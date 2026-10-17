@@ -53,11 +53,11 @@
 
                 <!-- PROFIL UTILIZATOR -->
                 <div id="user-profile-menu" class="hidden flex items-center gap-3 bg-zinc-900 border border-zinc-800 p-1.5 px-3 rounded-2xl">
-                    <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
-                        <i class="fa-solid fa-user"></i>
+                    <div class="w-9 h-9 rounded-full bg-gradient-to-br from-red-600 to-red-500 flex items-center justify-center text-white font-black text-[10px] shadow-md uppercase">
+                        <span id="user-avatar-display">U</span>
                     </div>
                     <div class="flex flex-col text-left">
-                        <span id="user-email-display" class="text-xs font-bold text-white font-mono">email@gmail.com</span>
+                        <span id="user-email-display" class="sr-only">email@gmail.com</span>
                         <span class="text-[9px] text-green-400 font-bold uppercase">Cont Activ</span>
                     </div>
                     <button onclick="switchView('dashboard')" class="ml-2 bg-zinc-800 hover:bg-red-600 text-zinc-300 hover:text-white text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
@@ -284,7 +284,16 @@
             <div class="dashboard-card p-6 rounded-2xl">
                 <h3 class="text-sm font-bold text-white mb-4">Setări Streamer</h3>
                 <label class="block text-xs text-zinc-400 mb-1">TikTok Username</label>
-                <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600 font-mono">
+                <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-3 focus:outline-none focus:border-red-600 font-mono">
+                <div class="flex gap-2 mb-4">
+                    <button onclick="syncTikTokAccount()" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2.5 rounded-xl text-[10px] border border-zinc-800 transition cursor-pointer">
+                        Conectează TikTok
+                    </button>
+                    <button onclick="clearTikTokAccount()" class="w-10 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl border border-zinc-800 transition cursor-pointer" title="Resetare">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+                <div id="tiktok-sync-status" class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">Stare: neconectat</div>
                 <label class="block text-xs text-zinc-400 mb-1">Joc activ</label>
                 <select class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600">
                     <option>Gift Battle Royale</option>
@@ -382,12 +391,20 @@
             const btnLogin = document.getElementById('btn-login-modal');
             const profileMenu = document.getElementById('user-profile-menu');
             const emailDisp = document.getElementById('user-email-display');
+            const avatarDisp = document.getElementById('user-avatar-display');
 
             if (session && session.user) {
                 currentUser = session.user;
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
-                if(emailDisp) emailDisp.innerText = session.user.email;
+                if(emailDisp) {
+                    emailDisp.innerText = session.user.email || 'user';
+                    emailDisp.classList.add('sr-only');
+                }
+                if (avatarDisp) {
+                    const initial = (session.user.email || 'U').charAt(0).toUpperCase();
+                    avatarDisp.innerText = initial;
+                }
                 closeAuthModal();
             } else {
                 currentUser = null;
@@ -466,6 +483,77 @@
                 switchView(view);
             }
         }
+
+        function syncTikTokAccount() {
+            const input = document.getElementById('tiktok-user');
+            const status = document.getElementById('tiktok-sync-status');
+            if (!input) return;
+
+            const username = input.value.trim();
+            if (!username) {
+                alert('Introdu username-ul TikTok pentru sincronizare.');
+                return;
+            }
+
+            const normalized = username.startsWith('@') ? username : '@' + username;
+            input.value = normalized;
+
+            try {
+                localStorage.setItem('tikinteract_tiktok_user', normalized);
+                localStorage.setItem('tikinteract_tiktok_connected', 'true');
+            } catch (err) {
+                console.warn('Local storage unavailable:', err);
+            }
+
+            if (status) {
+                status.textContent = 'Stare: conectat la ' + normalized;
+                status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-green-400';
+            }
+        }
+
+        function clearTikTokAccount() {
+            const input = document.getElementById('tiktok-user');
+            const status = document.getElementById('tiktok-sync-status');
+            if (input) input.value = '@numele_tau';
+            try {
+                localStorage.removeItem('tikinteract_tiktok_user');
+                localStorage.removeItem('tikinteract_tiktok_connected');
+            } catch (err) {
+                console.warn('Local storage unavailable:', err);
+            }
+            if (status) {
+                status.textContent = 'Stare: neconectat';
+                status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500';
+            }
+        }
+
+        function restoreTikTokState() {
+            const input = document.getElementById('tiktok-user');
+            const status = document.getElementById('tiktok-sync-status');
+            if (!input || !status) return;
+
+            try {
+                const savedUser = localStorage.getItem('tikinteract_tiktok_user');
+                const connected = localStorage.getItem('tikinteract_tiktok_connected') === 'true';
+
+                if (savedUser && connected) {
+                    input.value = savedUser;
+                    status.textContent = 'Stare: conectat la ' + savedUser;
+                    status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-green-400';
+                    return;
+                }
+            } catch (err) {
+                console.warn('Local storage unavailable:', err);
+            }
+
+            input.value = '@numele_tau';
+            status.textContent = 'Stare: neconectat';
+            status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            restoreTikTokState();
+        });
     </script>
 </body>
 </html>
