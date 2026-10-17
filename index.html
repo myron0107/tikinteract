@@ -305,7 +305,7 @@
                 <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-3 focus:outline-none focus:border-red-600 font-mono">
                 <div class="flex gap-2 mb-4">
                     <button onclick="syncTikTokAccount()" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2.5 rounded-xl text-[10px] border border-zinc-800 transition cursor-pointer">
-                        Conectează TikTok
+                        Salvează username
                     </button>
                     <button onclick="clearTikTokAccount()" class="w-10 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl border border-zinc-800 transition cursor-pointer" title="Resetare">
                         <i class="fa-solid fa-rotate-left"></i>
@@ -318,7 +318,7 @@
                     <option>Speed Race</option>
                     <option>Tower Survival</option>
                 </select>
-                <button onclick="alert('Conexiune TikTok pornită!')" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
+                <button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
                     Pornește Conexiunea Live
                 </button>
             </div>
@@ -329,21 +329,25 @@
                         <p class="section-kicker">Live overview</p>
                         <h4 class="text-xl font-bold text-white">Panou Stream Activ</h4>
                     </div>
-                    <span class="badge-live"><i class="fa-solid fa-circle"></i> Online</span>
+                    <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
+                </div>
+
+                <div class="mb-6 overflow-hidden rounded-xl border border-zinc-800">
+                    <canvas id="hubCanvas" width="800" height="180" class="block w-full"></canvas>
                 </div>
 
                 <div class="dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="mini-stat-box">
-                        <span>Viewers</span>
-                        <strong>8.4k</strong>
+                        <span>Scor</span>
+                        <strong id="score-display">0</strong>
                     </div>
                     <div class="mini-stat-box">
                         <span>Gifts</span>
-                        <strong>2.3k</strong>
+                        <strong id="gift-count">0</strong>
                     </div>
                     <div class="mini-stat-box">
-                        <span>Engagement</span>
-                        <strong>87%</strong>
+                        <span>Evenimente</span>
+                        <strong id="event-count">0</strong>
                     </div>
                 </div>
 
@@ -353,11 +357,8 @@
                             <span>Live feed</span>
                             <span class="pulse-indicator"></span>
                         </div>
-                        <div class="feed-list">
-                            <div class="feed-item"><strong>@ionel</strong> a trimis 3 gift-uri</div>
-                            <div class="feed-item"><strong>@maria</strong> a activat bonus</div>
-                            <div class="feed-item"><strong>@alex</strong> a ales opțiunea red</div>
-                            <div class="feed-item"><strong>@nina</strong> a completat provocarea</div>
+                        <div id="feed-list" class="feed-list">
+                            <div class="feed-item text-zinc-500">Evenimentele TikTok LIVE vor apărea aici.</div>
                         </div>
                     </div>
 
@@ -380,6 +381,8 @@
             </div>
         </div>
     </div>
+
+    <script src="game.js"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
     <script>
@@ -518,24 +521,23 @@
 
             try {
                 localStorage.setItem('tikinteract_tiktok_user', normalized);
-                localStorage.setItem('tikinteract_tiktok_connected', 'true');
             } catch (err) {
                 console.warn('Local storage unavailable:', err);
             }
 
             if (status) {
-                status.textContent = 'Stare: conectat la ' + normalized;
-                status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-green-400';
+                status.textContent = 'Username salvat; pornește conexiunea LIVE.';
+                status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400';
             }
         }
 
         function clearTikTokAccount() {
             const input = document.getElementById('tiktok-user');
             const status = document.getElementById('tiktok-sync-status');
+            if (typeof disconnectTikTokConnection === 'function') disconnectTikTokConnection();
             if (input) input.value = '@numele_tau';
             try {
                 localStorage.removeItem('tikinteract_tiktok_user');
-                localStorage.removeItem('tikinteract_tiktok_connected');
             } catch (err) {
                 console.warn('Local storage unavailable:', err);
             }
@@ -552,12 +554,10 @@
 
             try {
                 const savedUser = localStorage.getItem('tikinteract_tiktok_user');
-                const connected = localStorage.getItem('tikinteract_tiktok_connected') === 'true';
-
-                if (savedUser && connected) {
+                if (savedUser) {
                     input.value = savedUser;
-                    status.textContent = 'Stare: conectat la ' + savedUser;
-                    status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-green-400';
+                    status.textContent = 'Stare: neconectat';
+                    status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500';
                     return;
                 }
             } catch (err) {
