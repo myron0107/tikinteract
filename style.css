@@ -1,0 +1,13 @@
+body {
+    background-color: #050507;
+    color: #f4f4f5;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.glow-red {
+    box-shadow: 0 0 30px rgba(220, 38, 38, 0.25);
+}
+
+.glow-text {
+    text-shadow: 0 0 15px rgba(220, 38, 38, 0.5);
+}
