@@ -97,6 +97,14 @@ function toggleTikTokConnection() {
         return;
     }
 
+    if (window.location.origin !== 'http://127.0.0.1:3000') {
+        const localApp = new URL('http://127.0.0.1:3000/');
+        localApp.searchParams.set('tiktokUser', username);
+        localApp.searchParams.set('autoConnect', '1');
+        window.location.assign(localApp);
+        return;
+    }
+
     try {
         localStorage.setItem('tikinteract_tiktok_user', `@${username}`);
     } catch (error) {
