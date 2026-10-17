@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikInteract - Hub Jocuri TikTok Live</title>
     
-    <!-- Supabase JS SDK -->
+    <!-- Supabase JS SDK ÎNCĂRCAT SUS DE TOT CA SĂ NU DEA ERORI -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -49,12 +50,12 @@
             </nav>
 
             <div class="flex items-center gap-4">
-                <!-- BUTON LOGARE -->
+                <!-- BUTON AUTENTIFICARE CARE ACUM VA FUNCȚIONA GARANTAT -->
                 <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-user"></i> Autentificare / Cont
                 </button>
 
-                <!-- PROFIL UTILIZATOR -->
+                <!-- PROFIL UTILIZATOR (ASCUNS PÂNĂ LA LOGARE) -->
                 <div id="user-profile-menu" class="hidden flex items-center gap-3 bg-zinc-900 border border-zinc-800 p-1.5 px-3 rounded-2xl">
                     <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white font-bold text-xs shadow-md">
                         <i class="fa-solid fa-user"></i>
@@ -64,7 +65,7 @@
                         <span class="text-[9px] text-green-400 font-bold uppercase">Cont Activ</span>
                     </div>
                     <button onclick="switchView('dashboard')" class="ml-2 bg-zinc-800 hover:bg-red-600 text-zinc-300 hover:text-white text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
-                        Panou Streamer
+                        Panou
                     </button>
                     <button onclick="logoutUser()" title="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-1 transition cursor-pointer">
                         <i class="fa-solid fa-right-from-bracket"></i>
@@ -82,12 +83,12 @@
             </button>
 
             <h3 class="text-2xl font-bold text-white mb-2">Autentificare TikInteract</h3>
-            <p class="text-xs text-zinc-400 mb-6">Introdu e-mailul tău de Gmail și parola pentru a te conecta sau pentru a-ți crea cont instant.</p>
+            <p class="text-xs text-zinc-400 mb-6">Introdu e-mailul tău și parola pentru a te conecta sau a crea un cont nou instant.</p>
 
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">E-MAIL (GMAIL)</label>
-                    <input type="email" id="auth-email" placeholder="nume@gmail.com" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">E-MAIL</label>
+                    <input type="email" id="auth-email" placeholder="nume@example.com" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-zinc-400 mb-1">PAROLĂ</label>
@@ -136,7 +137,7 @@
                     <h3 class="text-lg font-bold text-white mb-2">Gift Battle Royale</h3>
                     <p class="text-zinc-400 text-xs mb-4">Luptători animați care se bat în funcție de cadourile primite pe TikTok Live.</p>
                 </div>
-                <button onclick="checkAccessAndGo('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition">
+                <button onclick="checkAccessAndGo('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition cursor-pointer">
                     Lansează Jocul
                 </button>
             </div>
@@ -146,7 +147,7 @@
                     <h3 class="text-lg font-bold text-white mb-2">TikInteract Speed Race</h3>
                     <p class="text-zinc-400 text-xs mb-4">Cursă auto alimentată de tap-uri și trandafiri.</p>
                 </div>
-                <button onclick="checkAccessAndGo('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition">
+                <button onclick="checkAccessAndGo('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition cursor-pointer">
                     Lansează Jocul
                 </button>
             </div>
@@ -156,7 +157,7 @@
                     <h3 class="text-lg font-bold text-white mb-2">Tower Survival</h3>
                     <p class="text-zinc-400 text-xs mb-4">Apără turnul împotriva monștrilor trimiși de spectatori.</p>
                 </div>
-                <button onclick="checkAccessAndGo('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition">
+                <button onclick="checkAccessAndGo('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition cursor-pointer">
                     Lansează Jocul
                 </button>
             </div>
@@ -170,7 +171,7 @@
                 <h2 class="text-2xl font-bold text-white">Panou Control Streamer</h2>
                 <p class="text-zinc-400 text-xs">Aici îți controlezi sesiunea live de TikTok.</p>
             </div>
-            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition">
+            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi
             </button>
         </div>
@@ -180,7 +181,7 @@
                 <h3 class="text-sm font-bold text-white mb-4">Setări Streamer</h3>
                 <label class="block text-xs text-zinc-400 mb-1">TikTok Username</label>
                 <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600 font-mono">
-                <button onclick="alert('Conexiune TikTok pornită!')" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition">
+                <button onclick="alert('Conexiune TikTok pornită!')" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
                     Pornește Conexiunea Live
                 </button>
             </div>
@@ -193,37 +194,41 @@
         </div>
     </div>
 
-    <!-- LOGICĂ SUPABASE -->
+    <!-- LOGICĂ JS DIRECTĂ ȘI SIGURĂ -->
     <script>
         const SUPABASE_URL = 'https://licrwrvqicreywprlafu.supabase.co';     
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpY3J3cnZxaWNyZXl3cHJsYWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTA0MDAsImV4cCI6MjEwNzgyNjQwMH0.2s7EaJ6ODXqNIBs2ItUwOtxHqRetI1tOpx1wJS_7smQ'; 
 
-        let supabase = null;
+        let supabaseClient = null;
         let currentUser = null;
 
+        // Inițializare sigură imediat ce se încarcă pagina
         window.addEventListener('DOMContentLoaded', async () => {
-            if (typeof window.supabase !== 'undefined') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                
-                const { data: { session } } = await supabase.auth.getSession();
-                handleSessionChange(session);
+            try {
+                if (window.supabase) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    updateUI(session);
 
-                supabase.auth.onAuthStateChange((_event, session) => {
-                    handleSessionChange(session);
-                });
+                    supabaseClient.auth.onAuthStateChange((_event, session) => {
+                        updateUI(session);
+                    });
+                }
+            } catch (err) {
+                console.error("Eroare initializare:", err);
             }
         });
 
-        function handleSessionChange(session) {
+        function updateUI(session) {
             const btnLogin = document.getElementById('btn-login-modal');
             const profileMenu = document.getElementById('user-profile-menu');
-            const userEmailDisplay = document.getElementById('user-email-display');
+            const emailDisp = document.getElementById('user-email-display');
 
             if (session && session.user) {
                 currentUser = session.user;
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
-                if(userEmailDisplay) userEmailDisplay.innerText = session.user.email;
+                if(emailDisp) emailDisp.innerText = session.user.email;
                 closeAuthModal();
             } else {
                 currentUser = null;
@@ -233,47 +238,54 @@
         }
 
         function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
+            const modal = document.getElementById('auth-modal');
+            if(modal) modal.classList.remove('hidden');
         }
 
         function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
+            const modal = document.getElementById('auth-modal');
+            if(modal) modal.classList.add('hidden');
         }
 
         async function loginWithEmail() {
-            if (!supabase) return alert("Eroare conexiune Supabase.");
+            if (!supabaseClient) return alert("Supabase nu este încărcat.");
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
-            if(!email || !password) return alert("Introdu adresa de e-mail și parola!");
+            if(!email || !password) return alert("Completează emailul și parola!");
 
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) alert("Eroare autentificare: " + error.message);
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) alert("Eroare la logare: " + error.message);
         }
 
         async function signUpWithEmail() {
-            if (!supabase) return alert("Eroare conexiune Supabase.");
+            if (!supabaseClient) return alert("Supabase nu este încărcat.");
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
-            if(!email || !password) return alert("Introdu adresa de e-mail și parola!");
+            if(!email || !password) return alert("Completează emailul și parola!");
 
-            const { error } = await supabase.auth.signUp({ email, password });
+            const { error } = await supabaseClient.auth.signUp({ email, password });
             if (error) {
-                alert("Eroare creare cont: " + error.message);
+                alert("Eroare la creare cont: " + error.message);
             } else {
-                alert("Contul a fost creat cu succes! Te poți conecta acum.");
+                alert("Cont creat cu succes! Te poți conecta acum.");
             }
         }
 
         async function logoutUser() {
-            if (supabase) {
-                await supabase.auth.signOut();
+            if (supabaseClient) {
+                await supabaseClient.auth.signOut();
                 switchView('catalog');
             }
         }
 
         function switchView(view) {
-            document.getElementById('view-catalog').classList.toggle('hidden', view !== 'catalog');
-            document.getElementById('view-dashboard').classList.toggle('hidden', view !== 'dashboard');
+            const catalog = document.getElementById('view-catalog');
+            const dashboard = document.getElementById('view-dashboard');
+            if(catalog && dashboard) {
+                catalog.classList.toggle('hidden', view !== 'catalog');
+                dashboard.classList.toggle('hidden', view !== 'dashboard');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         function checkAccessAndGo(view) {
