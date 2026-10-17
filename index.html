@@ -60,6 +60,7 @@
             
             <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-zinc-400">
                 <button onclick="switchView('catalog')" class="hover:text-white transition cursor-pointer">Jocuri Live</button>
+                <button onclick="switchView('leaderboard')" class="hover:text-white transition cursor-pointer">Clasament</button>
                 <a href="#pricing" class="hover:text-white transition">Abonamente</a>
             </nav>
 
@@ -286,6 +287,61 @@
         </section>
     </main>
 
+    <!-- PUBLIC STREAMER LEADERBOARD -->
+    <section id="view-leaderboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+        <div class="leaderboard-heading mb-8">
+            <div>
+                <span class="eyebrow">Comunitatea TikInteract</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Clasament Streameri</h1>
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
+                    Streamerii sunt clasificați după monedele câștigate prin cadourile primite în sesiunile LIVE pornite din TikInteract.
+                    Timpul transmis pe platformă departajează scorurile egale.
+                </p>
+            </div>
+            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
+            </button>
+        </div>
+
+        <div class="leaderboard-summary dashboard-panel rounded-2xl p-5 mb-6">
+            <div class="leaderboard-trophy"><i class="fa-solid fa-trophy"></i></div>
+            <div>
+                <p class="text-sm font-bold text-white">Clasament all-time</p>
+                <p class="mt-1 text-xs text-zinc-400">Doar statisticile înregistrate de TikInteract sunt incluse.</p>
+            </div>
+            <button onclick="loadLeaderboard()" class="ml-auto bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
+                <i class="fa-solid fa-rotate mr-2"></i> Reîncarcă
+            </button>
+        </div>
+
+        <div id="leaderboard-status" class="mb-5 text-sm text-zinc-400" role="status" aria-live="polite">
+            Se încarcă clasamentul...
+        </div>
+
+        <div id="leaderboard-podium" class="leaderboard-podium mb-6"></div>
+
+        <div class="dashboard-panel overflow-hidden rounded-2xl">
+            <div class="overflow-x-auto">
+                <table class="leaderboard-table w-full text-left">
+                    <thead>
+                        <tr>
+                            <th scope="col">Loc</th>
+                            <th scope="col">Streamer TikTok</th>
+                            <th scope="col" class="text-right">Monede</th>
+                            <th scope="col" class="text-right">Timp LIVE</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-list"></tbody>
+                </table>
+            </div>
+            <div id="leaderboard-empty" class="hidden px-6 py-12 text-center">
+                <i class="fa-solid fa-ranking-star text-3xl text-zinc-600"></i>
+                <p class="mt-4 font-bold text-white">Clasamentul este încă gol</p>
+                <p class="mt-2 text-sm text-zinc-400">Salvează username-ul TikTok, activează profilul public și pornește un LIVE prin TikInteract pentru a apărea aici.</p>
+            </div>
+        </div>
+    </section>
+
     <!-- DASHBOARD VIEW -->
     <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
         <div class="flex items-center justify-between mb-8 pb-4 border-b border-zinc-900">
@@ -322,6 +378,10 @@
                     </button>
                 </div>
                 <div id="tiktok-sync-status" class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">Stare: neconectat</div>
+                <label class="leaderboard-opt-in mb-4">
+                    <input id="leaderboard-public" type="checkbox">
+                    <span>Arată profilul și statisticile mele în clasamentul public</span>
+                </label>
                 <label class="block text-xs text-zinc-400 mb-1">Joc activ</label>
                 <select class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600">
                     <option>Gift Battle Royale</option>
@@ -406,6 +466,7 @@
             try {
                 if (window.supabase) {
                     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    window.tikInteractSupabase = supabaseClient;
                     const { data: { session } } = await supabaseClient.auth.getSession();
                     updateUI(session);
 
@@ -423,9 +484,16 @@
             const profileMenu = document.getElementById('user-profile-menu');
             const emailDisp = document.getElementById('user-email-display');
             const avatarDisp = document.getElementById('user-avatar-display');
+            window.tikInteractUser = session?.user || null;
+            if (session?.user) window.refreshTikInteractConnectionState?.();
 
             if (session && session.user) {
                 currentUser = session.user;
+                if (typeof restoreMyStreamerProfile === 'function') {
+                    restoreMyStreamerProfile().catch((err) => {
+                        console.error('Could not restore streamer profile:', err);
+                    });
+                }
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
                 if(emailDisp) {
@@ -492,6 +560,9 @@
 
         async function logoutUser() {
             if (supabaseClient) {
+                if (typeof finishPlatformLiveSession === 'function') {
+                    await finishPlatformLiveSession();
+                }
                 await supabaseClient.auth.signOut();
                 switchView('catalog');
             }
@@ -500,9 +571,12 @@
         function switchView(view) {
             const catalog = document.getElementById('view-catalog');
             const dashboard = document.getElementById('view-dashboard');
-            if(catalog && dashboard) {
+            const leaderboard = document.getElementById('view-leaderboard');
+            if(catalog && dashboard && leaderboard) {
                 catalog.classList.toggle('hidden', view !== 'catalog');
                 dashboard.classList.toggle('hidden', view !== 'dashboard');
+                leaderboard.classList.toggle('hidden', view !== 'leaderboard');
+                if (view === 'leaderboard' && typeof loadLeaderboard === 'function') loadLeaderboard();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
@@ -533,6 +607,10 @@
                 localStorage.setItem('tikinteract_tiktok_user', normalized);
             } catch (err) {
                 console.warn('Local storage unavailable:', err);
+            }
+
+            if (typeof saveTikTokProfileFromSettings === 'function') {
+                saveTikTokProfileFromSettings();
             }
 
             if (status) {

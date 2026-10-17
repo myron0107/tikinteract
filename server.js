@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -167,7 +168,7 @@ async function startLiveConnection(rawUsername) {
 
     stopLiveConnection();
     const attempt = connectionAttempt;
-    const connection = new TikTokLiveConnection(username, {});
+    const connection = new TikTokLiveConnection(username, { enableExtendedGiftInfo: true });
     liveConnection = connection;
     activeUsername = username;
     connectionStatus = 'connecting';
@@ -183,12 +184,36 @@ async function startLiveConnection(rawUsername) {
     });
 
     connection.on(WebcastEvent.GIFT, (event) => {
+        const giftType = Number(event.giftDetails?.giftType);
+        const isFinalGiftEvent = giftType !== 1 || event.repeatEnd === true;
+        const extendedGiftInfo = event.extendedGiftInfo
+            || connection.availableGifts?.find((gift) => String(gift.id) === String(event.giftId));
+        const coinValue = Number(
+            extendedGiftInfo?.diamondCount
+            ?? extendedGiftInfo?.diamond_count
+            ?? event.giftDetails?.diamondCount
+            ?? event.giftDetails?.diamond_count
+            ?? 0
+        );
+        const repeatCount = Math.max(1, Math.floor(Number(event.repeatCount) || 1));
+        const coins = isFinalGiftEvent && Number.isFinite(coinValue)
+            ? Math.min(1000000, Math.max(0, Math.floor(coinValue * repeatCount)))
+            : 0;
+
         broadcast({
             type: 'gift',
             username: event.user?.uniqueId || 'utilizator',
             giftName: event.giftDetails?.giftName || event.giftName || 'Cadou',
-            avatarUrl: getProfilePhotoUrl(event.user)
+            avatarUrl: getProfilePhotoUrl(event.user),
+            eventId: coins > 0 ? randomUUID() : null,
+            coins
         });
+    });
+
+    connection.on(WebcastEvent.STREAM_END, () => {
+        if (liveConnection === connection) {
+            stopLiveConnection();
+        }
     });
 
     try {
