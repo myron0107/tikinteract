@@ -6,11 +6,11 @@
     <title>TikInteract - Hub Jocuri TikTok Live</title>
     
     <!-- ==================================================== -->
-    <!-- ⚙️ CONFIGURARE SUPABASE (Pune datele tale aici)      -->
+    <!-- ⚙️ CONFIGURARE SUPABASE                              -->
     <!-- ==================================================== -->
     <script>
-        const SUPABASE_URL = 'https://licrwrvqicreywprlafu.supabase.co/rest/v1/';     // Ex: 'https://xyz.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpY3J3cnZxaWNyZXl3cHJsYWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTA0MDAsImV4cCI6MjEwNzgyNjQwMH0.2s7EaJ6ODXqNIBs2ItUwOtxHqRetI1tOpx1wJS_7smQ'; // Ex: 'eyJhbGciOi...'
+        const SUPABASE_URL = 'https://licrwrvqicreywprlafu.supabase.co';     
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxpY3J3cnZxaWNyZXl3cHJsYWZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNTA0MDAsImV4cCI6MjEwNzgyNjQwMH0.2s7EaJ6ODXqNIBs2ItUwOtxHqRetI1tOpx1wJS_7smQ'; 
     </script>
     <!-- ==================================================== -->
 
@@ -60,14 +60,14 @@
             <div class="flex items-center gap-4">
                 <div id="user-profile-nav" class="hidden flex items-center gap-3">
                     <span id="user-email-display" class="text-xs font-mono text-zinc-400"></span>
-                    <button onclick="logoutUser()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs px-3 py-2 rounded-xl border border-zinc-800">
+                    <button onclick="logoutUser()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs px-3 py-2 rounded-xl border border-zinc-800 cursor-pointer">
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
                 <button id="btn-auth-nav" onclick="openAuthModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-zinc-800 transition cursor-pointer">
                     Autentificare
                 </button>
-                <button onclick="switchView('dashboard')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2">
+                <button onclick="switchView('dashboard')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-circle-user"></i> Panou Streamer
                 </button>
             </div>
@@ -75,160 +75,4 @@
     </header>
 
     <!-- MODAL AUTENTIFICARE (LOGIN / GOOGLE / EMAIL) -->
-    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-cardbg border border-zinc-800 w-full max-w-md rounded-3xl p-8 relative glow-red">
-            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-zinc-500 hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <h3 class="text-2xl font-bold text-white mb-2">Autentificare</h3>
-            <p class="text-xs text-zinc-400 mb-6">Conectează-te pentru a accesa jocurile și abonamentul tău.</p>
-
-            <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-zinc-200 text-zinc-900 font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-3 mb-6 transition">
-                <i class="fa-brands fa-google text-lg"></i> Conectează-te cu Google
-            </button>
-
-            <div class="flex items-center gap-3 mb-6">
-                <div class="flex-1 h-px bg-zinc-800"></div>
-                <span class="text-[10px] text-zinc-500 uppercase font-bold">sau cu email</span>
-                <div class="flex-1 h-px bg-zinc-800"></div>
-            </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">EMAIL</label>
-                    <input type="email" id="auth-email" placeholder="nume@example.com" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">PAROLĂ</label>
-                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
-                </div>
-                <button onclick="loginWithEmail()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs transition glow-red">
-                    Intră în cont
-                </button>
-                <button onclick="signUpWithEmail()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold py-3 rounded-xl text-xs border border-zinc-800 transition">
-                    Creează cont nou
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- VIEW 1: CATALOGUL DE JOCURI -->
-    <main id="view-catalog" class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
-        <div class="mb-12 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-zinc-900 to-zinc-950 border border-zinc-800/80 p-8 rounded-3xl relative overflow-hidden">
-            <div class="max-w-2xl z-10">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/40 text-red-400 text-xs font-bold mb-4">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Platformă SaaS TikTok Live
-                </span>
-                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-white">
-                    Jocuri Interactive pentru <span class="text-red-500">TikTok Live</span>
-                </h1>
-                <p class="text-zinc-400 text-sm md:text-base mb-6">
-                    Alege un joc din catalog, conectează contul tău și lasă privitorii să controleze acțiunea direct prin cadouri și tap-uri în timp real.
-                </p>
-                <div class="flex flex-wrap gap-4">
-                    <button onclick="switchView('dashboard')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition glow-red">
-                        Pornește un Joc Acum
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            <div class="bg-cardbg border border-zinc-900 p-6 rounded-2xl">
-                <h3 class="text-lg font-bold text-white mb-2">Gift Battle Royale</h3>
-                <p class="text-zinc-400 text-xs mb-4">Luptători animați alimentați de cadourile din chat.</p>
-                <button onclick="switchView('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-zinc-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition border border-zinc-800">
-                    Configurează
-                </button>
-            </div>
-        </div>
-    </main>
-
-    <!-- VIEW 2: PANOUL STREAMERULUI -->
-    <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
-        <h2 class="text-2xl font-bold text-white mb-4">Panou de Control Streamer</h2>
-        <button onclick="switchView('catalog')" class="bg-zinc-900 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 mb-6">
-            Înapoi la Catalog
-        </button>
-    </div>
-
-    <!-- JAVASCRIPT LOGIC -->
-    <script>
-        let supabase = null;
-
-        function initSupabase() {
-            if (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'PUNE_AICI_PROJECT_URL' && SUPABASE_ANON_KEY !== 'PUNE_AICI_ANON_KEY') {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            }
-        }
-
-        window.addEventListener('DOMContentLoaded', async () => {
-            initSupabase();
-            if(supabase) {
-                const { data: { session } } = await supabase.auth.getSession();
-                updateUIState(session);
-
-                supabase.auth.onAuthStateChange((_event, session) => {
-                    updateUIState(session);
-                });
-            }
-        });
-
-        function updateUIState(session) {
-            const btnAuthNav = document.getElementById('btn-auth-nav');
-            const userProfileNav = document.getElementById('user-profile-nav');
-            const userEmailDisplay = document.getElementById('user-email-display');
-
-            if (session) {
-                btnAuthNav.classList.add('hidden');
-                userProfileNav.classList.remove('hidden');
-                userEmailDisplay.innerText = session.user.email;
-            } else {
-                btnAuthNav.classList.remove('hidden');
-                userProfileNav.classList.add('hidden');
-            }
-        }
-
-        function openAuthModal() {
-            document.getElementById('auth-modal').classList.remove('hidden');
-        }
-
-        function closeAuthModal() {
-            document.getElementById('auth-modal').classList.add('hidden');
-        }
-
-        async function loginWithGoogle() {
-            if(!supabase) return alert("Verifică dacă ai introdus corect SUPABASE_URL și SUPABASE_ANON_KEY sus în cod!");
-            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
-            if(error) alert("Eroare Supabase: " + error.message);
-        }
-
-        async function loginWithEmail() {
-            if(!supabase) return alert("Verifică dacă ai introdus corect SUPABASE_URL și SUPABASE_ANON_KEY sus în cod!");
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            if(!email || !password) return alert("Introdu e-mailul și parola!");
-            const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if(error) alert("Eroare autentificare: " + error.message); else closeAuthModal();
-        }
-
-        async function signUpWithEmail() {
-            if(!supabase) return alert("Verifică dacă ai introdus corect SUPABASE_URL și SUPABASE_ANON_KEY sus în cod!");
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            if(!email || !password) return alert("Introdu e-mailul și parola!");
-            const { error } = await supabase.auth.signUp({ email, password });
-            if(error) alert("Eroare creare cont: " + error.message); else alert("Cont creat cu succes!");
-        }
-
-        async function logoutUser() {
-            if(supabase) await supabase.auth.signOut();
-        }
-
-        function switchView(view) {
-            document.getElementById('view-catalog').classList.toggle('hidden', view !== 'catalog');
-            document.getElementById('view-dashboard').classList.toggle('hidden', view !== 'dashboard');
-        }
-    </script>
-</body>
-</html>
+    <div
