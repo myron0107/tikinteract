@@ -207,7 +207,64 @@
             </div>
         </div>
 
+        <section class="feature-showcase mb-16">
+            <div class="section-heading">
+                <span class="eyebrow">Why streamers use it</span>
+                <h2>Tot ce ai nevoie pentru un live cu energie ridicată</h2>
+            </div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="icon-wrap"><i class="fa-solid fa-bolt"></i></div>
+                    <h3>Instant engagement</h3>
+                    <p>Chat-ul devine controlul jocului și fiecare gift devine acțiune în timpul live-ului.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-wrap"><i class="fa-solid fa-sliders"></i></div>
+                    <h3>Live controls</h3>
+                    <p>Activezi și gestionezi stream-ul dintr-un singur panou clar, fără bătăi de cap.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div>
+                    <h3>Audience analytics</h3>
+                    <p>Vezi ce tip de interacțiune merge cel mai bine și cresc performanța sesiunilor.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon-wrap"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3>Safe setup</h3>
+                    <p>Ambele sesiuni și datele sunt separate, cu experiență de streamer controlată.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="testimonial-showcase mb-20">
+            <div class="section-heading">
+                <span class="eyebrow">Loved by creators</span>
+                <h2>Streamerii se întorc pentru mai multă energie</h2>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"După 3 zile de folosință, timpul de participare a comunității a explodat. E ca și cum publicul ar fi controlat jocul."</p>
+                    <div class="author">Mila K. • Gaming creator</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"Design-ul este premium, dar cel mai important e că funcționează clar și face live-ul mai viu."</p>
+                    <div class="author">Alex T. • Streamer lifestyle</div>
+                </div>
+                <div class="testimonial-card">
+                    <div class="stars">★★★★★</div>
+                    <p>"Am montat rapid sesiunile, am activat mini-game-uri și spectatorii s-au implicat instant."</p>
+                    <div class="author">Radu F. • Esports host</div>
+                </div>
+            </div>
+        </section>
+
         <section id="pricing" class="mb-16">
+            <div class="section-heading center">
+                <span class="eyebrow">Pricing</span>
+                <h2>Planuri simple pentru orice tip de streamer</h2>
+            </div>
             <div class="pricing-grid">
                 <div class="pricing-card featured">
                     <p class="eyebrow">Starter</p>
@@ -248,19 +305,75 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="bg-cardbg border border-zinc-900 p-6 rounded-2xl">
+            <div class="dashboard-card p-6 rounded-2xl">
                 <h3 class="text-sm font-bold text-white mb-4">Setări Streamer</h3>
                 <label class="block text-xs text-zinc-400 mb-1">TikTok Username</label>
                 <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600 font-mono">
+                <label class="block text-xs text-zinc-400 mb-1">Joc activ</label>
+                <select class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600">
+                    <option>Gift Battle Royale</option>
+                    <option>Speed Race</option>
+                    <option>Tower Survival</option>
+                </select>
                 <button onclick="alert('Conexiune TikTok pornită!')" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
                     Pornește Conexiunea Live
                 </button>
             </div>
 
-            <div class="lg:col-span-2 bg-zinc-950 border border-zinc-900 rounded-2xl p-6 flex flex-col items-center justify-center text-center min-h-[300px]">
-                <i class="fa-solid fa-tower-broadcast text-4xl text-red-600 mb-3 animate-pulse"></i>
-                <h4 class="text-lg font-bold text-white">Panou Stream Activ</h4>
-                <p class="text-zinc-500 text-xs">Sesiunea ta este securizată și conectată la contul de utilizator.</p>
+            <div class="lg:col-span-2 dashboard-panel rounded-2xl p-6 min-h-[300px]">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <p class="section-kicker">Live overview</p>
+                        <h4 class="text-xl font-bold text-white">Panou Stream Activ</h4>
+                    </div>
+                    <span class="badge-live"><i class="fa-solid fa-circle"></i> Online</span>
+                </div>
+
+                <div class="dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="mini-stat-box">
+                        <span>Viewers</span>
+                        <strong>8.4k</strong>
+                    </div>
+                    <div class="mini-stat-box">
+                        <span>Gifts</span>
+                        <strong>2.3k</strong>
+                    </div>
+                    <div class="mini-stat-box">
+                        <span>Engagement</span>
+                        <strong>87%</strong>
+                    </div>
+                </div>
+
+                <div class="live-grid">
+                    <div class="feed-box">
+                        <div class="feed-header">
+                            <span>Live feed</span>
+                            <span class="pulse-indicator"></span>
+                        </div>
+                        <div class="feed-list">
+                            <div class="feed-item"><strong>@ionel</strong> a trimis 3 gift-uri</div>
+                            <div class="feed-item"><strong>@maria</strong> a activat bonus</div>
+                            <div class="feed-item"><strong>@alex</strong> a ales opțiunea red</div>
+                            <div class="feed-item"><strong>@nina</strong> a completat provocarea</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-box">
+                        <div class="chart-labels">
+                            <span>Audience flow</span>
+                            <span>+24% today</span>
+                        </div>
+                        <div class="bars">
+                            <span style="height: 42%"></span>
+                            <span style="height: 58%"></span>
+                            <span style="height: 50%"></span>
+                            <span style="height: 71%"></span>
+                            <span style="height: 65%"></span>
+                            <span style="height: 80%"></span>
+                            <span style="height: 96%"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
