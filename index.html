@@ -6,7 +6,7 @@
     <title>TikInteract - Hub Jocuri TikTok Live</title>
     
     <!-- ==================================================== -->
-    <!-- ⚙️ CONFIGURARE SUPABASE (Pune datele tale aici jos) -->
+    <!-- ⚙️ CONFIGURARE SUPABASE (Pune datele tale aici)      -->
     <!-- ==================================================== -->
     <script>
         const SUPABASE_URL = 'https://licrwrvqicreywprlafu.supabase.co/rest/v1/';     // Ex: 'https://xyz.supabase.co'
@@ -54,7 +54,6 @@
             
             <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-zinc-400">
                 <button onclick="switchView('catalog')" class="hover:text-white transition">Jocuri Live</button>
-                <a href="#features" class="hover:text-white transition">Cum funcționează</a>
                 <a href="#pricing" class="hover:text-white transition">Abonamente</a>
             </nav>
 
@@ -65,7 +64,7 @@
                         <i class="fa-solid fa-right-from-bracket"></i>
                     </button>
                 </div>
-                <button id="btn-auth-nav" onclick="openAuthModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-zinc-800 transition">
+                <button id="btn-auth-nav" onclick="openAuthModal()" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-zinc-800 transition cursor-pointer">
                     Autentificare
                 </button>
                 <button onclick="switchView('dashboard')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2">
@@ -75,7 +74,7 @@
         </div>
     </header>
 
-    <!-- MODAL AUTENTIFICARE -->
+    <!-- MODAL AUTENTIFICARE (LOGIN / GOOGLE / EMAIL) -->
     <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-zinc-800 w-full max-w-md rounded-3xl p-8 relative glow-red">
             <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-zinc-500 hover:text-white">
@@ -116,7 +115,6 @@
     <!-- VIEW 1: CATALOGUL DE JOCURI -->
     <main id="view-catalog" class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
         <div class="mb-12 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-6 bg-gradient-to-r from-zinc-900 to-zinc-950 border border-zinc-800/80 p-8 rounded-3xl relative overflow-hidden">
-            <div class="absolute right-0 top-0 translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-red-600/10 rounded-full blur-3xl pointer-events-none"></div>
             <div class="max-w-2xl z-10">
                 <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/40 text-red-400 text-xs font-bold mb-4">
                     <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Platformă SaaS TikTok Live
@@ -131,143 +129,106 @@
                     <button onclick="switchView('dashboard')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition glow-red">
                         Pornește un Joc Acum
                     </button>
-                    <a href="#pricing" class="bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold px-6 py-3 rounded-xl text-sm transition border border-zinc-700">
-                        Vezi Prețurile
-                    </a>
                 </div>
             </div>
-            <div class="hidden lg:flex flex-col items-center justify-center bg-zinc-950/80 border border-zinc-800 p-6 rounded-2xl text-center min-w-[240px]">
-                <i class="fa-solid fa-bolt text-red-500 text-3xl mb-2"></i>
-                <span class="text-2xl font-black text-white">100% Web</span>
-                <span class="text-xs text-zinc-500">Fără descărcări. Rulează în browser.</span>
-            </div>
-        </div>
-
-        <div class="mb-8 flex items-center justify-between">
-            <h2 class="text-2xl font-bold text-white flex items-center gap-3">
-                <i class="fa-solid fa-fire text-red-500"></i> Jocuri Disponibile
-            </h2>
-            <span class="text-xs text-zinc-500 font-mono">Actualizat zilnic</span>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-            <div class="bg-cardbg border border-zinc-900 hover:border-red-600/50 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col">
-                <div class="h-48 bg-zinc-900 relative flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-t from-cardbg via-transparent to-transparent z-10"></div>
-                    <i class="fa-solid fa-shield-halved text-6xl text-red-600/30 group-hover:scale-110 transition duration-500"></i>
-                    <span class="absolute top-3 right-3 z-20 bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">HOT LIVE</span>
-                </div>
-                <div class="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-red-400 transition">Gift Battle Royale</h3>
-                        <p class="text-zinc-400 text-xs mb-4 leading-relaxed">Luptători animați pe ecran care se bat în funcție de cadourile primite de la spectatori.</p>
-                    </div>
-                    <div class="pt-4 border-t border-zinc-900/80 flex items-center justify-between">
-                        <span class="text-[11px] text-zinc-500"><i class="fa-solid fa-users text-zinc-400 mr-1"></i> Multi-player chat</span>
-                        <button onclick="switchView('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-zinc-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition border border-zinc-800 hover:border-red-500">
-                            Configurează <i class="fa-solid fa-arrow-right ml-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-cardbg border border-zinc-900 hover:border-red-600/50 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col">
-                <div class="h-48 bg-zinc-900 relative flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-t from-cardbg via-transparent to-transparent z-10"></div>
-                    <i class="fa-solid fa-flag-checkered text-6xl text-rose-600/30 group-hover:scale-110 transition duration-500"></i>
-                    <span class="absolute top-3 right-3 z-20 bg-zinc-800 text-zinc-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">POPULAR</span>
-                </div>
-                <div class="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-red-400 transition">TikInteract Speed Race</h3>
-                        <p class="text-zinc-400 text-xs mb-4 leading-relaxed">Cursă auto dinamică alimentată de tap-uri și trandafiri trimiși în direct.</p>
-                    </div>
-                    <div class="pt-4 border-t border-zinc-900/80 flex items-center justify-between">
-                        <span class="text-[11px] text-zinc-500"><i class="fa-solid fa-bolt text-zinc-400 mr-1"></i> Tap-boost activ</span>
-                        <button onclick="switchView('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-zinc-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition border border-zinc-800 hover:border-red-500">
-                            Configurează <i class="fa-solid fa-arrow-right ml-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-cardbg border border-zinc-900 hover:border-red-600/50 rounded-2xl overflow-hidden transition-all duration-300 group flex flex-col">
-                <div class="h-48 bg-zinc-900 relative flex items-center justify-center overflow-hidden">
-                    <div class="absolute inset-0 bg-gradient-to-t from-cardbg via-transparent to-transparent z-10"></div>
-                    <i class="fa-solid fa-bomb text-6xl text-red-600/30 group-hover:scale-110 transition duration-500"></i>
-                    <span class="absolute top-3 right-3 z-20 bg-zinc-800 text-zinc-300 text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">DEFENSE</span>
-                </div>
-                <div class="p-6 flex-1 flex flex-col justify-between">
-                    <div>
-                        <h3 class="text-lg font-bold text-white mb-2 group-hover:text-red-400 transition">Tower Survival</h3>
-                        <p class="text-zinc-400 text-xs mb-4 leading-relaxed">Streamerul apără baza, iar chat-ul trimite monștri și obstacole prin cadouri.</p>
-                    </div>
-                    <div class="pt-4 border-t border-zinc-900/80 flex items-center justify-between">
-                        <span class="text-[11px] text-zinc-500"><i class="fa-solid fa-shield text-zinc-400 mr-1"></i> Boss waves</span>
-                        <button onclick="switchView('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-zinc-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition border border-zinc-800 hover:border-red-500">
-                            Configurează <i class="fa-solid fa-arrow-right ml-1"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <section id="pricing" class="py-12 border-t border-zinc-900">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-3 text-white">Planuri de Abonament</h2>
-                <p class="text-zinc-400 text-sm">Deblochează accesul complet la hub-ul de jocuri și conexiunea TikTok.</p>
-            </div>
-
-            <div class="max-w-md mx-auto bg-cardbg border-2 border-red-600 rounded-3xl p-8 relative glow-red shadow-2xl">
-                <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-red-600 text-white font-bold text-[10px] px-4 py-1.5 rounded-full uppercase tracking-wider">
-                    Acces Nelimitat
-                </div>
-                <div class="text-center mb-8">
-                    <h3 class="text-xl font-bold text-white mb-1">TikInteract VIP Hub</h3>
-                    <p class="text-zinc-400 text-xs">Pentru streameri care vor performanță</p>
-                    <div class="mt-6 flex items-baseline justify-center gap-1">
-                        <span class="text-5xl font-black text-white">14.99€</span>
-                        <span class="text-zinc-400 text-sm">/ lună</span>
-                    </div>
-                </div>
-
-                <ul class="space-y-3 mb-8 text-xs text-zinc-300">
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-red-500"></i> Acces la toate jocurile din hub</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-red-500"></i> Conexiune WebSocket dedicată TikTok Live</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-red-500"></i> Compatibil cu OBS & TikTok Studio</li>
-                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-red-500"></i> Actualizări automate cu jocuri noi</li>
-                </ul>
-
-                <button onclick="openAuthModal()" class="w-full bg-gradient-to-r from-red-600 to-rose-600 hover:from-red-500 hover:to-rose-500 text-white font-bold py-3.5 rounded-xl text-sm transition glow-red shadow-lg">
-                    Abonează-te Acum
+            <div class="bg-cardbg border border-zinc-900 p-6 rounded-2xl">
+                <h3 class="text-lg font-bold text-white mb-2">Gift Battle Royale</h3>
+                <p class="text-zinc-400 text-xs mb-4">Luptători animați alimentați de cadourile din chat.</p>
+                <button onclick="switchView('dashboard')" class="bg-zinc-900 hover:bg-red-600 text-zinc-300 hover:text-white text-xs font-bold px-4 py-2 rounded-xl transition border border-zinc-800">
+                    Configurează
                 </button>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- VIEW 2: PANOUL STREAMERULUI -->
     <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
-        <div class="flex items-center justify-between mb-8 pb-4 border-b border-zinc-900">
-            <div>
-                <h2 class="text-2xl font-bold text-white">Panou de Control Streamer</h2>
-                <p class="text-zinc-400 text-xs">Configurează conexiunea și rulează jocul în direct.</p>
-            </div>
-            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la Catalog
-            </button>
-        </div>
+        <h2 class="text-2xl font-bold text-white mb-4">Panou de Control Streamer</h2>
+        <button onclick="switchView('catalog')" class="bg-zinc-900 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 mb-6">
+            Înapoi la Catalog
+        </button>
+    </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="space-y-6">
-                <div class="bg-cardbg border border-zinc-900 p-6 rounded-2xl">
-                    <h3 class="text-sm font-bold text-white mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-sliders text-red-500"></i> Setări Live
-                    </h3>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-[11px] font-bold text-zinc-400 mb-1.5 uppercase">TikTok Username</label>
-                            <input type="text" id="tiktok-user" value="@nume_tiktoker" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-red-600 font-mono">
-                        </div>
-                        <div>
-                            <label class="block text-[11px] font-bold text-zinc-400 mb-1.5 uppercase">Selectează Jocul</label>
-                            <select class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-red-
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        let supabase = null;
+
+        function initSupabase() {
+            if (typeof window.supabase !== 'undefined' && SUPABASE_URL !== 'PUNE_AICI_PROJECT_URL' && SUPABASE_ANON_KEY !== 'PUNE_AICI_ANON_KEY') {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            initSupabase();
+            if(supabase) {
+                const { data: { session } } = await supabase.auth.getSession();
+                updateUIState(session);
+
+                supabase.auth.onAuthStateChange((_event, session) => {
+                    updateUIState(session);
+                });
+            }
+        });
+
+        function updateUIState(session) {
+            const btnAuthNav = document.getElementById('btn-auth-nav');
+            const userProfileNav = document.getElementById('user-profile-nav');
+            const userEmailDisplay = document.getElementById('user-email-display');
+
+            if (session) {
+                btnAuthNav.classList.add('hidden');
+                userProfileNav.classList.remove('hidden');
+                userEmailDisplay.innerText = session.user.email;
+            } else {
+                btnAuthNav.classList.remove('hidden');
+                userProfileNav.classList.add('hidden');
+            }
+        }
+
+        function openAuthModal() {
+            document.getElementById('auth-modal').classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
+        }
+
+        async function loginWithGoogle() {
+            if(!supabase) return alert("Verifică dacă ai introdus corect SUPABASE_URL și SUPABASE_ANON_KEY sus în cod!");
+            const { error } = await supabase.auth.signInWithOAuth({ provider: 'google' });
+            if(error) alert("Eroare Supabase: " + error.message);
+        }
+
+        async function loginWithEmail() {
+            if(!supabase) return alert("Verifică dacă ai introdus corect SUPABASE_URL și SUPABASE_ANON_KEY sus în cod!");
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if(!email || !password) return alert("Introdu e-mailul și parola!");
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if(error) alert("Eroare autentificare: " + error.message); else closeAuthModal();
+        }
+
+        async function signUpWithEmail() {
+            if(!supabase) return alert("Verifică dacă ai introdus corect SUPABASE_URL și SUPABASE_ANON_KEY sus în cod!");
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            if(!email || !password) return alert("Introdu e-mailul și parola!");
+            const { error } = await supabase.auth.signUp({ email, password });
+            if(error) alert("Eroare creare cont: " + error.message); else alert("Cont creat cu succes!");
+        }
+
+        async function logoutUser() {
+            if(supabase) await supabase.auth.signOut();
+        }
+
+        function switchView(view) {
+            document.getElementById('view-catalog').classList.toggle('hidden', view !== 'catalog');
+            document.getElementById('view-dashboard').classList.toggle('hidden', view !== 'dashboard');
+        }
+    </script>
+</body>
+</html>
