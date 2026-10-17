@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikInteract - Hub Jocuri TikTok Live</title>
-    <meta name="theme-color" content="#09090d">
-    <link rel="icon" type="image/svg+xml" href="tikinteract-icon.svg">
+    <meta name="theme-color" content="#030305">
+    <link rel="icon" type="image/png" href="assets/tikinteract-icon-v2.png">
     
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -18,9 +18,27 @@
             theme: {
                 extend: {
                     colors: {
-                        darkbg: '#050507',
-                        cardbg: '#0e0e12',
-                        accent: '#dc2626'
+                        darkbg: '#060607',
+                        cardbg: '#141113',
+                        accent: '#ff263e',
+                        red: {
+                            400: '#ff8b80',
+                            500: '#ff354d',
+                            600: '#e61932',
+                            700: '#be1029',
+                            800: '#831a2a',
+                            950: '#300b13'
+                        },
+                        zinc: {
+                            100: '#f8eeeb',
+                            200: '#ebdfdd',
+                            300: '#d0c3c5',
+                            400: '#b0a5a7',
+                            500: '#8f8085',
+                            800: '#30262b',
+                            900: '#1a1518',
+                            950: '#0b090b'
+                        }
                     }
                 }
             }
@@ -36,7 +54,7 @@
     <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('catalog')">
-                <img src="tikinteract-icon.svg" alt="TikInteract" class="w-11 h-11 rounded-2xl glow-red shadow-lg">
+                <img src="assets/tikinteract-icon-v2.png" alt="TikInteract" width="44" height="44" class="w-11 h-11 object-contain">
                 <span class="text-2xl font-black tracking-wider text-white">TIK<span class="text-red-600 glow-text">INTERACT</span></span>
             </div>
             
