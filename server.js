@@ -111,7 +111,7 @@ async function startLiveConnection(rawUsername) {
 
     stopLiveConnection();
     const attempt = connectionAttempt;
-    const connection = new TikTokLiveConnection(username);
+    const connection = new TikTokLiveConnection(username, {});
     liveConnection = connection;
     activeUsername = username;
     connectionStatus = 'connecting';
