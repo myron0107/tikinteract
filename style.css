@@ -451,6 +451,9 @@ select:focus {
 }
 
 .feed-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
     border-radius: 0.8rem;
     background: rgba(255,255,255,0.02);
     border: 1px solid rgba(255,255,255,0.05);
@@ -461,6 +464,40 @@ select:focus {
 
 .feed-item strong {
     color: white;
+}
+
+.feed-avatar,
+.tiktok-profile-avatar {
+    position: relative;
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, #e61932, #831a2a);
+    color: white;
+    font-weight: 700;
+}
+
+.feed-avatar {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.75rem;
+}
+
+.feed-avatar-image,
+.tiktok-profile-avatar img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.tiktok-profile-avatar {
+    width: 3rem;
+    height: 3rem;
+    font-size: 1rem;
 }
 
 .bars {

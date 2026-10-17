@@ -4,10 +4,14 @@ let socket = null;
 let giftCount = 0;
 let connectedUsername = null;
 
-function updateConnectionStatus(connected, username, connecting = false) {
+function updateConnectionStatus(connected, username, connecting = false, avatarUrl = null) {
     const status = document.getElementById('tiktok-sync-status');
     const button = document.getElementById('btn-connect');
     const badge = document.getElementById('live-overview-status');
+    const profile = document.getElementById('tiktok-profile');
+    const profileName = document.getElementById('tiktok-profile-name');
+    const profileImage = document.getElementById('tiktok-profile-image');
+    const profileFallback = document.getElementById('tiktok-profile-fallback');
 
     connectedUsername = connected ? username : null;
     if (status) {
@@ -31,6 +35,35 @@ function updateConnectionStatus(connected, username, connecting = false) {
     if (badge) {
         badge.textContent = connected ? 'Conectat' : connecting ? 'Se conectează' : 'Offline';
         badge.classList.toggle('is-connected', connected);
+    }
+
+    if (profile) profile.classList.toggle('hidden', !connected);
+    if (profileName && connected) profileName.textContent = `@${username}`;
+    if (profileFallback) {
+        profileFallback.textContent = String(username || 'T').replace(/^@/, '').charAt(0).toUpperCase() || 'T';
+        profileFallback.classList.remove('hidden');
+    }
+
+    let safeAvatarUrl = null;
+    try {
+        const parsedAvatarUrl = new URL(avatarUrl);
+        if (parsedAvatarUrl.protocol === 'https:') safeAvatarUrl = parsedAvatarUrl.href;
+    } catch {
+        safeAvatarUrl = null;
+    }
+
+    if (profileImage) {
+        profileImage.classList.toggle('hidden', !connected || !safeAvatarUrl);
+        profileImage.onload = () => profileFallback?.classList.add('hidden');
+        profileImage.onerror = () => {
+            profileImage.classList.add('hidden');
+            profileFallback?.classList.remove('hidden');
+        };
+        if (safeAvatarUrl) {
+            profileImage.src = safeAvatarUrl;
+        } else {
+            profileImage.removeAttribute('src');
+        }
     }
 }
 
@@ -56,7 +89,7 @@ function connectToLocalServer() {
         }
 
         if (message.type === 'status') {
-            updateConnectionStatus(message.connected, message.username, message.connecting);
+            updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl);
         } else if (message.type === 'connecting') {
             updateConnectionStatus(false, message.username, true);
         } else if (message.type === 'error') {
@@ -142,10 +175,40 @@ function handleTikTokEvent(event) {
     const feed = document.getElementById('feed-list');
     if (feed) {
         const row = document.createElement('div');
-        row.className = 'feed-item';
+        row.className = 'feed-item flex items-center gap-3';
+        const avatar = document.createElement('div');
+        avatar.className = 'feed-avatar';
         const sender = document.createElement('strong');
+        sender.className = 'min-w-0';
         sender.textContent = `@${username}`;
-        row.append(sender, document.createTextNode(` ${text}`));
+        const fallback = document.createElement('span');
+        fallback.className = 'feed-avatar-fallback';
+        fallback.textContent = username.charAt(0).toUpperCase() || 'T';
+        avatar.append(fallback);
+
+        let safeAvatarUrl = null;
+        try {
+            const parsedAvatarUrl = new URL(event.avatarUrl);
+            if (parsedAvatarUrl.protocol === 'https:') safeAvatarUrl = parsedAvatarUrl.href;
+        } catch {
+            safeAvatarUrl = null;
+        }
+
+        if (safeAvatarUrl) {
+            const image = document.createElement('img');
+            image.className = 'feed-avatar-image';
+            image.alt = `Poza de profil a lui @${username}`;
+            image.loading = 'lazy';
+            image.src = safeAvatarUrl;
+            image.addEventListener('load', () => fallback.classList.add('hidden'), { once: true });
+            image.addEventListener('error', () => image.remove(), { once: true });
+            avatar.append(image);
+        }
+
+        const content = document.createElement('span');
+        content.className = 'min-w-0';
+        content.append(sender, document.createTextNode(` ${text}`));
+        row.append(avatar, content);
         feed.prepend(row);
         while (feed.children.length > 30) feed.lastElementChild.remove();
     }

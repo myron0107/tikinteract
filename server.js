@@ -84,8 +84,27 @@ function getState() {
         type: 'status',
         connected: connectionStatus === 'connected',
         connecting: connectionStatus === 'connecting',
-        username: activeUsername
+        username: activeUsername,
+        avatarUrl: liveConnection ? getProfilePhotoUrl(liveConnection.roomInfo?.data?.user, liveConnection.roomInfo?.data?.owner) : null
     };
+}
+
+function getProfilePhotoUrl(...users) {
+    for (const user of users) {
+        const avatar = user?.avatarLarger || user?.avatarMedium || user?.avatarThumb || user?.profilePictureUrl;
+        const candidate = typeof avatar === 'string'
+            ? avatar
+            : avatar?.urlList?.[0] || avatar?.url_list?.[0] || avatar?.urls?.[0];
+        if (!candidate) continue;
+
+        try {
+            const url = new URL(candidate);
+            if (url.protocol === 'https:') return url.href;
+        } catch {
+            continue;
+        }
+    }
+    return null;
 }
 
 function stopLiveConnection() {
@@ -126,7 +145,8 @@ async function startLiveConnection(rawUsername) {
         broadcast({
             type: 'chat',
             username: event.user?.uniqueId || 'utilizator',
-            message: event.comment || ''
+            message: event.comment || '',
+            avatarUrl: getProfilePhotoUrl(event.user)
         });
     });
 
@@ -134,7 +154,8 @@ async function startLiveConnection(rawUsername) {
         broadcast({
             type: 'gift',
             username: event.user?.uniqueId || 'utilizator',
-            giftName: event.giftDetails?.giftName || event.giftName || 'Cadou'
+            giftName: event.giftDetails?.giftName || event.giftName || 'Cadou',
+            avatarUrl: getProfilePhotoUrl(event.user)
         });
     });
 
@@ -142,7 +163,12 @@ async function startLiveConnection(rawUsername) {
         await connection.connect();
         if (attempt === connectionAttempt && liveConnection === connection) {
             connectionStatus = 'connected';
-            broadcast({ type: 'status', connected: true, username });
+            broadcast({
+                type: 'status',
+                connected: true,
+                username,
+                avatarUrl: getProfilePhotoUrl(connection.roomInfo?.data?.user, connection.roomInfo?.data?.owner)
+            });
         }
     } catch (error) {
         if (attempt === connectionAttempt && liveConnection === connection) {
