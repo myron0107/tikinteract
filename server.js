@@ -85,13 +85,16 @@ function getState() {
         connected: connectionStatus === 'connected',
         connecting: connectionStatus === 'connecting',
         username: activeUsername,
-        avatarUrl: liveConnection ? getProfilePhotoUrl(liveConnection.roomInfo?.data?.user, liveConnection.roomInfo?.data?.owner) : null
+        avatarUrl: liveConnection ? getProfilePhotoUrl(liveConnection.roomInfo?.data?.owner, liveConnection.roomInfo?.data?.user) : null
     };
 }
 
 function getProfilePhotoUrl(...users) {
     for (const user of users) {
-        const avatar = user?.avatarLarger || user?.avatarMedium || user?.avatarThumb || user?.profilePictureUrl;
+        const avatar = user?.avatarLarger || user?.avatar_larger
+            || user?.avatarMedium || user?.avatar_medium
+            || user?.avatarThumb || user?.avatar_thumb
+            || user?.profilePictureUrl || user?.profile_picture_url;
         const candidate = typeof avatar === 'string'
             ? avatar
             : avatar?.urlList?.[0] || avatar?.url_list?.[0] || avatar?.urls?.[0];
@@ -105,6 +108,35 @@ function getProfilePhotoUrl(...users) {
         }
     }
     return null;
+}
+
+async function sendTikTokProfile(socket, rawUsername) {
+    const username = String(rawUsername || '').trim().replace(/^@/, '');
+    if (!/^[A-Za-z0-9._]{2,24}$/.test(username)) {
+        send(socket, { type: 'profile-error', username, message: 'Introdu un username TikTok valid.' });
+        return;
+    }
+
+    const connection = new TikTokLiveConnection(username, {});
+    try {
+        const roomInfo = await connection.fetchRoomInfo();
+        const owner = roomInfo?.data?.owner;
+        const avatarUrl = getProfilePhotoUrl(owner);
+        send(socket, {
+            type: 'profile',
+            username,
+            displayName: owner?.nickname || username,
+            avatarUrl
+        });
+    } catch (error) {
+        send(socket, {
+            type: 'profile-error',
+            username,
+            message: error instanceof Error ? error.message : 'Nu am putut încărca profilul TikTok.'
+        });
+    } finally {
+        await connection.disconnect();
+    }
 }
 
 function stopLiveConnection() {
@@ -167,7 +199,7 @@ async function startLiveConnection(rawUsername) {
                 type: 'status',
                 connected: true,
                 username,
-                avatarUrl: getProfilePhotoUrl(connection.roomInfo?.data?.user, connection.roomInfo?.data?.owner)
+                avatarUrl: getProfilePhotoUrl(connection.roomInfo?.data?.owner, connection.roomInfo?.data?.user)
             });
         }
     } catch (error) {
@@ -201,7 +233,15 @@ websocketServer.on('connection', (socket, request) => {
             return;
         }
 
-        if (message.type === 'connect') {
+        if (message.type === 'profile') {
+            sendTikTokProfile(socket, message.username).catch((error) => {
+                send(socket, {
+                    type: 'profile-error',
+                    username: String(message.username || ''),
+                    message: error instanceof Error ? error.message : 'Nu am putut încărca profilul TikTok.'
+                });
+            });
+        } else if (message.type === 'connect') {
             startLiveConnection(message.username).catch((error) => {
                 send(socket, {
                     type: 'error',

@@ -4,14 +4,54 @@ let socket = null;
 let giftCount = 0;
 let connectedUsername = null;
 
-function updateConnectionStatus(connected, username, connecting = false, avatarUrl = null) {
-    const status = document.getElementById('tiktok-sync-status');
-    const button = document.getElementById('btn-connect');
-    const badge = document.getElementById('live-overview-status');
+function setStreamerProfile(username, avatarUrl, displayName = username) {
     const profile = document.getElementById('tiktok-profile');
     const profileName = document.getElementById('tiktok-profile-name');
     const profileImage = document.getElementById('tiktok-profile-image');
     const profileFallback = document.getElementById('tiktok-profile-fallback');
+    if (!profile || !username) return;
+
+    profile.classList.remove('hidden');
+    if (profileName) profileName.textContent = displayName === username ? `@${username}` : `${displayName} · @${username}`;
+    if (profileFallback) {
+        profileFallback.textContent = username.charAt(0).toUpperCase() || 'T';
+        profileFallback.classList.remove('hidden');
+    }
+
+    let safeAvatarUrl = null;
+    try {
+        const parsedAvatarUrl = new URL(avatarUrl);
+        if (parsedAvatarUrl.protocol === 'https:') safeAvatarUrl = parsedAvatarUrl.href;
+    } catch {
+        safeAvatarUrl = null;
+    }
+
+    if (!profileImage) return;
+    profileImage.onload = () => profileFallback?.classList.add('hidden');
+    profileImage.onerror = () => {
+        profileImage.classList.add('hidden');
+        profileFallback?.classList.remove('hidden');
+    };
+    if (safeAvatarUrl) {
+        profileImage.src = safeAvatarUrl;
+        profileImage.classList.remove('hidden');
+    } else {
+        profileImage.removeAttribute('src');
+        profileImage.classList.add('hidden');
+    }
+}
+
+function clearStreamerProfile() {
+    const profile = document.getElementById('tiktok-profile');
+    const profileImage = document.getElementById('tiktok-profile-image');
+    if (profile) profile.classList.add('hidden');
+    if (profileImage) profileImage.removeAttribute('src');
+}
+
+function updateConnectionStatus(connected, username, connecting = false, avatarUrl = null) {
+    const status = document.getElementById('tiktok-sync-status');
+    const button = document.getElementById('btn-connect');
+    const badge = document.getElementById('live-overview-status');
 
     connectedUsername = connected ? username : null;
     if (status) {
@@ -37,33 +77,8 @@ function updateConnectionStatus(connected, username, connecting = false, avatarU
         badge.classList.toggle('is-connected', connected);
     }
 
-    if (profile) profile.classList.toggle('hidden', !connected);
-    if (profileName && connected) profileName.textContent = `@${username}`;
-    if (profileFallback) {
-        profileFallback.textContent = String(username || 'T').replace(/^@/, '').charAt(0).toUpperCase() || 'T';
-        profileFallback.classList.remove('hidden');
-    }
-
-    let safeAvatarUrl = null;
-    try {
-        const parsedAvatarUrl = new URL(avatarUrl);
-        if (parsedAvatarUrl.protocol === 'https:') safeAvatarUrl = parsedAvatarUrl.href;
-    } catch {
-        safeAvatarUrl = null;
-    }
-
-    if (profileImage) {
-        profileImage.classList.toggle('hidden', !connected || !safeAvatarUrl);
-        profileImage.onload = () => profileFallback?.classList.add('hidden');
-        profileImage.onerror = () => {
-            profileImage.classList.add('hidden');
-            profileFallback?.classList.remove('hidden');
-        };
-        if (safeAvatarUrl) {
-            profileImage.src = safeAvatarUrl;
-        } else {
-            profileImage.removeAttribute('src');
-        }
+    if (connected && username) {
+        setStreamerProfile(username, avatarUrl);
     }
 }
 
@@ -90,6 +105,24 @@ function connectToLocalServer() {
 
         if (message.type === 'status') {
             updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl);
+        } else if (message.type === 'profile') {
+            setStreamerProfile(message.username, message.avatarUrl, message.displayName);
+            const status = document.getElementById('tiktok-sync-status');
+            if (status && !connectedUsername) {
+                status.textContent = message.avatarUrl
+                    ? `Profil TikTok găsit: @${message.username}`
+                    : `Profil găsit, poza nu este disponibilă: @${message.username}`;
+                status.className = `mb-4 text-[10px] font-bold uppercase tracking-[0.14em] ${
+                    message.avatarUrl ? 'text-green-400' : 'text-zinc-400'
+                }`;
+            }
+        } else if (message.type === 'profile-error') {
+            const status = document.getElementById('tiktok-sync-status');
+            if (status && !connectedUsername) {
+                status.textContent = `Nu am putut încărca profilul: ${message.message}`;
+                status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
+            }
+            console.warn('TikTok profile lookup failed:', message.message);
         } else if (message.type === 'connecting') {
             updateConnectionStatus(false, message.username, true);
         } else if (message.type === 'error') {
@@ -153,6 +186,41 @@ function toggleTikTokConnection() {
         }, { once: true });
     } else {
         showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
+    }
+}
+
+function lookupTikTokProfile(rawUsername) {
+    const username = String(rawUsername || '').trim().replace(/^@/, '');
+    if (!/^[A-Za-z0-9._]{2,24}$/.test(username)) {
+        window.alert('Introdu un username TikTok valid.');
+        return;
+    }
+
+    setStreamerProfile(username, null);
+    const status = document.getElementById('tiktok-sync-status');
+    if (status) {
+        status.textContent = `Se caută profilul @${username}...`;
+        status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
+    }
+
+    connectToLocalServer();
+    const requestProfile = () => {
+        if (socket?.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify({ type: 'profile', username }));
+        }
+    };
+
+    if (socket?.readyState === WebSocket.OPEN) {
+        requestProfile();
+    } else if (socket?.readyState === WebSocket.CONNECTING) {
+        const pendingSocket = socket;
+        pendingSocket.addEventListener('open', requestProfile, { once: true });
+        pendingSocket.addEventListener('close', () => {
+            const profileStatus = document.getElementById('tiktok-sync-status');
+            if (profileStatus) profileStatus.textContent = 'Pornește serverul local și încearcă din nou.';
+        }, { once: true });
+    } else {
+        if (status) status.textContent = 'Pornește serverul local și încearcă din nou.';
     }
 }
 

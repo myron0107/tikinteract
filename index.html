@@ -315,7 +315,7 @@
                 <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-3 focus:outline-none focus:border-red-600 font-mono">
                 <div class="flex gap-2 mb-4">
                     <button onclick="syncTikTokAccount()" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2.5 rounded-xl text-[10px] border border-zinc-800 transition cursor-pointer">
-                        Salvează username
+                        Salvează și caută poza
                     </button>
                     <button onclick="clearTikTokAccount()" class="w-10 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl border border-zinc-800 transition cursor-pointer" title="Resetare">
                         <i class="fa-solid fa-rotate-left"></i>
@@ -536,15 +536,17 @@
             }
 
             if (status) {
-                status.textContent = 'Username salvat; pornește conexiunea LIVE.';
+                status.textContent = 'Username salvat; se caută poza profilului...';
                 status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400';
             }
+            if (typeof lookupTikTokProfile === 'function') lookupTikTokProfile(normalized);
         }
 
         function clearTikTokAccount() {
             const input = document.getElementById('tiktok-user');
             const status = document.getElementById('tiktok-sync-status');
             if (typeof disconnectTikTokConnection === 'function') disconnectTikTokConnection();
+            if (typeof clearStreamerProfile === 'function') clearStreamerProfile();
             if (input) input.value = '@numele_tau';
             try {
                 localStorage.removeItem('tikinteract_tiktok_user');
