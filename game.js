@@ -97,14 +97,6 @@ function toggleTikTokConnection() {
         return;
     }
 
-    if (window.location.origin !== 'http://127.0.0.1:3000') {
-        const localApp = new URL('http://127.0.0.1:3000/');
-        localApp.searchParams.set('tiktokUser', username);
-        localApp.searchParams.set('autoConnect', '1');
-        window.location.assign(localApp);
-        return;
-    }
-
     try {
         localStorage.setItem('tikinteract_tiktok_user', `@${username}`);
     } catch (error) {
@@ -119,11 +111,15 @@ function toggleTikTokConnection() {
         pendingSocket.addEventListener('open', () => {
             pendingSocket.send(JSON.stringify({ type: 'connect', username }));
         }, { once: true });
-        pendingSocket.addEventListener('close', () => {
-            showConnectionError('Pornește serverul local cu npm start și reîncarcă pagina.');
+        pendingSocket.addEventListener('close', (event) => {
+            if (event.code === 1008) {
+                showConnectionError('Originea paginii nu este permisă de serverul local. Folosește https://tikinteract.vercel.app/.');
+                return;
+            }
+            showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
         }, { once: true });
     } else {
-        showConnectionError('Pornește serverul local cu npm start și reîncarcă pagina.');
+        showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
     }
 }
 

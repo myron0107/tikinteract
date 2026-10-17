@@ -571,20 +571,6 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             restoreTikTokState();
-
-            const params = new URLSearchParams(window.location.search);
-            const username = params.get('tiktokUser');
-            if (params.get('autoConnect') === '1' && username && /^[A-Za-z0-9._]{2,24}$/.test(username)) {
-                const input = document.getElementById('tiktok-user');
-                if (input) input.value = '@' + username;
-
-                params.delete('tiktokUser');
-                params.delete('autoConnect');
-                const cleanUrl = new URL(window.location.href);
-                cleanUrl.search = params.toString();
-                window.history.replaceState(null, '', cleanUrl);
-                window.setTimeout(() => toggleTikTokConnection(), 0);
-            }
         });
     </script>
 </body>

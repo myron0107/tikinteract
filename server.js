@@ -8,6 +8,11 @@ import { TikTokLiveConnection, WebcastEvent } from 'tiktok-live-connector';
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.PORT || 3000);
+const ALLOWED_ORIGINS = new Set([
+    `http://127.0.0.1:${PORT}`,
+    `http://localhost:${PORT}`,
+    'https://tikinteract.vercel.app'
+]);
 const MIME_TYPES = {
     '.css': 'text/css; charset=utf-8',
     '.html': 'text/html; charset=utf-8',
@@ -155,7 +160,7 @@ async function startLiveConnection(rawUsername) {
 
 websocketServer.on('connection', (socket, request) => {
     const origin = request.headers.origin;
-    if (origin && !['http://127.0.0.1:3000', 'http://localhost:3000'].includes(origin)) {
+    if (origin && !ALLOWED_ORIGINS.has(origin)) {
         socket.close(1008, 'Origin not allowed');
         return;
     }
