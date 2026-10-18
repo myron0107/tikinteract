@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{description}}">
+    <title>{{title}} — TikInteract</title>
+    <link rel="stylesheet" href="../game-pages.css?v=3">
+    <link rel="stylesheet" href="../../assets/site-motion.css?v=2">
+    <script src="../../assets/site-motion.js?v=1" defer></script>
+    <link rel="preload" href="../../assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="../../assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="../../assets/fonts/font-faces.css?v=1">
+    <link rel="stylesheet" href="../../assets/typography.css?v=1">
+    <link rel="stylesheet" href="../../assets/game-gallery.css?v=2">
+    <script src="../../assets/game-gallery.js?v=2" defer></script>
+</head>
+<body>
+    <main class="game-page-shell game-presentation">
+        <nav class="game-page-nav" aria-label="Navigare">
+            <a class="game-page-brand" href="../../index.html">TIKINTERACT</a>
+            <a class="game-page-back" href="../../index.html?view=catalog">← Înapoi la jocuri</a>
+        </nav>
+        <article>
+            <header class="game-detail-header">
+                <span class="game-page-tag">{{tag}}</span>
+                <h1 class="game-page-title">{{title}}</h1>
+                <p class="game-page-summary">{{summary}}</p>
+            </header>
+            <div class="game-detail-layout">
+                <section class="game-gallery" id="game-gallery" aria-label="Galerie {{title}}">
+                    <button type="button" class="game-gallery-featured" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
+                        <img data-gallery-featured src="{{firstImage}}" alt="{{title}} — Zi" width="1080" height="1920" fetchpriority="high" decoding="async">
+                        <span class="game-gallery-expand">Extinde ↗</span>
+                    </button>
+                    <div class="game-gallery-caption"><span data-gallery-current>Zi</span><span data-gallery-position>1 / {{count}}</span></div>
+                    <div class="game-gallery-grid" role="group" aria-label="Alege imaginea din joc">
+{{thumbnails}}
+                    </div>
+                </section>
+                <aside class="game-detail-info" aria-label="Detalii {{title}}">
+{{details}}
+                    <div class="game-detail-launch">
+                        <a class="game-page-cta" href="../../index.html?view=live&amp;game={{game}}">Deschide în LIVE Studio <span aria-hidden="true">→</span></a>
+                        <p>Alege jocul și conectează transmisiunea ta din LIVE Studio.</p>
+                    </div>
+                </aside>
+            </div>
+        </article>
+        <dialog class="game-gallery-dialog" id="game-gallery-dialog" aria-labelledby="game-gallery-title">
+            <div class="game-gallery-dialog-top"><h2 id="game-gallery-title" data-gallery-title>Galerie {{title}}</h2><button type="button" data-gallery-close aria-label="Închide galeria" autofocus>×</button></div>
+            <div class="game-gallery-stage">
+                <button type="button" data-gallery-previous aria-label="Imaginea anterioară">‹</button>
+                <img data-gallery-full alt="" draggable="false">
+                <button type="button" data-gallery-next aria-label="Imaginea următoare">›</button>
+            </div>
+            <p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p>
+        </dialog>
+    </main>
+</body>
+</html>

@@ -55,9 +55,10 @@
     <link rel="stylesheet" href="assets/studio-test-menu.css?v=4">
     <link rel="stylesheet" href="assets/mobile.css?v=2">
     <link rel="stylesheet" href="assets/studio-layout.css?v=4">
-    <link rel="stylesheet" href="assets/modern-ui.css?v=7">
+    <link rel="stylesheet" href="assets/modern-ui.css?v=8">
     <link rel="stylesheet" href="assets/site-motion.css?v=2">
     <link rel="stylesheet" href="assets/typography.css?v=1">
+    <link rel="stylesheet" href="assets/home-layout.css?v=1">
     <script src="assets/site-motion.js?v=1" defer></script>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
@@ -229,11 +230,11 @@
                     <div class="home-hero-art-glow"></div>
                     <div class="home-preview-player">
                         <div class="home-preview-topbar"><span><span class="preview-status-dot"></span> TIKINTERACT</span><span>PREZENTARE JOCURI</span></div>
-                        <video controls playsinline muted preload="none" poster="assets/tikinteract-preview-poster.jpg" aria-label="Prezentare video a jocurilor TikInteract, 12 secunde">
-                            <source src="assets/tikinteract-preview.mp4" type="video/mp4">
-                            Browserul tău nu poate reda acest video. <a href="assets/tikinteract-preview.mp4">Descarcă prezentarea.</a>
+                        <video controls playsinline muted preload="none" poster="assets/tikinteract-preview-v2-poster.jpg" aria-label="Prezentare video a jocurilor TikInteract, 16 secunde, Full HD">
+                            <source src="assets/tikinteract-preview-v2.mp4" type="video/mp4">
+                            Browserul tău nu poate reda acest video. <a href="assets/tikinteract-preview-v2.mp4">Descarcă prezentarea.</a>
                         </video>
-                        <div class="home-preview-caption"><span>00:12 <i class="fa-solid fa-play" aria-hidden="true"></i></span></div>
+                        <div class="home-preview-caption"><span>00:16 <i class="fa-solid fa-play" aria-hidden="true"></i></span></div>
                     </div>
                     <span class="home-hero-orbit home-hero-orbit-one"></span>
                     <span class="home-hero-orbit home-hero-orbit-two"></span>
@@ -241,7 +242,7 @@
             </div>
         </section>
 
-        <div class="max-w-7xl mx-auto px-6 py-12">
+        <div class="home-content max-w-7xl mx-auto px-6 py-12">
             <section class="home-section" aria-labelledby="home-games-title">
                 <div class="home-section-heading">
                     <div>
@@ -253,7 +254,7 @@
                 </div>
                 <div class="home-hot-games">
                     <a href="GAME/NEON-RACE/index.html" class="home-hot-game home-hot-game-race">
-                        <img src="assets/neon-race-preview.png" alt="Neon Race" loading="lazy">
+                        <img src="assets/game-gallery/neon-race-night.webp" alt="Neon Race pe timp de noapte" loading="lazy">
                         <span class="home-game-number">01 <span>HOT GAME</span></span>
                         <div class="home-hot-game-copy"><h3>Neon Race</h3><p>Like-urile și cadourile accelerează cursa.</p><span>Vezi jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
                     </a>
@@ -275,14 +276,14 @@
                 <div class="home-section-heading">
                     <div>
                         <span class="eyebrow">Creatorii comunității</span>
-                        <h2 id="home-leaderboard-title">Top 10 clasament</h2>
+                        <h2 id="home-leaderboard-title">Top 5 streameri</h2>
                         <p>Streamerii TikInteract, ordonați după punctele din cadouri și timpul LIVE înregistrate.</p>
                     </div>
                     <button onclick="switchView('leaderboard')" class="home-text-link">Clasament complet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
                 </div>
                 <div class="home-leaderboard-card">
-                    <div class="home-leaderboard-head"><span>LOC</span><span>STREAMER</span><span>MONEDE</span><span>TIMP LIVE</span></div>
-                    <ol id="home-leaderboard-list" class="home-leaderboard-list"></ol>
+                    <div class="home-top-five-heading"><span><i class="fa-solid fa-trophy" aria-hidden="true"></i> Podiumul comunității</span><span>ALL TIME</span></div>
+                    <ol id="home-leaderboard-list" class="home-top-five" aria-label="Top 5 streameri"></ol>
                     <p id="home-leaderboard-status" class="home-leaderboard-status" role="status" aria-live="polite">Se încarcă topul comunității...</p>
                 </div>
             </section>
@@ -310,7 +311,7 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <a href="GAME/NEON-RACE/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
-                <img src="assets/neon-race-preview.png" alt="Mașinile din Neon Race pe pistă" class="game-card-preview mb-5" loading="lazy">
+                <img src="assets/game-gallery/neon-race-night.webp" alt="Neon Race pe timp de noapte, cu mașinile roșie și albastră pe pistă" class="game-card-preview mb-5" loading="lazy">
                 <span class="badge-top mb-3"><span>01</span> Race</span>
                 <h2 class="text-lg font-bold text-white mb-2">Neon Race</h2>
                 <p class="text-zinc-400 text-sm leading-6">Cursă auto cu echipe roșie și albastră, în care spectatorii avansează mașinile cu like-uri și cadouri.</p>
@@ -831,7 +832,7 @@
     <script src="assets/studio-layout.js?v=2"></script>
     <script src="assets/studio-live-bridge.js?v=1"></script>
     <script src="assets/studio-test-menu.js?v=5"></script>
-    <script src="game.js"></script>
+    <script src="game.js?v=2"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
     <script>
@@ -855,6 +856,7 @@
         window.addEventListener('DOMContentLoaded', async () => {
             try {
                 restorePendingLiveRoute();
+                if (initialRoute.get('view') === 'catalog') switchView('catalog');
                 if (window.supabase) {
                     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     window.tikInteractSupabase = supabaseClient;

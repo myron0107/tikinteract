@@ -949,6 +949,45 @@ async function loadLeaderboard() {
     }
 }
 
+function renderHomeLeaderboard(profiles) {
+    const list = document.getElementById('home-leaderboard-list');
+    if (!list) return;
+    list.replaceChildren();
+    profiles.slice(0, 5).forEach((profile, index) => {
+        const rank = index + 1;
+        const row = document.createElement('li');
+        row.className = `home-top-five-entry home-top-five-entry--${rank}`;
+        row.value = rank;
+        row.setAttribute('aria-label', `Locul ${rank}`);
+        const position = document.createElement('span');
+        position.className = 'home-top-five-position';
+        position.textContent = String(rank).padStart(2, '0');
+        position.setAttribute('aria-hidden', 'true');
+        const person = createLeaderboardPerson(profile);
+        person.classList.add('home-top-five-person');
+        const score = document.createElement('div');
+        score.className = 'home-top-five-score';
+        const coins = document.createElement('strong');
+        coins.textContent = Number(profile.total_coins || 0).toLocaleString('ro-RO');
+        const caption = document.createElement('span');
+        caption.textContent = 'monede';
+        score.append(coins, caption);
+        const time = document.createElement('span');
+        time.className = 'home-top-five-time';
+        time.textContent = `${formatLiveTime(profile.total_live_seconds)} LIVE`;
+        if (rank <= 3) {
+            const emblem = document.createElement('span');
+            emblem.className = 'home-top-five-emblem';
+            emblem.setAttribute('aria-hidden', 'true');
+            const icon = document.createElement('i');
+            icon.className = rank === 1 ? 'fa-solid fa-trophy' : 'fa-solid fa-medal';
+            emblem.append(icon);
+            row.append(emblem, person, score, time, position);
+        } else row.append(position, person, score, time);
+        list.append(row);
+    });
+}
+
 async function loadHomeLeaderboard() {
     const list = document.getElementById('home-leaderboard-list');
     const status = document.getElementById('home-leaderboard-status');
@@ -968,30 +1007,8 @@ async function loadHomeLeaderboard() {
         });
         if (error) throw error;
 
-        const rows = (data || []).slice(0, 10);
-        list.replaceChildren();
-        rows.forEach((profile, index) => {
-            const row = document.createElement('li');
-            row.className = 'home-leaderboard-row';
-
-            const rank = document.createElement('span');
-            rank.className = `home-leaderboard-rank${index < 3 ? ` is-top-${index + 1}` : ''}`;
-            rank.textContent = String(index + 1).padStart(2, '0');
-
-            const person = createLeaderboardPerson(profile);
-            person.classList.add('home-leaderboard-person');
-
-            const coins = document.createElement('strong');
-            coins.className = 'home-leaderboard-coins';
-            coins.textContent = Number(profile.total_coins || 0).toLocaleString('ro-RO');
-
-            const liveTime = document.createElement('span');
-            liveTime.className = 'home-leaderboard-time';
-            liveTime.textContent = formatLiveTime(profile.total_live_seconds);
-
-            row.append(rank, person, coins, liveTime);
-            list.append(row);
-        });
+        const rows = (data || []).slice(0, 5);
+        renderHomeLeaderboard(rows);
 
         status.textContent = rows.length
             ? `Top ${rows.length} · Clasament all-time`

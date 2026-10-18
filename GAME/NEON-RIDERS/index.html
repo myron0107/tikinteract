@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Descoperă Neon Riders: curse moto LIVE în care spectatorii aleg echipa roșie sau albastră și contribuie prin like-uri și cadouri.">
-    <title>Neon Riders — prezentarea jocului | TikInteract</title>
+    <title>Neon Riders — TikInteract</title>
     <link rel="stylesheet" href="../game-pages.css?v=3">
     <link rel="stylesheet" href="../../assets/site-motion.css?v=2">
     <script src="../../assets/site-motion.js?v=1" defer></script>
@@ -12,32 +12,57 @@
     <link rel="preload" href="../../assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../assets/fonts/font-faces.css?v=1">
     <link rel="stylesheet" href="../../assets/typography.css?v=1">
+    <link rel="stylesheet" href="../../assets/game-gallery.css?v=2">
+    <script src="../../assets/game-gallery.js?v=2" defer></script>
 </head>
 <body>
-    <main class="game-page-shell">
+    <main class="game-page-shell game-presentation">
         <nav class="game-page-nav" aria-label="Navigare">
             <a class="game-page-brand" href="../../index.html">TIKINTERACT</a>
-            <a class="game-page-back" href="../../index.html">← Înapoi la jocuri</a>
+            <a class="game-page-back" href="../../index.html?view=catalog">← Înapoi la jocuri</a>
         </nav>
-
         <article>
-            <section class="game-page-hero">
-                <img class="game-page-image" src="../../assets/neon-riders-preview.png" alt="Motocicletele roșie și albastră concurând în Neon Riders">
-                <div class="game-page-hero-content">
-                    <span class="game-page-tag">Curse moto · 2 echipe</span>
-                    <h1 class="game-page-title">Neon Riders</h1>
-                    <p class="game-page-summary">O cursă moto cu efecte neon, în care spectatorii TikTok LIVE aleg o echipă și își ajută riderul să ajungă primul la finiș.</p>
-                    <a class="game-page-cta" href="../../index.html?view=live&amp;game=neon-riders">Joacă în pagina LIVE <span aria-hidden="true">→</span></a>
-                    <p class="game-page-note">Aceasta este o pagină de prezentare. Jocul se joacă din meniul LIVE al TikInteract.</p>
-                </div>
-            </section>
-
-            <div class="game-page-info">
-                <section class="game-page-info-card">
+            <header class="game-detail-header">
+                <span class="game-page-tag">Curse moto · 2 echipe</span>
+                <h1 class="game-page-title">Neon Riders</h1>
+                <p class="game-page-summary">O cursă moto cu efecte neon, în care spectatorii TikTok LIVE aleg o echipă și își ajută riderul să ajungă primul la finiș.</p>
+            </header>
+            <div class="game-detail-layout">
+                <section class="game-gallery" id="game-gallery" aria-label="Galerie Neon Riders">
+                    <button type="button" class="game-gallery-featured" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
+                        <img data-gallery-featured src="../../assets/game-gallery/neon-riders-day.webp" alt="Neon Riders — Zi" width="1080" height="1920" fetchpriority="high" decoding="async">
+                        <span class="game-gallery-expand">Extinde ↗</span>
+                    </button>
+                    <div class="game-gallery-caption"><span data-gallery-current>Zi</span><span data-gallery-position>1 / 5</span></div>
+                    <div class="game-gallery-grid" role="group" aria-label="Alege imaginea din joc">
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/neon-riders-day.webp" data-gallery-label="Neon Riders — Zi" data-gallery-mode="Zi" aria-label="Vezi Neon Riders — Zi" aria-pressed="true">
+                            <img src="../../assets/game-gallery/neon-riders-day-thumb.webp" alt="Neon Riders — Zi" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Zi</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/neon-riders-night.webp" data-gallery-label="Neon Riders — Noapte" data-gallery-mode="Noapte" aria-label="Vezi Neon Riders — Noapte" aria-pressed="false">
+                            <img src="../../assets/game-gallery/neon-riders-night-thumb.webp" alt="Neon Riders — Noapte" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Noapte</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/neon-riders-rain.webp" data-gallery-label="Neon Riders — Ploaie" data-gallery-mode="Ploaie" aria-label="Vezi Neon Riders — Ploaie" aria-pressed="false">
+                            <img src="../../assets/game-gallery/neon-riders-rain-thumb.webp" alt="Neon Riders — Ploaie" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Ploaie</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/neon-riders-winter.webp" data-gallery-label="Neon Riders — Iarnă" data-gallery-mode="Iarnă" aria-label="Vezi Neon Riders — Iarnă" aria-pressed="false">
+                            <img src="../../assets/game-gallery/neon-riders-winter-thumb.webp" alt="Neon Riders — Iarnă" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Iarnă</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/neon-riders-christmas.webp" data-gallery-label="Neon Riders — Christmas Mode" data-gallery-mode="Christmas Mode" aria-label="Vezi Neon Riders — Christmas Mode" aria-pressed="false">
+                            <img src="../../assets/game-gallery/neon-riders-christmas-thumb.webp" alt="Neon Riders — Christmas Mode" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Christmas Mode</span>
+                        </button>
+                    </div>
+                </section>
+                <aside class="game-detail-info" aria-label="Detalii Neon Riders">
+<section class="game-page-info-card">
                     <h2>Despre joc</h2>
                     <p>Riderii roșu și albastru se întrec pe un circuit neon. Echipa susținută de comunitate câștigă viteză și încearcă să treacă prima linia de sosire.</p>
                 </section>
-                <section class="game-page-info-card">
+<section class="game-page-info-card">
                     <h2>Cum participă spectatorii</h2>
                     <ul>
                         <li>Scriu <strong>RED</strong> sau <strong>BLUE</strong> în chat pentru a intra în cursă.</li>
@@ -45,8 +70,22 @@
                         <li>Clasamentul arată contribuțiile spectatorilor pentru fiecare echipă.</li>
                     </ul>
                 </section>
+                    <div class="game-detail-launch">
+                        <a class="game-page-cta" href="../../index.html?view=live&amp;game=neon-riders">Deschide în LIVE Studio <span aria-hidden="true">→</span></a>
+                        <p>Alege jocul și conectează transmisiunea ta din LIVE Studio.</p>
+                    </div>
+                </aside>
             </div>
         </article>
+        <dialog class="game-gallery-dialog" id="game-gallery-dialog" aria-labelledby="game-gallery-title">
+            <div class="game-gallery-dialog-top"><h2 id="game-gallery-title" data-gallery-title>Galerie Neon Riders</h2><button type="button" data-gallery-close aria-label="Închide galeria" autofocus>×</button></div>
+            <div class="game-gallery-stage">
+                <button type="button" data-gallery-previous aria-label="Imaginea anterioară">‹</button>
+                <img data-gallery-full alt="" draggable="false">
+                <button type="button" data-gallery-next aria-label="Imaginea următoare">›</button>
+            </div>
+            <p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p>
+        </dialog>
     </main>
 </body>
 </html>

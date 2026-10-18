@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Descoperă Country Derby: curse de cai LIVE în care spectatorii aleg echipa roșie, albastră sau verde și susțin calul cu like-uri și cadouri.">
-    <title>Country Derby — prezentarea jocului | TikInteract</title>
+    <title>Country Derby — TikInteract</title>
     <link rel="stylesheet" href="../game-pages.css?v=3">
     <link rel="stylesheet" href="../../assets/site-motion.css?v=2">
     <script src="../../assets/site-motion.js?v=1" defer></script>
@@ -12,32 +12,53 @@
     <link rel="preload" href="../../assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../assets/fonts/font-faces.css?v=1">
     <link rel="stylesheet" href="../../assets/typography.css?v=1">
+    <link rel="stylesheet" href="../../assets/game-gallery.css?v=2">
+    <script src="../../assets/game-gallery.js?v=2" defer></script>
 </head>
 <body>
-    <main class="game-page-shell">
+    <main class="game-page-shell game-presentation">
         <nav class="game-page-nav" aria-label="Navigare">
             <a class="game-page-brand" href="../../index.html">TIKINTERACT</a>
-            <a class="game-page-back" href="../../index.html">← Înapoi la jocuri</a>
+            <a class="game-page-back" href="../../index.html?view=catalog">← Înapoi la jocuri</a>
         </nav>
-
         <article>
-            <section class="game-page-hero">
-                <img class="game-page-image" src="../../assets/country-derby-preview.png" alt="Caii roșu, albastru și verde concurând în Country Derby">
-                <div class="game-page-hero-content">
-                    <span class="game-page-tag">Curse de cai · 3 echipe</span>
-                    <h1 class="game-page-title">Country Derby</h1>
-                    <p class="game-page-summary">O cursă de cai cu atmosferă country, unde comunitatea TikTok LIVE alege dintre trei echipe și contribuie la cursă în timp real.</p>
-                    <a class="game-page-cta" href="../../index.html?view=live&amp;game=country-derby">Joacă în pagina LIVE <span aria-hidden="true">→</span></a>
-                    <p class="game-page-note">Aceasta este o pagină de prezentare. Jocul se joacă din meniul LIVE al TikInteract.</p>
-                </div>
-            </section>
-
-            <div class="game-page-info">
-                <section class="game-page-info-card">
+            <header class="game-detail-header">
+                <span class="game-page-tag">Curse de cai · 3 echipe</span>
+                <h1 class="game-page-title">Country Derby</h1>
+                <p class="game-page-summary">O cursă de cai cu atmosferă country, unde comunitatea TikTok LIVE alege dintre trei echipe și contribuie la cursă în timp real.</p>
+            </header>
+            <div class="game-detail-layout">
+                <section class="game-gallery" id="game-gallery" aria-label="Galerie Country Derby">
+                    <button type="button" class="game-gallery-featured" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
+                        <img data-gallery-featured src="../../assets/game-gallery/country-derby-day.webp" alt="Country Derby — Zi" width="1080" height="1920" fetchpriority="high" decoding="async">
+                        <span class="game-gallery-expand">Extinde ↗</span>
+                    </button>
+                    <div class="game-gallery-caption"><span data-gallery-current>Zi</span><span data-gallery-position>1 / 4</span></div>
+                    <div class="game-gallery-grid" role="group" aria-label="Alege imaginea din joc">
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/country-derby-day.webp" data-gallery-label="Country Derby — Zi" data-gallery-mode="Zi" aria-label="Vezi Country Derby — Zi" aria-pressed="true">
+                            <img src="../../assets/game-gallery/country-derby-day-thumb.webp" alt="Country Derby — Zi" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Zi</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/country-derby-night.webp" data-gallery-label="Country Derby — Noapte" data-gallery-mode="Noapte" aria-label="Vezi Country Derby — Noapte" aria-pressed="false">
+                            <img src="../../assets/game-gallery/country-derby-night-thumb.webp" alt="Country Derby — Noapte" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Noapte</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/country-derby-rain.webp" data-gallery-label="Country Derby — Ploaie" data-gallery-mode="Ploaie" aria-label="Vezi Country Derby — Ploaie" aria-pressed="false">
+                            <img src="../../assets/game-gallery/country-derby-rain-thumb.webp" alt="Country Derby — Ploaie" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Ploaie</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/country-derby-night-rain.webp" data-gallery-label="Country Derby — Ploaie noaptea" data-gallery-mode="Ploaie noaptea" aria-label="Vezi Country Derby — Ploaie noaptea" aria-pressed="false">
+                            <img src="../../assets/game-gallery/country-derby-night-rain-thumb.webp" alt="Country Derby — Ploaie noaptea" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Ploaie noaptea</span>
+                        </button>
+                    </div>
+                </section>
+                <aside class="game-detail-info" aria-label="Detalii Country Derby">
+<section class="game-page-info-card">
                     <h2>Despre joc</h2>
                     <p>Trei cai, roșu, albastru și verde, aleargă pe piste separate. Spectatorii se alătură echipei favorite și o ajută să avanseze spre finiș.</p>
                 </section>
-                <section class="game-page-info-card">
+<section class="game-page-info-card">
                     <h2>Cum participă spectatorii</h2>
                     <ul>
                         <li>Scriu <strong>RED</strong>, <strong>BLUE</strong> sau <strong>GREEN</strong> în chat ca să aleagă echipa.</li>
@@ -45,8 +66,22 @@
                         <li>Clasamentul urmărește contribuțiile spectatorilor pe fiecare echipă.</li>
                     </ul>
                 </section>
+                    <div class="game-detail-launch">
+                        <a class="game-page-cta" href="../../index.html?view=live&amp;game=country-derby">Deschide în LIVE Studio <span aria-hidden="true">→</span></a>
+                        <p>Alege jocul și conectează transmisiunea ta din LIVE Studio.</p>
+                    </div>
+                </aside>
             </div>
         </article>
+        <dialog class="game-gallery-dialog" id="game-gallery-dialog" aria-labelledby="game-gallery-title">
+            <div class="game-gallery-dialog-top"><h2 id="game-gallery-title" data-gallery-title>Galerie Country Derby</h2><button type="button" data-gallery-close aria-label="Închide galeria" autofocus>×</button></div>
+            <div class="game-gallery-stage">
+                <button type="button" data-gallery-previous aria-label="Imaginea anterioară">‹</button>
+                <img data-gallery-full alt="" draggable="false">
+                <button type="button" data-gallery-next aria-label="Imaginea următoare">›</button>
+            </div>
+            <p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p>
+        </dialog>
     </main>
 </body>
 </html>

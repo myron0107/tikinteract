@@ -1,0 +1,142 @@
+[
+  {
+    "game": "neon-race",
+    "mode": "day",
+    "label": "Zi",
+    "file": "neon-race-day.webp",
+    "time": "day",
+    "weather": "clear",
+    "shell": "",
+    "thumbnail": "neon-race-day-thumb.webp"
+  },
+  {
+    "game": "neon-race",
+    "mode": "night",
+    "label": "Noapte",
+    "file": "neon-race-night.webp",
+    "time": "night",
+    "weather": "clear",
+    "shell": "is-night",
+    "thumbnail": "neon-race-night-thumb.webp"
+  },
+  {
+    "game": "neon-race",
+    "mode": "rain",
+    "label": "Ploaie",
+    "file": "neon-race-rain.webp",
+    "time": "day",
+    "weather": "rain",
+    "shell": "is-raining",
+    "thumbnail": "neon-race-rain-thumb.webp"
+  },
+  {
+    "game": "neon-race",
+    "mode": "winter",
+    "label": "Iarnă",
+    "file": "neon-race-winter.webp",
+    "time": "day",
+    "weather": "winter",
+    "shell": "is-winter",
+    "thumbnail": "neon-race-winter-thumb.webp"
+  },
+  {
+    "game": "neon-race",
+    "mode": "christmas",
+    "label": "Christmas Mode",
+    "file": "neon-race-christmas.webp",
+    "time": "night",
+    "weather": "christmas",
+    "shell": "is-winter is-night is-christmas",
+    "thumbnail": "neon-race-christmas-thumb.webp"
+  },
+  {
+    "game": "neon-riders",
+    "mode": "day",
+    "label": "Zi",
+    "file": "neon-riders-day.webp",
+    "time": "day",
+    "weather": "clear",
+    "shell": "",
+    "thumbnail": "neon-riders-day-thumb.webp"
+  },
+  {
+    "game": "neon-riders",
+    "mode": "night",
+    "label": "Noapte",
+    "file": "neon-riders-night.webp",
+    "time": "night",
+    "weather": "clear",
+    "shell": "is-night",
+    "thumbnail": "neon-riders-night-thumb.webp"
+  },
+  {
+    "game": "neon-riders",
+    "mode": "rain",
+    "label": "Ploaie",
+    "file": "neon-riders-rain.webp",
+    "time": "day",
+    "weather": "rain",
+    "shell": "is-raining",
+    "thumbnail": "neon-riders-rain-thumb.webp"
+  },
+  {
+    "game": "neon-riders",
+    "mode": "winter",
+    "label": "Iarnă",
+    "file": "neon-riders-winter.webp",
+    "time": "day",
+    "weather": "winter",
+    "shell": "is-winter",
+    "thumbnail": "neon-riders-winter-thumb.webp"
+  },
+  {
+    "game": "neon-riders",
+    "mode": "christmas",
+    "label": "Christmas Mode",
+    "file": "neon-riders-christmas.webp",
+    "time": "night",
+    "weather": "christmas",
+    "shell": "is-winter is-night is-christmas",
+    "thumbnail": "neon-riders-christmas-thumb.webp"
+  },
+  {
+    "game": "country-derby",
+    "mode": "day",
+    "label": "Zi",
+    "file": "country-derby-day.webp",
+    "time": "day",
+    "weather": "clear",
+    "shell": "",
+    "thumbnail": "country-derby-day-thumb.webp"
+  },
+  {
+    "game": "country-derby",
+    "mode": "night",
+    "label": "Noapte",
+    "file": "country-derby-night.webp",
+    "time": "night",
+    "weather": "clear",
+    "shell": "",
+    "thumbnail": "country-derby-night-thumb.webp"
+  },
+  {
+    "game": "country-derby",
+    "mode": "rain",
+    "label": "Ploaie",
+    "file": "country-derby-rain.webp",
+    "time": "day",
+    "weather": "rain",
+    "shell": "",
+    "thumbnail": "country-derby-rain-thumb.webp"
+  },
+  {
+    "game": "country-derby",
+    "mode": "night-rain",
+    "label": "Ploaie noaptea",
+    "file": "country-derby-night-rain.webp",
+    "time": "night",
+    "weather": "rain",
+    "shell": "",
+    "thumbnail": "country-derby-night-rain-thumb.webp"
+  }
+]
