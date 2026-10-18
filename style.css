@@ -39,8 +39,30 @@ header {
 }
 
 #view-catalog,
-#view-dashboard {
+#view-live {
     position: relative;
+}
+
+.account-status-dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    flex: 0 0 auto;
+    border-radius: 9999px;
+}
+
+.account-status-dot.is-active,
+.account-status-text.is-active {
+    background: #22c55e;
+    color: #4ade80;
+    box-shadow: 0 0 0 4px rgba(34,197,94,0.12);
+}
+
+.account-status-dot.is-inactive,
+.account-status-text.is-inactive {
+    background: #ef4444;
+    color: #f87171;
+    box-shadow: 0 0 0 4px rgba(239,68,68,0.12);
 }
 
 .account-heading {
@@ -50,18 +72,6 @@ header {
     gap: 1.5rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid rgba(255,255,255,0.07);
-}
-
-.account-overview {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 1.25rem;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 1.25rem;
-    background:
-        linear-gradient(110deg, rgba(230,25,50,0.1), transparent 50%),
-        var(--panel);
 }
 
 .account-overview-avatar {
@@ -78,39 +88,108 @@ header {
     font-weight: 900;
 }
 
-.account-overview-details {
+.account-card {
+    padding: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
+    background:
+        linear-gradient(135deg, rgba(255,38,62,0.07), transparent 45%),
+        var(--panel);
+}
+
+.account-card-title {
+    margin-top: 0.45rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 800;
+    overflow-wrap: anywhere;
+}
+
+.account-current-plan,
+.account-plan-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid rgba(255,206,115,0.25);
+    border-radius: 9999px;
+    background: rgba(255,206,115,0.08);
+    color: #ffcf7b;
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.account-details-grid {
     display: grid;
-    gap: 0.2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem 1.5rem;
+}
+
+.account-details-grid > div {
     min-width: 0;
 }
 
-.account-overview-details strong {
-    overflow: hidden;
-    color: white;
-    font-size: 0.95rem;
-    text-overflow: ellipsis;
-}
-
-.account-overview-details > span:last-child {
-    overflow: hidden;
+.account-details-grid dt {
+    margin-bottom: 0.4rem;
     color: var(--muted);
-    font-size: 0.75rem;
-    text-overflow: ellipsis;
+    font-size: 0.68rem;
+    font-weight: 700;
 }
 
-.account-active-badge {
-    display: inline-flex;
+.account-details-grid dd {
+    color: white;
+    font-size: 0.8rem;
+    font-weight: 650;
+    overflow-wrap: anywhere;
+}
+
+.account-detail-status dd {
+    padding-left: 0.55rem;
+}
+
+.account-status-text {
+    position: relative;
+    display: inline-block;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.account-status-text::before {
+    position: absolute;
+    top: 50%;
+    left: -0.55rem;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 50%;
+    content: "";
+    transform: translateY(-50%);
+}
+
+.account-status-text.is-active::before {
+    background: #22c55e;
+    box-shadow: 0 0 8px rgba(34,197,94,0.65);
+}
+
+.account-status-text.is-inactive::before {
+    background: #ef4444;
+    box-shadow: 0 0 8px rgba(239,68,68,0.65);
+}
+
+.account-plan-note {
+    display: flex;
     align-items: center;
-    gap: 0.45rem;
-    margin-left: auto;
-    color: #4ade80;
-    font-size: 0.7rem;
-    font-weight: 800;
-    text-transform: uppercase;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 1.25rem;
 }
 
-.account-active-badge i {
-    font-size: 0.45rem;
+.account-actions {
+    display: flex;
+    justify-content: flex-end;
 }
 
 .account-logout-button {
@@ -298,7 +377,7 @@ select:focus {
 
 .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.2rem;
 }
 
@@ -801,16 +880,13 @@ select:focus {
         flex-direction: column;
     }
 
-    .account-overview {
-        flex-wrap: wrap;
+    .account-details-grid {
+        grid-template-columns: 1fr;
     }
 
-    .account-active-badge {
-        margin-left: 0;
-    }
-
-    .account-logout-button {
-        margin-left: auto;
+    .account-plan-note {
+        align-items: flex-start;
+        flex-direction: column;
     }
 
     .leaderboard-heading {

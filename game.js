@@ -178,9 +178,6 @@ function setLeaderboardPeriod(period) {
 }
 
 async function saveTikTokLeaderboardProfile(username, displayName = username, avatarUrl = null) {
-    const accountTikTok = document.getElementById('account-tiktok-username');
-    if (accountTikTok && username) accountTikTok.textContent = `@${username.replace(/^@/, '')}`;
-
     const supabase = window.tikInteractSupabase;
     if (!window.tikInteractUser || !supabase) {
         const status = document.getElementById('tiktok-sync-status');
@@ -218,8 +215,6 @@ async function restoreMyStreamerProfile() {
     const input = document.getElementById('tiktok-user');
     const publicToggle = document.getElementById('leaderboard-public');
     if (input) input.value = `@${data.tiktok_username}`;
-    const accountTikTok = document.getElementById('account-tiktok-username');
-    if (accountTikTok) accountTikTok.textContent = `@${data.tiktok_username}`;
     if (publicToggle) publicToggle.checked = data.is_public;
     setStreamerProfile(data.tiktok_username, data.avatar_url, data.tiktok_display_name);
 }
