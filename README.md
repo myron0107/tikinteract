@@ -28,8 +28,8 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 - The game files are kept separately in `GAME/NEON-RACE/`, `GAME/NEON-RIDERS/`, and `GAME/COUNTRY-DERBY/`.
 - The embedded games retain their original TikFinity Desktop connection. Start TikFinity on the same computer and use the game's **CONNECT** controls; the game WebSocket uses `ws://localhost:21213/`.
 - Country Derby supports `RED`, `BLUE`, and `GREEN` team chat commands. Neon Race and Neon Riders support `RED` and `BLUE`.
-- **Audio Center** is available as a tab inside LIVE Studio. Import audio files you are licensed to use, search and filter the soundboard, set the master volume, and stop playback. Imported files are stored locally in the browser on that device and are not uploaded to the app.
-- Audio Center playback is local browser audio. Include desktop/browser audio in your streaming software or audio routing for viewers to hear it. The clips listed in the soundboard are labels; TikInteract does not distribute the referenced recordings.
+- **Audio Center** is available as a tab inside LIVE Studio with 52 sound effects and 4 music buttons, search, category filters, favorites, local monitoring volume, and stop playback. Up to 12 sounds can be favorited; adding another is blocked with a notice until one is removed. Favorites are saved in the browser and shown as playable cards under the LIVE connection button and in the soundboard's Favorites filter. The integrated files are in `sounds/` and are served by the local app.
+- Audio Center playback is browser audio. Include desktop/browser audio in your streaming software or audio routing for viewers to hear it. Verify that audio files included in a public deployment are licensed for redistribution.
 
 ## Leaderboard setup
 

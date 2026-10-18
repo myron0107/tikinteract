@@ -35,8 +35,15 @@ const MIME_TYPES = {
     '.css': 'text/css; charset=utf-8',
     '.html': 'text/html; charset=utf-8',
     '.js': 'text/javascript; charset=utf-8',
+    '.aac': 'audio/aac',
+    '.flac': 'audio/flac',
+    '.m4a': 'audio/mp4',
+    '.mp3': 'audio/mpeg',
+    '.ogg': 'audio/ogg',
     '.png': 'image/png',
-    '.svg': 'image/svg+xml'
+    '.svg': 'image/svg+xml',
+    '.wav': 'audio/wav',
+    '.webm': 'audio/webm'
 };
 
 const server = createServer(async (request, response) => {
@@ -51,12 +58,16 @@ const server = createServer(async (request, response) => {
     const requestedPath = pathname === '/' ? '/index.html' : pathname;
     const filePath = path.resolve(ROOT, `.${requestedPath}`);
     const assetsPath = path.resolve(ROOT, 'assets');
+    const soundsPath = path.resolve(ROOT, 'sounds');
+    const isSoundFile = filePath.startsWith(`${soundsPath}${path.sep}`)
+        && /\.(aac|flac|m4a|mp3|ogg|wav|webm)$/i.test(filePath);
     if (filePath !== ROOT && !filePath.startsWith(`${ROOT}${path.sep}`)) {
         response.writeHead(403).end('Forbidden');
         return;
     }
     if (!STATIC_FILES.has(requestedPath)
-        && !filePath.startsWith(`${assetsPath}${path.sep}`)) {
+        && !filePath.startsWith(`${assetsPath}${path.sep}`)
+        && !isSoundFile) {
         response.writeHead(404).end('Not found');
         return;
     }

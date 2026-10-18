@@ -548,6 +548,19 @@
                 <button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
                     Pornește Conexiunea Live
                 </button>
+                <section class="live-favorites-panel" aria-labelledby="live-favorites-title">
+                    <div class="live-favorites-heading">
+                        <div>
+                            <p class="section-kicker">Acces rapid</p>
+                            <h4 id="live-favorites-title">Favorite audio</h4>
+                        </div>
+                        <span id="live-favorites-count" class="live-favorites-count">0</span>
+                    </div>
+                    <p id="live-favorites-empty" class="live-favorites-empty">
+                        Apasă pe stea la sunete în Audio Center și vor apărea aici.
+                    </p>
+                    <div id="live-favorite-sounds" class="live-favorite-grid" role="list"></div>
+                </section>
             </div>
 
             <div class="lg:col-span-2 dashboard-panel rounded-2xl p-6 min-h-[300px]">
@@ -609,46 +622,57 @@
                 </section>
 
                 <section id="audio-center-panel" class="hidden" role="tabpanel" aria-labelledby="audio-center-tab">
-                    <div class="audio-center-header">
-                        <div>
-                            <span class="eyebrow">Soundboard</span>
-                            <h3>Audio Center</h3>
-                            <p>Încarcă efectele audio pe care ai dreptul să le folosești, apoi redă-le manual în timpul LIVE-ului.</p>
+                    <div class="soundboard-shell">
+                        <div class="soundboard-topbar">
+                            <div class="soundboard-source-tabs" role="group" aria-label="Bibliotecă audio">
+                                <button id="audio-sounds-tab" class="soundboard-source-tab is-active" type="button" aria-pressed="true" onclick="setAudioLibraryTab('sounds')">Sounds</button>
+                                <button id="audio-music-tab" class="soundboard-source-tab" type="button" aria-pressed="false" onclick="setAudioLibraryTab('music')">Music</button>
+                            </div>
+                            <button type="button" class="audio-stop-all soundboard-stop" onclick="stopAllSoundEffects()" aria-label="Oprește toate sunetele" title="Oprește toate sunetele">
+                                <i class="fa-solid fa-stop" aria-hidden="true"></i>
+                            </button>
                         </div>
-                        <div class="audio-center-controls">
+
+                        <div class="soundboard-monitor">
+                            <span class="soundboard-monitor-label"><i class="fa-solid fa-headphones" aria-hidden="true"></i> Monitorizare locală</span>
                             <label class="audio-master-volume" for="audio-master-volume">
-                                <i class="fa-solid fa-volume-high" aria-hidden="true"></i>
-                                Volum
+                                <i class="fa-solid fa-volume-low" aria-hidden="true"></i>
                                 <input id="audio-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio">
                                 <span id="audio-master-volume-value">75%</span>
                             </label>
-                            <button type="button" class="audio-stop-all" onclick="stopAllSoundEffects()">
-                                <i class="fa-solid fa-stop" aria-hidden="true"></i> Oprește tot
-                            </button>
                         </div>
+
+                        <div class="soundboard-library-controls">
+                            <div class="soundboard-scope-tabs" role="group" aria-label="Filtru sunete">
+                                <button id="audio-filter-all" class="soundboard-scope-tab is-active" type="button" aria-pressed="true" onclick="setAudioLibraryScope('all')">All</button>
+                                <button id="audio-filter-favorites" class="soundboard-scope-tab" type="button" aria-pressed="false" onclick="setAudioLibraryScope('favorites')">
+                                    <i class="fa-regular fa-star" aria-hidden="true"></i> Favorites
+                                    <span id="audio-favorites-count">0</span>
+                                </button>
+                            </div>
+                            <span id="audio-library-count" class="audio-library-count"></span>
+                        </div>
+
+                        <div class="audio-library-toolbar">
+                            <label class="audio-category-filter">
+                                <span class="sr-only">Categorie</span>
+                                <select id="audio-sound-category" onchange="filterSoundEffects()" aria-label="Categorie sunete">
+                                    <option value="all">Toate categoriile</option>
+                                    <option value="sfx">Reacții</option>
+                                    <option value="meme">Meme &amp; voci</option>
+                                    <option value="music">Music</option>
+                                </select>
+                            </label>
+                            <label class="audio-search">
+                                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                                <input id="audio-sound-search" type="search" placeholder="Caută sunete" oninput="filterSoundEffects()" autocomplete="off">
+                            </label>
+                        </div>
+
+                        <p id="audio-center-status" class="audio-center-status" role="status" aria-live="polite">Se pregătește biblioteca audio...</p>
+                        <div id="audio-sound-grid" class="audio-sound-grid"></div>
+                        <p class="soundboard-footnote">Sunetul este redat local. Pentru ca publicul să-l audă, include audio-ul browserului în sursa de streaming.</p>
                     </div>
-                    <p class="audio-center-notice">
-                        Fișierele se păstrează doar în browserul acestui dispozitiv. Nu sunt incluse în site și nu sunt trimise pe server.
-                        Sunetul se aude în browser; publicul îl va auzi numai dacă incluzi audio-ul browserului/computerului în sursa ta de streaming.
-                        Încarcă doar clipuri pentru care ai dreptul de utilizare.
-                    </p>
-                    <div class="audio-library-toolbar">
-                        <label class="audio-search">
-                            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                            <input id="audio-sound-search" type="search" placeholder="Caută un sunet..." oninput="filterSoundEffects()" autocomplete="off">
-                        </label>
-                        <label class="audio-category-filter">
-                            <span>Categorie</span>
-                            <select id="audio-sound-category" onchange="filterSoundEffects()">
-                                <option value="all">Toate sunetele</option>
-                                <option value="sfx">Efecte audio</option>
-                                <option value="meme">Meme &amp; voice clips</option>
-                            </select>
-                        </label>
-                        <span id="audio-library-count" class="audio-library-count"></span>
-                    </div>
-                    <p id="audio-center-status" class="audio-center-status" role="status" aria-live="polite">Se pregătește biblioteca audio...</p>
-                    <div id="audio-sound-grid" class="audio-sound-grid"></div>
                 </section>
             </div>
         </div>
@@ -670,6 +694,11 @@
             <p class="footer-copyright">© <span id="footer-year">2026</span> TikInteract. All rights reserved.</p>
         </div>
     </footer>
+
+    <div id="audio-favorite-toast" class="audio-favorite-toast hidden" role="status" aria-live="polite" aria-atomic="true">
+        <span class="audio-favorite-toast-icon" aria-hidden="true"><i class="fa-solid fa-star"></i></span>
+        <span id="audio-favorite-toast-message"></span>
+    </div>
 
     <div id="cookie-preferences-modal" class="cookie-preferences-backdrop hidden" role="presentation" onclick="if (event.target === this) closeCookiePreferences()">
         <section class="cookie-preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
