@@ -1,0 +1,37 @@
+:root {
+    --font-body: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Oxanium', 'Inter', system-ui, sans-serif;
+}
+body { font-family: var(--font-body); font-optical-sizing: auto; }
+button, input, select, textarea { font-family: var(--font-body); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 700; }
+.footer-brand, .game-page-brand,
+.site-header-inner > div:first-child > span { font-family: var(--font-display); font-weight: 800; letter-spacing: -.025em; }
+.site-header-inner > nav:not(.mobile-nav) > button { font-family: var(--font-display); font-size: .75rem; font-weight: 600; letter-spacing: .025em; }
+.mobile-nav-link { font-family: var(--font-display); font-weight: 600; letter-spacing: .015em; }
+.home-page .home-hero-copy h1 { font-size: clamp(2.6rem, 4.4vw, 4.3rem); font-weight: 700; letter-spacing: -.045em; line-height: 1.12; }
+.home-page .home-hero-copy > p { font-size: .96rem; line-height: 1.8; }
+.home-section-heading h2, .account-heading h1, .account-heading h2,
+.game-center-heading h3, .audio-center-header h3 { font-weight: 700; letter-spacing: -.035em; }
+.home-page .home-hot-game-copy h3, .game-catalog-card h2,
+.game-center-card-body h4 { font-family: var(--font-display); font-weight: 700; letter-spacing: -.02em; }
+.eyebrow, .section-kicker, .studio-test-eyebrow { font-family: var(--font-body); font-weight: 600; }
+#view-live .live-studio-tab { font-family: var(--font-body); font-weight: 600; letter-spacing: -.015em; }
+.studio-test-header h5 { font-family: var(--font-display); font-weight: 700; letter-spacing: .025em; }
+.studio-test-tabs > button, .studio-test-action, .studio-test-team-row > button { font-family: var(--font-body); font-weight: 600; letter-spacing: -.015em; }
+.studio-test-team-name { font-family: var(--font-display); font-weight: 700; letter-spacing: 0; }
+.studio-test-field > output, .mini-stat-box strong, .price,
+.leaderboard-number, .home-leaderboard-rank { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+#pricing .pricing-card h3 { font-weight: 700; letter-spacing: -.025em; }
+#pricing .pricing-card .price { font-weight: 700; letter-spacing: -.035em; }
+.public-info-header h1, .game-page-title { font-family: var(--font-display); font-weight: 700; letter-spacing: -.04em; line-height: 1.15; }
+.public-info-content .public-info-card p, .public-info-content .public-info-card li,
+.game-page-summary, .game-page-info-card p, .game-page-info-card li { font-family: var(--font-body); }
+@media (min-width: 768px) and (max-width: 1100px) {
+    .site-header-inner > nav:not(.mobile-nav) > button { font-size: .61rem; letter-spacing: 0; }
+}
+@media (max-width: 767px) {
+    .home-page .home-hero-copy h1 { font-size: clamp(2.3rem, 9.4vw, 3.6rem); letter-spacing: -.04em; }
+    .home-page .home-hero-copy > p { font-size: .88rem; }
+    .public-info-header h1, .game-page-title { overflow-wrap: break-word; }
+}

@@ -4,6 +4,19 @@
     padding: 3.5rem 0 5rem;
 }
 
+/* Match the Studio's charcoal surfaces and restrained rose accents. */
+body { -webkit-font-smoothing: antialiased; background: radial-gradient(ellipse at 15% 0, #ff263608, transparent 45rem), #080809; }
+.public-info-site-header { background: #0c0c0ee8; border-bottom-color: #ffffff12; }
+.public-info-back { min-height: 40px; padding: 10px 14px; border: 1px solid #ffffff12; border-radius: 11px; background: #ffffff03; }
+.public-info-back:focus-visible, .public-info-card a:focus-visible { outline: 2px solid #ff8892; outline-offset: 4px; }
+.public-info-header { padding: 28px; border: 1px solid #ffffff12; border-radius: 22px; background: radial-gradient(ellipse at top right, #ff334412, transparent 65%), #151517; }
+.public-info-content .public-info-card { padding: 24px; border-color: #ffffff10; border-radius: 18px; background: linear-gradient(145deg, #19191c, #101012); }
+.public-info-content .public-info-card h2 { letter-spacing: -.025em; }
+.public-info-content .public-info-card p, .public-info-content .public-info-card li { font-size: .83rem; line-height: 1.85; }
+@media (max-width: 600px) {
+    .public-info-header, .public-info-content .public-info-card { padding: 20px; border-radius: 16px; }
+}
+
 .public-info-back {
     display: inline-flex;
     align-items: center;

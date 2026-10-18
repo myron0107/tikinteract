@@ -7,6 +7,9 @@
     <meta name="description" content="Transformă like-urile și cadourile TikTok LIVE în acțiuni de joc. Explorează jocurile TikInteract și urmărește clasamentul streamerilor.">
     <meta name="theme-color" content="#030305">
     <link rel="icon" type="image/png" href="assets/tikinteract-icon-v2.png">
+    <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/fonts/font-faces.css?v=1">
     
     <!-- Supabase JS SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -19,26 +22,26 @@
             theme: {
                 extend: {
                     colors: {
-                        darkbg: '#060607',
-                        cardbg: '#141113',
-                        accent: '#ff263e',
+                        darkbg: '#080809',
+                        cardbg: '#121212',
+                        accent: '#ff2636',
                         red: {
-                            400: '#ff8b80',
-                            500: '#ff354d',
-                            600: '#e61932',
-                            700: '#be1029',
-                            800: '#831a2a',
-                            950: '#300b13'
+                            400: '#ff8892',
+                            500: '#ff3344',
+                            600: '#e02030',
+                            700: '#b91b29',
+                            800: '#821923',
+                            950: '#300c11'
                         },
                         zinc: {
-                            100: '#f8eeeb',
-                            200: '#ebdfdd',
-                            300: '#d0c3c5',
-                            400: '#b0a5a7',
-                            500: '#8f8085',
-                            800: '#30262b',
-                            900: '#1a1518',
-                            950: '#0b090b'
+                            100: '#f5f5f7',
+                            200: '#e4e4e7',
+                            300: '#d4d4d8',
+                            400: '#aaaab2',
+                            500: '#85858e',
+                            800: '#2b2b30',
+                            900: '#1b1b1e',
+                            950: '#0b0b0d'
                         }
                     }
                 }
@@ -49,9 +52,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/visual-refresh.css?v=26">
-    <link rel="stylesheet" href="assets/studio-test-menu.css?v=2">
+    <link rel="stylesheet" href="assets/studio-test-menu.css?v=4">
     <link rel="stylesheet" href="assets/mobile.css?v=2">
-    <link rel="stylesheet" href="assets/studio-layout.css?v=2">
+    <link rel="stylesheet" href="assets/studio-layout.css?v=4">
+    <link rel="stylesheet" href="assets/modern-ui.css?v=7">
+    <link rel="stylesheet" href="assets/site-motion.css?v=2">
+    <link rel="stylesheet" href="assets/typography.css?v=1">
+    <script src="assets/site-motion.js?v=1" defer></script>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
@@ -205,16 +212,17 @@
         <section class="home-hero">
             <div class="home-hero-inner max-w-7xl mx-auto px-6">
                 <div class="home-hero-copy">
-                    <span class="home-kicker"><span class="home-kicker-dot"></span> JOCURI INTERACTIVE PENTRU TIKTOK LIVE</span>
-                    <h1>LIVE-ul tău.<br><span>Regulile publicului.</span></h1>
+                    <span class="home-kicker"><span class="home-kicker-dot"></span> PLATFORMA DE GAMING PENTRU TIKTOK LIVE</span>
+                    <h1>Tu ești LIVE.<br><span>Chat-ul intră în joc.</span></h1>
                     <p>Transformă fiecare like și cadou într-o parte din joc. Alege un joc, conectează LIVE-ul și lasă comunitatea să schimbe acțiunea în timp real.</p>
                     <div class="home-hero-actions">
                         <button onclick="checkAccessAndGo('live')" class="home-primary-button"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Începe un LIVE</button>
                         <button onclick="switchView('catalog')" class="home-secondary-button">Explorează jocurile <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
                     </div>
                     <div class="home-hero-proof">
-                        <span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> 3 jocuri disponibile</span>
-                        <span><i class="fa-solid fa-users" aria-hidden="true"></i> Comunitatea conduce jocul</span>
+                        <span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Jocuri interactive</span>
+                        <span><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Efecte audio</span>
+                        <span><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Control LIVE</span>
                     </div>
                 </div>
                 <div class="home-hero-art">
@@ -340,7 +348,8 @@
             </button>
         </div>
         <div id="pricing" class="pricing-grid">
-            <div class="pricing-card">
+            <div class="pricing-card pricing-card--free">
+                <span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-gamepad"></i></span>
                 <p class="eyebrow">Începe gratuit</p>
                 <h3>FREE</h3>
                 <div class="price">0<span> lei</span></div>
@@ -351,7 +360,8 @@
                 </ul>
                 <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Plan de bază</button>
             </div>
-            <div class="pricing-card featured">
+            <div class="pricing-card featured pricing-card--pass">
+                <span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-bolt"></i></span>
                 <p class="eyebrow">Pentru creatori</p>
                 <h3>Play Pass</h3>
                 <div class="price">29<span>/lună</span></div>
@@ -362,7 +372,8 @@
                 </ul>
                 <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
             </div>
-            <div class="pricing-card">
+            <div class="pricing-card pricing-card--pro">
+                <span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-crown"></i></span>
                 <p class="eyebrow">Pentru studiouri</p>
                 <h3>Play Pass PRO</h3>
                 <div class="price">79<span>/lună</span></div>
@@ -600,7 +611,7 @@
                 <div class="studio-stage-heading flex items-center justify-between mb-6">
                     <div>
                         <p class="section-kicker">Joc LIVE</p>
-                        <h4 class="text-xl font-bold text-white">Joacă direct în TikInteract</h4>
+                        <h4 class="text-xl font-bold text-white"><i class="fa-solid fa-gamepad studio-stage-game-icon" aria-hidden="true"></i> Arena LIVE</h4>
                     </div>
                     <div class="studio-stage-actions">
                         <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
@@ -610,7 +621,10 @@
                 <div class="studio-game-browser">
                     <div class="studio-game-sidebar">
                         <section id="studio-test-panel" class="studio-test-panel" aria-labelledby="studio-test-title" aria-busy="true">
-                            <div class="studio-test-header"><h5 id="studio-test-title">TEST MENU</h5><span class="studio-test-status"><span></span> CONTROL JOC</span></div>
+                            <div class="studio-test-header">
+                                <div class="studio-test-identity"><span class="studio-test-symbol"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span><div><p class="studio-test-eyebrow">CONTROL JOC</p><h5 id="studio-test-title">Test Menu</h5></div></div>
+                                <span class="studio-test-status" title="Comenzile controlează jocul selectat"><span></span> DIRECT</span>
+                            </div>
                             <p id="studio-test-game-name">Se încarcă comenzile…</p>
                             <div id="studio-test-tabs" class="studio-test-tabs" role="tablist" aria-label="Comenzi de test"></div>
                             <div id="studio-test-controls" role="tabpanel"></div>
@@ -816,7 +830,7 @@
 
     <script src="assets/studio-layout.js?v=2"></script>
     <script src="assets/studio-live-bridge.js?v=1"></script>
-    <script src="assets/studio-test-menu.js?v=4"></script>
+    <script src="assets/studio-test-menu.js?v=5"></script>
     <script src="game.js"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->

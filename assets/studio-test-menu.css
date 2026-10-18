@@ -57,7 +57,7 @@ input.studio-test-input[type="file"]::file-selector-button { margin-right: 8px; 
 
 /* Compact table and category controls stay within reach above favorites. */
 .studio-game-sidebar { display: flex; flex-direction: column; align-self: stretch; gap: 24px; }
-.studio-game-sidebar > .studio-test-panel { order: 0; position: sticky; top: calc(var(--site-header-height, 88px) + 12px); z-index: 3; margin: 0; padding: 10px 0 14px; background: #141013; }
+.studio-game-sidebar > .studio-test-panel { order: 0; position: static; margin: 0; padding: 10px 0 14px; background: linear-gradient(145deg, #151215e0, #0b0a0ce6); }
 .studio-game-sidebar > .studio-game-picker { order: 1; }
 .studio-test-header h5 { font-size: .76rem; }
 #studio-test-game-name { margin-top: 4px; font-size: .65rem; }
@@ -92,3 +92,34 @@ input.studio-test-input[type="file"]::file-selector-button { margin-right: 8px; 
     .studio-test-field--range > span, .studio-test-field--range > output { font-size: .7rem; }
     .studio-test-action { font-size: .65rem; }
 }
+
+/* Muted charcoal surfaces and colored accents, matching audio favorites. */
+.studio-test-panel { --test-accent: #c4b5fd; }
+.studio-test-header h5 { color: #f5eeee; }
+.studio-test-status { color: #a69fac; }
+.studio-test-status > span { background: #6ee7b7; }
+#studio-test-game-name { color: #c4b5fd; }
+.studio-test-group[data-studio-test-category="teams"] { --test-accent: #fb7185; }
+.studio-test-group[data-studio-test-category="weather"] { --test-accent: #7dd3fc; }
+.studio-test-group[data-studio-test-category="audio"] { --test-accent: #6ee7b7; }
+.studio-test-group[data-studio-test-category="music"] { --test-accent: #c4b5fd; }
+.studio-test-group[data-studio-test-category="extra"] { --test-accent: #fcd34d; }
+.studio-test-group[data-studio-test-category="common"] { --test-accent: #fcd34d; }
+#studio-test-tab-teams { --test-accent: #fb7185; }
+#studio-test-tab-weather { --test-accent: #7dd3fc; }
+#studio-test-tab-audio { --test-accent: #6ee7b7; }
+#studio-test-tab-music { --test-accent: #c4b5fd; }
+#studio-test-tab-extra { --test-accent: #fcd34d; }
+.studio-test-tabs > button:hover,
+.studio-test-tabs > button[aria-selected="true"] { color: var(--test-accent); background: color-mix(in srgb, var(--test-accent) 12%, #17171a); border-bottom-color: var(--test-accent); }
+.studio-test-action,
+.studio-test-team-row > button { color: #eeeaf2; background: linear-gradient(145deg, color-mix(in srgb, var(--test-accent) 14%, #17171a), #1a191d 78%); }
+.studio-test-action:hover:not(:disabled),
+.studio-test-action[aria-pressed="true"] { color: var(--test-accent); background: color-mix(in srgb, var(--test-accent) 23%, #17171a); }
+.studio-test-field > output { color: var(--test-accent); }
+input.studio-test-input[type="range"],
+input.studio-test-input[type="checkbox"] { accent-color: var(--test-accent); }
+input.studio-test-input[type="file"]::file-selector-button { color: var(--test-accent); background: color-mix(in srgb, var(--test-accent) 14%, #17171a); }
+.studio-test-panel button:focus-visible,
+.studio-test-panel input:focus-visible,
+.studio-test-panel select:focus-visible { outline: 2px solid var(--test-accent); outline-offset: 2px; }

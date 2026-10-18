@@ -20,13 +20,13 @@
     #view-live.is-studio-mode .studio-stage-heading h4 { font-size: .85rem; }
     #view-live.is-studio-mode .studio-stage .studio-game-browser { flex: none; min-height: 0; grid-template-columns: 260px minmax(0, 1fr); align-items: start; gap: 12px; }
     #view-live.is-studio-mode .studio-game-sidebar { display: flex; flex-direction: column; align-self: stretch; gap: 16px; min-height: 0; overflow: visible; }
-    #view-live.is-studio-mode .studio-game-sidebar > .studio-test-panel { position: sticky; flex: none; padding: 0; }
+    #view-live.is-studio-mode .studio-game-sidebar > .studio-test-panel { position: static; flex: none; padding: 0; }
     #view-live.is-studio-mode .studio-game-sidebar > .studio-game-picker { flex: none; padding: 12px; border-radius: 12px; }
     #view-live.is-studio-mode .studio-game-picker .live-favorites-heading { margin-bottom: 10px; }
-    #view-live.is-studio-mode .studio-game-options { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; max-height: 120px; }
-    #view-live.is-studio-mode .studio-game-option { min-height: 78px; padding: 25px 4px 6px; gap: 4px; }
-    #view-live.is-studio-mode .studio-game-option img { width: 46px; height: 30px; }
-    #view-live.is-studio-mode .studio-game-option span { font-size: .51rem; }
+    #view-live.is-studio-mode .studio-game-options { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; max-height: 224px; }
+    #view-live.is-studio-mode .studio-game-option { min-height: 104px; padding: 22px 4px 8px; gap: 6px; }
+    #view-live.is-studio-mode .studio-game-option img { width: 60px; max-width: 100%; height: 42px; }
+    #view-live.is-studio-mode .studio-game-option span { font-size: .64rem; line-height: 1.35; }
     #view-live.is-studio-mode .studio-quick-search { margin-top: 10px; }
     #view-live.is-studio-mode .studio-quick-search input { min-height: 34px; padding-block: 8px; }
     #view-live.is-studio-mode .studio-all-games { min-height: 32px; padding: 8px; margin-top: 8px; font-size: .6rem; }

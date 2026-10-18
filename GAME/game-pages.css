@@ -1,6 +1,6 @@
 :root {
     color-scheme: dark;
-    font-family: Inter, Arial, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
     background: #09090b;
     color: #f4f4f5;
 }
@@ -119,7 +119,7 @@ a {
     padding: 0.75rem 1rem;
     border: 1px solid rgba(255,154,140,0.3);
     border-radius: 0.8rem;
-    background: linear-gradient(135deg, #be1029, #e61932 55%, #f04443);
+    background: linear-gradient(135deg, #be1029, #e02030 55%, #f04443);
     color: white;
     font-size: 0.85rem;
     font-weight: 800;
@@ -193,4 +193,21 @@ a {
     .game-page-info {
         grid-template-columns: 1fr;
     }
+}
+
+/* Match the main site's modern presentation while retaining the game artwork. */
+body { -webkit-font-smoothing: antialiased; background: radial-gradient(ellipse at 15% 0, #ff26360d, transparent 48rem), #080809; }
+.game-page-nav { padding-bottom: 20px; border-bottom: 1px solid #ffffff10; }
+.game-page-back { padding: 11px 14px; border: 1px solid #ffffff12; border-radius: 11px; background: #ffffff03; }
+.game-page-hero { border-color: #ffffff12; border-radius: 24px; background: linear-gradient(145deg, #1b1b1e, #101012); }
+.game-page-title { letter-spacing: -.055em; }
+.game-page-summary { color: #bcbcc4; line-height: 1.85; }
+.game-page-cta { border-radius: 12px; background: linear-gradient(135deg, #ff3344, #e02030); box-shadow: inset 0 1px #ffffff22, 0 6px 22px #ff263620; }
+.game-page-info-card { padding: 24px; border-color: #ffffff10; border-radius: 18px; background: linear-gradient(145deg, #19191c, #101012); }
+.game-page-info-card h2 { letter-spacing: -.025em; }
+a:focus-visible { outline: 2px solid #ff8892; outline-offset: 4px; }
+@media (min-width: 900px) {
+    .game-page-hero { display: grid; grid-template-columns: 1.05fr 1fr; align-items: stretch; }
+    .game-page-image { height: 100%; min-height: 470px; max-height: none; aspect-ratio: auto; }
+    .game-page-hero-content { align-self: center; padding: 40px; }
 }

@@ -50,7 +50,8 @@ const MIME_TYPES = {
     '.mp4': 'video/mp4',
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
-    '.webm': 'audio/webm'
+    '.webm': 'audio/webm',
+    '.woff2': 'font/woff2'
 };
 
 const server = createServer(async (request, response) => {

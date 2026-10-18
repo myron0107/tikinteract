@@ -133,6 +133,7 @@ function addStudioTestControl(group, source, labelText) {
     const tag = source.tagName.toLowerCase();
     const proxy = document.createElement(tag);
     proxy.className = tag === 'button' ? 'studio-test-action' : 'studio-test-input';
+    if (source.id) proxy.dataset.testControl = source.id;
     for (const key of ['type', 'min', 'max', 'step', 'accept', 'maxlength', 'placeholder']) {
         if (source.hasAttribute(key)) proxy.setAttribute(key, source.getAttribute(key));
     }
@@ -206,6 +207,7 @@ function buildStudioTestControls(original) {
         if (!rows.has(team)) {
             const row = document.createElement('div');
             row.className = 'studio-test-team-row';
+            row.dataset.testTeam = team;
             const name = document.createElement('span');
             name.className = 'studio-test-team-name';
             name.textContent = ({0:'RED',1:'BLUE',2:'GREEN'})[team] || `Echipa ${Number(team)+1}`;

@@ -1,0 +1,44 @@
+/* Small, compositor-friendly animations; the game viewport stays untouched. */
+@keyframes ti-view-enter { from { opacity: .55; } to { opacity: 1; } }
+@keyframes ti-hero-enter { from { opacity: 0; translate: 0 16px; } to { opacity: 1; translate: 0 0; } }
+@keyframes ti-ambient { 0%, 100% { opacity: .35; } 50% { opacity: .65; } }
+@keyframes ti-feedback { from { opacity: .45; } to { opacity: 1; } }
+@keyframes ti-favorite { from { opacity: .55; } to { opacity: 1; } }
+@keyframes ti-playing { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+
+@media (prefers-reduced-motion: no-preference) {
+    :is(#view-home, #view-catalog, #view-account, #view-play-pass, #view-leaderboard, #view-live):not(.hidden),
+    :is(#live-studio-panel, #game-center-panel, #audio-center-panel):not(.hidden) { animation: ti-view-enter .26s ease-out; }
+    .home-hero-copy > :is(.home-kicker, h1, p, .home-hero-actions, .home-hero-proof) { animation: ti-hero-enter .55s cubic-bezier(.2,.7,.2,1) both; }
+    .home-hero-copy > h1 { animation-delay: .06s; }
+    .home-hero-copy > p { animation-delay: .12s; }
+    .home-hero-copy > .home-hero-actions { animation-delay: .18s; }
+    .home-hero-copy > .home-hero-proof { animation-delay: .24s; }
+    .home-hero-art-glow { animation: ti-ambient 7s ease-in-out infinite; }
+    .motion-reveal { opacity: 0; translate: 0 14px; transition: opacity .45s ease, translate .45s cubic-bezier(.2,.7,.2,1), border-color .2s, box-shadow .2s, transform .2s; }
+    .motion-reveal.motion-shown { opacity: 1; translate: 0 0; transition-delay: var(--reveal-delay, 0ms), var(--reveal-delay, 0ms), 0s, 0s, 0s; }
+    .motion-reveal:focus-within { opacity: 1; translate: 0 0; transition-delay: 0s; }
+    .game-favorite-star[aria-pressed="true"] { animation: ti-favorite .24s ease-out; }
+    #studio-test-feedback:not(:empty) { animation: ti-feedback .2s ease-out; }
+    .live-favorite-trigger.is-playing .live-favorite-icon,
+    .audio-sound-trigger.is-playing .audio-sound-icon { animation: ti-playing 1.5s ease-in-out infinite; }
+    .public-info-header, .game-page-hero { animation: ti-hero-enter .5s ease-out; }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    :is(.home-primary-button, .home-secondary-button, .game-page-cta, .studio-all-games) { transition: box-shadow .18s, background .18s, border-color .18s; }
+    .studio-test-action { transition: background .15s, color .15s, box-shadow .15s; }
+    .studio-test-action:hover:not(:disabled) { box-shadow: none; }
+    .site-header-inner > nav button { transition: background .18s, color .18s, box-shadow .18s; }
+}
+@media (prefers-reduced-motion: no-preference) {
+    :is(.home-primary-button, .home-secondary-button, .studio-test-action, .game-favorite-star, .audio-sound-trigger, .live-favorite-trigger) { transition: background .15s, color .15s; }
+}
+@media (max-width: 767px) {
+    .motion-reveal { --reveal-delay: 0ms !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .motion-reveal { opacity: 1; translate: none; }
+    *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
