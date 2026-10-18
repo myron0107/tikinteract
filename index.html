@@ -405,8 +405,16 @@
                     <span id="account-avatar-display">U</span>
                 </div>
                 <span id="account-card-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
-                <h3 id="account-email" class="account-card-title">Cont conectat</h3>
+                <h3 id="account-display-name" class="account-card-title">Display Name</h3>
                 <span class="account-current-plan">PLAN <strong>FREE</strong></span>
+                <form class="account-display-name-form" onsubmit="saveDisplayName(event)">
+                    <label for="account-display-name-input">Display Name</label>
+                    <div class="account-display-name-controls">
+                        <input id="account-display-name-input" type="text" maxlength="40" autocomplete="nickname" placeholder="Numele tău" required>
+                        <button id="account-display-name-save" type="submit">Salvează</button>
+                    </div>
+                    <p id="account-display-name-status" role="status" aria-live="polite"></p>
+                </form>
             </div>
 
             <div class="account-card dashboard-panel lg:col-span-2">
@@ -590,7 +598,8 @@
             if (session && session.user) {
                 const user = session.user;
                 currentUser = user;
-                const accountEmail = document.getElementById('account-email');
+                const accountDisplayName = document.getElementById('account-display-name');
+                const accountDisplayNameInput = document.getElementById('account-display-name-input');
                 const accountEmailDetail = document.getElementById('account-email-detail');
                 const accountLoginMethod = document.getElementById('account-login-method');
                 const accountCreatedAt = document.getElementById('account-created-at');
@@ -598,6 +607,11 @@
                 const accountAvatar = document.getElementById('account-avatar-display');
                 const providers = user.app_metadata?.providers || [];
                 const provider = user.app_metadata?.provider || providers[0] || 'unknown';
+                const displayName = user.user_metadata?.display_name
+                    || user.user_metadata?.full_name
+                    || user.user_metadata?.name
+                    || user.email?.split('@')[0]
+                    || 'Utilizator';
                 const loginMethod = provider === 'google'
                     ? 'Google'
                     : provider === 'email'
@@ -606,12 +620,15 @@
                 const createdAt = user.created_at
                     ? new Date(user.created_at).toLocaleDateString('ro-RO', { year: 'numeric', month: 'long', day: 'numeric' })
                     : 'Indisponibil';
-                if (accountEmail) accountEmail.textContent = user.email || 'Cont TikInteract';
+                if (accountDisplayName) accountDisplayName.textContent = displayName;
+                if (accountDisplayNameInput && document.activeElement !== accountDisplayNameInput) {
+                    accountDisplayNameInput.value = user.user_metadata?.display_name || displayName;
+                }
                 if (accountEmailDetail) accountEmailDetail.textContent = user.email || 'Indisponibil';
                 if (accountLoginMethod) accountLoginMethod.textContent = loginMethod;
                 if (accountCreatedAt) accountCreatedAt.textContent = createdAt;
                 if (accountUserId) accountUserId.textContent = user.id || 'Indisponibil';
-                if (accountAvatar) accountAvatar.textContent = (user.email || 'U').charAt(0).toUpperCase();
+                if (accountAvatar) accountAvatar.textContent = displayName.charAt(0).toUpperCase();
                 [statusDot, accountCardStatusDot].forEach((dot) => {
                     if (!dot) return;
                     dot.classList.toggle('is-active', true);
@@ -634,13 +651,17 @@
                 closeAuthModal();
             } else {
                 currentUser = null;
-                const accountEmail = document.getElementById('account-email');
+                const accountDisplayName = document.getElementById('account-display-name');
+                const accountDisplayNameInput = document.getElementById('account-display-name-input');
+                const accountDisplayNameStatus = document.getElementById('account-display-name-status');
                 const accountEmailDetail = document.getElementById('account-email-detail');
                 const accountLoginMethod = document.getElementById('account-login-method');
                 const accountCreatedAt = document.getElementById('account-created-at');
                 const accountUserId = document.getElementById('account-user-id');
                 const accountAvatar = document.getElementById('account-avatar-display');
-                if (accountEmail) accountEmail.textContent = 'Cont conectat';
+                if (accountDisplayName) accountDisplayName.textContent = 'Display Name';
+                if (accountDisplayNameInput) accountDisplayNameInput.value = '';
+                if (accountDisplayNameStatus) accountDisplayNameStatus.textContent = '';
                 if (accountEmailDetail) accountEmailDetail.textContent = '—';
                 if (accountLoginMethod) accountLoginMethod.textContent = '—';
                 if (accountCreatedAt) accountCreatedAt.textContent = '—';
@@ -676,6 +697,59 @@
         function closeAuthModal() {
             const modal = document.getElementById('auth-modal');
             if(modal) modal.classList.add('hidden');
+        }
+
+        async function saveDisplayName(event) {
+            event.preventDefault();
+            const input = document.getElementById('account-display-name-input');
+            const button = document.getElementById('account-display-name-save');
+            const status = document.getElementById('account-display-name-status');
+            const displayName = input?.value.trim();
+            if (!currentUser || !supabaseClient) {
+                if (status) {
+                    status.textContent = 'Conectează-te pentru a-ți salva numele.';
+                    status.className = 'is-error';
+                }
+                return;
+            }
+            if (!displayName) {
+                if (status) {
+                    status.textContent = 'Introdu un nume înainte să salvezi.';
+                    status.className = 'is-error';
+                }
+                return;
+            }
+
+            if (button) button.disabled = true;
+            if (status) {
+                status.textContent = 'Se salvează...';
+                status.className = '';
+            }
+            try {
+                const { data, error } = await supabaseClient.auth.updateUser({
+                    data: { display_name: displayName }
+                });
+                if (error) throw error;
+                if (!data.user) throw new Error('Supabase nu a returnat profilul actualizat.');
+
+                currentUser = data.user;
+                const heading = document.getElementById('account-display-name');
+                const avatar = document.getElementById('account-avatar-display');
+                if (heading) heading.textContent = displayName;
+                if (avatar) avatar.textContent = displayName.charAt(0).toUpperCase();
+                if (status) {
+                    status.textContent = 'Numele a fost salvat.';
+                    status.className = 'is-success';
+                }
+            } catch (error) {
+                console.error('Could not save account display name:', error);
+                if (status) {
+                    status.textContent = `Nu am putut salva numele: ${error.message}`;
+                    status.className = 'is-error';
+                }
+            } finally {
+                if (button) button.disabled = false;
+            }
         }
 
         // Autentificare Google OAuth
