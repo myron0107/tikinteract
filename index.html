@@ -59,32 +59,32 @@
             </div>
             
             <nav class="hidden md:flex items-center gap-5 text-xs font-semibold text-zinc-400 lg:gap-8 lg:text-sm">
-                <button onclick="switchView('catalog')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i> JOCURI
+                <button data-nav-item="catalog" onclick="switchView('catalog')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer is-active" aria-current="page">
+                    <i class="fa-solid fa-gamepad nav-icon--games" aria-hidden="true"></i> JOCURI
                 </button>
-                <button onclick="checkAccessAndGo('live')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> LIVE
+                <button data-nav-item="live" onclick="checkAccessAndGo('live')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-tower-broadcast nav-icon--live" aria-hidden="true"></i> LIVE
                 </button>
-                <button onclick="switchView('leaderboard')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-trophy" aria-hidden="true"></i> CLASAMENT
+                <button data-nav-item="leaderboard" onclick="switchView('leaderboard')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-trophy nav-icon--leaderboard" aria-hidden="true"></i> CLASAMENT
                 </button>
-                <button onclick="goToPlayPass()" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-crown" aria-hidden="true"></i> PLAY PASS
+                <button data-nav-item="play-pass" onclick="goToPlayPass()" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
+                    <i class="fa-solid fa-crown nav-icon--play-pass" aria-hidden="true"></i> PLAY PASS
                 </button>
             </nav>
 
             <nav class="mobile-nav grid grid-cols-4 w-full md:hidden" aria-label="Navigare principală">
-                <button onclick="switchView('catalog')" class="mobile-nav-link">
-                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span>
+                <button data-nav-item="catalog" onclick="switchView('catalog')" class="mobile-nav-link is-active" aria-current="page">
+                    <i class="fa-solid fa-gamepad nav-icon--games" aria-hidden="true"></i><span>JOCURI</span>
                 </button>
-                <button onclick="checkAccessAndGo('live')" class="mobile-nav-link">
-                    <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span>LIVE</span>
+                <button data-nav-item="live" onclick="checkAccessAndGo('live')" class="mobile-nav-link">
+                    <i class="fa-solid fa-tower-broadcast nav-icon--live" aria-hidden="true"></i><span>LIVE</span>
                 </button>
-                <button onclick="switchView('leaderboard')" class="mobile-nav-link">
-                    <i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span>
+                <button data-nav-item="leaderboard" onclick="switchView('leaderboard')" class="mobile-nav-link">
+                    <i class="fa-solid fa-trophy nav-icon--leaderboard" aria-hidden="true"></i><span>CLASAMENT</span>
                 </button>
-                <button onclick="goToPlayPass()" class="mobile-nav-link">
-                    <i class="fa-solid fa-crown" aria-hidden="true"></i><span>PLAY PASS</span>
+                <button data-nav-item="play-pass" onclick="goToPlayPass()" class="mobile-nav-link">
+                    <i class="fa-solid fa-crown nav-icon--play-pass" aria-hidden="true"></i><span>PLAY PASS</span>
                 </button>
             </nav>
 
@@ -273,48 +273,56 @@
             </div>
         </section>
 
-        <section id="pricing" class="mb-16">
-            <div class="section-heading center">
-                <span class="eyebrow">TikInteract Play Pass</span>
-                <h2>Alege abonamentul potrivit</h2>
-            </div>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <p class="eyebrow">Începe gratuit</p>
-                    <h3>FREE</h3>
-                    <div class="price">0<span> lei</span></div>
-                    <ul>
-                        <li>Acces la funcțiile de bază</li>
-                        <li>Conectare TikTok LIVE locală</li>
-                        <li>Profil și clasament public</li>
-                    </ul>
-                    <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Plan de bază</button>
-                </div>
-                <div class="pricing-card featured">
-                    <p class="eyebrow">Pentru creatori</p>
-                    <h3>Play Pass</h3>
-                    <div class="price">29<span>/lună</span></div>
-                    <ul>
-                        <li>Jocuri LIVE extinse</li>
-                        <li>Evenimente interactive</li>
-                        <li>Statistici de bază</li>
-                    </ul>
-                    <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
-                </div>
-                <div class="pricing-card">
-                    <p class="eyebrow">Pentru studiouri</p>
-                    <h3>Play Pass PRO</h3>
-                    <div class="price">79<span>/lună</span></div>
-                    <ul>
-                        <li>Jocuri și opțiuni avansate</li>
-                        <li>Instrumente pentru moderatori</li>
-                        <li>Automatizări pentru chat</li>
-                    </ul>
-                    <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
-                </div>
-            </div>
-        </section>
     </main>
+
+    <!-- PLAY PASS VIEW -->
+    <section id="view-play-pass" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
+        <div class="account-heading mb-8">
+            <div>
+                <span class="eyebrow">TikInteract Play Pass</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Alege abonamentul potrivit</h1>
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">Alege planul potrivit pentru felul în care folosești TikInteract.</p>
+            </div>
+            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
+                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
+            </button>
+        </div>
+        <div id="pricing" class="pricing-grid">
+            <div class="pricing-card">
+                <p class="eyebrow">Începe gratuit</p>
+                <h3>FREE</h3>
+                <div class="price">0<span> lei</span></div>
+                <ul>
+                    <li>Acces la funcțiile de bază</li>
+                    <li>Conectare TikTok LIVE locală</li>
+                    <li>Profil și clasament public</li>
+                </ul>
+                <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Plan de bază</button>
+            </div>
+            <div class="pricing-card featured">
+                <p class="eyebrow">Pentru creatori</p>
+                <h3>Play Pass</h3>
+                <div class="price">29<span>/lună</span></div>
+                <ul>
+                    <li>Jocuri LIVE extinse</li>
+                    <li>Evenimente interactive</li>
+                    <li>Statistici de bază</li>
+                </ul>
+                <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
+            </div>
+            <div class="pricing-card">
+                <p class="eyebrow">Pentru studiouri</p>
+                <h3>Play Pass PRO</h3>
+                <div class="price">79<span>/lună</span></div>
+                <ul>
+                    <li>Jocuri și opțiuni avansate</li>
+                    <li>Instrumente pentru moderatori</li>
+                    <li>Automatizări pentru chat</li>
+                </ul>
+                <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
+            </div>
+        </div>
+    </section>
 
     <!-- PUBLIC STREAMER LEADERBOARD -->
     <section id="view-leaderboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
@@ -721,18 +729,33 @@
             const live = document.getElementById('view-live');
             const account = document.getElementById('view-account');
             const leaderboard = document.getElementById('view-leaderboard');
+            const playPass = document.getElementById('view-play-pass');
             if ((view === 'live' || view === 'account') && !currentUser) {
                 openAuthModal();
                 return;
             }
-            if(catalog && live && account && leaderboard) {
+            if(catalog && live && account && leaderboard && playPass) {
                 catalog.classList.toggle('hidden', view !== 'catalog');
                 live.classList.toggle('hidden', view !== 'live');
                 account.classList.toggle('hidden', view !== 'account');
                 leaderboard.classList.toggle('hidden', view !== 'leaderboard');
+                playPass.classList.toggle('hidden', view !== 'play-pass');
+                setActiveNavigation(view);
                 if (view === 'leaderboard' && typeof loadLeaderboard === 'function') loadLeaderboard();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        }
+
+        function setActiveNavigation(activeItem) {
+            document.querySelectorAll('[data-nav-item]').forEach((item) => {
+                const isActive = item.dataset.navItem === activeItem;
+                item.classList.toggle('is-active', isActive);
+                if (isActive) {
+                    item.setAttribute('aria-current', 'page');
+                } else {
+                    item.removeAttribute('aria-current');
+                }
+            });
         }
 
         function checkAccessAndGo(view) {
@@ -744,8 +767,7 @@
         }
 
         function goToPlayPass() {
-            switchView('catalog');
-            window.setTimeout(() => document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' }), 0);
+            switchView('play-pass');
         }
 
         function syncTikTokAccount() {

@@ -42,6 +42,37 @@ header {
     display: none;
 }
 
+.nav-icon--games {
+    color: #ffffff;
+}
+
+.nav-icon--live {
+    color: #ffffff;
+}
+
+.nav-icon--leaderboard {
+    color: #ffffff;
+}
+
+.nav-icon--play-pass {
+    color: #ff263e;
+}
+
+[data-nav-item].is-active {
+    color: #ff263e;
+}
+
+[data-nav-item].is-active .nav-icon--games,
+[data-nav-item].is-active .nav-icon--live,
+[data-nav-item].is-active .nav-icon--leaderboard,
+[data-nav-item].is-active .nav-icon--play-pass {
+    color: #ff263e;
+}
+
+[data-nav-item="leaderboard"].is-active .nav-icon--leaderboard {
+    color: #fbbf24;
+}
+
 .mobile-nav-link {
     display: flex;
     min-width: 0;
@@ -60,7 +91,6 @@ header {
 }
 
 .mobile-nav-link i {
-    color: #ff9a8c;
     font-size: 0.95rem;
 }
 
@@ -69,6 +99,16 @@ header {
     border-color: rgba(255,38,62,0.25);
     background: rgba(255,38,62,0.08);
     color: white;
+}
+
+.mobile-nav-link.is-active {
+    border-color: rgba(255,38,62,0.3);
+    background: rgba(255,38,62,0.1);
+    color: #ff6b78;
+}
+
+.mobile-nav-link.is-active i {
+    color: #ff263e;
 }
 
 #view-catalog,
@@ -1026,6 +1066,7 @@ select:focus {
     #view-account,
     #view-live,
     #view-leaderboard,
+    #view-play-pass,
     #view-catalog {
         padding-right: 1rem;
         padding-left: 1rem;
