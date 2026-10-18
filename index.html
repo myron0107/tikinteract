@@ -51,15 +51,17 @@
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/visual-refresh.css?v=26">
-    <link rel="stylesheet" href="assets/studio-test-menu.css?v=4">
+    <link rel="stylesheet" href="assets/visual-refresh.css?v=27">
+    <link rel="stylesheet" href="assets/studio-test-menu.css?v=5">
     <link rel="stylesheet" href="assets/mobile.css?v=2">
     <link rel="stylesheet" href="assets/studio-layout.css?v=4">
-    <link rel="stylesheet" href="assets/modern-ui.css?v=8">
+    <link rel="stylesheet" href="assets/modern-ui.css?v=9">
     <link rel="stylesheet" href="assets/site-motion.css?v=2">
     <link rel="stylesheet" href="assets/typography.css?v=1">
-    <link rel="stylesheet" href="assets/home-layout.css?v=1">
+    <link rel="stylesheet" href="assets/home-layout.css?v=2">
     <script src="assets/site-motion.js?v=1" defer></script>
+    <link rel="stylesheet" href="assets/home-showcase.css?v=3">
+    <script src="assets/home-showcase.js?v=9" defer></script>
 </head>
 <body class="min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
@@ -228,13 +230,13 @@
                 </div>
                 <div class="home-hero-art">
                     <div class="home-hero-art-glow"></div>
-                    <div class="home-preview-player">
-                        <div class="home-preview-topbar"><span><span class="preview-status-dot"></span> TIKINTERACT</span><span>PREZENTARE JOCURI</span></div>
-                        <video controls playsinline muted preload="none" poster="assets/tikinteract-preview-v2-poster.jpg" aria-label="Prezentare video a jocurilor TikInteract, 16 secunde, Full HD">
-                            <source src="assets/tikinteract-preview-v2.mp4" type="video/mp4">
-                            Browserul tău nu poate reda acest video. <a href="assets/tikinteract-preview-v2.mp4">Descarcă prezentarea.</a>
-                        </video>
-                        <div class="home-preview-caption"><span>00:16 <i class="fa-solid fa-play" aria-hidden="true"></i></span></div>
+                    <div class="home-preview-player home-showcase" data-home-showcase>
+                        <div class="home-preview-topbar"><span><span class="preview-status-dot"></span> TIKINTERACT</span><button type="button" class="home-showcase-toggle" data-showcase-toggle aria-pressed="false" aria-label="Pauză animație">Pauză</button></div>
+                        <div class="home-showcase-stage">
+                            <canvas width="1200" height="720" role="img" aria-label="Animație Neon Interact" data-showcase-canvas>Previzualizare animată Neon Interact.</canvas>
+                            <div class="home-showcase-copy"><span>GRATUIT</span></div>
+                        </div>
+                        <div class="home-showcase-caption"><strong data-showcase-name>Neon Interact</strong><span data-showcase-state>GRATUIT</span></div>
                     </div>
                     <span class="home-hero-orbit home-hero-orbit-one"></span>
                     <span class="home-hero-orbit home-hero-orbit-two"></span>
@@ -247,26 +249,21 @@
                 <div class="home-section-heading">
                     <div>
                         <span class="eyebrow">Alege-ți arena</span>
-                        <h2 id="home-games-title">Hot Games</h2>
-                        <p>3 moduri diferite de a transforma publicul în jucători.</p>
+                        <h2 id="home-games-title">Jocuri gratuite disponibile</h2>
+                        <p>Alege un joc gratuit și lasă comunitatea să intre în cursă.</p>
                     </div>
                     <button onclick="switchView('catalog')" class="home-text-link">Toate jocurile <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
                 </div>
                 <div class="home-hot-games">
-                    <a href="GAME/NEON-RACE/index.html" class="home-hot-game home-hot-game-race">
-                        <img src="assets/game-gallery/neon-race-night.webp" alt="Neon Race pe timp de noapte" loading="lazy">
-                        <span class="home-game-number">01 <span>HOT GAME</span></span>
-                        <div class="home-hot-game-copy"><h3>Neon Race</h3><p>Like-urile și cadourile accelerează cursa.</p><span>Vezi jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+                    <a href="GAME/NEON-INTERACT/index.html" class="home-hot-game home-hot-game-race">
+                        <img src="assets/game-gallery/neon-race-2-night.webp" alt="Neon Interact în cursă nocturnă" loading="lazy">
+                        <span class="home-game-number">01 <span>GRATUIT</span></span>
+                        <div class="home-hot-game-copy"><h3>Neon Interact</h3><p>Două echipe, nitro și curse pe străzile orașului de noapte.</p><span>Joacă gratuit <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
                     </a>
-                    <a href="GAME/NEON-RIDERS/index.html" class="home-hot-game home-hot-game-riders">
-                        <img src="assets/neon-riders-preview.png" alt="Neon Riders" loading="lazy">
-                        <span class="home-game-number">02 <span>HOT GAME</span></span>
-                        <div class="home-hot-game-copy"><h3>Neon Riders</h3><p>Două echipe moto, o singură linie de sosire.</p><span>Vezi jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
-                    </a>
-                    <a href="GAME/COUNTRY-DERBY/index.html" class="home-hot-game home-hot-game-derby">
-                        <img src="assets/country-derby-preview.png" alt="Country Derby" loading="lazy">
-                        <span class="home-game-number">03 <span>HOT GAME</span></span>
-                        <div class="home-hot-game-copy"><h3>Country Derby</h3><p>Alege un cal și adună-ți echipa în chat.</p><span>Vezi jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
+                    <a href="GAME/MOTO-INTERACT/index.html" class="home-hot-game home-hot-game-riders">
+                        <img src="assets/game-gallery/moto-interact-day.webp" alt="Moto Interact pe bulevardul de zi" loading="lazy">
+                        <span class="home-game-number">02 <span>GRATUIT</span></span>
+                        <div class="home-hot-game-copy"><h3>Moto Interact</h3><p>Curse moto de zi, două echipe și nitro cu wheelie.</p><span>Joacă gratuit <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span></div>
                     </a>
                 </div>
             </section>
@@ -309,31 +306,58 @@
             <p class="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">Alege un joc pentru a vedea imaginile, descrierea și modul de joc.</p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <a href="GAME/NEON-RACE/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
-                <img src="assets/game-gallery/neon-race-night.webp" alt="Neon Race pe timp de noapte, cu mașinile roșie și albastră pe pistă" class="game-card-preview mb-5" loading="lazy">
-                <span class="badge-top mb-3"><span>01</span> Race</span>
-                <h2 class="text-lg font-bold text-white mb-2">Neon Race</h2>
-                <p class="text-zinc-400 text-sm leading-6">Cursă auto cu echipe roșie și albastră, în care spectatorii avansează mașinile cu like-uri și cadouri.</p>
-                <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-            </a>
+        <section class="mb-10" aria-labelledby="catalog-free-title">
+            <h2 id="catalog-free-title" class="mb-4 text-xl font-extrabold text-white">GRATUITE</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <a href="GAME/NEON-INTERACT/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                    <img src="assets/game-gallery/neon-race-2-night.webp" alt="Neon Interact pe pista de noapte" class="game-card-preview mb-5" loading="lazy">
+                    <span class="badge-top mb-3"><span>01</span> GRATUIT / Night Run</span>
+                    <h2 class="text-lg font-bold text-white mb-2">Neon Interact</h2>
+                    <p class="text-zinc-400 text-sm leading-6">Curse în orașul de noapte, mașini cu iluminare neon și nitro activat de comunitatea LIVE.</p>
+                    <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+                <a href="GAME/MOTO-INTERACT/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                    <img src="assets/game-gallery/moto-interact-day.webp" alt="Moto Interact, motociclete RED și BLUE pe bulevardul de zi" class="game-card-preview mb-5" loading="lazy">
+                    <span class="badge-top mb-3"><span>02</span> GRATUIT / DAY RIDE</span>
+                    <h2 class="text-lg font-bold text-white mb-2">Moto Interact</h2>
+                    <p class="text-zinc-400 text-sm leading-6">Motociclete sport, peisaj de zi și nitro care ridică roata din față. Comunitatea dă ritmul.</p>
+                    <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+            </div>
+        </section>
 
-            <a href="GAME/NEON-RIDERS/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
-                <img src="assets/neon-riders-preview.png" alt="Motocicletele din Neon Riders pe pistă" class="game-card-preview mb-5" loading="lazy">
-                <span class="badge-top mb-3"><span>02</span> Riders</span>
-                <h2 class="text-lg font-bold text-white mb-2">Neon Riders</h2>
-                <p class="text-zinc-400 text-sm leading-6">Curse moto neon pentru două echipe, cu progres alimentat de interacțiunile comunității LIVE.</p>
-                <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-            </a>
+        <section class="mb-10" aria-labelledby="catalog-pass-title">
+            <h2 id="catalog-pass-title" class="mb-4 text-xl font-extrabold text-white">PLAY PASS</h2>
+            <p class="mb-5 max-w-3xl text-sm leading-6 text-zinc-400">Jocurile rămân vizibile în catalog. Lansarea lor în LIVE Studio este blocată până la activarea abonamentelor.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+                <a href="GAME/NEON-RACE/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                    <img src="assets/game-gallery/neon-race-night.webp" alt="Neon Race pe timp de noapte, cu mașinile roșie și albastră pe pistă" class="game-card-preview mb-5" loading="lazy">
+                    <span class="badge-top mb-3"><span>01</span> PLAY PASS / Race</span>
+                    <h2 class="text-lg font-bold text-white mb-2">Neon Race</h2>
+                    <p class="text-zinc-400 text-sm leading-6">Cursă auto cu echipe roșie și albastră, în care spectatorii avansează mașinile cu like-uri și cadouri.</p>
+                    <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+                <a href="GAME/NEON-RIDERS/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                    <img src="assets/neon-riders-preview.png" alt="Motocicletele din Neon Riders pe pistă" class="game-card-preview mb-5" loading="lazy">
+                    <span class="badge-top mb-3"><span>02</span> PLAY PASS / Riders</span>
+                    <h2 class="text-lg font-bold text-white mb-2">Neon Riders</h2>
+                    <p class="text-zinc-400 text-sm leading-6">Curse moto neon pentru două echipe, cu progres alimentat de interacțiunile comunității LIVE.</p>
+                    <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+                <a href="GAME/COUNTRY-DERBY/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                    <img src="assets/country-derby-preview.png" alt="Caii din Country Derby pe pista de curse" class="game-card-preview mb-5" loading="lazy">
+                    <span class="badge-top mb-3"><span>03</span> PLAY PASS / Derby</span>
+                    <h2 class="text-lg font-bold text-white mb-2">Country Derby</h2>
+                    <p class="text-zinc-400 text-sm leading-6">Curse de cai cu trei echipe, în care like-urile și cadourile susțin calul ales de spectatori.</p>
+                    <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+            </div>
+        </section>
 
-            <a href="GAME/COUNTRY-DERBY/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
-                <img src="assets/country-derby-preview.png" alt="Caii din Country Derby pe pista de curse" class="game-card-preview mb-5" loading="lazy">
-                <span class="badge-top mb-3"><span>03</span> Derby</span>
-                <h2 class="text-lg font-bold text-white mb-2">Country Derby</h2>
-                <p class="text-zinc-400 text-sm leading-6">Curse de cai cu trei echipe, în care like-urile și cadourile susțin calul ales de spectatori.</p>
-                <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
-            </a>
-        </div>
+        <section aria-labelledby="catalog-pro-title">
+            <h2 id="catalog-pro-title" class="mb-4 text-xl font-extrabold text-white">PLAY PASS PRO</h2>
+            <p class="text-sm leading-6 text-zinc-400">Nu există jocuri în această categorie momentan.</p>
+        </section>
     </main>
 
     <!-- PLAY PASS VIEW -->
@@ -647,6 +671,8 @@
                         <option value="neon-race">Neon Race</option>
                         <option value="neon-riders">Neon Riders</option>
                         <option value="country-derby">Country Derby</option>
+                        <option value="neon-race-2">Neon Interact</option>
+                        <option value="moto-interact">Moto Interact</option>
                     </select>
                 <div class="live-game-frame-wrap mb-6 overflow-hidden rounded-xl border border-zinc-800">
                     <iframe id="live-game-frame" class="live-game-frame" title="Joc TikTok LIVE" loading="eager" allow="autoplay" allowfullscreen></iframe>
@@ -706,19 +732,40 @@
                     <div><span class="section-kicker">BIBLIOTECA TA</span><h3>Game Center</h3><p>Alege un joc și deschide-l în LIVE Studio.</p></div>
                     <label class="game-center-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="game-center-search" type="search" placeholder="Caută un joc…" aria-label="Caută în Game Center" oninput="filterStudioGames(this.value)"></label>
                 </div>
-                <div class="game-center-grid">
-                    <article class="game-center-card" data-game-center-card="Neon Race curse mașini">
+                <div class="mb-8" data-game-category>
+                    <h4 class="mb-4 text-sm font-extrabold tracking-wide text-white">GRATUITE</h4>
+                    <div class="game-center-grid">
+                    <article class="game-center-card" data-game-id="neon-race-2" data-game-center-card="Neon Interact night run curse masini noapte">
+                        <img src="assets/game-gallery/neon-race-2-night.webp" alt="Neon Interact pe pista de noapte" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">GRATUIT / NIGHT RUN</span><h4>Neon Interact</h4><p>Orașul de noapte, două echipe și mașini cu iluminare neon.</p><button type="button" onclick="launchStudioGame('neon-race-2')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                    <article class="game-center-card" data-game-id="moto-interact" data-game-center-card="Moto Interact motociclete moto motorete zi day ride wheelie nitro">
+                        <img src="assets/game-gallery/moto-interact-day.webp" alt="Moto Interact pe bulevardul de zi" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">GRATUIT / DAY RIDE</span><h4>Moto Interact</h4><p>Curse pe timp de zi și nitro pe roata din spate.</p><button type="button" onclick="launchStudioGame('moto-interact')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                    </div>
+                </div>
+                <div class="mb-8" data-game-category>
+                    <h4 class="mb-4 text-sm font-extrabold tracking-wide text-white">PLAY PASS</h4>
+                    <p class="mb-4 text-xs text-zinc-400">Necesită abonament. Abonamentele nu sunt încă disponibile.</p>
+                    <div class="game-center-grid">
+                    <article class="game-center-card" data-game-id="neon-race" data-game-center-card="Neon Race curse mașini">
                         <img src="assets/neon-race-preview.png" alt="Captură din jocul Neon Race" loading="lazy">
-                        <div class="game-center-card-body"><span class="section-kicker">CURSE AUTO</span><h4>Neon Race</h4><p>Like-urile și cadourile accelerează cursa.</p><button type="button" onclick="launchStudioGame('neon-race')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                        <div class="game-center-card-body"><span class="section-kicker">PLAY PASS / CURSE AUTO</span><h4>Neon Race</h4><p>Like-urile și cadourile accelerează cursa.</p><button type="button" disabled aria-disabled="true" title="Necesită Play Pass; abonamentele nu sunt încă disponibile">Necesită Play Pass</button></div>
                     </article>
-                    <article class="game-center-card" data-game-center-card="Neon Riders curse motociclete moto">
+                    <article class="game-center-card" data-game-id="neon-riders" data-game-center-card="Neon Riders curse motociclete moto">
                         <img src="assets/neon-riders-preview.png" alt="Captură din jocul Neon Riders" loading="lazy">
-                        <div class="game-center-card-body"><span class="section-kicker">CURSE MOTO</span><h4>Neon Riders</h4><p>Două echipe moto, o singură linie de sosire.</p><button type="button" onclick="launchStudioGame('neon-riders')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                        <div class="game-center-card-body"><span class="section-kicker">PLAY PASS / CURSE MOTO</span><h4>Neon Riders</h4><p>Două echipe moto, o singură linie de sosire.</p><button type="button" disabled aria-disabled="true" title="Necesită Play Pass; abonamentele nu sunt încă disponibile">Necesită Play Pass</button></div>
                     </article>
-                    <article class="game-center-card" data-game-center-card="Country Derby curse cai echipe">
+                    <article class="game-center-card" data-game-id="country-derby" data-game-center-card="Country Derby curse cai echipe">
                         <img src="assets/country-derby-preview.png" alt="Captură din jocul Country Derby" loading="lazy">
-                        <div class="game-center-card-body"><span class="section-kicker">CURSE DE CAI</span><h4>Country Derby</h4><p>Alege un cal și adună-ți echipa în chat.</p><button type="button" onclick="launchStudioGame('country-derby')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                        <div class="game-center-card-body"><span class="section-kicker">PLAY PASS / CURSE DE CAI</span><h4>Country Derby</h4><p>Alege un cal și adună-ți echipa în chat.</p><button type="button" disabled aria-disabled="true" title="Necesită Play Pass; abonamentele nu sunt încă disponibile">Necesită Play Pass</button></div>
                     </article>
+                    </div>
+                </div>
+                <div class="mb-8" data-game-category>
+                    <h4 class="mb-4 text-sm font-extrabold tracking-wide text-white">PLAY PASS PRO</h4>
+                    <p class="text-xs text-zinc-400">Nu există jocuri în această categorie momentan.</p>
                 </div>
                 <p id="game-center-empty" class="game-center-empty" hidden>Nu am găsit jocuri. Încearcă altă căutare.</p>
             </div>
@@ -831,8 +878,9 @@
 
     <script src="assets/studio-layout.js?v=2"></script>
     <script src="assets/studio-live-bridge.js?v=1"></script>
-    <script src="assets/studio-test-menu.js?v=5"></script>
-    <script src="game.js?v=2"></script>
+    <script src="assets/studio-test-menu.js?v=7"></script>
+    <script src="assets/game-access.js?v=1"></script>
+    <script src="game.js?v=3"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
     <script>
@@ -845,6 +893,8 @@
         let isPasswordRecovery = false;
         const LIVE_GAME_PATHS = Object.freeze({
             'neon-race': 'GAME/NEON-RACE/Neon-Race.html',
+            'neon-race-2': 'GAME/NEON-INTERACT/Neon-Interact.html',
+            'moto-interact': 'GAME/MOTO-INTERACT/Moto-Interact.html',
             'neon-riders': 'GAME/NEON-RIDERS/NEON-RIDERS.html',
             'country-derby': 'GAME/COUNTRY-DERBY/COUNTRY-DERBY.html'
         });
@@ -1348,7 +1398,18 @@
             const gameFrame = document.getElementById('live-game-frame');
             const gameSelect = document.getElementById('live-game-select');
             const gameStatus = document.getElementById('live-game-status');
-            if (!gameFrame || !gamePath) return;
+            if (!gameFrame || !gamePath) return false;
+            if (!window.TikInteractGameAccess?.isAvailable(gameId)) {
+                if (gameSelect && !window.TikInteractGameAccess?.isAvailable(gameSelect.value)) gameSelect.value = 'moto-interact';
+                document.querySelectorAll('[data-live-game]').forEach((button) => {
+                    const selected = button.dataset.liveGame === gameSelect?.value;
+                    button.classList.toggle('is-active', selected);
+                    button.setAttribute('aria-pressed', String(selected));
+                });
+                if (gameStatus) gameStatus.textContent = window.TikInteractGameAccess?.getLockMessage(gameId)
+                    || 'Jocul nu este disponibil.';
+                return false;
+            }
 
             if (gameSelect && gameSelect.value !== gameId) gameSelect.value = gameId;
             document.querySelectorAll('[data-live-game]').forEach((button) => {
@@ -1356,7 +1417,7 @@
                 button.classList.toggle('is-active', selected);
                 button.setAttribute('aria-pressed', String(selected));
             });
-            if (gameFrame.dataset.gameId === gameId) return;
+            if (gameFrame.dataset.gameId === gameId) return true;
 
             resetStudioTestMenu();
             gameFrame.dataset.gameId = gameId;
@@ -1380,6 +1441,7 @@
                 complete();
             };
             gameFrame.src = token ? `${gamePath}?tikinteractHost=${encodeURIComponent(token)}` : gamePath;
+            return true;
         }
 
         function setActiveNavigation(activeItem) {

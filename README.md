@@ -24,7 +24,9 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 ## Game catalog and LIVE Studio
 
 - The **Jocuri** menu is a catalog: each game card opens a presentation page with screenshots and instructions, not the playable game.
-- To play, sign in, open **LIVE Studio**, select Neon Race, Neon Riders, or Country Derby, and the selected game loads inside the TikInteract page. Leaving LIVE Studio unloads the embedded game.
+- To play, sign in, open **LIVE Studio**, select Neon Race, Neon Interact, Moto Interact, Neon Riders, or Country Derby, and the selected game loads inside the TikInteract page. Leaving LIVE Studio unloads the embedded game.
+- **Neon Interact — Night Run** uses the homepage animation's night city and track, with neon car lighting, two teams, nitro and the shared Studio test controls. See [game rules and verification](docs/neon-race2.md). Its files are in `GAME/NEON-INTERACT/` and `assets/neon-race2*`.
+- **Moto Interact — Day Ride** is a separate daylight motorcycle version with newly generated scenery and red/blue rider sprites. Nitro raises the front wheel around the grounded rear tire; fading speed lowers it smoothly. See [gameplay and verification](docs/moto-interact.md). Files: `GAME/MOTO-INTERACT/` and `assets/moto-interact*`.
 - The game files are kept separately in `GAME/NEON-RACE/`, `GAME/NEON-RIDERS/`, and `GAME/COUNTRY-DERBY/`.
 - Game artwork is stored in `assets/game-media/` as content-addressed, lossless WebP images. Include this folder when copying or deploying the games. The local server caches these immutable images for reuse when switching games; the HTML and scripts remain uncached. Game readiness does not wait for all image downloads.
 - **Pornește Conexiunea Live** is the single LIVE connection for the site and its embedded games. Comments, batched likes, and completed gifts are sent automatically to the selected game. TikFinity is not required inside LIVE Studio. The games keep their optional TikFinity controls when opened separately.

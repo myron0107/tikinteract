@@ -708,12 +708,16 @@ function filterStudioGames(query) {
         card.hidden = !matches;
         if (matches) visible++;
     });
+    document.querySelectorAll('[data-game-category]').forEach((category) => {
+        const cards = category.querySelectorAll('[data-game-center-card]');
+        category.hidden = normalized ? ![...cards].some(card => !card.hidden) : false;
+    });
     const empty = document.getElementById('game-center-empty');
     if (empty) empty.hidden = visible > 0;
 }
 
 function launchStudioGame(gameId) {
-    loadLiveGame(gameId);
+    if (!loadLiveGame(gameId)) return;
     setLiveStudioTab('studio');
     document.querySelector(`[data-live-game="${gameId}"]`)?.focus({preventScroll: true});
 }
@@ -728,8 +732,8 @@ function initializeGameFavorites() {
     const cards = [...document.querySelectorAll('[data-game-center-card]')];
     studioGameCatalog = [...select.options].map((option, index) => ({
         id: option.value, name: option.textContent.trim(),
-        image: cards[index]?.querySelector('img')?.getAttribute('src') || '',
-        card: cards[index]
+        image: cards.find(card => card.dataset.gameId === option.value)?.querySelector('img')?.getAttribute('src') || '',
+        card: cards.find(card => card.dataset.gameId === option.value)
     }));
     try {
         const saved = JSON.parse(localStorage.getItem(GAME_FAVORITES_KEY) || '[]');
@@ -791,9 +795,12 @@ function renderQuickGames() {
         open.type = 'button';
         open.className = 'studio-game-option';
         open.dataset.liveGame = game.id;
+        const available = window.TikInteractGameAccess?.isAvailable(game.id) === true;
+        open.disabled = !available;
+        open.setAttribute('aria-disabled', String(!available));
         open.classList.toggle('is-active', selectedId === game.id);
         open.setAttribute('aria-pressed', String(selectedId === game.id));
-        open.title = game.name;
+        open.title = available ? game.name : window.TikInteractGameAccess?.getLockMessage(game.id) || 'Jocul nu este disponibil.';
         open.addEventListener('click', () => loadLiveGame(game.id));
         const image = document.createElement('img');
         image.src = game.image; image.alt = ''; image.width = 42; image.height = 38;

@@ -9,6 +9,12 @@ Neon Race and Neon Riders: day, night, rain, winter, Christmas at night.
 Country Derby: day, night, day rain, night rain; its current menu has no winter
 or Christmas setting.
 
+Neon Interact: Night Run. Its screenshot and thumbnail are captured by
+`node scripts/verify-neon-race2.mjs`, after clearing the test supporter lists.
+The main capture script preserves this separate game's manifest entry.
+Moto Interact: Day Ride. `node scripts/verify-moto-interact.mjs` captures its
+generated daylight track and actual nitro wheelie, with test supporter lists cleared.
+
 Full images are 1080×1920. Lightweight thumbnails are 360×640. `manifest.json`
 records the selected time, weather and renderer classes for each full capture.
 

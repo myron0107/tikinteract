@@ -1,0 +1,86 @@
+[
+  {
+    "name": "nitro",
+    "source": "nitro.png",
+    "file": "nitro.webp",
+    "originalSize": [
+      2172,
+      724
+    ],
+    "bounds": {
+      "x": 57,
+      "y": 205,
+      "width": 2081,
+      "height": 326
+    },
+    "size": [
+      768,
+      120
+    ],
+    "transparentRatio": 0.7597327360784673,
+    "centerAlpha": 252
+  },
+  {
+    "name": "boost",
+    "source": "boost.png",
+    "file": "boost.webp",
+    "originalSize": [
+      2172,
+      724
+    ],
+    "bounds": {
+      "x": 601,
+      "y": 243,
+      "width": 969,
+      "height": 223
+    },
+    "size": [
+      768,
+      177
+    ],
+    "transparentRatio": 0.9366701260645279,
+    "centerAlpha": 252
+  },
+  {
+    "name": "impact",
+    "source": "impact.png",
+    "file": "impact.webp",
+    "originalSize": [
+      1254,
+      1254
+    ],
+    "bounds": {
+      "x": 86,
+      "y": 91,
+      "width": 1067,
+      "height": 1068
+    },
+    "size": [
+      512,
+      512
+    ],
+    "transparentRatio": 0.7785987551160052,
+    "centerAlpha": 0
+  },
+  {
+    "name": "shield",
+    "source": "shield.png",
+    "file": "shield.webp",
+    "originalSize": [
+      2058,
+      764
+    ],
+    "bounds": {
+      "x": 96,
+      "y": 121,
+      "width": 1866,
+      "height": 512
+    },
+    "size": [
+      1024,
+      281
+    ],
+    "transparentRatio": 0.8215373284691588,
+    "centerAlpha": 0
+  }
+]

@@ -1,0 +1,69 @@
+// Generated sprite placement metadata. See prepare-neon-race2-cars.mjs.
+export default [
+  {
+    "team": "red",
+    "source": "night-coupe-red.png",
+    "file": "night-coupe-red.webp",
+    "originalSize": [
+      2098,
+      749
+    ],
+    "bounds": {
+      "x": 76,
+      "y": 96,
+      "width": 1955,
+      "height": 556
+    },
+    "size": [
+      1280,
+      364
+    ],
+    "wheels": [
+      {
+        "x": 0.20051150895140665,
+        "y": 0.7194244604316546,
+        "radius": 0.058312020460358056,
+        "score": 7305
+      },
+      {
+        "x": 0.7902813299232737,
+        "y": 0.7122302158273381,
+        "radius": 0.058312020460358056,
+        "score": 7239
+      }
+    ]
+  },
+  {
+    "team": "blue",
+    "source": "night-coupe-blue.png",
+    "file": "night-coupe-blue.webp",
+    "originalSize": [
+      2100,
+      749
+    ],
+    "bounds": {
+      "x": 74,
+      "y": 92,
+      "width": 1954,
+      "height": 559
+    },
+    "size": [
+      1280,
+      366
+    ],
+    "wheels": [
+      {
+        "x": 0.19959058341862845,
+        "y": 0.7155635062611807,
+        "radius": 0.06038894575230297,
+        "score": 7410
+      },
+      {
+        "x": 0.7896622313203685,
+        "y": 0.7227191413237924,
+        "radius": 0.05834186284544524,
+        "score": 7212
+      }
+    ]
+  }
+];

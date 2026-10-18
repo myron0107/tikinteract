@@ -30,6 +30,7 @@ try {
     const pending = new Map();
     socket.on('message', buffer => {
         const message = JSON.parse(buffer.toString());
+        if (message.method==='Runtime.exceptionThrown') console.error(message.params.exceptionDetails.exception?.description || message.params.exceptionDetails.text);
         if (!pending.has(message.id)) return;
         const {resolve,reject,timer} = pending.get(message.id);
         pending.delete(message.id); clearTimeout(timer);
@@ -52,7 +53,62 @@ try {
     await page('Page.enable');
     await page('Runtime.enable');
     await page('Emulation.setDeviceMetricsOverride',{width:540,height:960,deviceScaleFactor:2,mobile:false});
-    if (process.argv.includes('--verify')) {
+    if (process.argv.includes('--verify-animation')) {
+        const waitFor=async expression=>{
+            for(let i=0;i<150;i++) {
+                try {if(await evaluate(expression))return;}catch{}
+                await new Promise(resolve=>setTimeout(resolve,100));
+            }
+            throw new Error(`Showcase timed out: ${expression}`);
+        };
+        const settle=(ms=350)=>new Promise(resolve=>setTimeout(resolve,ms));
+        const fingerprint=()=>evaluate("document.querySelector('[data-showcase-canvas]').toDataURL('image/webp',.3)");
+        const changed=async expected=>{
+            const first=await fingerprint();await settle();const second=await fingerprint();
+            if((first!==second)!==expected) {
+                const shot=await page('Page.captureScreenshot',{format:'webp',quality:90});
+                await writeFile(path.join(root,'.tools/home-showcase-failure.webp'),Buffer.from(shot.data,'base64'));
+                const state=await evaluate("({game:document.querySelector('[data-showcase-name]').textContent,status:document.querySelector('[data-showcase-state]').textContent,paused:document.querySelector('[data-showcase-toggle]').getAttribute('aria-pressed')})");
+                throw new Error((expected?'Expected real canvas motion: ':'Expected canvas to remain paused: ')+JSON.stringify(state));
+            }
+        };
+        for(const width of (process.argv.includes('--mobile-only')?[390]:[1280,390])) {
+            await page('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});
+            await page('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});
+            await page('Page.navigate',{url:'http://localhost:3000/'});
+            await waitFor("document.querySelector('[data-showcase-canvas]')?.getAttribute('aria-label').includes('personaje') && typeof switchView==='function'");
+            await evaluate("document.querySelector('[data-home-showcase]').scrollIntoView({block:'center',behavior:'instant'})");
+            await settle(1200);
+            if(await evaluate("!!document.querySelector('[data-home-showcase] video')"))throw new Error('Home must have a native animation, not a video element');
+            await changed(true);
+            await evaluate("document.querySelector('[data-showcase-toggle]').click()");await settle();
+            await changed(false);
+            await evaluate("window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'})");await settle();
+            await evaluate("document.querySelector('[data-home-showcase]').scrollIntoView({block:'center',behavior:'instant'})");await settle();
+            await changed(false);
+            await evaluate("document.querySelector('[data-showcase-toggle]').click()");await settle();
+            await changed(true);
+            if(await evaluate("JSON.stringify([...document.querySelectorAll('[data-showcase-game]')].map(button=>button.dataset.showcaseGame))")!==JSON.stringify(['race','riders']))throw new Error('Home animation must offer only Neon Race and Neon Riders');
+            for(const game of ['race','riders']) {
+                await evaluate(`document.querySelector('[data-showcase-game="${game}"]').click()`);await settle(800);
+                if(!await evaluate(`document.querySelector('[data-showcase-game="${game}"]').getAttribute('aria-pressed')==='true'`))throw new Error('Game selection failed');
+                await changed(true);
+                const shot=await page('Page.captureScreenshot',{format:'webp',quality:90});
+                await writeFile(path.join(root,`.tools/home-showcase-${game}-${width}.webp`),Buffer.from(shot.data,'base64'));
+            }
+            await evaluate("window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'})");await settle();
+            await changed(false);
+            await evaluate("document.querySelector('[data-home-showcase]').scrollIntoView({block:'center',behavior:'instant'})");await settle();
+            await changed(true);
+            await page('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await settle();
+            await changed(false);
+            await page('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'no-preference'}]});await settle();
+            await changed(true);
+            await evaluate("switchView('catalog')");await settle();
+            await changed(false);
+            console.log(`Verified native canvas at ${width}px: no video, moving sprites, 2 game choices, pause, offscreen suspend/resume and reduced motion.`);
+        }
+    } else if (process.argv.includes('--verify')) {
         const checks = [['NEON-RACE',5],['NEON-RIDERS',5],['COUNTRY-DERBY',4]];
         for (const width of [1280,390]) {
             await page('Emulation.setDeviceMetricsOverride',{width,height:900,deviceScaleFactor:1,mobile:false});
@@ -131,7 +187,8 @@ try {
         ['neon-riders','GAME/NEON-RIDERS/NEON-RIDERS.html',modes],
         ['country-derby','GAME/COUNTRY-DERBY/COUNTRY-DERBY.html',[...modes.slice(0,3),{id:'night-rain',label:'Ploaie noaptea',time:'night',weather:'rain'}]]
     ];
-    const manifest = [];
+    const previousManifest = JSON.parse(await readFile(path.join(output,'manifest.json'),'utf8'));
+    const manifest = previousManifest.filter(item => !['neon-race','neon-riders','country-derby'].includes(item.game));
     for (const [game, pathname, variants] of games) {
         await page('Page.navigate',{url:`http://localhost:3000/${pathname}`});
         let ready = false;

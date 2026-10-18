@@ -1,0 +1,58 @@
+{
+  "race-red": {
+    "source": "assets/game-media/97e2f7849747ba816540c981d279b96574ad2c3795245ac45633fa75a0c18657.webp",
+    "originalSize": [
+      2172,
+      724
+    ],
+    "file": "race-red.webp"
+  },
+  "race-blue": {
+    "source": "assets/game-media/5d84d0ea002aa0dc8b1202146272aa560fccb22b61f0754f53565f54bac18cb5.webp",
+    "originalSize": [
+      2172,
+      724
+    ],
+    "file": "race-blue.webp"
+  },
+  "riders-red": {
+    "source": "assets/game-media/d95548057c3c5f8ae80bec1e26f48251d6c0596c5fe7d4752bff6b5c750156f6.webp",
+    "originalSize": [
+      1536,
+      1024
+    ],
+    "file": "riders-red.webp"
+  },
+  "riders-blue": {
+    "source": "assets/game-media/7e8870e0a6ac926c42a2094f99ed0f9eefecc9bc2ed1dc2f4e8ba49a7c5a3f59.webp",
+    "originalSize": [
+      1536,
+      1024
+    ],
+    "file": "riders-blue.webp"
+  },
+  "derby-red": {
+    "source": "assets/game-media/52fa533d064ba5206831fc03f084911b6af391ea907dbb462c186a3907a155fa.webp",
+    "originalSize": [
+      1536,
+      1024
+    ],
+    "file": "derby-red.webp"
+  },
+  "derby-blue": {
+    "source": "assets/game-media/64983b556ce1878893991288f8482b4c60d8a1e90b3bde49c8c3f4f2bfa7875c.webp",
+    "originalSize": [
+      1536,
+      1024
+    ],
+    "file": "derby-blue.webp"
+  },
+  "derby-green": {
+    "source": "assets/game-media/7b0189b3e2fcc6690f82e2bedc466d5e36ddb43fa9437d4c5f778072ed865312.webp",
+    "originalSize": [
+      1536,
+      1024
+    ],
+    "file": "derby-green.webp"
+  }
+}

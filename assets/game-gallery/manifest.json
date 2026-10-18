@@ -138,5 +138,25 @@
     "weather": "rain",
     "shell": "",
     "thumbnail": "country-derby-night-rain-thumb.webp"
+  },
+  {
+    "game": "neon-race-2",
+    "mode": "night",
+    "label": "Night Run",
+    "file": "neon-race-2-night.webp",
+    "thumbnail": "neon-race-2-night-thumb.webp",
+    "time": "night",
+    "weather": "clear",
+    "shell": ""
+  },
+  {
+    "game": "moto-interact",
+    "mode": "day",
+    "label": "Day Ride",
+    "file": "moto-interact-day.webp",
+    "thumbnail": "moto-interact-day-thumb.webp",
+    "time": "day",
+    "weather": "clear",
+    "shell": ""
   }
 ]

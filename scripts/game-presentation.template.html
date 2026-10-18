@@ -30,10 +30,10 @@
             <div class="game-detail-layout">
                 <section class="game-gallery" id="game-gallery" aria-label="Galerie {{title}}">
                     <button type="button" class="game-gallery-featured" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
-                        <img data-gallery-featured src="{{firstImage}}" alt="{{title}} — Zi" width="1080" height="1920" fetchpriority="high" decoding="async">
+                        <img data-gallery-featured src="{{firstImage}}" alt="{{title}} — {{firstLabel}}" width="1080" height="1920" fetchpriority="high" decoding="async">
                         <span class="game-gallery-expand">Extinde ↗</span>
                     </button>
-                    <div class="game-gallery-caption"><span data-gallery-current>Zi</span><span data-gallery-position>1 / {{count}}</span></div>
+                    <div class="game-gallery-caption"><span data-gallery-current>{{firstLabel}}</span><span data-gallery-position>1 / {{count}}</span></div>
                     <div class="game-gallery-grid" role="group" aria-label="Alege imaginea din joc">
 {{thumbnails}}
                     </div>

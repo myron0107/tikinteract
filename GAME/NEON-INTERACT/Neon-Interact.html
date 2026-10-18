@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ro">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Neon Interact — by TikInteract</title>
+    <link rel="stylesheet" href="../../assets/fonts/font-faces.css?v=1">
+    <link rel="stylesheet" href="../../assets/neon-race2.css?v=7">
+    <script src="../../assets/game-live-sdk.js?v=1"></script>
+    <script type="module" src="../../assets/neon-race2.js?v=13"></script>
+</head>
+<body>
+<div id="game-fit"><main id="shell">
+    <section class="race-heading"><div><h1>NEON <em>INTERACT</em></h1><p class="race-byline">by TikInteract</p></div><div class="round-number">RUN <strong id="round">01</strong></div></section>
+    <section class="race-dashboard" aria-label="Starea cursei">
+        <div class="race-clock"><span id="roundState">CURSA ESTE ÎN DESFĂȘURARE</span><strong id="timer">02:00</strong><small id="raceNotice" role="status">Chat-ul dă ritmul.</small></div>
+        <div class="race-progress"><div class="red"><span>TEAM RED <b id="redDistance">0 m</b></span><div role="progressbar" aria-label="Progres RED" aria-valuemin="0" aria-valuemax="4000" id="redProgress"><i></i></div></div><div class="blue"><span>TEAM BLUE <b id="blueDistance">0 m</b></span><div role="progressbar" aria-label="Progres BLUE" aria-valuemin="0" aria-valuemax="4000" id="blueProgress"><i></i></div></div></div>
+    </section>
+    <section class="night-track" aria-label="Pista de noapte"><canvas id="raceCanvas" width="1200" height="900" role="img" aria-label="Mașinile RED și BLUE în cursă prin orașul de noapte"></canvas><div class="track-label"><span class="track-brand"><img src="../../assets/tikinteract-icon-v2.png" alt="" width="11" height="11"><span>TIK<span>INTERACT</span></span></span><span>4.0 KM</span></div><div class="lane-status red" id="redTelemetry"><span>RED</span><strong id="redSpeed">50 <small>KM/H</small></strong><div class="car-nitro" id="redNitro" role="progressbar" aria-label="Nitro RED" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div></div><div class="lane-status blue" id="blueTelemetry"><span>BLUE</span><strong id="blueSpeed">50 <small>KM/H</small></strong><div class="car-nitro" id="blueNitro" role="progressbar" aria-label="Nitro BLUE" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i></i></div></div></section>
+    <section class="race-community"><div class="community-title"><span>COMUNITATEA CONDUCE.</span><span id="wins">RED 0 : 0 BLUE</span></div><div class="team-rankings"><section class="red"><h2><i></i> TEAM RED <span>TOP 5</span></h2><ol id="topRed"><li class="empty">Scrie RED în chat și intră în cursă.</li></ol></section><section class="blue"><h2><i></i> TEAM BLUE <span>TOP 5</span></h2><ol id="topBlue"><li class="empty">Scrie BLUE în chat și intră în cursă.</li></ol></section></div></section>
+    <footer class="race-footer"><span><b>RED</b> / <b>BLUE</b> în chat</span><span>♥ Like = viteză</span><span>✦ Cadou = nitro</span></footer>
+    <section class="race-overlay" id="raceOverlay" hidden aria-live="polite" aria-labelledby="overlayTitle">
+        <canvas class="victory-effects" id="victoryEffects" width="1080" height="1920" aria-hidden="true"></canvas>
+        <div class="race-overlay-inner"><span class="overlay-kicker" id="overlayKicker">CONTROL CURSĂ</span><span class="overlay-symbol" id="overlaySymbol" aria-hidden="true"></span><h2 id="overlayTitle">Cursă în pauză</h2><p id="overlayDescription">Mașinile și cronometrul sunt oprite.</p><div id="resultDetails" class="result-details" hidden><div class="red"><b>RED</b><span id="redResult"></span></div><div class="blue"><b>BLUE</b><span id="blueResult"></span></div></div><div class="next-race" id="nextRaceCountdown" hidden><span>URMĂTOAREA CURSĂ ÎN</span><strong id="nextRaceSeconds">15</strong><small>SECUNDE</small></div><button id="pauseResume" type="button">Reia cursa</button><button id="resultNextRace" type="button" hidden>Pornește cursa următoare</button></div>
+    </section>
+</main></div>
+<div class="controls"><button id="testToggle" type="button" aria-controls="testPanel" aria-expanded="false">TEST MENU</button><a href="../../index.html?view=live&amp;game=neon-race-2">Deschide în LIVE Studio ↗</a></div>
+<section id="testPanel" hidden aria-label="Comenzi de test Neon Interact">
+    <h2>Test Neon Interact <button id="testClose" type="button" aria-label="Închide meniul">×</button></h2>
+    <label>Valoare cadou<select id="giftValue"><option value="1">1 punct</option><option value="10">10 puncte</option><option value="100" selected>100 puncte</option><option value="500">500 puncte</option></select></label>
+    <div class="team-test"><span>RED</span><button type="button" data-team="0" data-kind="like">+1 like</button><button type="button" data-team="0" data-kind="like25">+25 likes</button><button type="button" data-team="0" data-kind="gift">Cadou</button></div>
+    <div class="team-test"><span>BLUE</span><button type="button" data-team="1" data-kind="like">+1 like</button><button type="button" data-team="1" data-kind="like25">+25 likes</button><button type="button" data-team="1" data-kind="gift">Cadou</button></div>
+    <div class="test-row"><button id="pause" type="button">Pauză</button><button id="reset" type="button">Cursă nouă</button><button id="auto" type="button">LIVE SIM: OFF</button><label><input type="checkbox" id="autoNext" checked> Rundă automată</label></div>
+    <div class="test-row"><input id="chatUser" maxlength="60" placeholder="Nume spectator" aria-label="Nume spectator"><input id="chatMessage" maxlength="30" placeholder="RED sau BLUE" aria-label="Comandă echipă"><button id="sendChat" type="button">Trimite comentariul</button></div>
+    <div class="test-row"><button id="sound" type="button" aria-pressed="true">SOUND ON</button><label>Volum general<input id="volumeMaster" type="range" min="0" max="100" value="70"></label><label>Motoare<input id="volumeEngine" type="range" min="0" max="100" value="20"></label><label>Efecte<input id="volumeEffects" type="range" min="0" max="100" value="40"></label></div>
+    <button id="resetSupporters" type="button">Resetează clasamentul</button><p id="testFeedback" role="status">Simularea este oprită. Intră în echipă înainte de like-uri și cadouri.</p>
+</section>
+</body></html>

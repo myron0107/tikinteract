@@ -58,7 +58,7 @@ function showStudioTestUnavailable(message) {
     if (label) label.textContent = message;
 }
 
-function createStudioTestGroup(title, kind = '', category = kind || 'extra') {
+function createStudioTestGroup(title, kind, category = kind) {
     const section = document.createElement('section');
     section.className = `studio-test-group${kind ? ` studio-test-group--${kind}` : ''}`;
     section.dataset.studioTestCategory = category;
@@ -75,7 +75,7 @@ function createStudioTestGroup(title, kind = '', category = kind || 'extra') {
 function initializeStudioTestTabs() {
     const nav = document.getElementById('studio-test-tabs');
     if (!nav || !studioTestBridge) return;
-    const categories = [['teams','Test'],['weather','Decor'],['audio','Audio'],['music','Muzică'],['extra','Extra']];
+    const categories = [['teams','Test'],['weather','Decor'],['audio','Audio'],['music','Muzică']];
     for (const [key, label] of categories) {
         if (!studioTestBridge.groups.some(group => group.category === key)) continue;
         const button = document.createElement('button');
@@ -238,15 +238,11 @@ function buildStudioTestControls(original) {
     add(music, 'defaultMusic');
     add(music, 'customMusicStatus');
     add(music, 'musicName');
-    if (doc.getElementById('chatUser')) {
-        const chat = createStudioTestGroup('Test comentarii');
-        add(chat, 'chatUser', 'Nume spectator');
-        add(chat, 'chatMessage', 'Comandă echipă');
-        add(chat, 'sendChat');
-    }
-    const ranks = createStudioTestGroup('Clasamentul jocului');
-    add(ranks, 'resetSupporters');
-    add(ranks, 'resetTops');
+    studioTestBridge.groups = studioTestBridge.groups.filter(group => {
+        const populated = group.section.children[1].children.length > 0;
+        group.section.hidden = !populated;
+        return populated;
+    });
     initializeStudioTestTabs();
 }
 

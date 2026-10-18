@@ -166,6 +166,8 @@ body > header { background: #080709e8; border-bottom-color: #ffffff12; box-shado
 .studio-game-option:hover { border-color: #ffffff18; background: #ffffff05; }
 .studio-game-option.is-active { border-color: #ff263e50; background: linear-gradient(145deg, #ff263e1c, #ff263e08); color: #fff5f2; }
 .studio-game-option.is-active img, .studio-game-option:hover img { opacity: 1; }
+.studio-game-option:disabled { cursor: not-allowed; opacity: .55; }
+.studio-game-option:disabled:hover { border-color: transparent; background: transparent; }
 .studio-game-browser .live-game-frame-wrap { min-width: 0; width: 100%; margin-bottom: 0; }
 .studio-stage #live-game-status { margin-top: 14px; }
 @media (max-width: 560px) {
@@ -200,6 +202,8 @@ body > header { background: #080709e8; border-bottom-color: #ffffff12; box-shado
 .game-center-card p { min-height: 2.8em; margin-top: 8px; color: #b0a5a7; font-size: .75rem; line-height: 1.6; }
 .game-center-card-body > button { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; margin-top: 22px; padding: 12px 14px; border: 1px solid #ff263e30; border-radius: 10px; background: #ff263e13; color: #ff9aa5; font-size: .72rem; font-weight: 700; cursor: pointer; }
 .game-center-card-body > button:hover { background: #ff263e25; border-color: #ff263e70; }
+.game-center-card-body > button:disabled { border-color: #ffffff18; background: #ffffff08; color: #a1a1aa; cursor: not-allowed; opacity: .75; }
+.game-center-card-body > button:disabled:hover { border-color: #ffffff18; background: #ffffff08; }
 .game-center-empty { padding: 40px 16px; text-align: center; font-size: .85rem; color: #b0a5a7; }
 @media (max-width: 560px) {
     #view-live .live-studio-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }

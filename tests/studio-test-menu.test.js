@@ -62,7 +62,9 @@ for (const [gameId,path] of [['neon-race','GAME/NEON-RACE/Neon-Race.html'],['neo
         assert(elements['studio-test-controls'].children.every(section => section.tagName === 'SECTION'));
         const sections = elements['studio-test-controls'].children;
         assert.equal(sections.filter(section => !section.hidden).length,2);
-        assert.equal(elements['studio-test-tabs'].children.length,5);
+        assert.equal(elements['studio-test-tabs'].children.length,4);
+        assert(!elements['studio-test-tabs'].children.some(tab => tab.id === 'studio-test-tab-extra'));
+        assert(!sections.some(section => section.dataset.studioTestCategory === 'extra'));
         context.selectStudioTestTab('audio');
         assert(sections.filter(section => !section.hidden).every(section => ['audio','common'].includes(section.dataset.studioTestCategory)));
         context.selectStudioTestTab('teams');
