@@ -1,0 +1,24 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "date": "2026-10-19",
+  "stages": [
+    {
+      "asset": "alien",
+      "prompt": "Use case: background-extraction. Edit target is the supplied SIX-PART alien rig sheet. Remove ALL background pixels including the dark gray, black and burgundy gradient. Output a real RGBA PNG with actual transparent alpha channel. KEEP exactly all six objects and their original positions, shapes, colors, scale, details, and outer outlines UNCHANGED. The gaps between the six detached parts MUST be completely transparent. No colored matte, no checkerboard baked into image, no drop shadow outside objects. This will be used as a layered cutout in a game. Do not redraw or add anything.",
+      "referenced_image_paths": [
+        "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-3a0b07b3-69cf-4756-88cf-c62322782e9d.png"
+      ],
+      "transparent_background": true,
+      "selectedFile": "source/alien-v2.png"
+    },
+    {
+      "asset": "ship",
+      "prompt": "Use case: background-extraction. Edit target is the supplied UFO. Remove the entire black gray and burgundy backdrop and all outside glow/shadow pixels. Output an actual transparent alpha-channel PNG cutout, not a dark background. Keep the ship interior opaque and exactly unchanged: white ceramic plates, black glass dome, burgundy rings and red engines. Preserve the exact silhouette, source dimensions and position. All empty area outside UFO must be fully alpha=0. No added glow, no matte, no ground, no checkerboard, no text.",
+      "referenced_image_paths": [
+        "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-7de9509d-130b-430f-a53b-45e2fa8b2e34.png"
+      ],
+      "transparent_background": true,
+      "selectedFile": "source/ship-v2.png"
+    }
+  ]
+}

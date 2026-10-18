@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-19",
+  "generator": "OpenAI built-in imagegen",
+  "assets": [
+    {
+      "key": "atlas",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-51e57751-8033-495f-867d-81da87b1d1c3.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: production 2D game sprite atlas, edit the reference atlas. Redesign ALL the 16 objects to a coherent premium playful sci-fi TikInteract universe. Preserve this exact 4x4 sprite layout, each individual sprite position, size, pose, isolated silhouette and transparent gutters. Row1 four poses of ONE NEW distinctive adorable little robot: idle, upward jump, falling arms raised, squashed landing. NEW robot design has rounded rectangular white ceramic head with charcoal glass face, two soft white LED eyes, short antenna, burgundy armored torso and forearms, white boots with graphite soles, subtle red LED seams. NOT cyan or blue. Keep proportions and poses for animation. Row2: floating sci-fi platform, spring platform, crystalline platform, finish platform with checkered flag, remade in graphite, ivory and muted burgundy with restrained ruby highlights. Row3: magnet, friendly white cloud, rocket, energy vortex. Row4: tornado, portal, trophy, cloud cluster. Remake all props with charcoal/ivory and burgundy/ruby accents, trophy brushed platinum with a little pale gold. Attractive high-detail polished stylized 3D game rendering with strong readable outlines, no colored outer halo, no baked background, no text, no labels, no grid lines. MUST retain all16 separate objects at the exact original positions, transparent background and matching original crop bounds. Reference is edit target.",
+        "referenced_image_paths": [
+          "C:/Users/miron/Desktop/TIKINTERACT/tikinteract/.tools/skyshift-source/art-atlas.webp"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "key": "alien",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-3a0b07b3-69cf-4756-88cf-c62322782e9d.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: production articulated alien 2D game rig sprite atlas. Edit reference image, preserving the exact six detached body parts, their positions, orientations, relative sizes and separation on the transparent 3-column by 2-row sheet. Replace lime-green/purple alien design with a NEW mischievous friendly alien: pale warm gray / blush skin, large glossy charcoal black eyes with white highlights, expressive grin, short curved antenna with a ruby tip, pointed ears, graphite and burgundy astronaut armor with ivory trim. Same polished stylized 3D cartoon universe as a white ceramic and burgundy little robot. Top-left large head, top-middle armless headless armored torso, top-right closed fist with wrist cuff. Bottom-left a detached hand doing a playful open-palm wave (not an obscene gesture), bottom-middle single chunky astronaut boot, bottom-right open gripping hand with cuff. Match original part bounding boxes and position closely so game rig can assemble them. Opaque interiors, real transparent background everywhere else, crisp isolated edges, no text, no labels, no extra body parts, no shadows between objects, no green, cyan, or purple armor. Keep wide 3:2 canvas.",
+        "referenced_image_paths": [
+          "C:/Users/miron/Desktop/TIKINTERACT/tikinteract/.tools/skyshift-source/art-alien.webp"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "key": "ship",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-7de9509d-130b-430f-a53b-45e2fa8b2e34.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: 2D game prop transparent cutout. Redesign reference UFO in premium playful sci-fi cartoon 3D render. Preserve exact perspective, silhouette, size and centered position with transparent margins. UFO shell white ceramic and charcoal graphite, deep burgundy structural rings, small red LED perimeter lamps, smoked black glass dome with soft ivory reflection, underside engines soft red/burgundy luminous. Same world as a white and burgundy small robot and a blush-gray alien in graphite burgundy armor. Clearly readable sculpted shapes and fine material detail. No cyan, lime, purple, gold flood, no beams, no shadow plane, no scenery, no text or logos. Real transparent background. Wide3:2 canvas. Reference is edit target.",
+        "referenced_image_paths": [
+          "C:/Users/miron/Desktop/TIKINTERACT/tikinteract/.tools/skyshift-source/art-ship.webp"
+        ],
+        "transparent_background": true
+      }
+    },
+    {
+      "key": "city",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-df315c94-a1e8-444f-b19e-b2efcbacca23.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: production background image for a vertical 2D jumping game, portrait 2:3. Premium polished stylized 3D illustration, coherent playful sci-fi world for a small white ceramic, graphite and burgundy robot and a gray alien. TikInteract palette charcoal, black, ivory-white, burgundy with restrained luminous red accents, medium atmospheric contrast, detailed edges but visually quiet broad central 65% for gameplay. Scene is environment ONLY, no characters, no platforms or floating stepping stones in the center, no UI, text, letters, logos, HUD or borders. Avoid giant foreground obstructions, oversaturated cyan/green/purple, featureless black. Light mist and beautiful depth, readable background with pale stone and white highlights. Compose props at outer edges leaving middle free. Scene: A futuristic rooftop vertical canyon looking upward between distant art-deco sci-fi towers, ivory ceramic architecture and graphite structure with small burgundy window strips, far red-pink twilight horizon with soft clouds, lower edges frame rooftop parapets and hanging cables. The central corridor is an open gradient of dusty rose sky. Inviting, cinematic, crisp but softly atmospheric, no street foreground.",
+        "transparent_background": false
+      }
+    },
+    {
+      "key": "clouds",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-bf68a112-fc39-4bf8-af77-c37db588acfb.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: production background image for a vertical 2D jumping game, portrait 2:3. Premium polished stylized 3D illustration, coherent playful sci-fi world for a small white ceramic, graphite and burgundy robot and a gray alien. TikInteract palette charcoal, black, ivory-white, burgundy with restrained luminous red accents, medium atmospheric contrast, detailed edges but visually quiet broad central 65% for gameplay. Scene is environment ONLY, no characters, no platforms or floating stepping stones in the center, no UI, text, letters, logos, HUD or borders. Avoid giant foreground obstructions, oversaturated cyan/green/purple, featureless black. Light mist and beautiful depth, readable background with pale stone and white highlights. Compose props at outer edges leaving middle free. Scene: High above the futuristic city among pearl white cloud islands; distant ivory communication spires and burgundy observation towers very far along outer edges, thin stratospheric crescent, soft charcoal-rose upper sky, white and dusty rose clouds at lower corners. Airy and luminous but no pure white glare. Broad open center and tall sky, clouds never form solid ground or platforms.",
+        "transparent_background": false
+      }
+    },
+    {
+      "key": "space",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-b61e43c9-7efd-4a1b-84d9-b66ad0b4497f.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: production background image for a vertical 2D jumping game, portrait 2:3. Premium polished stylized 3D illustration, coherent playful sci-fi world for a small white ceramic, graphite and burgundy robot and a gray alien. TikInteract palette charcoal, black, ivory-white, burgundy with restrained luminous red accents, medium atmospheric contrast, detailed edges but visually quiet broad central 65% for gameplay. Scene is environment ONLY, no characters, no platforms or floating stepping stones in the center, no UI, text, letters, logos, HUD or borders. Avoid giant foreground obstructions, oversaturated cyan/green/purple, featureless black. Light mist and beautiful depth, readable background with pale stone and white highlights. Compose props at outer edges leaving middle free. Scene: Deep orbit above the curved horizon of a slate gray planet with burgundy-red atmospheric glow at the bottom, far orbital station architecture visible only along upper side corners, sparse elegant stars, a beautiful soft burgundy nebula across dark charcoal sky, a small pale moon. Restrained cinematic starfield, gentle diffuse ivory and red illumination, expansive negative space in the center.",
+        "transparent_background": false
+      }
+    },
+    {
+      "key": "depths",
+      "path": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-a9407de8-75db-4b24-8805-5570187f719c.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Asset type: production background image for a vertical 2D jumping game, portrait 2:3. Premium polished stylized 3D illustration, coherent playful sci-fi world for a small white ceramic, graphite and burgundy robot and a gray alien. TikInteract palette charcoal, black, ivory-white, burgundy with restrained luminous red accents, medium atmospheric contrast, detailed edges but visually quiet broad central 65% for gameplay. Scene is environment ONLY, no characters, no platforms or floating stepping stones in the center, no UI, text, letters, logos, HUD or borders. Avoid giant foreground obstructions, oversaturated cyan/green/purple, featureless black. Light mist and beautiful depth, readable background with pale stone and white highlights. Compose props at outer edges leaving middle free. Scene: An immense subterranean alien cavern with graphite basalt walls and ivory mineral formations confined to the outer edges, deep burgundy crystals and narrow red magma seams deep in the distance, red mist at the bottom, mysterious but playful sci-fi adventure mood. Center is open smoky charcoal with faint rose light and distant cave depth, brightest crystals stay around side edges, no central rocks or platforms.",
+        "transparent_background": false
+      }
+    }
+  ]
+}
