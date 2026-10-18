@@ -1120,6 +1120,21 @@ select:focus {
         gap: 0.5rem;
     }
 
+    #account-status-indicator {
+        order: 1;
+    }
+
+    #user-profile-menu {
+        order: 2;
+    }
+
+    #header-account-avatar {
+        order: 3;
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 0.65rem;
+    }
+
     #btn-login-modal {
         gap: 0.4rem;
         padding: 0.55rem 0.7rem;
@@ -1143,17 +1158,17 @@ select:focus {
     #user-profile-menu > button:first-child {
         display: inline-flex;
         margin-left: 0;
-        padding: 0.45rem 0.6rem;
-        font-size: 0.65rem;
+        padding: 0.35rem 0.5rem;
+        font-size: 0.58rem;
     }
 
     #user-profile-menu > button:last-child {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        min-width: 2rem;
-        min-height: 2rem;
-        padding: 0.45rem;
+        min-width: 1.75rem;
+        min-height: 1.75rem;
+        padding: 0.35rem;
     }
 
     #user-profile-menu {
