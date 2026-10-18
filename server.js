@@ -41,6 +41,8 @@ const MIME_TYPES = {
     '.mp3': 'audio/mpeg',
     '.ogg': 'audio/ogg',
     '.png': 'image/png',
+    '.jpg': 'image/jpeg',
+    '.mp4': 'video/mp4',
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
     '.webm': 'audio/webm'

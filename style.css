@@ -11,7 +11,7 @@
     --red: #ff263e;
     --red-strong: #e61932;
     --red-soft: rgba(255, 38, 62, 0.14);
-    --glow: 0 0 35px rgba(255, 38, 62, 0.3);
+    --glow: 0 8px 28px rgba(255, 38, 62, 0.22);
 }
 
 * {
@@ -20,6 +20,12 @@
 
 html {
     scroll-behavior: smooth;
+}
+
+/* Visual refresh: retain the original red, warm neutrals and dark surfaces. */
+button:focus-visible, a:focus-visible, video:focus-visible {
+    outline: 2px solid #ff8b80;
+    outline-offset: 5px;
 }
 
 body {

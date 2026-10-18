@@ -48,6 +48,7 @@
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/visual-refresh.css?v=9">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
@@ -213,10 +214,16 @@
                         <span><i class="fa-solid fa-users" aria-hidden="true"></i> Comunitatea conduce jocul</span>
                     </div>
                 </div>
-                <div class="home-hero-art" role="img" aria-label="Neon Race, joc interactiv pentru TikTok LIVE">
+                <div class="home-hero-art">
                     <div class="home-hero-art-glow"></div>
-                    <img src="assets/neon-race-preview.png" alt="" fetchpriority="high">
-                    <div class="home-hero-art-label"><span>JOCUL COMUNITĂȚII</span><strong>NEON RACE</strong></div>
+                    <div class="home-preview-player">
+                        <div class="home-preview-topbar"><span><span class="preview-status-dot"></span> TIKINTERACT</span><span>PREZENTARE JOCURI</span></div>
+                        <video controls playsinline muted preload="none" poster="assets/tikinteract-preview-poster.jpg" aria-label="Prezentare video a jocurilor TikInteract, 12 secunde">
+                            <source src="assets/tikinteract-preview.mp4" type="video/mp4">
+                            Browserul tău nu poate reda acest video. <a href="assets/tikinteract-preview.mp4">Descarcă prezentarea.</a>
+                        </video>
+                        <div class="home-preview-caption"><span>00:12 <i class="fa-solid fa-play" aria-hidden="true"></i></span></div>
+                    </div>
                     <span class="home-hero-orbit home-hero-orbit-one"></span>
                     <span class="home-hero-orbit home-hero-orbit-two"></span>
                 </div>
@@ -252,6 +259,7 @@
                 </div>
             </section>
 
+            <div class="home-community-grid">
             <section class="home-leaderboard-section" aria-labelledby="home-leaderboard-title">
                 <div class="home-section-heading">
                     <div>
@@ -277,6 +285,7 @@
                 <div class="home-how-step"><span>02</span><i class="fa-solid fa-plug" aria-hidden="true"></i><h3>Conectează LIVE-ul</h3><p>Pornește TikInteract și conectează-te la transmisiunea ta.</p></div>
                 <div class="home-how-step"><span>03</span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><h3>Lasă chat-ul să joace</h3><p>Like-urile și cadourile declanșează acțiuni în joc.</p></div>
             </section>
+            </div>
         </div>
     </main>
 
@@ -506,15 +515,19 @@
             <button id="live-studio-tab" class="live-studio-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="live-studio-panel" onclick="setLiveStudioTab('studio')">
                 <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> LIVE Studio
             </button>
+            <button id="game-center-tab" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="game-center-panel" onclick="setLiveStudioTab('games')">
+                <i class="fa-solid fa-gamepad" aria-hidden="true"></i> Game Center
+            </button>
             <button id="audio-center-tab" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="audio-center-panel" onclick="setLiveStudioTab('audio')">
                 <i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center
             </button>
         </div>
 
         <section id="live-studio-panel" role="tabpanel" aria-labelledby="live-studio-tab">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="dashboard-card p-6 rounded-2xl">
-                <h3 class="text-sm font-bold text-white mb-4">Setări Streamer</h3>
+        <div class="studio-workspace">
+            <aside class="studio-controls" aria-label="Configurare LIVE și sunete rapide">
+            <div class="studio-connection dashboard-card p-6 rounded-2xl">
+                <h3 class="studio-panel-title text-sm font-bold text-white mb-4"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Setări Streamer</h3>
                 <div id="tiktok-profile" class="hidden flex mb-4 items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-3">
                     <div class="tiktok-profile-avatar">
                         <span id="tiktok-profile-fallback">T</span>
@@ -539,16 +552,11 @@
                 <p class="mb-4 text-[10px] leading-relaxed text-zinc-400">
                     Profilul și statisticile sunt adăugate automat în clasamentul public după salvarea username-ului TikTok.
                 </p>
-                <label for="live-game-select" class="block text-xs text-zinc-400 mb-1">Joc activ</label>
-                <select id="live-game-select" onchange="loadLiveGame(this.value)" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600">
-                    <option value="neon-race">Neon Race</option>
-                    <option value="neon-riders">Neon Riders</option>
-                    <option value="country-derby">Country Derby</option>
-                </select>
                 <button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
                     Pornește Conexiunea Live
                 </button>
-                <section class="live-favorites-panel" aria-labelledby="live-favorites-title">
+            </div>
+                <section class="live-favorites-panel studio-audio" aria-labelledby="live-favorites-title">
                     <div class="live-favorites-heading">
                         <div>
                             <p class="section-kicker">Acces rapid</p>
@@ -577,10 +585,10 @@
                     </label>
                     <div id="live-favorites-search-results" class="live-favorites-search-results hidden" role="list" aria-label="Rezultate sunete"></div>
                 </section>
-            </div>
+            </aside>
 
-            <div class="lg:col-span-2 dashboard-panel rounded-2xl p-6 min-h-[300px]">
-                <div class="flex items-center justify-between mb-6">
+            <div class="studio-stage dashboard-panel rounded-2xl p-6 min-h-[300px]">
+                <div class="studio-stage-heading flex items-center justify-between mb-6">
                     <div>
                         <p class="section-kicker">Joc LIVE</p>
                         <h4 class="text-xl font-bold text-white">Joacă direct în TikInteract</h4>
@@ -588,12 +596,29 @@
                     <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
                 </div>
 
+                <div class="studio-game-browser">
+                    <section class="studio-game-picker live-favorites-panel" aria-labelledby="studio-game-favorites-title">
+                        <div class="live-favorites-heading">
+                            <div><p class="section-kicker">Acces rapid</p><h4 id="studio-game-favorites-title">Favorite jocuri</h4></div>
+                            <span id="studio-game-favorites-count" class="live-favorites-count">0</span>
+                        </div>
+                        <div class="studio-game-options"></div>
+                        <p id="studio-quick-empty" class="studio-quick-empty" hidden>Adaugă jocuri cu ★ din Game Center.</p>
+                        <label class="studio-quick-search live-favorites-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="sr-only">Caută jocuri pentru acces rapid</span><input id="studio-quick-search" type="search" placeholder="Caută un joc și adaugă-l rapid…" oninput="renderQuickGames()" autocomplete="off"></label>
+                        <button class="studio-all-games" type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Deschide Game Center</button>
+                    </section>
+                    <select id="live-game-select" hidden aria-label="Joc selectat">
+                        <option value="neon-race">Neon Race</option>
+                        <option value="neon-riders">Neon Riders</option>
+                        <option value="country-derby">Country Derby</option>
+                    </select>
                 <div class="live-game-frame-wrap mb-6 overflow-hidden rounded-xl border border-zinc-800">
                     <iframe id="live-game-frame" class="live-game-frame" title="Joc TikTok LIVE" loading="lazy" allow="autoplay" allowfullscreen></iframe>
                 </div>
+                </div>
                 <p id="live-game-status" class="mb-6 text-xs text-zinc-500" role="status" aria-live="polite">Deschide LIVE pentru a încărca jocul selectat.</p>
 
-                <div class="dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div class="studio-stats dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="mini-stat-box">
                         <span>Scor</span>
                         <strong id="score-display">0</strong>
@@ -635,8 +660,33 @@
                         </div>
                     </div>
                 </div>
-                </section>
+            </div>
+        </div>
+        </section>
 
+        <section id="game-center-panel" class="hidden" role="tabpanel" aria-labelledby="game-center-tab">
+            <div class="game-center-shell">
+                <div class="game-center-heading">
+                    <div><span class="section-kicker">BIBLIOTECA TA</span><h3>Game Center</h3><p>Alege un joc și deschide-l în LIVE Studio.</p></div>
+                    <label class="game-center-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="game-center-search" type="search" placeholder="Caută un joc…" aria-label="Caută în Game Center" oninput="filterStudioGames(this.value)"></label>
+                </div>
+                <div class="game-center-grid">
+                    <article class="game-center-card" data-game-center-card="Neon Race curse mașini">
+                        <img src="assets/neon-race-preview.png" alt="Captură din jocul Neon Race" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">CURSE AUTO</span><h4>Neon Race</h4><p>Like-urile și cadourile accelerează cursa.</p><button type="button" onclick="launchStudioGame('neon-race')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                    <article class="game-center-card" data-game-center-card="Neon Riders curse motociclete moto">
+                        <img src="assets/neon-riders-preview.png" alt="Captură din jocul Neon Riders" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">CURSE MOTO</span><h4>Neon Riders</h4><p>Două echipe moto, o singură linie de sosire.</p><button type="button" onclick="launchStudioGame('neon-riders')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                    <article class="game-center-card" data-game-center-card="Country Derby curse cai echipe">
+                        <img src="assets/country-derby-preview.png" alt="Captură din jocul Country Derby" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">CURSE DE CAI</span><h4>Country Derby</h4><p>Alege un cal și adună-ți echipa în chat.</p><button type="button" onclick="launchStudioGame('country-derby')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                </div>
+                <p id="game-center-empty" class="game-center-empty" hidden>Nu am găsit jocuri. Încearcă altă căutare.</p>
+            </div>
+        </section>
                 <section id="audio-center-panel" class="hidden" role="tabpanel" aria-labelledby="audio-center-tab">
                     <div class="soundboard-shell">
                         <div class="soundboard-topbar">
@@ -689,8 +739,6 @@
                         <p class="soundboard-footnote">Sunetul este redat local. Pentru ca publicul să-l audă, include audio-ul browserului în sursa de streaming.</p>
                     </div>
                 </section>
-            </div>
-        </div>
     </div>
 
     <footer class="site-footer">
@@ -1244,6 +1292,11 @@
             if (!gameFrame || !gamePath) return;
 
             if (gameSelect && gameSelect.value !== gameId) gameSelect.value = gameId;
+            document.querySelectorAll('[data-live-game]').forEach((button) => {
+                const selected = button.dataset.liveGame === gameId;
+                button.classList.toggle('is-active', selected);
+                button.setAttribute('aria-pressed', String(selected));
+            });
             if (gameFrame.dataset.gameId === gameId) return;
 
             gameFrame.dataset.gameId = gameId;

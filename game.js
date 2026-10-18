@@ -585,20 +585,132 @@ function setAudioLibraryScope(scope) {
 }
 
 function setLiveStudioTab(tab) {
-    const isAudio = tab === 'audio';
-    const studioPanel = document.getElementById('live-studio-panel');
-    const audioPanel = document.getElementById('audio-center-panel');
-    const studioTab = document.getElementById('live-studio-tab');
-    const audioTab = document.getElementById('audio-center-tab');
-    if (!studioPanel || !audioPanel || !studioTab || !audioTab) return;
+    const tabs = {studio: ['live-studio-tab', 'live-studio-panel'], games: ['game-center-tab', 'game-center-panel'], audio: ['audio-center-tab', 'audio-center-panel']};
+    if (!tabs[tab]) return;
+    Object.entries(tabs).forEach(([key, [buttonId, panelId]]) => {
+        const selected = key === tab;
+        const button = document.getElementById(buttonId);
+        document.getElementById(panelId)?.classList.toggle('hidden', !selected);
+        button?.classList.toggle('is-active', selected);
+        button?.setAttribute('aria-selected', String(selected));
+    });
+    if (tab === 'audio') document.getElementById('audio-sound-search')?.focus();
+    if (tab === 'games') document.getElementById('game-center-search')?.focus();
+}
 
-    studioPanel.classList.toggle('hidden', isAudio);
-    audioPanel.classList.toggle('hidden', !isAudio);
-    studioTab.classList.toggle('is-active', !isAudio);
-    audioTab.classList.toggle('is-active', isAudio);
-    studioTab.setAttribute('aria-selected', String(!isAudio));
-    audioTab.setAttribute('aria-selected', String(isAudio));
-    if (isAudio) document.getElementById('audio-sound-search')?.focus();
+function filterStudioGames(query) {
+    const normalized = query.trim().toLocaleLowerCase('ro');
+    let visible = 0;
+    document.querySelectorAll('[data-game-center-card]').forEach((card) => {
+        const matches = card.dataset.gameCenterCard.toLocaleLowerCase('ro').includes(normalized);
+        card.hidden = !matches;
+        if (matches) visible++;
+    });
+    const empty = document.getElementById('game-center-empty');
+    if (empty) empty.hidden = visible > 0;
+}
+
+function launchStudioGame(gameId) {
+    loadLiveGame(gameId);
+    setLiveStudioTab('studio');
+    document.querySelector(`[data-live-game="${gameId}"]`)?.focus({preventScroll: true});
+}
+
+const GAME_FAVORITES_KEY = 'tikinteract_game_favorites_v1';
+let favoriteGameIds = new Set();
+let studioGameCatalog = [];
+
+function initializeGameFavorites() {
+    const select = document.getElementById('live-game-select');
+    if (!select) return;
+    const cards = [...document.querySelectorAll('[data-game-center-card]')];
+    studioGameCatalog = [...select.options].map((option, index) => ({
+        id: option.value, name: option.textContent.trim(),
+        image: cards[index]?.querySelector('img')?.getAttribute('src') || '',
+        card: cards[index]
+    }));
+    try {
+        const saved = JSON.parse(localStorage.getItem(GAME_FAVORITES_KEY) || '[]');
+        favoriteGameIds = new Set(Array.isArray(saved) ? saved.filter(id => studioGameCatalog.some(game => game.id === id)) : []);
+    } catch { favoriteGameIds = new Set(); }
+    studioGameCatalog.forEach(game => {
+        if (!game.card || game.card.querySelector('[data-game-favorite]')) return;
+        game.card.prepend(createGameFavoriteButton(game));
+    });
+    refreshGameFavorites();
+}
+
+function createGameFavoriteButton(game) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'game-favorite-star';
+    button.dataset.gameFavorite = game.id;
+    button.addEventListener('click', (event) => {
+        event.stopPropagation();
+        toggleGameFavorite(game.id);
+    });
+    return button;
+}
+
+function toggleGameFavorite(gameId) {
+    if (!studioGameCatalog.some(game => game.id === gameId)) return;
+    if (favoriteGameIds.has(gameId)) favoriteGameIds.delete(gameId);
+    else favoriteGameIds.add(gameId);
+    try { localStorage.setItem(GAME_FAVORITES_KEY, JSON.stringify([...favoriteGameIds])); } catch { /* Keep favorites usable in memory when storage is unavailable. */ }
+    refreshGameFavorites();
+}
+
+function refreshGameFavorites() {
+    const count = document.getElementById('studio-game-favorites-count');
+    if (count) count.textContent = favoriteGameIds.size;
+    renderQuickGames();
+    document.querySelectorAll('[data-game-favorite]').forEach(button => {
+        const selected = favoriteGameIds.has(button.dataset.gameFavorite);
+        const game = studioGameCatalog.find(item => item.id === button.dataset.gameFavorite);
+        button.textContent = selected ? '★' : '☆';
+        button.classList.toggle('is-favorite', selected);
+        button.setAttribute('aria-pressed', String(selected));
+        button.setAttribute('aria-label', `${selected ? 'Elimină din favorite' : 'Adaugă la favorite'}: ${game?.name || ''}`);
+        button.title = selected ? 'Elimină din Acces rapid' : 'Adaugă în Acces rapid';
+    });
+}
+
+function renderQuickGames() {
+    const list = document.querySelector('.studio-game-options');
+    if (!list) return;
+    const query = (document.getElementById('studio-quick-search')?.value || '').trim().toLocaleLowerCase('ro');
+    const games = studioGameCatalog.filter(game => query ? game.name.toLocaleLowerCase('ro').includes(query) : favoriteGameIds.has(game.id));
+    const selectedId = document.getElementById('live-game-select')?.value;
+    list.replaceChildren();
+    games.forEach(game => {
+        const item = document.createElement('div');
+        item.className = 'studio-quick-item';
+        const open = document.createElement('button');
+        open.type = 'button';
+        open.className = 'studio-game-option';
+        open.dataset.liveGame = game.id;
+        open.classList.toggle('is-active', selectedId === game.id);
+        open.setAttribute('aria-pressed', String(selectedId === game.id));
+        open.title = game.name;
+        open.addEventListener('click', () => loadLiveGame(game.id));
+        const image = document.createElement('img');
+        image.src = game.image; image.alt = ''; image.width = 42; image.height = 38;
+        const label = document.createElement('span'); label.textContent = game.name;
+        open.append(image, label);
+        const star = createGameFavoriteButton(game);
+        const favorite = favoriteGameIds.has(game.id);
+        star.textContent = favorite ? '★' : '☆';
+        star.classList.toggle('is-favorite', favorite);
+        star.setAttribute('aria-pressed', String(favorite));
+        star.setAttribute('aria-label', `${favorite ? 'Elimină din favorite' : 'Adaugă la favorite'}: ${game.name}`);
+        star.title = favorite ? 'Elimină din Acces rapid' : 'Adaugă în Acces rapid';
+        item.append(open, star); list.append(item);
+    });
+    const empty = document.getElementById('studio-quick-empty');
+    if (empty) {
+        empty.hidden = games.length > 0;
+        empty.textContent = query ? 'Niciun joc găsit.' : 'Adaugă jocuri cu ★ din Game Center.';
+    }
 }
 
 function createLeaderboardPerson(profile, rank) {
@@ -1360,6 +1472,7 @@ function runEngine() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    initializeGameFavorites();
     connectToLocalServer();
     runEngine();
     loadSoundEffectLibrary();
