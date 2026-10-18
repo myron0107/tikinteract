@@ -584,19 +584,117 @@ function setAudioLibraryScope(scope) {
     filterSoundEffects();
 }
 
-function setLiveStudioTab(tab) {
-    const tabs = {studio: ['live-studio-tab', 'live-studio-panel'], games: ['game-center-tab', 'game-center-panel'], audio: ['audio-center-tab', 'audio-center-panel']};
-    if (!tabs[tab]) return;
-    document.querySelector('.live-studio-tabs')?.classList.toggle('is-sticky', tab !== 'studio');
-    Object.entries(tabs).forEach(([key, [buttonId, panelId]]) => {
-        const selected = key === tab;
-        const button = document.getElementById(buttonId);
-        document.getElementById(panelId)?.classList.toggle('hidden', !selected);
-        button?.classList.toggle('is-active', selected);
-        button?.setAttribute('aria-selected', String(selected));
+function setLiveStudioTab(tab, options = {}) {
+    const tabs = [...document.querySelectorAll('.live-studio-tabs [data-studio-tab]')];
+    if (!tabs.some(button => button.dataset.studioTab === tab)) return;
+    tabs.forEach(button => {
+        const selected = button.dataset.studioTab === tab;
+        document.getElementById(button.getAttribute('aria-controls'))?.classList.toggle('hidden', !selected);
+        button.classList.toggle('is-active', selected);
+        button.setAttribute('aria-selected', String(selected));
     });
-    if (tab === 'audio') document.getElementById('audio-sound-search')?.focus();
-    if (tab === 'games') document.getElementById('game-center-search')?.focus();
+    const backButton = document.getElementById('studio-back-button');
+    if (backButton) backButton.hidden = tab === 'studio' || tab === 'audio';
+    if (options.focus !== false && tab === 'audio') document.getElementById('audio-sound-search')?.focus();
+    if (options.focus !== false && tab === 'games') document.getElementById('game-center-search')?.focus();
+}
+
+const studioTourSteps = [
+    {tab:'studio', target:'.live-studio-tabs', title:'Bine ai venit în LIVE Studio', text:'Acestea sunt meniurile tale. Îți arătăm pe rând unde configurezi LIVE-ul, alegi jocurile și controlezi sunetele.'},
+    {tab:'studio', target:'.studio-connection', title:'Conectează streamerul', text:'Introdu username-ul creatorului care este LIVE, salvează profilul și pornește conexiunea. Serverul local TikInteract trebuie să ruleze pe același calculator.'},
+    {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Aici apar jocurile favorite. Apasă imaginea pentru a deschide jocul. Caută un joc și folosește steluța pentru a-l adăuga sau elimina din Acces rapid.'},
+    {tab:'studio', target:'.studio-stats', title:'Urmărește sesiunea', text:'Scor, Gifts și Evenimente arată activitatea primită în sesiunea curentă. Datele se actualizează când conexiunea primește evenimente LIVE.'},
+    {tab:'studio', target:'.studio-stage .feed-box', title:'Evenimentele din LIVE', text:'Aici vezi evenimentele primite prin TikInteract. Pentru jocurile cu buton CONNECT în interior, pornește separat și TikFinity Desktop.'},
+    {tab:'games', target:'.game-center-heading', title:'Game Center', text:'Aceasta este biblioteca de jocuri. Caută după nume, apoi apasă „Deschide în Studio” pentru a încărca jocul ales.'},
+    {tab:'games', target:'.game-center-card > .game-favorite-star', title:'Steluța adaugă la favorite', text:'Apasă ☆ pentru a adăuga jocul în Acces rapid. Apasă din nou pe ★ pentru a-l elimina. Favoritele se păstrează în browser.'},
+    {tab:'audio', target:'.soundboard-library-controls', title:'Audio Center', text:'Aici găsești biblioteca de sunete. Alege toate sunetele sau doar favoritele. Mai jos poți căuta după nume și filtra după categorie.'},
+    {tab:'audio', target:'.soundboard-monitor', title:'Control audio la îndemână', text:'Reglează volumul, oprește toate sunetele sau apasă ÎNAPOI pentru a reveni în LIVE Studio. Această bară te urmărește când derulezi.'},
+    {tab:'studio', target:'.studio-audio', title:'Sunete rapide în timpul LIVE-ului', text:'Apasă un card pentru a reda un sunet favorit. Caută și adaugă sunete direct aici sau deschide Audio Center. Include audio-ul browserului în aplicația de streaming pentru ca publicul să le audă.'}
+];
+let studioTourIndex = -1;
+let studioTourTarget = null;
+let studioTourOrigin = null;
+
+function openStudioHelp() {
+    const dialog = document.getElementById('studio-help-dialog');
+    if (!dialog || dialog.open) return;
+    studioTourOrigin = {tab: document.querySelector('[data-studio-tab].is-active')?.dataset.studioTab || 'studio', scroll: window.scrollY, gameSearch: document.getElementById('game-center-search')?.value || ''};
+    dialog.showModal();
+    showStudioTourStep(0);
+}
+
+function closeStudioHelp() {
+    document.getElementById('studio-help-dialog')?.close();
+}
+
+function showStudioTourStep(index) {
+    if (index >= studioTourSteps.length) { closeStudioHelp(); return; }
+    if (index < 0) return;
+    studioTourIndex = index;
+    const step = studioTourSteps[index];
+    setLiveStudioTab(step.tab, {focus:false});
+    studioTourTarget = document.querySelector(step.target);
+    // A filtered library may hide the favorite control; restore visible cards for this step.
+    if (step.tab === 'games' && studioTourTarget?.getClientRects().length === 0) {
+        const input = document.getElementById('game-center-search');
+        if (input) input.value = '';
+        filterStudioGames('');
+    }
+    document.getElementById('studio-tour-title').textContent = step.title;
+    document.getElementById('studio-tour-description').textContent = step.text;
+    document.getElementById('studio-tour-progress').textContent = `${index + 1} / ${studioTourSteps.length}`;
+    document.getElementById('studio-tour-prev').disabled = index === 0;
+    document.getElementById('studio-tour-next').textContent = index === studioTourSteps.length - 1 ? 'Am înțeles' : 'Următorul →';
+    studioTourTarget?.scrollIntoView({behavior:'instant', block:'center', inline:'nearest'});
+    positionStudioTour();
+    document.getElementById('studio-tour-next').focus({preventScroll:true});
+}
+
+function positionStudioTour() {
+    if (studioTourIndex < 0 || !studioTourTarget) return;
+    const dialog = document.getElementById('studio-help-dialog');
+    if (!dialog?.open) return;
+    const width = window.innerWidth, height = window.innerHeight;
+    const box = studioTourTarget.getBoundingClientRect();
+    const left = Math.max(6, Math.min(width - 6, box.left - 6));
+    const top = Math.max(6, Math.min(height - 6, box.top - 6));
+    const right = Math.max(left, Math.min(width - 6, box.right + 6));
+    const bottom = Math.max(top, Math.min(height - 6, box.bottom + 6));
+    const setRect = (id, x, y, w, h) => Object.assign(document.getElementById(id).style, {left:`${x}px`, top:`${y}px`, width:`${Math.max(0,w)}px`, height:`${Math.max(0,h)}px`});
+    setRect('studio-tour-shade-top',0,0,width,top);
+    setRect('studio-tour-shade-left',0,top,left,bottom-top);
+    setRect('studio-tour-shade-right',right,top,width-right,bottom-top);
+    setRect('studio-tour-shade-bottom',0,bottom,width,height-bottom);
+    setRect('studio-tour-highlight',left,top,right-left,bottom-top);
+    const tip = document.getElementById('studio-tour-tooltip');
+    const tipWidth = tip.offsetWidth, tipHeight = tip.offsetHeight, gap = 16;
+    let x, y;
+    if (width - right >= tipWidth + gap + 12) { x = right + gap; y = top; }
+    else if (left >= tipWidth + gap + 12) { x = left - tipWidth - gap; y = top; }
+    else { x = left + (right-left-tipWidth)/2; y = height-bottom >= tipHeight+gap ? bottom+gap : top-tipHeight-gap; }
+    tip.style.left = `${Math.max(12, Math.min(width-tipWidth-12, x))}px`;
+    tip.style.top = `${Math.max(12, Math.min(height-tipHeight-12, y))}px`;
+}
+
+function finishStudioTour() {
+    studioTourIndex = -1;
+    studioTourTarget = null;
+    if (studioTourOrigin) {
+        const search = document.getElementById('game-center-search');
+        if (search) search.value = studioTourOrigin.gameSearch;
+        filterStudioGames(studioTourOrigin.gameSearch);
+        setLiveStudioTab(studioTourOrigin.tab, {focus:false});
+        window.scrollTo({top:studioTourOrigin.scroll, behavior:'instant'});
+        studioTourOrigin = null;
+    }
+    document.getElementById('studio-help-button')?.focus({preventScroll:true});
+}
+
+function returnToLiveStudio() {
+    setLiveStudioTab('studio');
+    document.getElementById('live-studio-tab')?.focus({preventScroll: true});
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('view-live')?.scrollIntoView({behavior: reducedMotion ? 'instant' : 'smooth', block: 'start'});
 }
 
 function filterStudioGames(query) {
@@ -1473,6 +1571,13 @@ function runEngine() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const helpDialog = document.getElementById('studio-help-dialog');
+    helpDialog?.addEventListener('close', finishStudioTour);
+    helpDialog?.addEventListener('click', (event) => {
+        if (event.target.hasAttribute('data-tour-advance')) showStudioTourStep(studioTourIndex + 1);
+    });
+    window.addEventListener('resize', positionStudioTour);
+    window.addEventListener('scroll', positionStudioTour, {passive:true});
     const siteHeader = document.querySelector('body > header');
     if (siteHeader) {
         const updateHeaderHeight = () => {
