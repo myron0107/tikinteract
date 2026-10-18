@@ -94,6 +94,9 @@
                     <span id="header-account-avatar-fallback">U</span>
                     <img id="header-account-avatar-image" class="hidden" alt="" referrerpolicy="no-referrer">
                 </span>
+                <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
+                    <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                </button>
                 <!-- BUTON AUTENTIFICARE -->
                 <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-user"></i> Autentificare / Cont
@@ -101,11 +104,12 @@
 
                 <!-- PROFIL UTILIZATOR -->
                 <div id="user-profile-menu" class="hidden flex items-center">
-                    <button onclick="switchView('account')" class="account-menu-button text-xs px-3 py-2 rounded-xl transition cursor-pointer">
+                    <button onclick="closeAccountMenu(); switchView('account')" class="account-menu-button text-xs px-3 py-2 rounded-xl transition cursor-pointer">
                         Contul meu
                     </button>
                     <button onclick="logoutUser()" title="Deconectare" aria-label="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-2 transition cursor-pointer">
                         <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                        <span class="account-logout-label">Deconectare</span>
                     </button>
                 </div>
             </div>
@@ -594,6 +598,7 @@
         function updateUI(session) {
             const btnLogin = document.getElementById('btn-login-modal');
             const profileMenu = document.getElementById('user-profile-menu');
+            const accountMenuToggle = document.getElementById('account-menu-toggle');
             const statusDot = document.getElementById('account-status-indicator');
             const accountCardStatusDot = document.getElementById('account-card-status-indicator');
             const accountStatus = document.getElementById('account-status-label');
@@ -654,8 +659,10 @@
                 }
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
+                if(accountMenuToggle) accountMenuToggle.classList.remove('hidden');
                 closeAuthModal();
             } else {
+                closeAccountMenu();
                 currentUser = null;
                 const accountDisplayName = document.getElementById('account-display-name');
                 const accountDisplayNameInput = document.getElementById('account-display-name-input');
@@ -688,6 +695,7 @@
                 }
                 if(btnLogin) btnLogin.classList.remove('hidden');
                 if(profileMenu) profileMenu.classList.add('hidden');
+                if(accountMenuToggle) accountMenuToggle.classList.add('hidden');
                 if (document.getElementById('view-account') && !document.getElementById('view-account').classList.contains('hidden')) {
                     switchView('catalog');
                 } else if (document.getElementById('view-live') && !document.getElementById('view-live').classList.contains('hidden')) {
@@ -705,6 +713,32 @@
             const modal = document.getElementById('auth-modal');
             if(modal) modal.classList.add('hidden');
         }
+
+        function toggleAccountMenu(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('user-profile-menu');
+            const toggle = document.getElementById('account-menu-toggle');
+            if (!menu || !toggle) return;
+            const isOpen = menu.classList.toggle('is-open');
+            toggle.setAttribute('aria-expanded', String(isOpen));
+        }
+
+        function closeAccountMenu() {
+            const menu = document.getElementById('user-profile-menu');
+            const toggle = document.getElementById('account-menu-toggle');
+            menu?.classList.remove('is-open');
+            toggle?.setAttribute('aria-expanded', 'false');
+        }
+
+        document.addEventListener('click', (event) => {
+            if (event.target instanceof Element && !event.target.closest('.header-account-actions')) {
+                closeAccountMenu();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') closeAccountMenu();
+        });
 
         async function saveDisplayName(event) {
             event.preventDefault();

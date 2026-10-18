@@ -138,6 +138,14 @@ header {
     box-shadow: 0 0 0 4px rgba(239,68,68,0.12);
 }
 
+.account-menu-toggle {
+    display: none;
+}
+
+.account-logout-label {
+    display: none;
+}
+
 .header-account-avatar {
     position: relative;
     display: inline-grid;
@@ -1117,6 +1125,7 @@ select:focus {
     }
 
     .header-account-actions {
+        position: relative;
         gap: 0.5rem;
     }
 
@@ -1124,8 +1133,61 @@ select:focus {
         order: 1;
     }
 
-    #user-profile-menu {
+    #header-account-avatar {
         order: 2;
+    }
+
+    #account-menu-toggle:not(.hidden) {
+        display: inline-flex;
+        order: 3;
+    }
+
+    #btn-login-modal {
+        order: 4;
+    }
+
+    #user-profile-menu {
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0;
+        z-index: 60;
+        display: none;
+        min-width: 9rem;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.25rem;
+        padding: 0.45rem;
+        border: 1px solid rgba(255,255,255,0.1);
+        border-radius: 0.75rem;
+        background: #18181b;
+        box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+    }
+
+    #user-profile-menu.is-open {
+        display: flex;
+    }
+
+    .account-menu-toggle {
+        align-items: center;
+        justify-content: center;
+        width: 2.25rem;
+        height: 2.25rem;
+        flex: 0 0 auto;
+        border: 1px solid rgba(255,255,255,0.12);
+        border-radius: 0.7rem;
+        background: rgba(255,255,255,0.06);
+        color: #e4e4e7;
+        cursor: pointer;
+    }
+
+    .account-menu-toggle:hover,
+    .account-menu-toggle[aria-expanded="true"] {
+        border-color: rgba(255,154,140,0.4);
+        color: #ff6b78;
+    }
+
+    .account-logout-label {
+        display: inline;
     }
 
     #header-account-avatar {
@@ -1160,21 +1222,22 @@ select:focus {
         margin-left: 0;
         padding: 0.35rem 0.5rem;
         font-size: 0.58rem;
+        text-align: left;
     }
 
     #user-profile-menu > button:last-child {
         display: inline-flex;
         align-items: center;
-        justify-content: center;
-        min-width: 1.75rem;
-        min-height: 1.75rem;
-        padding: 0.35rem;
+        justify-content: flex-start;
+        gap: 0.55rem;
+        min-height: 2rem;
+        padding: 0.35rem 0.5rem;
+        color: #a1a1aa;
+        text-align: left;
     }
 
     #user-profile-menu {
-        padding: 0;
-        border: 0;
-        background: transparent;
+        padding: 0.45rem;
     }
 
     .mobile-nav {
