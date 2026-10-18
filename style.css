@@ -994,8 +994,20 @@ select:focus {
         display: none;
     }
 
-    #user-profile-menu > button:not(.user-avatar-trigger) {
-        display: none;
+    #user-profile-menu > button:first-child {
+        display: inline-flex;
+        margin-left: 0;
+        padding: 0.45rem 0.6rem;
+        font-size: 0.65rem;
+    }
+
+    #user-profile-menu > button:last-child {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 2rem;
+        min-height: 2rem;
+        padding: 0.45rem;
     }
 
     #user-profile-menu {
