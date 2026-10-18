@@ -21,13 +21,15 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 - The top 10 is loaded from Supabase using the same `get_streamer_leaderboard` RPC as the full leaderboard.
 - The footer links to the privacy policy, terms of use, usage guide, and updates; **Cookie preferences** explains the browser storage currently needed by the app.
 
-## Game catalog and LIVE games
+## Game catalog and LIVE Studio
 
 - The **Jocuri** menu is a catalog: each game card opens a presentation page with screenshots and instructions, not the playable game.
-- To play, sign in, open **LIVE**, select Neon Race, Neon Riders, or Country Derby, and the selected game loads inside the TikInteract page. Leaving LIVE unloads the embedded game.
+- To play, sign in, open **LIVE Studio**, select Neon Race, Neon Riders, or Country Derby, and the selected game loads inside the TikInteract page. Leaving LIVE Studio unloads the embedded game.
 - The game files are kept separately in `GAME/NEON-RACE/`, `GAME/NEON-RIDERS/`, and `GAME/COUNTRY-DERBY/`.
 - The embedded games retain their original TikFinity Desktop connection. Start TikFinity on the same computer and use the game's **CONNECT** controls; the game WebSocket uses `ws://localhost:21213/`.
 - Country Derby supports `RED`, `BLUE`, and `GREEN` team chat commands. Neon Race and Neon Riders support `RED` and `BLUE`.
+- **Audio Center** is available as a tab inside LIVE Studio. Import audio files you are licensed to use, search and filter the soundboard, set the master volume, and stop playback. Imported files are stored locally in the browser on that device and are not uploaded to the app.
+- Audio Center playback is local browser audio. Include desktop/browser audio in your streaming software or audio routing for viewers to hear it. The clips listed in the soundboard are labels; TikInteract does not distribute the referenced recordings.
 
 ## Leaderboard setup
 

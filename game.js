@@ -8,6 +8,36 @@ let platformSessionPromise = null;
 let leaderboardRefreshTimer = null;
 let leaderboardPeriod = 'all';
 let leaderboardRequestId = 0;
+const soundEffectCatalog = [
+    ['Applause', 'sfx'], ['Celebration', 'sfx'], ['Audience laugh', 'sfx'], ['Epic fail', 'sfx'],
+    ['Big impact', 'sfx'], ['Whoosh', 'sfx'], ['Suspense', 'sfx'], ['Coin drop', 'sfx'],
+    ['Level up', 'sfx'], ['Laser', 'sfx'], ['Power boost', 'sfx'], ['Glitch', 'sfx'],
+    ['Ping', 'sfx'], ['Pop drop', 'sfx'], ['Victory', 'sfx'], ['Impact', 'sfx'],
+    ['Switch', 'sfx'], ['Spark', 'sfx'], ['Alert', 'sfx'], ['Arcade intro', 'sfx'],
+    ['Arcade victory', 'sfx'], ['Pizzicato interlude', 'sfx'], ['Cipher', 'sfx'],
+    ['E lutador', 'meme'], ['Ack', 'meme'], ['Am trei rânduri de creier', 'meme'],
+    ['Anime Ahh', 'meme'], ['Apple Pay', 'meme'], ['Baby laughing', 'meme'],
+    ['Cat laugh', 'meme'], ['Core', 'meme'], ['Dry fart', 'meme'], ['Dun dun dun', 'meme'],
+    ['Emotional damage', 'meme'], ['Error', 'meme'], ['Fah!', 'meme'], ['Indian song', 'meme'],
+    ['Levántense', 'meme'], ['Made in Romania', 'meme'], ['Meow', 'meme'],
+    ['Me perdonas', 'meme'], ['Movie', 'meme'], ['NY audio', 'meme'],
+    ['Oh my God bro', 'meme'], ['Perfect fart', 'meme'], ['Piuw', 'meme'],
+    ['Pou', 'meme'], ['Pump shotgun', 'meme'], ['Rizz', 'meme'], ['Șarpili', 'meme'],
+    ['Spiderman', 'meme'], ['SpongeBob fail', 'meme'], ['Sukuna gugu gaga', 'meme'],
+    ['TF Nemesis', 'meme'], ['Tuco Get Out', 'meme'], ['Vine boom', 'meme']
+].map(([name, category], index) => ({
+    id: `sound-${String(index + 1).padStart(2, '0')}`,
+    name,
+    category
+}));
+
+const SOUND_LIBRARY_DB = 'tikinteract-audio-library';
+const SOUND_LIBRARY_STORE = 'sound-effects';
+const MAX_SOUND_FILE_SIZE = 25 * 1024 * 1024;
+let soundLibraryDatabasePromise = null;
+let loadedSoundEffects = new Map();
+let activeSoundEffectId = null;
+let soundMasterVolume = 0.75;
 
 const leaderboardPeriods = {
     all: 'Clasament all-time',
@@ -28,6 +58,293 @@ function formatLiveTime(seconds) {
     const hours = Math.floor(totalMinutes / 60);
     const minutes = totalMinutes % 60;
     return hours ? `${hours} h ${minutes} min` : `${minutes} min`;
+}
+
+function openSoundLibraryDatabase() {
+    if (soundLibraryDatabasePromise) return soundLibraryDatabasePromise;
+    if (!window.indexedDB) return Promise.reject(new Error('Stocarea audio locală nu este disponibilă în acest browser.'));
+
+    soundLibraryDatabasePromise = new Promise((resolve, reject) => {
+        const request = window.indexedDB.open(SOUND_LIBRARY_DB, 1);
+        request.onupgradeneeded = () => {
+            if (!request.result.objectStoreNames.contains(SOUND_LIBRARY_STORE)) {
+                request.result.createObjectStore(SOUND_LIBRARY_STORE, { keyPath: 'id' });
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error('Nu am putut deschide biblioteca audio locală.'));
+        request.onblocked = () => reject(new Error('Închide celelalte file TikInteract și încearcă din nou.'));
+    }).catch((error) => {
+        soundLibraryDatabasePromise = null;
+        throw error;
+    });
+    return soundLibraryDatabasePromise;
+}
+
+function runSoundLibraryTransaction(mode, operation) {
+    return openSoundLibraryDatabase().then((database) => new Promise((resolve, reject) => {
+        const transaction = database.transaction(SOUND_LIBRARY_STORE, mode);
+        const request = operation(transaction.objectStore(SOUND_LIBRARY_STORE));
+        let result;
+        if (request) {
+            request.onsuccess = () => { result = request.result; };
+            request.onerror = () => reject(request.error || new Error('Nu am putut accesa fișierul audio.'));
+        }
+        transaction.oncomplete = () => resolve(result);
+        transaction.onerror = () => reject(transaction.error || new Error('Nu am putut salva biblioteca audio.'));
+        transaction.onabort = () => reject(transaction.error || new Error('Operația din biblioteca audio a fost anulată.'));
+    }));
+}
+
+function setSoundLibraryStatus(message, isError = false) {
+    const status = document.getElementById('audio-center-status');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('is-error', isError);
+}
+
+function renderSoundEffectCards() {
+    const grid = document.getElementById('audio-sound-grid');
+    if (!grid) return;
+    grid.replaceChildren();
+
+    soundEffectCatalog.forEach((sound) => {
+        const card = document.createElement('article');
+        card.className = 'audio-sound-card';
+        card.dataset.soundId = sound.id;
+        card.dataset.category = sound.category;
+
+        const cardHeading = document.createElement('div');
+        cardHeading.className = 'audio-sound-card-heading';
+        const icon = document.createElement('span');
+        icon.className = 'audio-sound-icon';
+        icon.innerHTML = sound.category === 'sfx'
+            ? '<i class="fa-solid fa-wave-square" aria-hidden="true"></i>'
+            : '<i class="fa-solid fa-microphone-lines" aria-hidden="true"></i>';
+        const name = document.createElement('h4');
+        name.textContent = sound.name;
+        cardHeading.append(icon, name);
+
+        const fileName = document.createElement('p');
+        fileName.className = 'audio-sound-file-name';
+        fileName.textContent = 'Nu este încărcat';
+        fileName.dataset.soundFileName = '';
+
+        const controls = document.createElement('div');
+        controls.className = 'audio-sound-controls';
+        const playButton = document.createElement('button');
+        playButton.type = 'button';
+        playButton.className = 'audio-sound-play';
+        playButton.dataset.soundPlay = '';
+        playButton.disabled = true;
+        playButton.setAttribute('aria-label', `Redă ${sound.name}`);
+        playButton.innerHTML = '<i class="fa-solid fa-play" aria-hidden="true"></i><span>Redă</span>';
+        playButton.addEventListener('click', () => playSoundEffect(sound.id));
+
+        const uploadButton = document.createElement('button');
+        uploadButton.type = 'button';
+        uploadButton.className = 'audio-sound-upload';
+        uploadButton.setAttribute('aria-label', `Încarcă audio pentru ${sound.name}`);
+        uploadButton.title = `Încarcă audio pentru ${sound.name}`;
+        uploadButton.innerHTML = '<i class="fa-solid fa-upload" aria-hidden="true"></i><span>Încarcă</span>';
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.webm';
+        fileInput.hidden = true;
+        fileInput.setAttribute('aria-label', `Încarcă un fișier audio pentru ${sound.name}`);
+        fileInput.addEventListener('change', () => {
+            const [file] = fileInput.files || [];
+            fileInput.value = '';
+            if (file) saveSoundEffect(sound.id, file);
+        });
+        uploadButton.addEventListener('click', () => fileInput.click());
+
+        controls.append(playButton, uploadButton, fileInput);
+        card.append(cardHeading, fileName, controls);
+        grid.append(card);
+    });
+
+    filterSoundEffects();
+}
+
+function updateSoundEffectCard(soundId, savedName = null, isPlaying = false) {
+    const card = document.querySelector(`[data-sound-id="${soundId}"]`);
+    if (!card) return;
+    const name = card.querySelector('[data-sound-file-name]');
+    const playButton = card.querySelector('[data-sound-play]');
+    if (name) name.textContent = savedName || 'Nu este încărcat';
+    if (playButton) {
+        playButton.disabled = !savedName;
+        playButton.classList.toggle('is-playing', isPlaying);
+        playButton.setAttribute('aria-label', `${isPlaying ? 'Oprește' : 'Redă'} ${card.querySelector('h4')?.textContent || 'sunet'}`);
+        playButton.innerHTML = isPlaying
+            ? '<i class="fa-solid fa-stop" aria-hidden="true"></i><span>Oprește</span>'
+            : '<i class="fa-solid fa-play" aria-hidden="true"></i><span>Redă</span>';
+    }
+}
+
+async function loadSoundEffectLibrary() {
+    renderSoundEffectCards();
+    const savedEffects = await runSoundLibraryTransaction('readonly', (store) => store.getAll());
+    loadedSoundEffects.forEach(({ player, objectUrl }) => {
+        player.pause();
+        URL.revokeObjectURL(objectUrl);
+    });
+    loadedSoundEffects = new Map();
+
+    savedEffects.forEach((sound) => {
+        if (!sound.blob || !soundLibraryCatalogHas(sound.id)) return;
+        const objectUrl = URL.createObjectURL(sound.blob);
+        const player = new Audio(objectUrl);
+        player.preload = 'metadata';
+        player.volume = soundMasterVolume;
+        player.addEventListener('ended', () => {
+            if (activeSoundEffectId === sound.id) activeSoundEffectId = null;
+            updateSoundEffectCard(sound.id, sound.name, false);
+        });
+        player.addEventListener('error', () => {
+            if (activeSoundEffectId === sound.id) activeSoundEffectId = null;
+            updateSoundEffectCard(sound.id, sound.name, false);
+            setSoundLibraryStatus(`Fișierul „${sound.name}” nu poate fi redat. Încarcă un fișier audio valid.`, true);
+        });
+        loadedSoundEffects.set(sound.id, { player, objectUrl, name: sound.name });
+        updateSoundEffectCard(sound.id, sound.name);
+    });
+
+    setSoundLibraryStatus(`Bibliotecă pregătită. ${loadedSoundEffects.size} din ${soundEffectCatalog.length} sunete au fișiere încărcate.`);
+}
+
+function soundLibraryCatalogHas(soundId) {
+    return soundEffectCatalog.some((sound) => sound.id === soundId);
+}
+
+async function saveSoundEffect(soundId, file) {
+    const sound = soundEffectCatalog.find((entry) => entry.id === soundId);
+    if (!sound) return;
+    if (!file.type.startsWith('audio/') && !/\.(mp3|wav|ogg|m4a|aac|flac|webm)$/i.test(file.name)) {
+        setSoundLibraryStatus('Alege un fișier audio, de exemplu MP3, WAV, OGG, M4A sau FLAC.', true);
+        return;
+    }
+    if (file.size > MAX_SOUND_FILE_SIZE) {
+        setSoundLibraryStatus('Fișierul este prea mare. Limita este de 25 MB pentru fiecare sunet.', true);
+        return;
+    }
+    if (file.size === 0) {
+        setSoundLibraryStatus('Fișierul audio este gol. Alege alt fișier.', true);
+        return;
+    }
+
+    setSoundLibraryStatus(`Se salvează „${sound.name}” în browser...`);
+    try {
+        const savedSound = { id: soundId, name: file.name, blob: file, savedAt: Date.now() };
+        await runSoundLibraryTransaction('readwrite', (store) => store.put(savedSound));
+        const previous = loadedSoundEffects.get(soundId);
+        if (previous) {
+            previous.player.pause();
+            URL.revokeObjectURL(previous.objectUrl);
+        }
+
+        const objectUrl = URL.createObjectURL(file);
+        const player = new Audio(objectUrl);
+        player.preload = 'metadata';
+        player.volume = soundMasterVolume;
+        player.addEventListener('ended', () => {
+            if (activeSoundEffectId === soundId) activeSoundEffectId = null;
+            updateSoundEffectCard(soundId, file.name, false);
+        });
+        player.addEventListener('error', () => {
+            if (activeSoundEffectId === soundId) activeSoundEffectId = null;
+            updateSoundEffectCard(soundId, file.name, false);
+            setSoundLibraryStatus(`Fișierul „${file.name}” nu poate fi redat. Încearcă alt format audio.`, true);
+        });
+        loadedSoundEffects.set(soundId, { player, objectUrl, name: file.name });
+        updateSoundEffectCard(soundId, file.name);
+        filterSoundEffects();
+        setSoundLibraryStatus(`„${sound.name}” a fost salvat local pe acest dispozitiv.`);
+    } catch (error) {
+        console.error('Could not save sound effect to local library:', error);
+        setSoundLibraryStatus(`Nu am putut salva „${sound.name}”: ${error.message}`, true);
+    }
+}
+
+async function playSoundEffect(soundId) {
+    const sound = loadedSoundEffects.get(soundId);
+    if (!sound) {
+        setSoundLibraryStatus('Încarcă mai întâi un fișier audio pentru acest sunet.');
+        return;
+    }
+    if (activeSoundEffectId === soundId && !sound.player.paused) {
+        sound.player.pause();
+        sound.player.currentTime = 0;
+        activeSoundEffectId = null;
+        updateSoundEffectCard(soundId, sound.name, false);
+        return;
+    }
+
+    stopAllSoundEffects();
+    sound.player.currentTime = 0;
+    sound.player.volume = soundMasterVolume;
+    try {
+        await sound.player.play();
+        activeSoundEffectId = soundId;
+        updateSoundEffectCard(soundId, sound.name, true);
+        setSoundLibraryStatus(`Se redă „${soundEffectCatalog.find((entry) => entry.id === soundId)?.name || sound.name}”.`);
+    } catch (error) {
+        console.error('Could not play sound effect:', error);
+        setSoundLibraryStatus(`Nu am putut reda sunetul: ${error.message}`, true);
+    }
+}
+
+function stopAllSoundEffects() {
+    loadedSoundEffects.forEach(({ player, name }, soundId) => {
+        player.pause();
+        player.currentTime = 0;
+        updateSoundEffectCard(soundId, name, false);
+    });
+    activeSoundEffectId = null;
+}
+
+function setAudioMasterVolume(value) {
+    const parsedVolume = Number(value);
+    if (!Number.isFinite(parsedVolume)) return;
+    soundMasterVolume = Math.max(0, Math.min(1, parsedVolume / 100));
+    loadedSoundEffects.forEach(({ player }) => { player.volume = soundMasterVolume; });
+    const display = document.getElementById('audio-master-volume-value');
+    if (display) display.textContent = `${Math.round(soundMasterVolume * 100)}%`;
+}
+
+function filterSoundEffects() {
+    const search = document.getElementById('audio-sound-search')?.value.trim().toLocaleLowerCase() || '';
+    const category = document.getElementById('audio-sound-category')?.value || 'all';
+    let visibleCount = 0;
+    document.querySelectorAll('.audio-sound-card').forEach((card) => {
+        const matches = card.querySelector('h4')?.textContent.toLocaleLowerCase().includes(search) || false;
+        const categoryMatches = category === 'all' || card.dataset.category === category;
+        const visible = matches && categoryMatches;
+        card.classList.toggle('hidden', !visible);
+        if (visible) visibleCount += 1;
+    });
+
+    const count = document.getElementById('audio-library-count');
+    if (count) count.textContent = `${visibleCount} sunete`;
+}
+
+function setLiveStudioTab(tab) {
+    const isAudio = tab === 'audio';
+    const studioPanel = document.getElementById('live-studio-panel');
+    const audioPanel = document.getElementById('audio-center-panel');
+    const studioTab = document.getElementById('live-studio-tab');
+    const audioTab = document.getElementById('audio-center-tab');
+    if (!studioPanel || !audioPanel || !studioTab || !audioTab) return;
+
+    studioPanel.classList.toggle('hidden', isAudio);
+    audioPanel.classList.toggle('hidden', !isAudio);
+    studioTab.classList.toggle('is-active', !isAudio);
+    audioTab.classList.toggle('is-active', isAudio);
+    studioTab.setAttribute('aria-selected', String(!isAudio));
+    audioTab.setAttribute('aria-selected', String(isAudio));
+    if (isAudio) document.getElementById('audio-sound-search')?.focus();
 }
 
 function createLeaderboardPerson(profile, rank) {
@@ -791,6 +1108,11 @@ function runEngine() {
 document.addEventListener('DOMContentLoaded', () => {
     connectToLocalServer();
     runEngine();
+    loadSoundEffectLibrary().catch((error) => {
+        console.error('Could not load the local sound library:', error);
+        renderSoundEffectCards();
+        setSoundLibraryStatus(`Biblioteca audio indisponibilă: ${error.message}`, true);
+    });
 });
 
 window.refreshTikInteractConnectionState = () => {

@@ -67,7 +67,7 @@
                     <i class="fa-solid fa-gamepad nav-icon--games" aria-hidden="true"></i> JOCURI
                 </button>
                 <button data-nav-item="live" onclick="checkAccessAndGo('live')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
-                    <i class="fa-solid fa-tower-broadcast nav-icon--live" aria-hidden="true"></i> LIVE
+                    <i class="fa-solid fa-tower-broadcast nav-icon--live" aria-hidden="true"></i> LIVE STUDIO
                 </button>
                 <button data-nav-item="leaderboard" onclick="switchView('leaderboard')" class="inline-flex items-center gap-2 hover:text-white transition cursor-pointer">
                     <i class="fa-solid fa-trophy nav-icon--leaderboard" aria-hidden="true"></i> CLASAMENT
@@ -85,7 +85,7 @@
                     <i class="fa-solid fa-gamepad nav-icon--games" aria-hidden="true"></i><span>JOCURI</span>
                 </button>
                 <button data-nav-item="live" onclick="checkAccessAndGo('live')" class="mobile-nav-link">
-                    <i class="fa-solid fa-tower-broadcast nav-icon--live" aria-hidden="true"></i><span>LIVE</span>
+                    <i class="fa-solid fa-tower-broadcast nav-icon--live" aria-hidden="true"></i><span>STUDIO</span>
                 </button>
                 <button data-nav-item="leaderboard" onclick="switchView('leaderboard')" class="mobile-nav-link">
                     <i class="fa-solid fa-trophy nav-icon--leaderboard" aria-hidden="true"></i><span>CLASAMENT</span>
@@ -494,14 +494,24 @@
         <div class="account-heading mb-8">
             <div>
                 <span class="eyebrow">TikTok LIVE</span>
-                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Panou LIVE</h2>
-                <p class="mt-2 text-sm text-zinc-400">Gestionează profilul TikTok și transmisiunea LIVE.</p>
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">LIVE Studio</h2>
+                <p class="mt-2 text-sm text-zinc-400">Gestionează transmisiunea, jocurile și efectele audio dintr-un singur loc.</p>
             </div>
             <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
             </button>
         </div>
 
+        <div class="live-studio-tabs" role="tablist" aria-label="Instrumente LIVE Studio">
+            <button id="live-studio-tab" class="live-studio-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="live-studio-panel" onclick="setLiveStudioTab('studio')">
+                <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> LIVE Studio
+            </button>
+            <button id="audio-center-tab" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="audio-center-panel" onclick="setLiveStudioTab('audio')">
+                <i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center
+            </button>
+        </div>
+
+        <section id="live-studio-panel" role="tabpanel" aria-labelledby="live-studio-tab">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="dashboard-card p-6 rounded-2xl">
                 <h3 class="text-sm font-bold text-white mb-4">Setări Streamer</h3>
@@ -596,6 +606,50 @@
                         </div>
                     </div>
                 </div>
+                </section>
+
+                <section id="audio-center-panel" class="hidden" role="tabpanel" aria-labelledby="audio-center-tab">
+                    <div class="audio-center-header">
+                        <div>
+                            <span class="eyebrow">Soundboard</span>
+                            <h3>Audio Center</h3>
+                            <p>Încarcă efectele audio pe care ai dreptul să le folosești, apoi redă-le manual în timpul LIVE-ului.</p>
+                        </div>
+                        <div class="audio-center-controls">
+                            <label class="audio-master-volume" for="audio-master-volume">
+                                <i class="fa-solid fa-volume-high" aria-hidden="true"></i>
+                                Volum
+                                <input id="audio-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio">
+                                <span id="audio-master-volume-value">75%</span>
+                            </label>
+                            <button type="button" class="audio-stop-all" onclick="stopAllSoundEffects()">
+                                <i class="fa-solid fa-stop" aria-hidden="true"></i> Oprește tot
+                            </button>
+                        </div>
+                    </div>
+                    <p class="audio-center-notice">
+                        Fișierele se păstrează doar în browserul acestui dispozitiv. Nu sunt incluse în site și nu sunt trimise pe server.
+                        Sunetul se aude în browser; publicul îl va auzi numai dacă incluzi audio-ul browserului/computerului în sursa ta de streaming.
+                        Încarcă doar clipuri pentru care ai dreptul de utilizare.
+                    </p>
+                    <div class="audio-library-toolbar">
+                        <label class="audio-search">
+                            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                            <input id="audio-sound-search" type="search" placeholder="Caută un sunet..." oninput="filterSoundEffects()" autocomplete="off">
+                        </label>
+                        <label class="audio-category-filter">
+                            <span>Categorie</span>
+                            <select id="audio-sound-category" onchange="filterSoundEffects()">
+                                <option value="all">Toate sunetele</option>
+                                <option value="sfx">Efecte audio</option>
+                                <option value="meme">Meme &amp; voice clips</option>
+                            </select>
+                        </label>
+                        <span id="audio-library-count" class="audio-library-count"></span>
+                    </div>
+                    <p id="audio-center-status" class="audio-center-status" role="status" aria-live="polite">Se pregătește biblioteca audio...</p>
+                    <div id="audio-sound-grid" class="audio-sound-grid"></div>
+                </section>
             </div>
         </div>
     </div>
@@ -1107,6 +1161,7 @@
                     const gameSelect = document.getElementById('live-game-select');
                     if (gameSelect) loadLiveGame(gameSelect.value);
                 } else {
+                    if (typeof stopAllSoundEffects === 'function') stopAllSoundEffects();
                     const gameFrame = document.getElementById('live-game-frame');
                     const gameStatus = document.getElementById('live-game-status');
                     if (gameFrame?.dataset.gameId) {
