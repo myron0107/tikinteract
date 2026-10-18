@@ -138,6 +138,19 @@ header {
     box-shadow: 0 0 0 4px rgba(239,68,68,0.12);
 }
 
+.account-menu-button {
+    border: 1px solid rgba(255,154,140,0.28);
+    background: linear-gradient(135deg, #be1029 0%, #e61932 55%, #f04443 100%);
+    color: white;
+    font-weight: 750;
+    box-shadow: 0 5px 18px rgba(230,25,50,0.2);
+}
+
+.account-menu-button:hover {
+    background: linear-gradient(135deg, #d41430 0%, #f0223d 55%, #fc594e 100%);
+    box-shadow: 0 7px 22px rgba(230,25,50,0.3);
+}
+
 .account-heading {
     display: flex;
     align-items: flex-end;
