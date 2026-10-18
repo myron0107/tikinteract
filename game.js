@@ -587,6 +587,7 @@ function setAudioLibraryScope(scope) {
 function setLiveStudioTab(tab) {
     const tabs = {studio: ['live-studio-tab', 'live-studio-panel'], games: ['game-center-tab', 'game-center-panel'], audio: ['audio-center-tab', 'audio-center-panel']};
     if (!tabs[tab]) return;
+    document.querySelector('.live-studio-tabs')?.classList.toggle('is-sticky', tab !== 'studio');
     Object.entries(tabs).forEach(([key, [buttonId, panelId]]) => {
         const selected = key === tab;
         const button = document.getElementById(buttonId);
