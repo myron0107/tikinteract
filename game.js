@@ -188,15 +188,14 @@ async function saveTikTokLeaderboardProfile(username, displayName = username, av
         return false;
     }
 
-    const isPublic = Boolean(document.getElementById('leaderboard-public')?.checked);
     const { error } = await supabase.rpc('save_my_streamer_profile', {
         p_tiktok_username: username.replace(/^@/, ''),
         p_tiktok_display_name: displayName || username.replace(/^@/, ''),
         p_avatar_url: avatarUrl,
-        p_is_public: isPublic
+        p_is_public: true
     });
     if (error) throw error;
-    return isPublic;
+    return true;
 }
 
 async function restoreMyStreamerProfile() {
@@ -210,13 +209,37 @@ async function restoreMyStreamerProfile() {
         .eq('user_id', user.id)
         .maybeSingle();
     if (error) throw error;
-    if (!data) return;
+
+    let profile = data;
+    if (!profile) {
+        let savedUsername = null;
+        try {
+            savedUsername = localStorage.getItem('tikinteract_tiktok_user');
+        } catch (storageError) {
+            console.warn('Could not restore TikTok username from local storage:', storageError);
+        }
+        if (!savedUsername) return;
+
+        const username = savedUsername.trim().replace(/^@/, '');
+        await saveTikTokLeaderboardProfile(username);
+        profile = {
+            tiktok_username: username,
+            tiktok_display_name: username,
+            avatar_url: null,
+            is_public: true
+        };
+    } else if (!profile.is_public) {
+        await saveTikTokLeaderboardProfile(
+            profile.tiktok_username,
+            profile.tiktok_display_name,
+            profile.avatar_url
+        );
+        profile.is_public = true;
+    }
 
     const input = document.getElementById('tiktok-user');
-    const publicToggle = document.getElementById('leaderboard-public');
-    if (input) input.value = `@${data.tiktok_username}`;
-    if (publicToggle) publicToggle.checked = data.is_public;
-    setStreamerProfile(data.tiktok_username, data.avatar_url, data.tiktok_display_name);
+    if (input) input.value = `@${profile.tiktok_username}`;
+    setStreamerProfile(profile.tiktok_username, profile.avatar_url, profile.tiktok_display_name);
 }
 
 function saveTikTokProfileFromSettings() {
@@ -227,9 +250,9 @@ function saveTikTokProfileFromSettings() {
         const status = document.getElementById('tiktok-sync-status');
         if (status && !connectedUsername) {
             status.textContent = isPublic
-                ? 'Profil salvat și publicat în clasament.'
-                : 'Profil salvat privat. Activează opțiunea pentru clasamentul public.';
-            status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-green-400';
+                ? 'Profilul și statisticile sunt publicate automat în clasament.'
+                : 'Conectează-te la TikInteract pentru publicarea profilului în clasament.';
+            status.className = `mb-4 text-[10px] font-bold uppercase tracking-[0.14em] ${isPublic ? 'text-green-400' : 'text-amber-400'}`;
         }
         loadLeaderboard();
     }).catch((error) => {

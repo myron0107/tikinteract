@@ -3,13 +3,20 @@ create table if not exists public.streamer_profiles (
     tiktok_username text not null,
     tiktok_display_name text not null,
     avatar_url text,
-    is_public boolean not null default false,
+    is_public boolean not null default true,
     total_coins bigint not null default 0 check (total_coins >= 0),
     total_live_seconds bigint not null default 0 check (total_live_seconds >= 0),
     updated_at timestamptz not null default now(),
     constraint streamer_profiles_tiktok_username_format
         check (tiktok_username ~ '^[A-Za-z0-9._]{2,24}$')
 );
+
+alter table public.streamer_profiles
+    alter column is_public set default true;
+
+update public.streamer_profiles
+set is_public = true
+where not is_public;
 
 create unique index if not exists streamer_profiles_tiktok_username_lower_idx
     on public.streamer_profiles (lower(tiktok_username));
@@ -95,13 +102,13 @@ begin
         user_id, tiktok_username, tiktok_display_name, avatar_url, is_public, updated_at
     )
     values (
-        v_user_id, v_username, v_display_name, v_avatar_url, coalesce(p_is_public, false), now()
+        v_user_id, v_username, v_display_name, v_avatar_url, true, now()
     )
     on conflict (user_id) do update
     set tiktok_username = excluded.tiktok_username,
         tiktok_display_name = excluded.tiktok_display_name,
         avatar_url = coalesce(excluded.avatar_url, public.streamer_profiles.avatar_url),
-        is_public = excluded.is_public,
+        is_public = true,
         updated_at = now();
 end;
 $$;

@@ -14,13 +14,22 @@ The LIVE connector uses the unofficial `tiktok-live-connector` Node.js package (
 
 The local server listens only on `127.0.0.1` and accepts WebSocket requests from the local app and `https://tikinteract.vercel.app/`; the browser must be on the same computer as the server. Keep its terminal window open while streaming. Opening `index.html` directly or using the hosted site without first starting the local server will not connect.
 
+## Game catalog and LIVE games
+
+- The **Jocuri** menu is a catalog: each game card opens a presentation page with screenshots and instructions, not the playable game.
+- To play, sign in, open **LIVE**, select Neon Race, Neon Riders, or Country Derby, and the selected game loads inside the TikInteract page. Leaving LIVE unloads the embedded game.
+- The game files are kept separately in `GAME/NEON-RACE/`, `GAME/NEON-RIDERS/`, and `GAME/COUNTRY-DERBY/`.
+- The embedded games retain their original TikFinity Desktop connection. Start TikFinity on the same computer and use the game's **CONNECT** controls; the game WebSocket uses `ws://localhost:21213/`.
+- Country Derby supports `RED`, `BLUE`, and `GREEN` team chat commands. Neon Race and Neon Riders support `RED` and `BLUE`.
+
 ## Leaderboard setup
 
 1. In the Supabase project, open **SQL Editor** and run `supabase/leaderboard.sql`.
 2. For rolling period leaderboards, also run `supabase/leaderboard_periods.sql` in **SQL Editor**.
-3. Sign in to TikInteract, enter the TikTok username, choose whether the profile should be public, and press **Salvează și caută poza**.
-4. Start a LIVE connection from TikInteract. Session time and gift coin values received through the connector are saved to the public leaderboard.
+3. Re-run `supabase/leaderboard.sql` to publish existing saved profiles automatically and make future profiles public by default. TikTok usernames, profile photos, and leaderboard statistics will be publicly visible.
+4. Sign in to TikInteract, enter the TikTok username, and press **Salvează și caută poza**. The profile is published automatically; no checkbox is required.
+5. Start a LIVE connection from TikInteract. Session time and gift coin values received through the connector are saved to the public leaderboard.
 
-The leaderboard offers all-time, last 24 hours, 7 days, and 30 days views, sorted by TikInteract gift-value points and then LIVE time within the selected period. Recent-period LIVE time is calculated from the overlap of recorded sessions with the selected time window; gift points use events received in that window. Gift points are calculated from TikTok gift diamond values; they are activity points, not cash or withdrawable currency. The username and stats are public only when the account owner enables the public profile checkbox. Statistics count only sessions and gift events observed while connected through TikInteract. This first version is intended for community rankings, not prizes or payments; client-reported event totals are not tamper-proof.
+The leaderboard offers all-time, last 24 hours, 7 days, and 30 days views, sorted by TikInteract gift-value points and then LIVE time within the selected period. Recent-period LIVE time is calculated from the overlap of recorded sessions with the selected time window; gift points use events received in that window. Gift points are calculated from TikTok gift diamond values; they are activity points, not cash or withdrawable currency. Statistics count only sessions and gift events observed while connected through TikInteract. This first version is intended for community rankings, not prizes or payments; client-reported event totals are not tamper-proof.
 
 TikTok usernames are entered by users and are not verified through TikTok OAuth in this version.

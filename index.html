@@ -160,130 +160,37 @@
 
     <!-- MAIN VIEW: CATALOG -->
     <main id="view-catalog" class="flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
-        <div class="mb-12 flex flex-col md:flex-row items-center justify-between gap-8 hero-panel p-8 rounded-3xl relative overflow-hidden">
-            <div class="max-w-2xl z-10">
-                <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/40 text-red-400 text-xs font-bold mb-4 hero-badge">
-                    <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span> Platformă SaaS TikTok Live
-                </span>
-                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight mb-4 text-white leading-tight">
-                    Jocuri Interactive pentru <span class="text-red-500">TikTok Live</span>
-                </h1>
-                <p class="text-zinc-400 text-sm mb-6 max-w-xl">
-                    Alege un joc, conectează-te și lasă privitorii să controleze acțiunea direct din chat-ul TikTok.
-                </p>
-                <div class="flex flex-wrap gap-3 mb-6">
-                    <span class="metric-pill">4.9/5 creators</span>
-                    <span class="metric-pill">12k live actions</span>
-                    <span class="metric-pill">3 onboarding games</span>
-                </div>
-                <div class="flex gap-4">
-                    <button onclick="checkAccessAndGo('live')" class="bg-red-600 hover:bg-red-500 text-white font-bold px-6 py-3 rounded-xl text-sm transition glow-red cursor-pointer">
-                        Deschide Panoul Streamer
-                    </button>
-                    <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-white font-bold px-6 py-3 rounded-xl text-sm transition cursor-pointer border border-zinc-800">
-                        Explorează jocurile
-                    </button>
-                </div>
-            </div>
-
-            <div class="relative z-10 w-full max-w-md">
-                <div class="status-card">
-                    <div class="status-header">
-                        <div>
-                            <p class="text-[10px] uppercase tracking-[0.25em] text-zinc-500">Live status</p>
-                            <p class="text-xl font-bold text-white">Stream activ</p>
-                        </div>
-                        <span class="live-dot"></span>
-                    </div>
-                    <div class="score-card mt-5">
-                        <span class="text-[10px] uppercase tracking-[0.25em] text-zinc-500">Audience energy</span>
-                        <div class="text-3xl font-black text-white mt-3">87%</div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3 mt-5 text-left">
-                        <div class="mini-stat">
-                            <span>Gifts</span>
-                            <strong>2.4k</strong>
-                        </div>
-                        <div class="mini-stat">
-                            <span>Users</span>
-                            <strong>1.1k</strong>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="mb-8">
+            <span class="eyebrow">Catalog</span>
+            <h1 class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-white">Jocuri disponibile</h1>
+            <p class="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">Alege un joc pentru a vedea imaginile, descrierea și modul de joc.</p>
         </div>
 
-        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-            <i class="fa-solid fa-fire text-red-500"></i> Jocuri Disponibile
-        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <a href="GAME/NEON-RACE/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                <img src="assets/neon-race-preview.png" alt="Mașinile din Neon Race pe pistă" class="game-card-preview mb-5" loading="lazy">
+                <span class="badge-top mb-3"><span>01</span> Race</span>
+                <h2 class="text-lg font-bold text-white mb-2">Neon Race</h2>
+                <p class="text-zinc-400 text-sm leading-6">Cursă auto cu echipe roșie și albastră, în care spectatorii avansează mașinile cu like-uri și cadouri.</p>
+                <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+            </a>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-            <div class="premium-card p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <img src="assets/neon-race-preview.png" alt="Previzualizare din jocul Neon Race" class="game-card-preview mb-4" loading="lazy">
-                    <div class="badge-top mb-4"><span>01</span> Race</div>
-                    <h3 class="text-lg font-bold text-white mb-2">Neon Race</h3>
-                    <p class="text-zinc-400 text-xs mb-4">Cursă auto cu două echipe și interacțiuni LIVE.</p>
-                </div>
-                <button onclick="launchGamePage('GAME/NEON-RACE/Neon-Race.html')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition cursor-pointer">
-                    Lansează Jocul
-                </button>
-            </div>
+            <a href="GAME/NEON-RIDERS/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                <img src="assets/neon-riders-preview.png" alt="Motocicletele din Neon Riders pe pistă" class="game-card-preview mb-5" loading="lazy">
+                <span class="badge-top mb-3"><span>02</span> Riders</span>
+                <h2 class="text-lg font-bold text-white mb-2">Neon Riders</h2>
+                <p class="text-zinc-400 text-sm leading-6">Curse moto neon pentru două echipe, cu progres alimentat de interacțiunile comunității LIVE.</p>
+                <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+            </a>
 
-            <div class="premium-card p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <img src="assets/neon-riders-preview.png" alt="Previzualizare din jocul Neon Riders" class="game-card-preview mb-4" loading="lazy">
-                    <div class="badge-top mb-4"><span>02</span> Riders</div>
-                    <h3 class="text-lg font-bold text-white mb-2">Neon Riders</h3>
-                    <p class="text-zinc-400 text-xs mb-4">Curse moto neon pentru două echipe, cu evenimente LIVE.</p>
-                </div>
-                <button onclick="launchGamePage('GAME/NEON-RIDERS/NEON-RIDERS.html')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition cursor-pointer">
-                    Lansează Jocul
-                </button>
-            </div>
-
-            <div class="premium-card p-6 rounded-2xl flex flex-col justify-between">
-                <div>
-                    <img src="assets/country-derby-preview.png" alt="Previzualizare din jocul Country Derby" class="game-card-preview mb-4" loading="lazy">
-                    <div class="badge-top mb-4"><span>03</span> Derby</div>
-                    <h3 class="text-lg font-bold text-white mb-2">Country Derby</h3>
-                    <p class="text-zinc-400 text-xs mb-4">Curse de cai country controlate de comunitatea LIVE.</p>
-                </div>
-                <button onclick="launchGamePage('GAME/COUNTRY-DERBY/COUNTRY-DERBY.html')" class="bg-zinc-900 hover:bg-red-600 text-white text-xs font-bold py-2.5 rounded-xl border border-zinc-800 transition cursor-pointer">
-                    Lansează Jocul
-                </button>
-            </div>
+            <a href="GAME/COUNTRY-DERBY/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                <img src="assets/country-derby-preview.png" alt="Caii din Country Derby pe pista de curse" class="game-card-preview mb-5" loading="lazy">
+                <span class="badge-top mb-3"><span>03</span> Derby</span>
+                <h2 class="text-lg font-bold text-white mb-2">Country Derby</h2>
+                <p class="text-zinc-400 text-sm leading-6">Curse de cai cu trei echipe, în care like-urile și cadourile susțin calul ales de spectatori.</p>
+                <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+            </a>
         </div>
-
-        <section class="feature-showcase mb-16">
-            <div class="section-heading">
-                <span class="eyebrow">Why streamers use it</span>
-                <h2>Tot ce ai nevoie pentru un live cu energie ridicată</h2>
-            </div>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="icon-wrap"><i class="fa-solid fa-bolt"></i></div>
-                    <h3>Instant engagement</h3>
-                    <p>Chat-ul devine controlul jocului și fiecare gift devine acțiune în timpul live-ului.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon-wrap"><i class="fa-solid fa-sliders"></i></div>
-                    <h3>Live controls</h3>
-                    <p>Activezi și gestionezi stream-ul dintr-un singur panou clar, fără bătăi de cap.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon-wrap"><i class="fa-solid fa-chart-line"></i></div>
-                    <h3>Audience analytics</h3>
-                    <p>Vezi ce tip de interacțiune merge cel mai bine și cresc performanța sesiunilor.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="icon-wrap"><i class="fa-solid fa-shield-halved"></i></div>
-                    <h3>Safe setup</h3>
-                    <p>Ambele sesiuni și datele sunt separate, cu experiență de streamer controlată.</p>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <!-- PLAY PASS VIEW -->
@@ -392,7 +299,7 @@
             <div id="leaderboard-empty" class="hidden px-6 py-12 text-center">
                 <i class="fa-solid fa-ranking-star text-3xl text-zinc-600"></i>
                 <p class="mt-4 font-bold text-white">Clasamentul este încă gol</p>
-                <p class="mt-2 text-sm text-zinc-400">Salvează username-ul TikTok, activează profilul public și pornește un LIVE prin TikInteract pentru a apărea aici.</p>
+                <p class="mt-2 text-sm text-zinc-400">Salvează username-ul TikTok și pornește un LIVE prin TikInteract pentru a apărea aici. Profilul este public automat.</p>
             </div>
         </div>
     </section>
@@ -497,15 +404,14 @@
                     </button>
                 </div>
                 <div id="tiktok-sync-status" class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">Stare: neconectat</div>
-                <label class="leaderboard-opt-in mb-4">
-                    <input id="leaderboard-public" type="checkbox">
-                    <span>Arată profilul și statisticile mele în clasamentul public</span>
-                </label>
-                <label class="block text-xs text-zinc-400 mb-1">Joc activ</label>
-                <select class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600">
-                    <option>Gift Battle Royale</option>
-                    <option>Speed Race</option>
-                    <option>Tower Survival</option>
+                <p class="mb-4 text-[10px] leading-relaxed text-zinc-400">
+                    Profilul și statisticile sunt adăugate automat în clasamentul public după salvarea username-ului TikTok.
+                </p>
+                <label for="live-game-select" class="block text-xs text-zinc-400 mb-1">Joc activ</label>
+                <select id="live-game-select" onchange="loadLiveGame(this.value)" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-4 focus:outline-none focus:border-red-600">
+                    <option value="neon-race">Neon Race</option>
+                    <option value="neon-riders">Neon Riders</option>
+                    <option value="country-derby">Country Derby</option>
                 </select>
                 <button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
                     Pornește Conexiunea Live
@@ -515,15 +421,16 @@
             <div class="lg:col-span-2 dashboard-panel rounded-2xl p-6 min-h-[300px]">
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <p class="section-kicker">Live overview</p>
-                        <h4 class="text-xl font-bold text-white">Panou Stream Activ</h4>
+                        <p class="section-kicker">Joc LIVE</p>
+                        <h4 class="text-xl font-bold text-white">Joacă direct în TikInteract</h4>
                     </div>
                     <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
                 </div>
 
-                <div class="mb-6 overflow-hidden rounded-xl border border-zinc-800">
-                    <canvas id="hubCanvas" width="800" height="180" class="block w-full"></canvas>
+                <div class="live-game-frame-wrap mb-6 overflow-hidden rounded-xl border border-zinc-800">
+                    <iframe id="live-game-frame" class="live-game-frame" title="Joc TikTok LIVE" loading="lazy" allow="autoplay" allowfullscreen></iframe>
                 </div>
+                <p id="live-game-status" class="mb-6 text-xs text-zinc-500" role="status" aria-live="polite">Deschide LIVE pentru a încărca jocul selectat.</p>
 
                 <div class="dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="mini-stat-box">
@@ -580,9 +487,19 @@
 
         let supabaseClient = null;
         let currentUser = null;
+        const LIVE_GAME_PATHS = Object.freeze({
+            'neon-race': 'GAME/NEON-RACE/Neon-Race.html',
+            'neon-riders': 'GAME/NEON-RIDERS/NEON-RIDERS.html',
+            'country-derby': 'GAME/COUNTRY-DERBY/COUNTRY-DERBY.html'
+        });
+        const initialRoute = new URLSearchParams(window.location.search);
+        let shouldOpenLiveFromUrl = initialRoute.get('view') === 'live';
+        let requestedLiveGame = initialRoute.get('game');
+        let hasPendingLiveReturn = false;
 
         window.addEventListener('DOMContentLoaded', async () => {
             try {
+                restorePendingLiveRoute();
                 if (window.supabase) {
                     supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     window.tikInteractSupabase = supabaseClient;
@@ -597,6 +514,27 @@
                 console.error("Eroare initializare:", err);
             }
         });
+
+        function restorePendingLiveRoute() {
+            if (shouldOpenLiveFromUrl) return;
+            let gameId;
+            try {
+                gameId = sessionStorage.getItem('tikinteract-live-return');
+                if (gameId) sessionStorage.removeItem('tikinteract-live-return');
+            } catch (error) {
+                console.error('Could not restore the selected game after sign-in:', error);
+                return;
+            }
+            if (!gameId) return;
+            if (!LIVE_GAME_PATHS[gameId]) {
+                console.error('Ignoring an invalid saved LIVE game selection.');
+                return;
+            }
+
+            shouldOpenLiveFromUrl = true;
+            requestedLiveGame = gameId;
+            hasPendingLiveReturn = true;
+        }
 
         function updateUI(session) {
             const btnLogin = document.getElementById('btn-login-modal');
@@ -658,12 +596,26 @@
                 if (typeof restoreMyStreamerProfile === 'function') {
                     restoreMyStreamerProfile().catch((err) => {
                         console.error('Could not restore streamer profile:', err);
+                        const status = document.getElementById('tiktok-sync-status');
+                        if (status) {
+                            status.textContent = `Profilul nu s-a putut publica automat: ${err.message}`;
+                            status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
+                        }
                     });
                 }
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
                 if(accountMenuToggle) accountMenuToggle.classList.remove('hidden');
                 closeAuthModal();
+                if (shouldOpenLiveFromUrl) {
+                    shouldOpenLiveFromUrl = false;
+                    if (requestedLiveGame) loadLiveGame(requestedLiveGame);
+                    switchView('live');
+                    if (hasPendingLiveReturn) {
+                        sessionStorage.removeItem('tikinteract-live-return');
+                        hasPendingLiveReturn = false;
+                    }
+                }
             } else {
                 closeAccountMenu();
                 currentUser = null;
@@ -699,6 +651,7 @@
                 if(btnLogin) btnLogin.classList.remove('hidden');
                 if(profileMenu) profileMenu.classList.add('hidden');
                 if(accountMenuToggle) accountMenuToggle.classList.add('hidden');
+                if (shouldOpenLiveFromUrl) openAuthModal();
                 if (document.getElementById('view-account') && !document.getElementById('view-account').classList.contains('hidden')) {
                     switchView('catalog');
                 } else if (document.getElementById('view-live') && !document.getElementById('view-live').classList.contains('hidden')) {
@@ -799,13 +752,24 @@
         // Autentificare Google OAuth
         async function loginWithGoogle() {
             if (!supabaseClient) return alert("Supabase nu este încărcat.");
+            if (shouldOpenLiveFromUrl) {
+                try {
+                    sessionStorage.setItem('tikinteract-live-return', requestedLiveGame || 'neon-race');
+                } catch (error) {
+                    console.error('Could not preserve the selected game through Google sign-in:', error);
+                    return alert('Nu am putut păstra jocul selectat. Încearcă autentificarea prin e-mail.');
+                }
+            }
             const { error } = await supabaseClient.auth.signInWithOAuth({
                 provider: 'google',
                 options: {
                     redirectTo: window.location.origin
                 }
             });
-            if (error) alert("Eroare logare Google: " + error.message);
+            if (error) {
+                if (shouldOpenLiveFromUrl) sessionStorage.removeItem('tikinteract-live-return');
+                alert("Eroare logare Google: " + error.message);
+            }
         }
 
         async function loginWithEmail() {
@@ -859,9 +823,42 @@
                 leaderboard.classList.toggle('hidden', view !== 'leaderboard');
                 playPass.classList.toggle('hidden', view !== 'play-pass');
                 setActiveNavigation(view);
+                if (view === 'live') {
+                    const gameSelect = document.getElementById('live-game-select');
+                    if (gameSelect) loadLiveGame(gameSelect.value);
+                } else {
+                    const gameFrame = document.getElementById('live-game-frame');
+                    const gameStatus = document.getElementById('live-game-status');
+                    if (gameFrame?.dataset.gameId) {
+                        gameFrame.removeAttribute('src');
+                        delete gameFrame.dataset.gameId;
+                        if (gameStatus) gameStatus.textContent = 'Deschide LIVE pentru a încărca jocul selectat.';
+                    }
+                }
                 if (view === 'leaderboard' && typeof loadLeaderboard === 'function') loadLeaderboard();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
+        }
+
+        function loadLiveGame(gameId) {
+            const gamePath = LIVE_GAME_PATHS[gameId];
+            const gameFrame = document.getElementById('live-game-frame');
+            const gameSelect = document.getElementById('live-game-select');
+            const gameStatus = document.getElementById('live-game-status');
+            if (!gameFrame || !gamePath) return;
+
+            if (gameSelect && gameSelect.value !== gameId) gameSelect.value = gameId;
+            if (gameFrame.dataset.gameId === gameId) return;
+
+            gameFrame.dataset.gameId = gameId;
+            gameFrame.title = `${gameSelect?.selectedOptions[0]?.textContent || 'TikTok LIVE'} — joc LIVE`;
+            gameFrame.setAttribute('aria-busy', 'true');
+            if (gameStatus) gameStatus.textContent = 'Se încarcă jocul selectat…';
+            gameFrame.onload = () => {
+                gameFrame.removeAttribute('aria-busy');
+                if (gameStatus) gameStatus.textContent = 'Jocul este încărcat. Conectează-l la TikFinity din comenzile jocului.';
+            };
+            gameFrame.src = gamePath;
         }
 
         function setActiveNavigation(activeItem) {
@@ -882,14 +879,6 @@
             } else {
                 switchView(view);
             }
-        }
-
-        function launchGamePage(path) {
-            if (!currentUser) {
-                openAuthModal();
-                return;
-            }
-            window.open(path, '_blank', 'noopener');
         }
 
         function goToPlayPass() {
