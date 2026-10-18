@@ -1,0 +1,110 @@
+/* Phone layout; desktop keeps the existing workspace. */
+@media (max-width: 767px) {
+    html { -webkit-text-size-adjust: 100%; }
+    body { overflow-wrap: break-word; }
+    .site-header-inner { min-height: 0; padding: 10px 12px; gap: 10px; }
+    .site-header-inner > div:first-child { gap: 7px; }
+    .site-header-inner > div:first-child > span { font-size: 1rem; letter-spacing: .03em; }
+    .site-header-inner > div:first-child img { width: 30px; height: 30px; }
+    .header-account-actions { gap: 6px; margin-left: auto; }
+    #btn-login-modal { min-height: 40px; padding: 9px; font-size: .6rem; gap: 5px; }
+    .mobile-nav { gap: 3px; padding-top: 8px; }
+    .mobile-nav-link { min-height: 46px; gap: 6px; padding: 7px 2px; font-size: .49rem; }
+    #view-live { padding: 16px 12px 30px; }
+    #view-live > .account-heading { padding: 18px; margin-bottom: 16px; gap: 14px; }
+    #view-live > .account-heading > div { min-width: 0; }
+    #view-live > .account-heading h2 { font-size: 1.8rem; }
+    #view-live > .account-heading p { font-size: .8rem; }
+    #view-live > .account-heading > button { min-height: 42px; }
+    #view-live .live-studio-tabs { display: grid; width: 100%; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; margin-bottom: 18px; }
+    #view-live .live-studio-tab { min-width: 0; min-height: 44px; padding: 10px 7px; gap: 7px; font-size: .75rem; }
+    .studio-workspace { display: flex; flex-direction: column; gap: 18px; }
+    .studio-controls { display: contents; }
+    .studio-workspace > .studio-controls > .studio-connection { order: 0; width: 100%; }
+    .studio-workspace > .studio-stage { order: 1; width: 100%; }
+    #view-live .studio-workspace > .studio-controls > .studio-audio { order: 2; width: 100%; }
+    .studio-stage, .studio-connection, #view-live .studio-audio { padding: 16px; border-radius: 16px; }
+    .studio-connection > p { font-size: .72rem; line-height: 1.7; }
+    .studio-connection > label { font-size: .8rem; }
+    .studio-stage-heading { gap: 10px; margin-bottom: 16px; }
+    .studio-stage-heading h4 { font-size: 1rem; line-height: 1.4; }
+    #view-live .studio-stats { gap: 8px; margin-bottom: 16px; }
+    .studio-stats .mini-stat-box { padding: 12px 8px; gap: 8px; flex-direction: column; align-items: start; }
+    .studio-stats .mini-stat-box span { font-size: .58rem; letter-spacing: .02em; }
+    .studio-stats .mini-stat-box strong { font-size: 1.25rem; }
+    #view-live .studio-game-browser { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    #view-live .studio-game-picker { padding: 16px; }
+    #view-live .studio-game-options { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 310px; gap: 8px; }
+    #view-live .studio-game-option { min-height: 130px; padding: 34px 9px 12px; }
+    #view-live .studio-game-option span { font-size: .72rem; }
+    #view-live .studio-quick-item > .game-favorite-star { width: 40px; height: 36px; top: 0; right: 0; }
+    #view-live .studio-quick-empty { font-size: .78rem; }
+    #view-live .studio-all-games { min-height: 44px; font-size: .75rem; }
+    .studio-game-browser .live-game-frame { width: 100%; height: auto; aspect-ratio: 9 / 16; }
+    .studio-game-browser .live-game-frame[data-game-id="country-derby"] { height: 800px; aspect-ratio: auto; }
+    .studio-stage #live-game-status { font-size: .74rem; }
+    .studio-stage .live-grid { grid-template-columns: minmax(0, 1fr); }
+    .feed-item { overflow-wrap: anywhere; font-size: .75rem; }
+    #view-live .studio-audio .live-favorite-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    #view-live .studio-audio .live-favorite-card { min-height: 90px; }
+    #view-live .studio-audio .live-favorite-title { font-size: .59rem; }
+    #view-live .studio-audio .live-favorite-remove { width: 32px; height: 30px; }
+    #view-live .studio-audio .live-favorites-volume { width: 100%; min-height: 44px; padding: 8px; gap: 8px; }
+    #view-live .studio-audio .live-favorites-volume input { flex: 1; width: 0; min-width: 50px; min-height: 28px; }
+    #view-live .studio-audio .live-favorites-stop { width: 44px; height: 44px; }
+    #view-live .soundboard-shell { width: 100%; padding: 12px; border-radius: 16px; }
+    #audio-center-panel .soundboard-sticky-controls { top: calc(var(--site-header-height, 120px) + 8px); padding-bottom: 8px; }
+    #view-live .soundboard-monitor { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; width: fit-content; max-width: 100%; gap: 10px 8px; padding: 10px; }
+    #audio-center-panel .audio-back-button { min-height: 44px; padding: 9px 10px; font-size: .64rem; }
+    .soundboard-monitor .soundboard-monitor-label { min-width: 0; font-size: .6rem; line-height: 1.5; gap: 5px; }
+    .soundboard-monitor .soundboard-stop.audio-stop-all { width: 44px; min-height: 44px; padding: 8px; }
+    .soundboard-monitor .soundboard-volume-control { grid-column: 1 / -1; width: 100%; margin: 0; gap: 10px; padding-top: 8px; border-top: 1px solid #ffffff0c; }
+    .soundboard-monitor .soundboard-volume-control input { flex: 1; width: 0; min-width: 50px; min-height: 30px; }
+    .soundboard-source-tab, .soundboard-scope-tab { min-height: 44px; font-size: .75rem; }
+    #view-live .soundboard-shell .audio-library-toolbar { flex-wrap: wrap; gap: 10px; }
+    #view-live .soundboard-shell .audio-category-filter, #view-live .soundboard-shell .audio-search { width: 100%; flex: 1 1 100%; }
+    #view-live .soundboard-shell .audio-sound-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+    #view-live .soundboard-shell .audio-sound-card { min-height: 112px; padding: 6px; }
+    #view-live .soundboard-shell .audio-sound-card .audio-sound-favorite { width: 36px; height: 32px; }
+    #view-live .soundboard-shell .audio-sound-trigger h4 { font-size: .67rem; line-height: 1.35; }
+    .game-center-shell { padding: 16px; }
+    .game-center-heading { flex-direction: column; align-items: stretch; gap: 16px; }
+    .game-center-search { width: 100%; min-height: 46px; }
+    .game-center-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .game-center-card > img { height: 300px; }
+    .game-center-card-body { padding: 18px; }
+    .game-center-card p { font-size: .8rem; }
+    .game-center-card-body > button { min-height: 46px; font-size: .78rem; }
+    .game-center-card > .game-favorite-star { width: 44px; height: 44px; }
+    .home-hero-copy h1 { overflow-wrap: normal; }
+    .home-page .home-kicker { max-width: 100%; font-size: .54rem; letter-spacing: .06em; line-height: 1.6; }
+    .home-hero-actions { display: grid; grid-template-columns: minmax(0, 1fr); }
+    .home-hero-actions > button { justify-content: center; width: 100%; min-height: 48px; }
+    .home-hero-proof { flex-wrap: wrap; gap: 10px; }
+    .home-page .home-hot-game:not(:first-child) .home-hot-game-copy { max-width: 70%; }
+    .home-page .home-hot-game-copy p { font-size: .77rem; }
+    .site-footer { flex-direction: column; align-items: start; gap: 20px; padding: 24px 16px; }
+    .footer-content { justify-items: start; }
+    .footer-links { justify-content: start; gap: 6px 16px; }
+    .footer-links a, .footer-links button { display: inline-flex; align-items: center; min-height: 40px; font-size: .72rem; }
+    .footer-copyright { text-align: left; }
+    /* Keep form controls readable and prevent automatic zoom on phone inputs. */
+    #view-live input:not([type="range"]), #view-live select, #auth-modal input { font-size: 16px; }
+    #view-live input[type="search"] { width: 100%; min-width: 0; }
+    #studio-tour-tooltip { width: min(310px, calc(100vw - 24px)); max-height: min(40dvh, 290px); padding: 13px; border-radius: 14px; }
+    .studio-tour-top { gap: 8px; }
+    .studio-tour-top .section-kicker { font-size: .48rem; letter-spacing: .08em; }
+    #studio-tour-title { margin-top: 5px; font-size: .94rem; line-height: 1.3; }
+    #studio-tour-description { margin-top: 7px; font-size: .74rem; line-height: 1.55; }
+    .studio-tour-navigation { margin-top: 12px; padding-top: 9px; gap: 6px; }
+    .studio-tour-navigation button { min-width: 44px; min-height: 44px; padding: 8px; font-size: .63rem; }
+    .studio-tour-top .studio-help-close { min-width: 44px; min-height: 44px; background: transparent; border-color: transparent; }
+}
+@media (max-width: 359px) {
+    .site-header-inner > div:first-child > span { font-size: .86rem; }
+    .site-header-inner > div:first-child img { width: 26px; height: 26px; }
+    #btn-login-modal { font-size: .54rem; padding-inline: 6px; }
+    #view-live { padding-inline: 8px; }
+    .studio-stage, .studio-connection, #view-live .studio-audio { padding: 12px; }
+    #view-live .studio-game-picker { padding: 12px; }
+}
