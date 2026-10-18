@@ -1367,53 +1367,35 @@ select:focus {
     gap: 0.65rem;
 }
 
-.audio-master-volume {
-    display: inline-flex;
-    min-height: 2.5rem;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.45rem 0.7rem;
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 0.7rem;
-    background: rgba(0,0,0,0.25);
-    color: #c5b9bc;
-    font-size: 0.66rem;
-    font-weight: 750;
-}
-
-.audio-master-volume i {
-    color: #fb7185;
-}
-
-.audio-master-volume input {
-    width: 5rem;
-    accent-color: #f43f5e;
-}
-
-.audio-master-volume > span {
-    min-width: 2rem;
-    color: white;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-}
-
 .audio-stop-all {
     display: inline-flex;
     min-height: 2.5rem;
     align-items: center;
-    gap: 0.45rem;
-    padding: 0.55rem 0.8rem;
+    justify-content: center;
+    padding: 0.4rem;
     border: 1px solid rgba(255,100,100,0.2);
     border-radius: 0.7rem;
     background: rgba(255,38,62,0.09);
     color: #ff9aa5;
-    font-size: 0.66rem;
-    font-weight: 800;
+    cursor: pointer;
+    transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.audio-stop-all i {
+    font-size: 1.55rem;
+    line-height: 1;
 }
 
 .audio-stop-all:hover {
+    border-color: rgba(255,100,100,0.42);
     background: rgba(255,38,62,0.18);
     color: white;
+    transform: translateY(-1px);
+}
+
+.audio-stop-all:focus-visible {
+    outline: 2px solid #ff9aa5;
+    outline-offset: 2px;
 }
 
 .audio-center-notice {
@@ -1649,6 +1631,200 @@ select:focus {
     color: #f5eeee;
     font-size: 0.85rem;
     font-weight: 850;
+}
+
+.live-favorites-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.live-favorites-stop.audio-stop-all {
+    width: 2.45rem;
+    min-height: 2.45rem;
+    border-radius: 0.55rem;
+}
+
+.live-favorites-stop.audio-stop-all i {
+    font-size: 1.45rem;
+}
+
+.soundboard-stop.audio-stop-all {
+    width: 2.65rem;
+    min-height: 2.65rem;
+    border-radius: 0.65rem;
+}
+
+.live-favorites-volume {
+    display: inline-flex;
+    min-width: 0;
+    align-items: center;
+    gap: 0.35rem;
+    margin: -0.2rem 0 0.65rem;
+    padding: 0.4rem 0.5rem;
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 0.55rem;
+    background: rgba(0,0,0,0.18);
+    color: #bdb4c8;
+    font-size: 0.58rem;
+    font-weight: 700;
+}
+
+.live-favorites-volume i {
+    flex: 0 0 auto;
+    color: #a78bfa;
+    font-size: 0.65rem;
+}
+
+.live-favorites-volume input {
+    width: clamp(4rem, 8vw, 6rem);
+    min-width: 2.5rem;
+    margin-left: auto;
+    accent-color: #b78bff;
+}
+
+.live-favorites-volume > span {
+    min-width: 2rem;
+    color: #c9b7f5;
+    font-size: 0.6rem;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.live-favorites-search {
+    position: relative;
+    display: block;
+    margin-top: 0.65rem;
+    margin-bottom: 0.55rem;
+}
+
+.live-favorites-search > i {
+    position: absolute;
+    top: 50%;
+    left: 0.65rem;
+    color: #958a9d;
+    font-size: 0.68rem;
+    pointer-events: none;
+    transform: translateY(-50%);
+}
+
+.live-favorites-search input {
+    width: 100%;
+    min-height: 2.25rem;
+    padding: 0.5rem 0.65rem 0.5rem 1.9rem;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 0.6rem;
+    outline: none;
+    background: rgba(0,0,0,0.22);
+    color: #f5eeee;
+    font-size: 0.66rem;
+}
+
+.live-favorites-search input::placeholder {
+    color: #817781;
+}
+
+.live-favorites-search input:focus {
+    border-color: rgba(167,139,250,0.55);
+    box-shadow: 0 0 0 2px rgba(167,139,250,0.1);
+}
+
+.live-favorites-search-results {
+    display: grid;
+    gap: 0.3rem;
+    max-height: 12rem;
+    overflow-y: auto;
+    margin: -0.2rem 0 0.6rem;
+    padding: 0.15rem 0.25rem 0.15rem 0;
+    scrollbar-color: rgba(167,139,250,0.55) rgba(255,255,255,0.035);
+    scrollbar-width: thin;
+}
+
+.live-favorites-search-results::-webkit-scrollbar {
+    width: 0.4rem;
+}
+
+.live-favorites-search-results::-webkit-scrollbar-track {
+    border-radius: 999px;
+    background: rgba(255,255,255,0.035);
+}
+
+.live-favorites-search-results::-webkit-scrollbar-thumb {
+    border: 1px solid rgba(14,12,17,0.85);
+    border-radius: 999px;
+    background: linear-gradient(180deg, rgba(196,167,255,0.78), rgba(139,92,246,0.58));
+}
+
+.live-favorites-search-results::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #d4bcff, #a78bfa);
+}
+
+.live-favorites-search-result {
+    display: flex;
+    min-height: 2.35rem;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.35rem 0.45rem 0.35rem 0.6rem;
+    border: 1px solid color-mix(in srgb, var(--sound-accent, #fb7185) 22%, rgba(255,255,255,0.08));
+    border-radius: 0.55rem;
+    background: color-mix(in srgb, var(--sound-accent, #fb7185) 6%, #151417);
+}
+
+.live-favorites-search-result > i {
+    flex: 0 0 1rem;
+    color: var(--sound-accent, #fb7185);
+    text-align: center;
+}
+
+.live-favorites-search-name {
+    overflow: hidden;
+    flex: 1;
+    color: #eee8ef;
+    font-size: 0.63rem;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.live-favorites-search-add {
+    display: grid;
+    width: 1.75rem;
+    height: 1.75rem;
+    flex: 0 0 1.75rem;
+    place-items: center;
+    border: 1px solid rgba(167,139,250,0.24);
+    border-radius: 0.45rem;
+    background: rgba(167,139,250,0.1);
+    color: #c4a7ff;
+}
+
+.live-favorites-search-add:hover:not(:disabled) {
+    background: rgba(167,139,250,0.22);
+    color: white;
+}
+
+.live-favorites-search-add:disabled {
+    border-color: rgba(74,222,128,0.18);
+    background: rgba(74,222,128,0.08);
+    color: #86efac;
+    cursor: default;
+}
+
+.live-favorites-search-add:focus-visible {
+    outline: 2px solid #c4a7ff;
+    outline-offset: 2px;
+}
+
+.live-favorites-search-empty,
+.live-favorites-search-hint {
+    padding: 0.45rem 0.55rem;
+    color: #9c929e;
+    font-size: 0.59rem;
+}
+
+.live-favorites-search-empty {
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 0.55rem;
 }
 
 .live-favorites-count {
@@ -2357,15 +2533,6 @@ select:focus {
         width: 100%;
     }
 
-    .audio-master-volume {
-        flex: 1 1 auto;
-    }
-
-    .audio-master-volume input {
-        flex: 1 1 auto;
-        min-width: 2rem;
-    }
-
     .audio-library-toolbar {
         flex-wrap: wrap;
         align-items: flex-end;
@@ -2892,7 +3059,6 @@ select:focus {
 
 .soundboard-topbar,
 .soundboard-source-tabs,
-.soundboard-monitor,
 .soundboard-library-controls,
 .soundboard-scope-tabs,
 .audio-library-toolbar {
@@ -2902,6 +3068,55 @@ select:focus {
 
 .soundboard-topbar {
     justify-content: space-between;
+}
+
+.soundboard-monitor {
+    display: flex;
+    min-height: 2.4rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0.5rem 0 0.65rem;
+    padding: 0.45rem 0.65rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 0.65rem;
+    background: rgba(255,255,255,0.025);
+}
+
+.soundboard-monitor-label,
+.soundboard-volume-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #bdb4c8;
+    font-size: 0.65rem;
+    font-weight: 700;
+}
+
+.soundboard-stop.audio-stop-all {
+    min-height: 1.9rem;
+    gap: 0.35rem;
+    padding: 0.4rem 0.55rem;
+    border-radius: 0.55rem;
+    font-size: 0.58rem;
+    white-space: nowrap;
+}
+
+.soundboard-monitor-label i,
+.soundboard-volume-control i {
+    color: #a78bfa;
+}
+
+.soundboard-volume-control input {
+    width: clamp(5rem, 12vw, 8rem);
+    accent-color: #b78bff;
+}
+
+.soundboard-volume-control span {
+    min-width: 2.2rem;
+    color: #c9b7f5;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
 }
 
 .soundboard-source-tabs {
@@ -2926,60 +3141,6 @@ select:focus {
     border-color: rgba(255,255,255,0.07);
     background: #28262b;
     color: white;
-}
-
-.soundboard-stop.audio-stop-all {
-    width: 2.1rem;
-    min-height: 2.1rem;
-    justify-content: center;
-    padding: 0;
-    border-color: rgba(255,255,255,0.08);
-    border-radius: 0.6rem;
-    background: #201f22;
-    color: #bdb8c3;
-}
-
-.soundboard-monitor {
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-top: 0.65rem;
-}
-
-.soundboard-monitor-label {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: #c9c3ce;
-    font-size: 0.72rem;
-}
-
-.soundboard-monitor-label i {
-    color: #77727e;
-    font-size: 0.65rem;
-}
-
-.soundboard-monitor .audio-master-volume {
-    min-height: 2rem;
-    gap: 0.5rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #c0bac8;
-    font-size: 0.65rem;
-}
-
-.soundboard-monitor .audio-master-volume i {
-    color: #93899f;
-}
-
-.soundboard-monitor .audio-master-volume input {
-    width: clamp(5rem, 24vw, 10rem);
-    accent-color: #b78bff;
-}
-
-.soundboard-monitor .audio-master-volume > span {
-    min-width: 2.25rem;
-    color: #c9b7f5;
 }
 
 .soundboard-library-controls {
@@ -3207,6 +3368,34 @@ select:focus {
         padding: 0.65rem;
     }
 
+    .soundboard-monitor {
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        padding-inline: 0.45rem;
+    }
+
+    .soundboard-monitor-label {
+        flex: 1 0 100%;
+    }
+
+    .soundboard-stop.audio-stop-all {
+        width: 2.4rem;
+        min-height: 2.4rem;
+    }
+
+    .soundboard-stop.audio-stop-all i {
+        font-size: 1.35rem;
+    }
+
+    .soundboard-volume-control {
+        gap: 0.25rem;
+        margin-left: auto;
+    }
+
+    .soundboard-volume-control input {
+        width: 4.5rem;
+    }
+
     .soundboard-shell .audio-sound-grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 0.4rem;
@@ -3227,15 +3416,16 @@ select:focus {
 }
 
 @media (max-width: 360px) {
-    .soundboard-monitor-label {
-        font-size: 0.63rem;
-    }
-
-    .soundboard-monitor .audio-master-volume {
+    .live-favorites-controls {
         gap: 0.3rem;
     }
 
-    .soundboard-monitor .audio-master-volume input {
+    .live-favorites-volume {
+        gap: 0.2rem;
+    }
+
+    .live-favorites-volume input {
         width: 4rem;
+        min-width: 2rem;
     }
 }

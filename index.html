@@ -554,12 +554,28 @@
                             <p class="section-kicker">Acces rapid</p>
                             <h4 id="live-favorites-title">Favorite audio</h4>
                         </div>
-                        <span id="live-favorites-count" class="live-favorites-count">0</span>
+                        <div class="live-favorites-controls">
+                            <button type="button" class="audio-stop-all live-favorites-stop" onclick="stopAllSoundEffects()" aria-label="Oprește toate sunetele" title="Oprește toate sunetele">
+                                <i class="fa-solid fa-circle-stop" aria-hidden="true"></i>
+                            </button>
+                            <span id="live-favorites-count" class="live-favorites-count">0</span>
+                        </div>
                     </div>
+                    <label class="live-favorites-volume" for="audio-master-volume">
+                        <i class="fa-solid fa-volume-low" aria-hidden="true"></i>
+                        <span>Volum</span>
+                        <input id="audio-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio">
+                        <span id="audio-master-volume-value">75%</span>
+                    </label>
                     <p id="live-favorites-empty" class="live-favorites-empty">
-                        Apasă pe stea la sunete în Audio Center și vor apărea aici.
+                        Încă nu ai sunete favorite. Caută mai jos sau adaugă din Audio Center.
                     </p>
                     <div id="live-favorite-sounds" class="live-favorite-grid" role="list"></div>
+                    <label class="live-favorites-search" for="live-favorites-search-input">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                        <input id="live-favorites-search-input" type="search" placeholder="Caută un sunet și adaugă-l rapid..." oninput="searchLiveFavoriteSounds(this.value)" autocomplete="off">
+                    </label>
+                    <div id="live-favorites-search-results" class="live-favorites-search-results hidden" role="list" aria-label="Rezultate sunete"></div>
                 </section>
             </div>
 
@@ -628,17 +644,16 @@
                                 <button id="audio-sounds-tab" class="soundboard-source-tab is-active" type="button" aria-pressed="true" onclick="setAudioLibraryTab('sounds')">Sounds</button>
                                 <button id="audio-music-tab" class="soundboard-source-tab" type="button" aria-pressed="false" onclick="setAudioLibraryTab('music')">Music</button>
                             </div>
-                            <button type="button" class="audio-stop-all soundboard-stop" onclick="stopAllSoundEffects()" aria-label="Oprește toate sunetele" title="Oprește toate sunetele">
-                                <i class="fa-solid fa-stop" aria-hidden="true"></i>
-                            </button>
                         </div>
-
                         <div class="soundboard-monitor">
                             <span class="soundboard-monitor-label"><i class="fa-solid fa-headphones" aria-hidden="true"></i> Monitorizare locală</span>
-                            <label class="audio-master-volume" for="audio-master-volume">
+                            <button type="button" class="audio-stop-all soundboard-stop" onclick="stopAllSoundEffects()" aria-label="Oprește toate sunetele" title="Oprește toate sunetele">
+                                <i class="fa-solid fa-circle-stop" aria-hidden="true"></i>
+                            </button>
+                            <label class="soundboard-volume-control" for="audio-center-master-volume">
                                 <i class="fa-solid fa-volume-low" aria-hidden="true"></i>
-                                <input id="audio-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio">
-                                <span id="audio-master-volume-value">75%</span>
+                                <input id="audio-center-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio în Audio Center">
+                                <span id="audio-center-volume-value">75%</span>
                             </label>
                         </div>
 

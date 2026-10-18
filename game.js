@@ -189,7 +189,8 @@ function showAudioFavoriteToast(message, type = 'success') {
     toast.setAttribute('aria-live', type === 'warning' || type === 'error' ? 'assertive' : 'polite');
     toast.classList.remove('hidden');
     toast.classList.remove('is-visible');
-    window.requestAnimationFrame(() => toast.classList.add('is-visible'));
+    toast.getBoundingClientRect();
+    toast.classList.add('is-visible');
     audioFavoriteToastTimer = window.setTimeout(() => {
         toast.classList.remove('is-visible');
         audioFavoriteToastHideTimer = window.setTimeout(() => toast.classList.add('hidden'), 220);
@@ -236,6 +237,66 @@ function updateLiveFavoritePlayButton(soundId, isPlaying) {
     button.setAttribute('aria-label', `${isPlaying ? 'Oprește' : 'Redă'} ${sound?.name || 'sunet'}`);
 }
 
+function searchLiveFavoriteSounds(query) {
+    const results = document.getElementById('live-favorites-search-results');
+    if (!results) return;
+
+    results.replaceChildren();
+    const normalizedQuery = query.trim().toLocaleLowerCase();
+    const emptyState = document.getElementById('live-favorites-empty');
+    if (emptyState) emptyState.classList.toggle('hidden', favoriteSoundIds.size > 0 || Boolean(normalizedQuery));
+    if (!normalizedQuery) {
+        results.classList.add('hidden');
+        return;
+    }
+
+    const allMatches = soundEffectCatalog.filter((sound) => sound.name.toLocaleLowerCase().includes(normalizedQuery));
+    const matches = allMatches.slice(0, 8);
+    results.classList.remove('hidden');
+
+    if (matches.length === 0) {
+        const emptyResult = document.createElement('p');
+        emptyResult.className = 'live-favorites-search-empty';
+        emptyResult.textContent = 'Nu am găsit niciun sunet.';
+        results.append(emptyResult);
+        return;
+    }
+
+    matches.forEach((sound) => {
+        const row = document.createElement('div');
+        row.className = 'live-favorites-search-result';
+        row.setAttribute('role', 'listitem');
+        const [iconName, accentColor] = soundEffectVisuals[sound.name] || ['fa-wave-square', '#fb7185'];
+        row.style.setProperty('--sound-accent', accentColor);
+
+        const icon = document.createElement('i');
+        icon.className = `fa-solid ${iconName}`;
+        icon.setAttribute('aria-hidden', 'true');
+        const name = document.createElement('span');
+        name.className = 'live-favorites-search-name';
+        name.textContent = sound.name;
+        const addButton = document.createElement('button');
+        const isFavorite = favoriteSoundIds.has(sound.id);
+        addButton.type = 'button';
+        addButton.className = 'live-favorites-search-add';
+        addButton.disabled = isFavorite;
+        addButton.setAttribute('aria-label', isFavorite ? `${sound.name} este deja la favorite` : `Adaugă ${sound.name} la favorite`);
+        addButton.innerHTML = isFavorite
+            ? '<i class="fa-solid fa-check" aria-hidden="true"></i>'
+            : '<i class="fa-solid fa-plus" aria-hidden="true"></i>';
+        if (!isFavorite) addButton.addEventListener('click', () => toggleSoundFavorite(sound.id));
+        row.append(icon, name, addButton);
+        results.append(row);
+    });
+
+    if (allMatches.length > matches.length) {
+        const hint = document.createElement('p');
+        hint.className = 'live-favorites-search-hint';
+        hint.textContent = 'Afișate primele 8 rezultate. Rafinează căutarea pentru mai multe.';
+        results.append(hint);
+    }
+}
+
 function renderLiveFavoriteSounds() {
     const tableBody = document.getElementById('live-favorite-sounds');
     const emptyState = document.getElementById('live-favorites-empty');
@@ -247,7 +308,9 @@ function renderLiveFavoriteSounds() {
     count.textContent = String(favorites.length);
     const audioFavoritesCount = document.getElementById('audio-favorites-count');
     if (audioFavoritesCount) audioFavoritesCount.textContent = `${favorites.length}/${MAX_AUDIO_FAVORITES}`;
-    emptyState.classList.toggle('hidden', favorites.length > 0);
+    const searchInput = document.getElementById('live-favorites-search-input');
+    emptyState.classList.toggle('hidden', favorites.length > 0 || Boolean(searchInput?.value.trim()));
+    if (searchInput) searchLiveFavoriteSounds(searchInput.value);
 
     favorites.forEach((sound, index) => {
         const card = document.createElement('article');
@@ -456,8 +519,15 @@ function setAudioMasterVolume(value) {
     if (!Number.isFinite(parsedVolume)) return;
     soundMasterVolume = Math.max(0, Math.min(1, parsedVolume / 100));
     loadedSoundEffects.forEach(({ player }) => { player.volume = soundMasterVolume; });
-    const display = document.getElementById('audio-master-volume-value');
-    if (display) display.textContent = `${Math.round(soundMasterVolume * 100)}%`;
+    const percentage = Math.round(soundMasterVolume * 100);
+    ['audio-master-volume', 'audio-center-master-volume'].forEach((id) => {
+        const slider = document.getElementById(id);
+        if (slider) slider.value = String(percentage);
+    });
+    ['audio-master-volume-value', 'audio-center-volume-value'].forEach((id) => {
+        const display = document.getElementById(id);
+        if (display) display.textContent = `${percentage}%`;
+    });
 }
 
 function filterSoundEffects() {
