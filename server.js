@@ -14,6 +14,12 @@ const ALLOWED_ORIGINS = new Set([
     `http://localhost:${PORT}`,
     'https://tikinteract.vercel.app'
 ]);
+const STATIC_FILES = new Set([
+    '/index.html',
+    '/style.css',
+    '/game.js',
+    '/GAME/NEON-RACE/Neon-Race.html'
+]);
 const MIME_TYPES = {
     '.css': 'text/css; charset=utf-8',
     '.html': 'text/html; charset=utf-8',
@@ -38,7 +44,7 @@ const server = createServer(async (request, response) => {
         response.writeHead(403).end('Forbidden');
         return;
     }
-    if (!['/index.html', '/style.css', '/game.js'].includes(requestedPath)
+    if (!STATIC_FILES.has(requestedPath)
         && !filePath.startsWith(`${assetsPath}${path.sep}`)) {
         response.writeHead(404).end('Not found');
         return;
