@@ -96,19 +96,12 @@
                 </button>
 
                 <!-- PROFIL UTILIZATOR -->
-                <div id="user-profile-menu" class="hidden flex items-center gap-3 bg-zinc-900 border border-zinc-800 p-1.5 px-3 rounded-2xl">
-                    <button type="button" onclick="switchView('account')" aria-label="Deschide Contul meu" title="Contul meu" class="user-avatar-trigger w-9 h-9 rounded-full bg-gradient-to-br from-red-600 to-red-500 flex items-center justify-center text-white font-black text-[10px] shadow-md uppercase cursor-pointer">
-                        <span id="user-avatar-display">U</span>
-                    </button>
-                    <div class="flex flex-col text-left">
-                        <span id="user-email-display" class="sr-only">email@gmail.com</span>
-                        <span class="text-[9px] text-zinc-400 font-bold uppercase">Cont TikInteract</span>
-                    </div>
-                    <button onclick="switchView('account')" class="ml-2 bg-zinc-800 hover:bg-red-600 text-zinc-300 hover:text-white text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
+                <div id="user-profile-menu" class="hidden flex items-center">
+                    <button onclick="switchView('account')" class="bg-zinc-800 hover:bg-red-600 text-zinc-300 hover:text-white text-xs px-3 py-2 rounded-xl transition cursor-pointer">
                         Contul meu
                     </button>
-                    <button onclick="logoutUser()" title="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-1 transition cursor-pointer">
-                        <i class="fa-solid fa-right-from-bracket"></i>
+                    <button onclick="logoutUser()" title="Deconectare" aria-label="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-2 transition cursor-pointer">
+                        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>
@@ -580,8 +573,6 @@
         function updateUI(session) {
             const btnLogin = document.getElementById('btn-login-modal');
             const profileMenu = document.getElementById('user-profile-menu');
-            const emailDisp = document.getElementById('user-email-display');
-            const avatarDisp = document.getElementById('user-avatar-display');
             const statusDot = document.getElementById('account-status-indicator');
             const accountCardStatusDot = document.getElementById('account-card-status-indicator');
             const accountStatus = document.getElementById('account-status-label');
@@ -632,14 +623,6 @@
                 }
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
-                if(emailDisp) {
-                    emailDisp.innerText = session.user.email || 'user';
-                    emailDisp.classList.add('sr-only');
-                }
-                if (avatarDisp) {
-                    const initial = (session.user.email || 'U').charAt(0).toUpperCase();
-                    avatarDisp.innerText = initial;
-                }
                 closeAuthModal();
             } else {
                 currentUser = null;
