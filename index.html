@@ -48,7 +48,7 @@
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/visual-refresh.css?v=9">
+    <link rel="stylesheet" href="assets/visual-refresh.css?v=10">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
@@ -584,6 +584,7 @@
                         <input id="live-favorites-search-input" type="search" placeholder="Caută un sunet și adaugă-l rapid..." oninput="searchLiveFavoriteSounds(this.value)" autocomplete="off">
                     </label>
                     <div id="live-favorites-search-results" class="live-favorites-search-results hidden" role="list" aria-label="Rezultate sunete"></div>
+                    <button class="studio-all-games" type="button" onclick="setLiveStudioTab('audio')"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Deschide Audio Center</button>
                 </section>
             </aside>
 

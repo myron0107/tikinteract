@@ -83,7 +83,7 @@ body > header { background: #080709e8; border-bottom-color: #ffffff12; box-shado
 #view-live > .account-heading { align-items: center; margin-bottom: 22px; padding: 24px 28px; border: 1px solid #ffffff12; border-radius: 20px; background: radial-gradient(ellipse at top right, #ff263e12, transparent 60%), #100d0f; }
 #view-live > .account-heading h2 { font-size: clamp(1.8rem, 3vw, 2.4rem); letter-spacing: -.05em; }
 #view-live > .account-heading p { max-width: 560px; line-height: 1.7; }
-#view-live .live-studio-tabs { width: fit-content; margin: 0 0 24px; padding: 5px; border-radius: 14px; }
+#view-live .live-studio-tabs { position: sticky; top: calc(var(--site-header-height, 88px) + 8px); z-index: 40; width: fit-content; margin: 0 0 24px; padding: 5px; border-radius: 14px; background: #100d0ff5; backdrop-filter: blur(16px); box-shadow: 0 8px 28px #0005; }
 #view-live .live-studio-tab { min-width: 150px; }
 .studio-workspace { display: grid; grid-template-columns: minmax(0, 1fr) 340px; align-items: start; gap: 24px; }
 .studio-controls { grid-column: 2; grid-row: 1; display: grid; gap: 20px; min-width: 0; }

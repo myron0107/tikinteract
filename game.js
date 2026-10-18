@@ -1472,6 +1472,15 @@ function runEngine() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    const siteHeader = document.querySelector('body > header');
+    if (siteHeader) {
+        const updateHeaderHeight = () => {
+            document.documentElement.style.setProperty('--site-header-height', `${siteHeader.getBoundingClientRect().height}px`);
+        };
+        updateHeaderHeight();
+        if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateHeaderHeight).observe(siteHeader);
+        else window.addEventListener('resize', updateHeaderHeight);
+    }
     initializeGameFavorites();
     connectToLocalServer();
     runEngine();
