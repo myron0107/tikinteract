@@ -63,7 +63,7 @@ begin
                         - greatest(s.started_at, v_cutoff)
                     )))::bigint
                 )
-            ) as period_live_seconds
+            )::bigint as period_live_seconds
             from public.streamer_live_sessions s
             where s.user_id = p.user_id
               and s.started_at < v_now

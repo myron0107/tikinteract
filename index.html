@@ -58,9 +58,10 @@
                 <span class="text-2xl font-black tracking-wider text-white">TIK<span class="text-red-600 glow-text">INTERACT</span></span>
             </div>
             
-            <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-zinc-400">
+            <nav class="hidden md:flex items-center gap-5 text-xs font-semibold text-zinc-400 lg:gap-8 lg:text-sm">
                 <button onclick="switchView('catalog')" class="hover:text-white transition cursor-pointer">Jocuri Live</button>
                 <button onclick="switchView('leaderboard')" class="hover:text-white transition cursor-pointer">Clasament</button>
+                <button onclick="checkAccessAndGo('dashboard')" class="hover:text-white transition cursor-pointer">Panou</button>
                 <a href="#pricing" class="hover:text-white transition">Abonamente</a>
             </nav>
 
@@ -80,7 +81,7 @@
                         <span class="text-[9px] text-green-400 font-bold uppercase">Cont Activ</span>
                     </div>
                     <button onclick="switchView('dashboard')" class="ml-2 bg-zinc-800 hover:bg-red-600 text-zinc-300 hover:text-white text-xs px-3 py-1.5 rounded-xl transition cursor-pointer">
-                        Panou
+                        Contul meu
                     </button>
                     <button onclick="logoutUser()" title="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-1 transition cursor-pointer">
                         <i class="fa-solid fa-right-from-bracket"></i>
@@ -351,18 +352,34 @@
 
     <!-- DASHBOARD VIEW -->
     <div id="view-dashboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
-        <div class="flex items-center justify-between mb-8 pb-4 border-b border-zinc-900">
+        <div class="account-heading mb-8">
             <div>
-                <h2 class="text-2xl font-bold text-white">Panou Control Streamer</h2>
-                <p class="text-zinc-400 text-xs">Aici îți controlezi sesiunea live de TikTok.</p>
+                <span class="eyebrow">Zona ta personală</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Contul meu</h2>
+                <p class="mt-2 text-sm text-zinc-400">Gestionează profilul TikTok și activitatea ta LIVE pe TikInteract.</p>
             </div>
             <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi
+                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
+            </button>
+        </div>
+
+        <div class="account-overview dashboard-panel mb-8">
+            <div class="account-overview-avatar">
+                <span id="account-avatar-display">U</span>
+            </div>
+            <div class="account-overview-details">
+                <span class="section-kicker">Cont TikInteract</span>
+                <strong id="account-email">Cont conectat</strong>
+                <span id="account-tiktok-username">Profil TikTok neadăugat</span>
+            </div>
+            <span class="account-active-badge"><i class="fa-solid fa-circle"></i> Cont activ</span>
+            <button onclick="logoutUser()" class="account-logout-button">
+                <i class="fa-solid fa-right-from-bracket mr-2"></i> Deconectare
             </button>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="dashboard-card p-6 rounded-2xl">
+            <div id="account-streamer-settings" class="dashboard-card p-6 rounded-2xl">
                 <h3 class="text-sm font-bold text-white mb-4">Setări Streamer</h3>
                 <div id="tiktok-profile" class="hidden flex mb-4 items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-3">
                     <div class="tiktok-profile-avatar">
@@ -400,7 +417,7 @@
                 </button>
             </div>
 
-            <div class="lg:col-span-2 dashboard-panel rounded-2xl p-6 min-h-[300px]">
+            <div id="account-live-activity" class="lg:col-span-2 dashboard-panel rounded-2xl p-6 min-h-[300px]">
                 <div class="flex items-center justify-between mb-6">
                     <div>
                         <p class="section-kicker">Live overview</p>
@@ -496,6 +513,10 @@
 
             if (session && session.user) {
                 currentUser = session.user;
+                const accountEmail = document.getElementById('account-email');
+                const accountAvatar = document.getElementById('account-avatar-display');
+                if (accountEmail) accountEmail.textContent = session.user.email || 'Cont TikInteract';
+                if (accountAvatar) accountAvatar.textContent = (session.user.email || 'U').charAt(0).toUpperCase();
                 if (typeof restoreMyStreamerProfile === 'function') {
                     restoreMyStreamerProfile().catch((err) => {
                         console.error('Could not restore streamer profile:', err);
@@ -514,6 +535,12 @@
                 closeAuthModal();
             } else {
                 currentUser = null;
+                const accountEmail = document.getElementById('account-email');
+                const accountAvatar = document.getElementById('account-avatar-display');
+                const accountTikTok = document.getElementById('account-tiktok-username');
+                if (accountEmail) accountEmail.textContent = 'Cont conectat';
+                if (accountAvatar) accountAvatar.textContent = 'U';
+                if (accountTikTok) accountTikTok.textContent = 'Profil TikTok neadăugat';
                 if(btnLogin) btnLogin.classList.remove('hidden');
                 if(profileMenu) profileMenu.classList.add('hidden');
             }
