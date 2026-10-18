@@ -19,6 +19,7 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 - The home page introduces TikInteract, highlights the three available games, and displays the all-time top 10 from the public streamer leaderboard.
 - The featured games link to their presentation pages. Use **Începe un LIVE** to open the in-page LIVE setup.
 - The top 10 is loaded from Supabase using the same `get_streamer_leaderboard` RPC as the full leaderboard.
+- The footer links to the privacy policy, terms of use, usage guide, and updates; **Cookie preferences** explains the browser storage currently needed by the app.
 
 ## Game catalog and LIVE games
 

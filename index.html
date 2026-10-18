@@ -569,6 +569,36 @@
         </div>
     </div>
 
+    <footer class="site-footer">
+        <a class="footer-brand" href="index.html" aria-label="TikInteract — Acasă">
+            <img src="assets/tikinteract-icon-v2.png" alt="" width="36" height="36">
+            <span>TIK<span>INTERACT</span></span>
+        </a>
+        <div class="footer-content">
+            <nav class="footer-links" aria-label="Informații">
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <button type="button" onclick="openCookiePreferences()">Cookie preferences</button>
+                <a href="terms-of-use.html">Terms of Use</a>
+                <a href="guide.html">Guide</a>
+                <a href="updates.html">Updates</a>
+            </nav>
+            <p class="footer-copyright">© <span id="footer-year">2026</span> TikInteract. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <div id="cookie-preferences-modal" class="cookie-preferences-backdrop hidden" role="presentation" onclick="if (event.target === this) closeCookiePreferences()">
+        <section class="cookie-preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
+            <button class="cookie-preferences-close" type="button" onclick="closeCookiePreferences()" aria-label="Închide preferințele">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <span class="eyebrow">Confidențialitate</span>
+            <h2 id="cookie-preferences-title">Cookie preferences</h2>
+            <p id="cookie-preferences-description">TikInteract nu folosește în prezent cookie-uri opționale de analiză sau publicitate. Stocarea necesară pentru autentificare și pentru păstrarea username-ului TikTok salvat rămâne activă pentru funcționarea serviciului.</p>
+            <p class="cookie-preferences-note">Poți șterge datele locale din setările browserului. Detalii despre datele prelucrate găsești în <a href="privacy-policy.html">Privacy Policy</a>.</p>
+            <button class="home-primary-button" type="button" onclick="closeCookiePreferences()">Am înțeles</button>
+        </section>
+    </div>
+
     <script src="game.js"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
@@ -578,6 +608,7 @@
 
         let supabaseClient = null;
         let currentUser = null;
+        let cookiePreferencesPreviousFocus = null;
         const LIVE_GAME_PATHS = Object.freeze({
             'neon-race': 'GAME/NEON-RACE/Neon-Race.html',
             'neon-riders': 'GAME/NEON-RIDERS/NEON-RIDERS.html',
@@ -942,6 +973,22 @@
             }
         }
 
+        function openCookiePreferences() {
+            const modal = document.getElementById('cookie-preferences-modal');
+            if (!modal) return;
+            cookiePreferencesPreviousFocus = document.activeElement;
+            modal.classList.remove('hidden');
+            modal.querySelector('button')?.focus();
+        }
+
+        function closeCookiePreferences() {
+            const modal = document.getElementById('cookie-preferences-modal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            cookiePreferencesPreviousFocus?.focus();
+            cookiePreferencesPreviousFocus = null;
+        }
+
         function loadLiveGame(gameId) {
             const gamePath = LIVE_GAME_PATHS[gameId];
             const gameFrame = document.getElementById('live-game-frame');
@@ -1059,6 +1106,14 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             restoreTikTokState();
+            const footerYear = document.getElementById('footer-year');
+            if (footerYear) footerYear.textContent = String(new Date().getFullYear());
+            if (window.location.hash === '#cookie-preferences') openCookiePreferences();
+        });
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && !document.getElementById('cookie-preferences-modal')?.classList.contains('hidden')) {
+                closeCookiePreferences();
+            }
         });
     </script>
 </body>

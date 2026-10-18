@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ro" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#030305">
+    <meta name="description" content="Ghid rapid pentru catalogul TikInteract, jocurile LIVE și conectarea streamerului.">
+    <title>Guide — TikInteract</title>
+    <link rel="icon" type="image/png" href="assets/tikinteract-icon-v2.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public-info.css">
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="public-info-site-header">
+        <a class="footer-brand" href="index.html" aria-label="TikInteract — Acasă">
+            <img src="assets/tikinteract-icon-v2.png" alt="" width="36" height="36">
+            <span>TIK<span>INTERACT</span></span>
+        </a>
+    </header>
+    <main class="public-info-page">
+        <a class="public-info-back" href="index.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Înapoi la TikInteract</a>
+        <header class="public-info-header">
+            <span class="eyebrow">Ajutor</span>
+            <h1>Guide</h1>
+            <p>Urmează pașii de mai jos pentru a explora jocurile și a porni o sesiune interactivă TikTok LIVE.</p>
+        </header>
+        <div class="public-info-content">
+            <section class="public-info-card">
+                <h2>Pornește un LIVE cu TikInteract</h2>
+                <ol class="public-info-steps">
+                    <li>Creează un cont sau autentifică-te cu Google ori e-mail.</li>
+                    <li>Din pagina Acasă, apasă <strong>Începe un LIVE</strong> sau deschide secțiunea LIVE.</li>
+                    <li>Introdu username-ul creatorului TikTok care este LIVE și apasă <strong>Pornește Conexiunea Live</strong>.</li>
+                    <li>Alege jocul din selector. Jocul se încarcă în pagina TikInteract; comenzile și evenimentele disponibile depind de joc.</li>
+                    <li>Pentru înregistrarea statisticilor în clasament, salvează username-ul TikTok din setările LIVE înainte să conectezi sesiunea.</li>
+                </ol>
+            </section>
+            <section class="public-info-card">
+                <h2>Pornește serverul local</h2>
+                <ol class="public-info-steps">
+                    <li>Instalează Node.js 20 sau o versiune mai nouă.</li>
+                    <li>Pornește fișierul <strong>start-tikinteract.bat</strong> din folderul proiectului și lasă fereastra terminalului deschisă.</li>
+                    <li>Deschide aplicația pe același calculator. Serverul local este necesar și pentru pagina găzduită, deoarece transmite local conexiunea LIVE.</li>
+                </ol>
+                <p>Conectorul folosește username-ul public al creatorului; nu solicita și nu introduce parola TikTok sau cookie-uri TikTok.</p>
+            </section>
+            <section class="public-info-card">
+                <h2>Jocurile HTML originale și TikFinity</h2>
+                <p>Neon Race, Neon Riders și Country Derby pot păstra integrarea TikFinity Desktop din versiunile lor originale. Dacă folosești butonul CONNECT din interiorul jocului, pornește TikFinity Desktop pe același calculator și conectează jocul la WebSocket-ul local <code>ws://localhost:21213/</code>. Această conexiune este separată de conectorul LIVE TikInteract.</p>
+            </section>
+            <section class="public-info-card">
+                <h2>Catalog și clasament</h2>
+                <p>Secțiunea Jocuri conține pagini de prezentare și instrucțiuni; jocurile se joacă din LIVE. Clasamentul public afișează profilurile salvate și statisticile înregistrate de TikInteract. Pentru detalii, citește <a href="privacy-policy.html">Privacy Policy</a> și <a href="terms-of-use.html">Terms of Use</a>.</p>
+            </section>
+            <section class="public-info-card public-info-highlight">
+                <h2>Depanare rapidă</h2>
+                <ul>
+                    <li>Dacă apare o eroare de conexiune, verifică dacă serverul local rulează și dacă username-ul este scris corect.</li>
+                    <li>Dacă statisticile nu apar, autentifică-te în TikInteract și salvează mai întâi profilul TikTok.</li>
+                    <li>Dacă jocul original nu reacționează la evenimente, verifică separat conexiunea TikFinity Desktop.</li>
+                </ul>
+            </section>
+        </div>
+    </main>
+    <footer class="public-info-footer"><span>© <span data-current-year>2026</span> TikInteract. All rights reserved.</span><a href="privacy-policy.html">Privacy Policy</a><a href="terms-of-use.html">Terms of Use</a><a href="updates.html">Updates</a></footer>
+    <script>document.querySelectorAll('[data-current-year]').forEach((node) => { node.textContent = String(new Date().getFullYear()); });</script>
+</body>
+</html>
