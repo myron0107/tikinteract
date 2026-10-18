@@ -52,7 +52,7 @@
 
     <!-- NAVBAR -->
     <header class="border-b border-zinc-900 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+        <div class="site-header-inner max-w-7xl mx-auto px-6 min-h-20 flex flex-wrap items-center justify-between">
             <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('catalog')">
                 <img src="assets/tikinteract-icon-v2.png" alt="TikInteract" width="44" height="44" class="w-11 h-11 object-contain">
                 <span class="text-2xl font-black tracking-wider text-white">TIK<span class="text-red-600 glow-text">INTERACT</span></span>
@@ -73,7 +73,22 @@
                 </button>
             </nav>
 
-            <div class="flex items-center gap-4">
+            <nav class="mobile-nav grid grid-cols-4 w-full md:hidden" aria-label="Navigare principală">
+                <button onclick="switchView('catalog')" class="mobile-nav-link">
+                    <i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span>
+                </button>
+                <button onclick="checkAccessAndGo('live')" class="mobile-nav-link">
+                    <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span>LIVE</span>
+                </button>
+                <button onclick="switchView('leaderboard')" class="mobile-nav-link">
+                    <i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span>
+                </button>
+                <button onclick="goToPlayPass()" class="mobile-nav-link">
+                    <i class="fa-solid fa-crown" aria-hidden="true"></i><span>PLAY PASS</span>
+                </button>
+            </nav>
+
+            <div class="header-account-actions flex items-center gap-4">
                 <span id="account-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
                 <!-- BUTON AUTENTIFICARE -->
                 <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">

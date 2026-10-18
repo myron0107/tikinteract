@@ -38,6 +38,39 @@ header {
     backdrop-filter: blur(14px);
 }
 
+.mobile-nav {
+    display: none;
+}
+
+.mobile-nav-link {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    padding: 0.65rem 0.2rem;
+    border: 1px solid transparent;
+    border-radius: 0.8rem;
+    color: var(--muted);
+    font-size: 0.58rem;
+    font-weight: 800;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+}
+
+.mobile-nav-link i {
+    color: #ff9a8c;
+    font-size: 0.95rem;
+}
+
+.mobile-nav-link:hover,
+.mobile-nav-link:focus-visible {
+    border-color: rgba(255,38,62,0.25);
+    background: rgba(255,38,62,0.08);
+    color: white;
+}
+
 #view-catalog,
 #view-live {
     position: relative;
@@ -914,6 +947,117 @@ select:focus {
     .leaderboard-avatar {
         width: 2rem;
         height: 2rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .site-header-inner {
+        min-height: 0;
+        padding: 0.65rem 1rem;
+        row-gap: 0.65rem;
+    }
+
+    .site-header-inner > div:first-child {
+        gap: 0.5rem;
+    }
+
+    .site-header-inner > div:first-child img {
+        width: 2.25rem;
+        height: 2.25rem;
+    }
+
+    .site-header-inner > div:first-child > span {
+        font-size: 1.05rem;
+    }
+
+    .header-account-actions {
+        gap: 0.5rem;
+    }
+
+    #btn-login-modal {
+        gap: 0.4rem;
+        padding: 0.55rem 0.7rem;
+        font-size: 0.68rem;
+    }
+
+    #user-profile-menu {
+        gap: 0.4rem;
+        padding: 0.3rem 0.45rem;
+    }
+
+    #user-profile-menu > div:first-child {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    #user-profile-menu > div:nth-child(2) {
+        display: none;
+    }
+
+    #user-profile-menu > button:nth-of-type(1) {
+        margin-left: 0;
+        padding: 0.45rem 0.55rem;
+        font-size: 0.65rem;
+    }
+
+    .mobile-nav {
+        display: grid;
+        order: 3;
+        padding-top: 0.35rem;
+        border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    #view-account,
+    #view-live,
+    #view-leaderboard,
+    #view-catalog {
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    .account-card {
+        padding: 1.15rem;
+    }
+
+    .leaderboard-summary {
+        flex-wrap: wrap;
+    }
+
+    .leaderboard-summary > button {
+        margin-left: 0;
+    }
+
+    .leaderboard-periods button {
+        flex: 1 1 calc(50% - 0.5rem);
+    }
+
+    .modal,
+    #auth-modal > div {
+        padding: 1.35rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .site-header-inner {
+        padding-right: 0.75rem;
+        padding-left: 0.75rem;
+    }
+
+    .site-header-inner > div:first-child > span {
+        font-size: 0.92rem;
+    }
+
+    #btn-login-modal {
+        padding: 0.5rem 0.55rem;
+        font-size: 0.62rem;
+    }
+
+    .mobile-nav-link {
+        font-size: 0.52rem;
+    }
+
+    .account-details-grid dd {
+        font-size: 0.75rem;
     }
 }
 
