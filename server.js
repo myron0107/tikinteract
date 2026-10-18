@@ -18,7 +18,8 @@ const STATIC_FILES = new Set([
     '/index.html',
     '/style.css',
     '/game.js',
-    '/GAME/NEON-RACE/Neon-Race.html'
+    '/GAME/NEON-RACE/Neon-Race.html',
+    '/GAME/NEON-RIDERS/NEON-RIDERS.html'
 ]);
 const MIME_TYPES = {
     '.css': 'text/css; charset=utf-8',
