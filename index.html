@@ -90,6 +90,10 @@
 
             <div class="header-account-actions flex items-center gap-4">
                 <span id="account-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
+                <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
+                    <span id="header-account-avatar-fallback">U</span>
+                    <img id="header-account-avatar-image" class="hidden" alt="" referrerpolicy="no-referrer">
+                </span>
                 <!-- BUTON AUTENTIFICARE -->
                 <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-user"></i> Autentificare / Cont
@@ -622,6 +626,7 @@
                     ? new Date(user.created_at).toLocaleDateString('ro-RO', { year: 'numeric', month: 'long', day: 'numeric' })
                     : 'Indisponibil';
                 if (accountDisplayName) accountDisplayName.textContent = displayName;
+                if (typeof setAccountAvatar === 'function') setAccountAvatar(displayName, null);
                 if (accountDisplayNameInput && document.activeElement !== accountDisplayNameInput) {
                     accountDisplayNameInput.value = user.user_metadata?.display_name || displayName;
                 }
@@ -661,6 +666,7 @@
                 const accountUserId = document.getElementById('account-user-id');
                 const accountAvatar = document.getElementById('account-avatar-display');
                 if (accountDisplayName) accountDisplayName.textContent = 'Display Name';
+                if (typeof setAccountAvatar === 'function') setAccountAvatar('U', null);
                 if (accountDisplayNameInput) accountDisplayNameInput.value = '';
                 if (accountDisplayNameStatus) accountDisplayNameStatus.textContent = '';
                 if (accountEmailDetail) accountEmailDetail.textContent = '—';

@@ -351,25 +351,52 @@ function setStreamerProfile(username, avatarUrl, displayName = username) {
 function setAccountAvatar(displayName, avatarUrl) {
     const avatar = document.getElementById('account-avatar-display');
     const image = document.getElementById('account-avatar-image');
+    const headerAvatar = document.getElementById('header-account-avatar');
+    const headerFallback = document.getElementById('header-account-avatar-fallback');
+    const headerImage = document.getElementById('header-account-avatar-image');
+    const initial = String(displayName || 'U').trim().charAt(0).toUpperCase() || 'U';
+
     if (avatar) {
-        avatar.textContent = String(displayName || 'U').trim().charAt(0).toUpperCase() || 'U';
+        avatar.textContent = initial;
         avatar.classList.remove('hidden');
     }
-    if (!image) return;
 
-    image.onload = () => {
-        image.classList.remove('hidden');
-        avatar?.classList.add('hidden');
-    };
-    image.onerror = () => {
-        image.classList.add('hidden');
-        avatar?.classList.remove('hidden');
-    };
+    if (headerFallback) headerFallback.textContent = initial;
+    if (image) {
+        image.onload = () => {
+            image.classList.remove('hidden');
+            avatar?.classList.add('hidden');
+        };
+        image.onerror = () => {
+            image.classList.add('hidden');
+            avatar?.classList.remove('hidden');
+        };
+    }
+    if (headerImage) {
+        headerImage.onload = () => {
+            headerImage.classList.remove('hidden');
+            headerAvatar?.classList.remove('hidden');
+            headerFallback?.classList.add('hidden');
+        };
+        headerImage.onerror = () => {
+            headerImage.classList.add('hidden');
+            headerFallback?.classList.remove('hidden');
+        };
+    }
     if (avatarUrl) {
-        image.src = avatarUrl;
+        if (image) image.src = avatarUrl;
+        if (headerImage) headerImage.src = avatarUrl;
     } else {
-        image.removeAttribute('src');
-        image.classList.add('hidden');
+        if (image) {
+            image.removeAttribute('src');
+            image.classList.add('hidden');
+        }
+        if (headerImage) {
+            headerImage.removeAttribute('src');
+            headerImage.classList.add('hidden');
+        }
+        headerAvatar?.classList.add('hidden');
+        headerFallback?.classList.remove('hidden');
     }
 }
 
