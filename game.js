@@ -6,6 +6,15 @@ let connectedUsername = null;
 let platformSessionActive = false;
 let platformSessionPromise = null;
 let leaderboardRefreshTimer = null;
+let leaderboardPeriod = 'all';
+let leaderboardRequestId = 0;
+
+const leaderboardPeriods = {
+    all: 'Clasament all-time',
+    '24h': 'Clasament ultimele 24 de ore',
+    '7d': 'Clasament ultimele 7 zile',
+    '30d': 'Clasament ultimele 30 de zile'
+};
 
 function setLeaderboardStatus(message, isError = false) {
     const status = document.getElementById('leaderboard-status');
@@ -123,6 +132,7 @@ async function loadLeaderboard() {
     const list = document.getElementById('leaderboard-list');
     if (!list) return;
 
+    const requestId = ++leaderboardRequestId;
     if (!supabase) {
         setLeaderboardStatus('Nu s-a putut inițializa Supabase. Reîncarcă pagina și încearcă din nou.', true);
         return;
@@ -130,28 +140,41 @@ async function loadLeaderboard() {
 
     setLeaderboardStatus('Se încarcă clasamentul...');
     try {
-        const { data, error } = await supabase
-            .from('streamer_profiles')
-            .select('tiktok_username,tiktok_display_name,avatar_url,total_coins,total_live_seconds')
-            .eq('is_public', true)
-            .order('total_coins', { ascending: false })
-            .order('total_live_seconds', { ascending: false })
-            .limit(100);
+        const { data, error } = await supabase.rpc('get_streamer_leaderboard', {
+            p_period: leaderboardPeriod
+        });
         if (error) throw error;
+        if (requestId !== leaderboardRequestId) return;
 
         const rows = data || [];
         renderLeaderboard(rows);
         setLeaderboardStatus(rows.length
-            ? `Afișăm ${rows.length} profiluri publice. Monedele și timpul provin din sesiunile TikInteract.`
-            : 'Nu există încă profiluri publice. Fii primul streamer din clasament!');
+            ? `Afișăm ${rows.length} profiluri publice · ${leaderboardPeriods[leaderboardPeriod].toLowerCase()}.`
+            : leaderboardPeriod === 'all'
+                ? 'Nu există încă profiluri publice. Fii primul streamer din clasament!'
+                : `Nu există activitate în ${leaderboardPeriod === '24h' ? 'ultimele 24 de ore' : `ultimele ${leaderboardPeriod === '7d' ? '7 zile' : '30 de zile'}`}.`);
     } catch (error) {
+        if (requestId !== leaderboardRequestId) return;
         renderLeaderboard([]);
         document.getElementById('leaderboard-empty')?.classList.add('hidden');
         setLeaderboardStatus(
-            `Clasamentul nu s-a putut încărca: ${error.message}. Verifică dacă ai rulat supabase/leaderboard.sql în Supabase.`,
+            `Clasamentul nu s-a putut încărca: ${error.message}. Rulează supabase/leaderboard_periods.sql în Supabase.`,
             true
         );
     }
+}
+
+function setLeaderboardPeriod(period) {
+    if (!Object.hasOwn(leaderboardPeriods, period)) return;
+    leaderboardPeriod = period;
+    document.querySelectorAll('[data-leaderboard-period]').forEach((button) => {
+        const isActive = button.dataset.leaderboardPeriod === period;
+        button.setAttribute('aria-pressed', String(isActive));
+        button.classList.toggle('is-active', isActive);
+    });
+    const label = document.getElementById('leaderboard-period-label');
+    if (label) label.textContent = leaderboardPeriods[period];
+    loadLeaderboard();
 }
 
 async function saveTikTokLeaderboardProfile(username, displayName = username, avatarUrl = null) {

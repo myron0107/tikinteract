@@ -17,9 +17,10 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 ## Leaderboard setup
 
 1. In the Supabase project, open **SQL Editor** and run `supabase/leaderboard.sql`.
-2. Sign in to TikInteract, enter the TikTok username, choose whether the profile should be public, and press **Salvează și caută poza**.
-3. Start a LIVE connection from TikInteract. Session time and gift coin values received through the connector are saved to the public leaderboard.
+2. For rolling period leaderboards, also run `supabase/leaderboard_periods.sql` in **SQL Editor**.
+3. Sign in to TikInteract, enter the TikTok username, choose whether the profile should be public, and press **Salvează și caută poza**.
+4. Start a LIVE connection from TikInteract. Session time and gift coin values received through the connector are saved to the public leaderboard.
 
-The leaderboard is sorted by TikInteract gift-value points, then recorded LIVE time. Gift points are calculated from TikTok gift diamond values; they are activity points, not cash or withdrawable currency. The username and stats are public only when the account owner enables the public profile checkbox. Statistics count only sessions and gift events observed while connected through TikInteract. This first version is intended for community rankings, not prizes or payments; client-reported event totals are not tamper-proof.
+The leaderboard offers all-time, last 24 hours, 7 days, and 30 days views, sorted by TikInteract gift-value points and then LIVE time within the selected period. Recent-period LIVE time is calculated from the overlap of recorded sessions with the selected time window; gift points use events received in that window. Gift points are calculated from TikTok gift diamond values; they are activity points, not cash or withdrawable currency. The username and stats are public only when the account owner enables the public profile checkbox. Statistics count only sessions and gift events observed while connected through TikInteract. This first version is intended for community rankings, not prizes or payments; client-reported event totals are not tamper-proof.
 
 TikTok usernames are entered by users and are not verified through TikTok OAuth in this version.

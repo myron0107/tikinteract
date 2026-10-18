@@ -306,12 +306,19 @@
         <div class="leaderboard-summary dashboard-panel rounded-2xl p-5 mb-6">
             <div class="leaderboard-trophy"><i class="fa-solid fa-trophy"></i></div>
             <div>
-                <p class="text-sm font-bold text-white">Clasament all-time</p>
+                <p id="leaderboard-period-label" class="text-sm font-bold text-white">Clasament all-time</p>
                 <p class="mt-1 text-xs text-zinc-400">Doar statisticile înregistrate de TikInteract sunt incluse.</p>
             </div>
             <button onclick="loadLeaderboard()" class="ml-auto bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-rotate mr-2"></i> Reîncarcă
             </button>
+        </div>
+
+        <div class="leaderboard-periods mb-5" role="group" aria-label="Perioada clasamentului">
+            <button type="button" data-leaderboard-period="all" aria-pressed="true" class="is-active" onclick="setLeaderboardPeriod('all')">All-time</button>
+            <button type="button" data-leaderboard-period="24h" aria-pressed="false" onclick="setLeaderboardPeriod('24h')">Ultimele 24h</button>
+            <button type="button" data-leaderboard-period="7d" aria-pressed="false" onclick="setLeaderboardPeriod('7d')">7 zile</button>
+            <button type="button" data-leaderboard-period="30d" aria-pressed="false" onclick="setLeaderboardPeriod('30d')">30 zile</button>
         </div>
 
         <div id="leaderboard-status" class="mb-5 text-sm text-zinc-400" role="status" aria-live="polite">

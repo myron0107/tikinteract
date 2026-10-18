@@ -514,6 +514,30 @@ select:focus {
     border: 1px solid rgba(255,255,255,0.07);
 }
 
+.leaderboard-periods {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.leaderboard-periods button {
+    padding: 0.65rem 1rem;
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 0.75rem;
+    background: #09090b;
+    color: var(--muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+
+.leaderboard-periods button:hover,
+.leaderboard-periods button.is-active {
+    border-color: rgba(230,25,50,0.55);
+    background: rgba(230,25,50,0.12);
+    color: white;
+}
+
 .leaderboard-trophy {
     display: grid;
     place-items: center;
