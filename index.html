@@ -133,7 +133,7 @@
             <h3 class="text-2xl font-bold text-white mb-2">Autentificare TikInteract</h3>
             <p class="text-xs text-zinc-400 mb-6">Conectează-te rapid cu Google sau folosește e-mailul clasic.</p>
 
-            <div class="space-y-4">
+            <div id="email-auth-options" class="space-y-4">
                 <!-- BUTON GOOGLE OAUTH -->
                 <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-zinc-100 text-zinc-900 font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-3 transition cursor-pointer shadow-md">
                     <i class="fa-brands fa-google text-red-600 text-base"></i> Continuă cu Google
@@ -150,8 +150,13 @@
                     <input type="email" id="auth-email" placeholder="nume@example.com" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">PAROLĂ</label>
-                    <input type="password" id="auth-password" placeholder="••••••••" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                    <div class="mb-1 flex items-center justify-between gap-2">
+                        <label class="block text-xs font-bold text-zinc-400" for="auth-password">PAROLĂ</label>
+                        <button type="button" onclick="requestPasswordReset()" class="text-[10px] font-semibold text-red-400 hover:text-red-300 transition cursor-pointer">
+                            Ai uitat parola?
+                        </button>
+                    </div>
+                    <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
                 </div>
                 
                 <button onclick="loginWithEmail()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition glow-red cursor-pointer">
@@ -160,6 +165,32 @@
                 
                 <button onclick="signUpWithEmail()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold py-3.5 rounded-xl text-xs border border-zinc-800 transition cursor-pointer">
                     Creează cont nou instant
+                </button>
+                <p id="auth-email-status" class="hidden text-xs leading-relaxed text-zinc-400" role="status" aria-live="polite"></p>
+            </div>
+
+            <div id="password-recovery-form" class="hidden space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-zinc-400 mb-1" for="new-auth-password">PAROLĂ NOUĂ</label>
+                    <input type="password" id="new-auth-password" autocomplete="new-password" minlength="6" placeholder="Minimum 6 caractere" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-zinc-400 mb-1" for="confirm-auth-password">CONFIRMĂ PAROLA NOUĂ</label>
+                    <input type="password" id="confirm-auth-password" autocomplete="new-password" minlength="6" placeholder="Reintrodu parola nouă" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                </div>
+                <button type="button" onclick="updateRecoveredPassword()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition glow-red cursor-pointer">
+                    Salvează parola nouă
+                </button>
+                <p id="password-recovery-status" class="text-xs leading-relaxed text-zinc-400" role="status" aria-live="polite"></p>
+                <button type="button" onclick="closeAuthModal()" class="w-full text-xs font-semibold text-zinc-400 hover:text-white transition cursor-pointer">
+                    Închide
+                </button>
+            </div>
+
+            <div id="password-recovery-success" class="hidden space-y-4">
+                <p class="text-sm leading-relaxed text-green-400" role="status">Parola a fost schimbată cu succes. Ești conectat la cont.</p>
+                <button type="button" onclick="closeAuthModal()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition cursor-pointer">
+                    Continuă în TikInteract
                 </button>
             </div>
         </div>
@@ -609,6 +640,7 @@
         let supabaseClient = null;
         let currentUser = null;
         let cookiePreferencesPreviousFocus = null;
+        let isPasswordRecovery = false;
         const LIVE_GAME_PATHS = Object.freeze({
             'neon-race': 'GAME/NEON-RACE/Neon-Race.html',
             'neon-riders': 'GAME/NEON-RIDERS/NEON-RIDERS.html',
@@ -629,8 +661,9 @@
                     const { data: { session } } = await supabaseClient.auth.getSession();
                     updateUI(session);
 
-                    supabaseClient.auth.onAuthStateChange((_event, session) => {
+                    supabaseClient.auth.onAuthStateChange((event, session) => {
                         updateUI(session);
+                        if (event === 'PASSWORD_RECOVERY') showPasswordRecoveryForm();
                     });
                 } else {
                     loadHomeLeaderboard();
@@ -736,7 +769,7 @@
                 if(btnLogin) btnLogin.classList.add('hidden');
                 if(profileMenu) profileMenu.classList.remove('hidden');
                 if(accountMenuToggle) accountMenuToggle.classList.remove('hidden');
-                closeAuthModal();
+                if (!isPasswordRecovery) closeAuthModal();
                 if (shouldOpenLiveFromUrl) {
                     shouldOpenLiveFromUrl = false;
                     if (requestedLiveGame) loadLiveGame(requestedLiveGame);
@@ -798,6 +831,10 @@
         function closeAuthModal() {
             const modal = document.getElementById('auth-modal');
             if(modal) modal.classList.add('hidden');
+            isPasswordRecovery = false;
+            document.getElementById('email-auth-options')?.classList.remove('hidden');
+            document.getElementById('password-recovery-form')?.classList.add('hidden');
+            document.getElementById('password-recovery-success')?.classList.add('hidden');
         }
 
         function toggleAccountMenu(event) {
@@ -904,26 +941,137 @@
 
         async function loginWithEmail() {
             if (!supabaseClient) return alert("Supabase nu este încărcat.");
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             if(!email || !password) return alert("Completează emailul și parola!");
 
             const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-            if (error) alert("Eroare la logare: " + error.message);
+            if (error) {
+                showEmailAuthStatus(`Eroare la logare: ${error.message}`, true);
+            } else {
+                clearEmailAuthStatus();
+            }
+        }
+
+        async function requestPasswordReset() {
+            if (!supabaseClient) {
+                showEmailAuthStatus('Autentificarea nu este disponibilă momentan. Reîncarcă pagina și încearcă din nou.', true);
+                return;
+            }
+
+            const emailInput = document.getElementById('auth-email');
+            const email = emailInput?.value.trim();
+            if (!email) {
+                showEmailAuthStatus('Introdu adresa de e-mail a contului, apoi apasă din nou „Ai uitat parola?”.', true);
+                emailInput?.focus();
+                return;
+            }
+            if (!emailInput.checkValidity()) {
+                showEmailAuthStatus('Introdu o adresă de e-mail validă.', true);
+                emailInput.focus();
+                return;
+            }
+
+            const status = document.getElementById('auth-email-status');
+            if (status) {
+                status.textContent = 'Se trimite linkul de recuperare...';
+                status.className = 'text-xs leading-relaxed text-zinc-400';
+            }
+
+            try {
+                const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                    redirectTo: `${window.location.origin}${window.location.pathname}`
+                });
+                if (error) throw error;
+                if (status) {
+                    status.textContent = 'Dacă există un cont cu această adresă, vei primi un e-mail cu linkul de recuperare. Verifică și folderul Spam.';
+                    status.className = 'text-xs leading-relaxed text-green-400';
+                }
+            } catch (error) {
+                console.error('Could not send password recovery email:', error);
+                showEmailAuthStatus(`Nu am putut trimite linkul de recuperare: ${error.message}`, true);
+            }
+        }
+
+        function showPasswordRecoveryForm() {
+            isPasswordRecovery = true;
+            document.getElementById('email-auth-options')?.classList.add('hidden');
+            document.getElementById('password-recovery-success')?.classList.add('hidden');
+            const recoveryForm = document.getElementById('password-recovery-form');
+            recoveryForm?.classList.remove('hidden');
+            const status = document.getElementById('password-recovery-status');
+            if (status) {
+                status.textContent = 'Alege o parolă nouă pentru contul tău.';
+                status.className = 'text-xs leading-relaxed text-zinc-400';
+            }
+            document.getElementById('auth-modal')?.classList.remove('hidden');
+            document.getElementById('new-auth-password')?.focus();
+        }
+
+        async function updateRecoveredPassword() {
+            if (!supabaseClient) {
+                setPasswordRecoveryStatus('Autentificarea nu este disponibilă momentan. Reîncarcă pagina și încearcă din nou.', true);
+                return;
+            }
+
+            const passwordInput = document.getElementById('new-auth-password');
+            const confirmInput = document.getElementById('confirm-auth-password');
+            const password = passwordInput?.value || '';
+            if (password.length < 6) {
+                setPasswordRecoveryStatus('Parola trebuie să aibă cel puțin 6 caractere.', true);
+                passwordInput?.focus();
+                return;
+            }
+            if (password !== confirmInput?.value) {
+                setPasswordRecoveryStatus('Parolele nu coincid. Verifică cele două câmpuri.', true);
+                confirmInput?.focus();
+                return;
+            }
+
+            try {
+                const { error } = await supabaseClient.auth.updateUser({ password });
+                if (error) throw error;
+                isPasswordRecovery = false;
+                passwordInput.value = '';
+                confirmInput.value = '';
+                document.getElementById('password-recovery-form')?.classList.add('hidden');
+                document.getElementById('password-recovery-success')?.classList.remove('hidden');
+            } catch (error) {
+                console.error('Could not update password after recovery:', error);
+                setPasswordRecoveryStatus(`Nu am putut schimba parola: ${error.message}`, true);
+            }
+        }
+
+        function setPasswordRecoveryStatus(message, isError = false) {
+            const status = document.getElementById('password-recovery-status');
+            if (!status) return;
+            status.textContent = message;
+            status.className = `text-xs leading-relaxed ${isError ? 'text-amber-400' : 'text-zinc-400'}`;
+        }
+
+        function showEmailAuthStatus(message, isError = false, isSuccess = false) {
+            const status = document.getElementById('auth-email-status');
+            if (!status) return;
+            status.textContent = message;
+            status.className = `text-xs leading-relaxed ${isError ? 'text-amber-400' : isSuccess ? 'text-green-400' : 'text-zinc-400'}`;
+        }
+
+        function clearEmailAuthStatus() {
+            const status = document.getElementById('auth-email-status');
+            if (!status) return;
+            status.textContent = '';
+            status.className = 'hidden text-xs leading-relaxed text-zinc-400';
         }
 
         async function signUpWithEmail() {
             if (!supabaseClient) return alert("Supabase nu este încărcat.");
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value;
             if(!email || !password) return alert("Completează emailul și parola!");
 
             const { error } = await supabaseClient.auth.signUp({ email, password });
-            if (error) {
-                alert("Eroare la creare cont: " + error.message);
-            } else {
-                alert("Cont creat cu succes! Te poți conecta acum.");
-            }
+            if (error) showEmailAuthStatus(`Eroare la creare cont: ${error.message}`, true);
+            else showEmailAuthStatus('Cont creat cu succes! Verifică e-mailul dacă ți se cere confirmarea, apoi autentifică-te.', false, true);
         }
 
         async function logoutUser() {
