@@ -985,7 +985,7 @@ select:focus {
         padding: 0.3rem 0.45rem;
     }
 
-    #user-profile-menu > div:first-child {
+    .user-avatar-trigger {
         width: 2rem;
         height: 2rem;
     }
@@ -994,10 +994,14 @@ select:focus {
         display: none;
     }
 
-    #user-profile-menu > button:nth-of-type(1) {
-        margin-left: 0;
-        padding: 0.45rem 0.55rem;
-        font-size: 0.65rem;
+    #user-profile-menu > button:not(.user-avatar-trigger) {
+        display: none;
+    }
+
+    #user-profile-menu {
+        padding: 0;
+        border: 0;
+        background: transparent;
     }
 
     .mobile-nav {
