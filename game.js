@@ -164,6 +164,60 @@ async function loadLeaderboard() {
     }
 }
 
+async function loadHomeLeaderboard() {
+    const list = document.getElementById('home-leaderboard-list');
+    const status = document.getElementById('home-leaderboard-status');
+    const supabase = window.tikInteractSupabase;
+    if (!list || !status) return;
+    if (!supabase) {
+        status.textContent = 'Clasamentul nu este disponibil momentan. Reîncarcă pagina pentru a încerca din nou.';
+        status.classList.add('is-error');
+        return;
+    }
+
+    status.textContent = 'Se încarcă topul comunității...';
+    status.classList.remove('is-error');
+    try {
+        const { data, error } = await supabase.rpc('get_streamer_leaderboard', {
+            p_period: 'all'
+        });
+        if (error) throw error;
+
+        const rows = (data || []).slice(0, 10);
+        list.replaceChildren();
+        rows.forEach((profile, index) => {
+            const row = document.createElement('li');
+            row.className = 'home-leaderboard-row';
+
+            const rank = document.createElement('span');
+            rank.className = `home-leaderboard-rank${index < 3 ? ` is-top-${index + 1}` : ''}`;
+            rank.textContent = String(index + 1).padStart(2, '0');
+
+            const person = createLeaderboardPerson(profile);
+            person.classList.add('home-leaderboard-person');
+
+            const coins = document.createElement('strong');
+            coins.className = 'home-leaderboard-coins';
+            coins.textContent = Number(profile.total_coins || 0).toLocaleString('ro-RO');
+
+            const liveTime = document.createElement('span');
+            liveTime.className = 'home-leaderboard-time';
+            liveTime.textContent = formatLiveTime(profile.total_live_seconds);
+
+            row.append(rank, person, coins, liveTime);
+            list.append(row);
+        });
+
+        status.textContent = rows.length
+            ? `Top ${rows.length} · Clasament all-time`
+            : 'Clasamentul se va completa când streamerii își publică profilul și pornesc un LIVE prin TikInteract.';
+    } catch (error) {
+        console.error('Failed to load the home page leaderboard:', error);
+        status.textContent = `Topul nu s-a putut încărca: ${error.message}`;
+        status.classList.add('is-error');
+    }
+}
+
 function setLeaderboardPeriod(period) {
     if (!Object.hasOwn(leaderboardPeriods, period)) return;
     leaderboardPeriod = period;

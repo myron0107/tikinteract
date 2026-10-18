@@ -14,6 +14,12 @@ The LIVE connector uses the unofficial `tiktok-live-connector` Node.js package (
 
 The local server listens only on `127.0.0.1` and accepts WebSocket requests from the local app and `https://tikinteract.vercel.app/`; the browser must be on the same computer as the server. Keep its terminal window open while streaming. Opening `index.html` directly or using the hosted site without first starting the local server will not connect.
 
+## Home page
+
+- The home page introduces TikInteract, highlights the three available games, and displays the all-time top 10 from the public streamer leaderboard.
+- The featured games link to their presentation pages. Use **Începe un LIVE** to open the in-page LIVE setup.
+- The top 10 is loaded from Supabase using the same `get_streamer_leaderboard` RPC as the full leaderboard.
+
 ## Game catalog and LIVE games
 
 - The **Jocuri** menu is a catalog: each game card opens a presentation page with screenshots and instructions, not the playable game.
