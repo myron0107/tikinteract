@@ -48,8 +48,10 @@
     <!-- FontAwesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/visual-refresh.css?v=22">
+    <link rel="stylesheet" href="assets/visual-refresh.css?v=26">
+    <link rel="stylesheet" href="assets/studio-test-menu.css?v=2">
     <link rel="stylesheet" href="assets/mobile.css?v=2">
+    <link rel="stylesheet" href="assets/studio-layout.css?v=2">
 </head>
 <body class="min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
@@ -500,7 +502,7 @@
     </section>
 
     <!-- LIVE VIEW -->
-    <div id="view-live" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+    <div id="view-live" class="hidden is-studio-mode flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
         <div class="account-heading mb-8">
             <div>
                 <span class="eyebrow">TikTok LIVE</span>
@@ -600,10 +602,20 @@
                         <p class="section-kicker">Joc LIVE</p>
                         <h4 class="text-xl font-bold text-white">Joacă direct în TikInteract</h4>
                     </div>
-                    <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
+                    <div class="studio-stage-actions">
+                        <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
+                    </div>
                 </div>
 
                 <div class="studio-game-browser">
+                    <div class="studio-game-sidebar">
+                        <section id="studio-test-panel" class="studio-test-panel" aria-labelledby="studio-test-title" aria-busy="true">
+                            <div class="studio-test-header"><h5 id="studio-test-title">TEST MENU</h5><span class="studio-test-status"><span></span> CONTROL JOC</span></div>
+                            <p id="studio-test-game-name">Se încarcă comenzile…</p>
+                            <div id="studio-test-tabs" class="studio-test-tabs" role="tablist" aria-label="Comenzi de test"></div>
+                            <div id="studio-test-controls" role="tabpanel"></div>
+                            <p id="studio-test-feedback" class="studio-test-note" role="status" aria-live="polite"></p>
+                        </section>
                     <section class="studio-game-picker live-favorites-panel" aria-labelledby="studio-game-favorites-title">
                         <div class="live-favorites-heading">
                             <div><p class="section-kicker">Acces rapid</p><h4 id="studio-game-favorites-title">Favorite jocuri</h4></div>
@@ -614,13 +626,15 @@
                         <label class="studio-quick-search live-favorites-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="sr-only">Caută jocuri pentru acces rapid</span><input id="studio-quick-search" type="search" placeholder="Caută un joc și adaugă-l rapid…" oninput="renderQuickGames()" autocomplete="off"></label>
                         <button class="studio-all-games" type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Deschide Game Center</button>
                     </section>
+
+                    </div>
                     <select id="live-game-select" hidden aria-label="Joc selectat">
                         <option value="neon-race">Neon Race</option>
                         <option value="neon-riders">Neon Riders</option>
                         <option value="country-derby">Country Derby</option>
                     </select>
                 <div class="live-game-frame-wrap mb-6 overflow-hidden rounded-xl border border-zinc-800">
-                    <iframe id="live-game-frame" class="live-game-frame" title="Joc TikTok LIVE" loading="lazy" allow="autoplay" allowfullscreen></iframe>
+                    <iframe id="live-game-frame" class="live-game-frame" title="Joc TikTok LIVE" loading="eager" allow="autoplay" allowfullscreen></iframe>
                 </div>
                 </div>
                 <p id="live-game-status" class="mb-6 text-xs text-zinc-500" role="status" aria-live="polite">Deschide LIVE pentru a încărca jocul selectat.</p>
@@ -800,6 +814,9 @@
         </section>
     </div>
 
+    <script src="assets/studio-layout.js?v=2"></script>
+    <script src="assets/studio-live-bridge.js?v=1"></script>
+    <script src="assets/studio-test-menu.js?v=4"></script>
     <script src="game.js"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
@@ -1281,6 +1298,8 @@
                     const gameFrame = document.getElementById('live-game-frame');
                     const gameStatus = document.getElementById('live-game-status');
                     if (gameFrame?.dataset.gameId) {
+                        window.TikInteractLive?.detach();
+                        resetStudioTestMenu();
                         gameFrame.removeAttribute('src');
                         delete gameFrame.dataset.gameId;
                         if (gameStatus) gameStatus.textContent = 'Deschide LIVE pentru a încărca jocul selectat.';
@@ -1323,15 +1342,28 @@
             });
             if (gameFrame.dataset.gameId === gameId) return;
 
+            resetStudioTestMenu();
             gameFrame.dataset.gameId = gameId;
             gameFrame.title = `${gameSelect?.selectedOptions[0]?.textContent || 'TikTok LIVE'} — joc LIVE`;
             gameFrame.setAttribute('aria-busy', 'true');
             if (gameStatus) gameStatus.textContent = 'Se încarcă jocul selectat…';
-            gameFrame.onload = () => {
+            let completed = false;
+            const complete = (viewport) => {
+                if (gameFrame.dataset.gameId !== gameId) return;
+                window.TikInteractStudioLayout?.fitGame(viewport);
+                if (completed) return;
+                completed = true;
                 gameFrame.removeAttribute('aria-busy');
-                if (gameStatus) gameStatus.textContent = 'Jocul este încărcat. Conectează-l la TikFinity din comenzile jocului.';
+                initializeStudioTestMenu();
+                if (gameStatus) gameStatus.textContent = 'Jocul este încărcat. Folosește Pornește Conexiunea Live pentru comentarii, like-uri și cadouri.';
             };
-            gameFrame.src = gamePath;
+            const token = window.TikInteractLive?.prepare(gameFrame, complete);
+            window.TikInteractStudioLayout?.fitGame({width:540, height:960});
+            gameFrame.onload = () => {
+                window.TikInteractLive?.loaded(gameFrame);
+                complete();
+            };
+            gameFrame.src = token ? `${gamePath}?tikinteractHost=${encodeURIComponent(token)}` : gamePath;
         }
 
         function setActiveNavigation(activeItem) {

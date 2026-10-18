@@ -587,6 +587,8 @@ function setAudioLibraryScope(scope) {
 function setLiveStudioTab(tab, options = {}) {
     const tabs = [...document.querySelectorAll('.live-studio-tabs [data-studio-tab]')];
     if (!tabs.some(button => button.dataset.studioTab === tab)) return;
+    document.getElementById('view-live')?.classList.toggle('is-studio-mode', tab === 'studio');
+    requestAnimationFrame(() => window.TikInteractStudioLayout?.fitGame());
     tabs.forEach(button => {
         const selected = button.dataset.studioTab === tab;
         document.getElementById(button.getAttribute('aria-controls'))?.classList.toggle('hidden', !selected);
@@ -603,8 +605,9 @@ const studioTourSteps = [
     {tab:'studio', target:'.live-studio-tabs', title:'Bine ai venit în LIVE Studio', text:'Acestea sunt meniurile tale. Îți arătăm pe rând unde configurezi LIVE-ul, alegi jocurile și controlezi sunetele.'},
     {tab:'studio', target:'.studio-connection', title:'Conectează streamerul', text:'Introdu username-ul creatorului care este LIVE, salvează profilul și pornește conexiunea. Serverul local TikInteract trebuie să ruleze pe același calculator.'},
     {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Aici apar jocurile favorite. Apasă imaginea pentru a deschide jocul. Caută un joc și folosește steluța pentru a-l adăuga sau elimina din Acces rapid.'},
+    {tab:'studio', target:'#studio-test-panel', title:'Testează jocul din Studio', text:'Comenzile TEST MENU sunt permanent vizibile în stânga. Testezi echipele, controlezi cursa și ajustezi vremea sau sunetele direct de aici.'},
     {tab:'studio', target:'.studio-stats', title:'Urmărește sesiunea', text:'Scor, Gifts și Evenimente arată activitatea primită în sesiunea curentă. Datele se actualizează când conexiunea primește evenimente LIVE.'},
-    {tab:'studio', target:'.studio-stage .feed-box', title:'Evenimentele din LIVE', text:'Aici vezi evenimentele primite prin TikInteract. Pentru jocurile cu buton CONNECT în interior, pornește separat și TikFinity Desktop.'},
+    {tab:'studio', target:'.studio-stage .feed-box', title:'Evenimentele din LIVE', text:'Comentariile, like-urile și cadourile primite prin aceeași conexiune ajung automat la jocul deschis. Spectatorii aleg echipa prin chat: RED sau BLUE; Country Derby acceptă și GREEN.'},
     {tab:'games', target:'.game-center-heading', title:'Game Center', text:'Aceasta este biblioteca de jocuri. Caută după nume, apoi apasă „Deschide în Studio” pentru a încărca jocul ales.'},
     {tab:'games', target:'.game-center-card > .game-favorite-star', title:'Steluța adaugă la favorite', text:'Apasă ☆ pentru a adăuga jocul în Acces rapid. Apasă din nou pe ★ pentru a-l elimina. Favoritele se păstrează în browser.'},
     {tab:'audio', target:'.soundboard-library-controls', title:'Audio Center', text:'Aici găsești biblioteca de sunete. Alege toate sunetele sau doar favoritele. Mai jos poți căuta după nume și filtra după categorie.'},
@@ -1267,12 +1270,14 @@ function clearStreamerProfile() {
     setAccountAvatar(document.getElementById('account-display-name')?.textContent, null);
 }
 
-function updateConnectionStatus(connected, username, connecting = false, avatarUrl = null) {
+function updateConnectionStatus(connected, username, connecting = false, avatarUrl = null, sessionId = null) {
     const status = document.getElementById('tiktok-sync-status');
     const button = document.getElementById('btn-connect');
     const badge = document.getElementById('live-overview-status');
 
     connectedUsername = connected ? username : null;
+    document.getElementById('view-live')?.classList.toggle('is-live-connected', !!connected);
+    window.TikInteractLive?.setState({connected:!!connected, connecting:!!connecting, username:username || null, sessionId});
     if (status) {
         status.textContent = connected
             ? `Stare: conectat la @${username}`
@@ -1323,7 +1328,7 @@ function connectToLocalServer() {
         }
 
         if (message.type === 'status') {
-            updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl);
+            updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl, message.sessionId);
             if (message.connected && message.username) {
                 startPlatformLiveSession(message.username);
             } else {
@@ -1360,10 +1365,10 @@ function connectToLocalServer() {
             }
             console.warn('TikTok profile lookup failed:', message.message);
         } else if (message.type === 'connecting') {
-            updateConnectionStatus(false, message.username, true);
+            updateConnectionStatus(false, message.username, true, null, message.sessionId);
         } else if (message.type === 'error') {
             showConnectionError(message.message);
-        } else if (message.type === 'chat' || message.type === 'gift') {
+        } else if (message.type === 'chat' || message.type === 'gift' || message.type === 'like') {
             handleTikTokEvent(message);
         }
     });
@@ -1467,12 +1472,14 @@ function lookupTikTokProfile(rawUsername) {
 }
 
 function handleTikTokEvent(event) {
+    if (window.TikInteractLive && !window.TikInteractLive.dispatch(event)) return;
     const username = String(event.username || 'utilizator').replace(/^@/, '');
     const isGift = event.type === 'gift';
-    const text = isGift ? `a trimis ${event.giftName}` : event.message;
+    const isLike = event.type === 'like';
+    const text = isGift ? `a trimis ${event.giftName}` : isLike ? `a trimis ${event.likeCount} like-uri` : event.message;
     if (!text) return;
 
-    totalScore += isGift ? 10 : 1;
+    totalScore += isGift ? 10 : isLike ? event.likeCount : 1;
     if (isGift) giftCount += 1;
     if (isGift) recordLeaderboardGift(event).catch((error) => {
         console.error('Failed to save gift statistics:', error);

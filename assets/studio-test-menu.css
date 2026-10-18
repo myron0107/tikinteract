@@ -1,0 +1,94 @@
+/* An open control surface: headings and rows instead of nested cards. */
+.studio-game-sidebar { min-width: 0; }
+.studio-test-panel { margin-top: 28px; padding: 0 2px; color: var(--text); }
+.studio-test-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.studio-test-header h5 { font-size: .85rem; font-weight: 850; letter-spacing: .04em; }
+.studio-test-status { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: .44rem; font-weight: 700; letter-spacing: .1em; }
+.studio-test-status > span { width: 5px; height: 5px; border-radius: 50%; background: var(--red); }
+#studio-test-game-name { margin-top: 7px; color: #ff9aa5; font-size: .7rem; line-height: 1.6; }
+#studio-test-controls { display: grid; gap: 26px; margin-top: 24px; }
+.studio-test-group { min-width: 0; }
+.studio-test-group > h6 { margin-bottom: 12px; color: var(--muted); font-size: .56rem; font-weight: 750; text-transform: uppercase; letter-spacing: .15em; }
+.studio-test-group-body { display: grid; gap: 10px; min-width: 0; }
+.studio-test-action { display: inline-flex; align-items: center; justify-content: center; min-width: 0; min-height: 36px; padding: 8px 9px; border: 0; border-radius: 6px; background: #ffffff06; color: var(--text); font-size: .64rem; font-weight: 650; line-height: 1.4; cursor: pointer; transition: background .15s, color .15s; }
+.studio-test-action:hover:not(:disabled), .studio-test-action[aria-pressed="true"] { background: var(--red-soft); color: #ff9aa5; }
+.studio-test-action:disabled { opacity: .4; cursor: default; }
+.studio-test-team-row { display: flex; align-items: center; gap: 5px; }
+.studio-test-team-name { width: 36px; flex-shrink: 0; color: var(--muted); font-size: .48rem; font-weight: 800; letter-spacing: .05em; }
+.studio-test-team-row > button { flex: 1; padding-inline: 5px; font-size: .59rem; }
+.studio-test-group--race .studio-test-group-body, .studio-test-group--weather .studio-test-group-body { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.studio-test-field { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; min-width: 0; }
+.studio-test-field > span { color: var(--muted); font-size: .65rem; line-height: 1.5; }
+.studio-test-field > output { grid-column: 2; grid-row: 1; color: #ff9aa5; font-size: .62rem; font-variant-numeric: tabular-nums; }
+.studio-test-field > input:not([type="checkbox"]), .studio-test-field > select { grid-column: 1 / -1; grid-row: 2; }
+.studio-test-field--checkbox { grid-column: 1 / -1; padding-block: 6px; }
+.studio-test-field--checkbox > input { grid-column: 2; grid-row: 1; }
+.studio-test-input { display: block; width: 100%; min-width: 0; max-width: 100%; color: var(--muted); font-size: .64rem; line-height: 1.6; overflow-wrap: anywhere; }
+input.studio-test-input:not([type="range"]):not([type="checkbox"]), select.studio-test-input { min-height: 38px; padding: 8px 0; border: 0; border-bottom: 1px solid var(--line-strong); border-radius: 0; background: transparent; color: var(--text); }
+select.studio-test-input > option { background: var(--panel-muted); color: var(--text); }
+input.studio-test-input[type="range"] { min-height: 24px; margin: 0; accent-color: var(--red); }
+input.studio-test-input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--red); }
+input.studio-test-input[type="file"]::file-selector-button { margin-right: 8px; padding: 8px 10px; border: 0; border-radius: 6px; background: var(--red-soft); color: #ffb5bd; cursor: pointer; }
+.studio-test-note { color: var(--muted); font-size: .66rem; line-height: 1.6; }
+#studio-test-feedback { margin-top: 12px; }
+#studio-test-feedback:empty { display: none; }
+.studio-test-panel[aria-busy="true"] .studio-test-status { opacity: .45; }
+@media (max-width: 1250px) {
+    .studio-game-sidebar { display: contents; }
+    .studio-test-panel { order: 3; margin-top: 4px; }
+    #studio-test-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 28px; }
+}
+@media (max-width: 767px) {
+    .studio-test-panel { padding-top: 12px; }
+    .studio-test-status { font-size: .5rem; }
+    #studio-test-controls { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+    .studio-test-group > h6 { font-size: .65rem; }
+    .studio-test-action { min-height: 44px; font-size: .75rem; }
+    .studio-test-team-row { gap: 6px; }
+    .studio-test-team-name { width: 42px; font-size: .57rem; }
+    .studio-test-team-row > button { min-height: 44px; font-size: .64rem; }
+    .studio-test-field > span { font-size: .75rem; }
+    .studio-test-field > output { font-size: .72rem; }
+    .studio-test-field--checkbox { min-height: 44px; }
+    input.studio-test-input[type="range"] { min-height: 32px; }
+    .studio-test-note { font-size: .74rem; }
+}
+@media (prefers-reduced-motion: reduce) { .studio-test-action { transition: none; } }
+
+/* Compact table and category controls stay within reach above favorites. */
+.studio-game-sidebar { display: flex; flex-direction: column; align-self: stretch; gap: 24px; }
+.studio-game-sidebar > .studio-test-panel { order: 0; position: sticky; top: calc(var(--site-header-height, 88px) + 12px); z-index: 3; margin: 0; padding: 10px 0 14px; background: #141013; }
+.studio-game-sidebar > .studio-game-picker { order: 1; }
+.studio-test-header h5 { font-size: .76rem; }
+#studio-test-game-name { margin-top: 4px; font-size: .65rem; }
+.studio-test-tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 3px; margin-top: 12px; border-bottom: 1px solid var(--line); }
+.studio-test-tabs:empty { display: none; }
+.studio-test-tabs > button { min-width: 0; min-height: 36px; padding: 7px 2px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font-size: .61rem; font-weight: 700; cursor: pointer; }
+.studio-test-tabs > button[aria-selected="true"] { border-bottom-color: var(--red); color: #ff9aa5; }
+#studio-test-controls { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 12px; }
+.studio-test-group[hidden] { display: none; }
+.studio-test-group > h6 { display: none; }
+.studio-test-group[data-studio-test-category="extra"] > h6 { display: block; margin-bottom: 8px; font-size: .55rem; }
+.studio-test-group-body { gap: 7px; }
+.studio-test-group--race { order: 2; padding-top: 10px; border-top: 1px solid var(--line); }
+.studio-test-group--race .studio-test-group-body { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.studio-test-action { min-height: 34px; padding: 7px 5px; font-size: .6rem; }
+.studio-test-team-row { gap: 0; min-height: 36px; border-bottom: 1px solid var(--line); }
+.studio-test-team-name { width: 39px; }
+.studio-test-team-row > button { border-radius: 0; background: transparent; font-size: .6rem; }
+.studio-test-field--range { grid-template-columns: 72px minmax(0, 1fr) 30px; min-height: 32px; gap: 8px; }
+.studio-test-field--range > span { grid-column: 1; grid-row: 1; font-size: .61rem; }
+.studio-test-field--range > input { grid-column: 2 !important; grid-row: 1 !important; min-height: 28px; }
+.studio-test-field--range > output { grid-column: 3; grid-row: 1; font-size: .6rem; }
+.studio-test-group--audio .studio-test-input:not(input) { font-size: .6rem; line-height: 1.5; }
+@media (max-width: 1250px) {
+    .studio-game-sidebar { display: contents; }
+    .studio-game-sidebar > .studio-test-panel { position: static; order: 0; width: 100%; margin: 0; }
+    .studio-game-sidebar > .studio-game-picker { order: 1; }
+}
+@media (max-width: 767px) {
+    .studio-test-tabs > button, .studio-test-action, .studio-test-team-row > button { min-height: 44px; }
+    .studio-test-tabs > button { font-size: .7rem; }
+    .studio-test-field--range > span, .studio-test-field--range > output { font-size: .7rem; }
+    .studio-test-action { font-size: .65rem; }
+}

@@ -1,0 +1,61 @@
+/* Use 80% of the original game size while preserving the complete viewport. */
+#view-live > .account-heading { padding: 10px 0; margin-bottom: 8px; border: 0; background: transparent; }
+#view-live > .account-heading h2 { font-size: 1.4rem; }
+#view-live > .account-heading .eyebrow, #view-live > .account-heading p { display: none; }
+#view-live .live-studio-tabs { margin-bottom: 12px; }
+.studio-stage .live-game-frame-wrap { position: relative; height: var(--studio-preview-height, 768px); min-height: 0; align-items: center; margin-bottom: 0; }
+.studio-game-browser .live-game-frame,
+.studio-game-browser .live-game-frame[data-game-id="country-derby"] { position: absolute; left: 50%; top: 50%; flex: none; width: var(--game-native-width, 540px); max-width: none; height: var(--game-native-height, 960px); min-height: 0; max-height: none; aspect-ratio: auto; transform: translate(-50%, -50%) scale(var(--game-fit-scale, .4)); transform-origin: center; border: 0; }
+@media (min-width: 1000px) {
+    #view-live.is-studio-mode:not(.hidden) { display: flex; flex-direction: column; height: auto; max-width: 1600px; padding: 8px 20px 12px; }
+    #view-live.is-studio-mode > .account-heading { flex: none; min-height: 34px; padding: 0; }
+    #view-live.is-studio-mode > .account-heading > button { padding: 7px 10px; font-size: .65rem; }
+    #view-live.is-studio-mode .live-studio-tabs { flex: none; padding: 3px; margin-bottom: 10px; }
+    #view-live.is-studio-mode .live-studio-tab { min-height: 34px; padding-block: 7px; font-size: .66rem; }
+    #view-live.is-studio-mode #live-studio-panel { flex: 1; min-height: 0; }
+    #view-live.is-studio-mode .studio-workspace { height: auto; min-height: 0; grid-template-columns: minmax(0, 1fr) 285px; gap: 16px; }
+    #view-live.is-studio-mode .studio-stage { height: auto; min-height: 0; padding: 12px; border-radius: 16px; }
+    #view-live.is-studio-mode .studio-stage-heading { flex: none; margin-bottom: 8px; }
+    #view-live.is-studio-mode .studio-stage-heading .section-kicker { display: none; }
+    #view-live.is-studio-mode .studio-stage-heading h4 { font-size: .85rem; }
+    #view-live.is-studio-mode .studio-stage .studio-game-browser { flex: none; min-height: 0; grid-template-columns: 260px minmax(0, 1fr); align-items: start; gap: 12px; }
+    #view-live.is-studio-mode .studio-game-sidebar { display: flex; flex-direction: column; align-self: stretch; gap: 16px; min-height: 0; overflow: visible; }
+    #view-live.is-studio-mode .studio-game-sidebar > .studio-test-panel { position: sticky; flex: none; padding: 0; }
+    #view-live.is-studio-mode .studio-game-sidebar > .studio-game-picker { flex: none; padding: 12px; border-radius: 12px; }
+    #view-live.is-studio-mode .studio-game-picker .live-favorites-heading { margin-bottom: 10px; }
+    #view-live.is-studio-mode .studio-game-options { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; max-height: 120px; }
+    #view-live.is-studio-mode .studio-game-option { min-height: 78px; padding: 25px 4px 6px; gap: 4px; }
+    #view-live.is-studio-mode .studio-game-option img { width: 46px; height: 30px; }
+    #view-live.is-studio-mode .studio-game-option span { font-size: .51rem; }
+    #view-live.is-studio-mode .studio-quick-search { margin-top: 10px; }
+    #view-live.is-studio-mode .studio-quick-search input { min-height: 34px; padding-block: 8px; }
+    #view-live.is-studio-mode .studio-all-games { min-height: 32px; padding: 8px; margin-top: 8px; font-size: .6rem; }
+    #view-live.is-studio-mode .studio-game-frame-wrap { height: var(--studio-preview-height, 768px); min-height: 0; }
+    #view-live.is-studio-mode .studio-stats { order: 3; flex: none; margin: 8px 0 0; gap: 8px; }
+    #view-live.is-studio-mode .mini-stat-box { padding: 6px 12px; border-radius: 8px; }
+    #view-live.is-studio-mode .mini-stat-box strong { font-size: 1rem; }
+    #view-live.is-studio-mode .studio-stage #live-game-status { order: 4; flex: none; margin: 6px 0 0; font-size: .58rem; line-height: 1.4; }
+    #view-live.is-studio-mode .studio-stage .live-grid { display: block; order: 5; flex: none; margin-top: 8px; }
+    #view-live.is-studio-mode .studio-stage .feed-box { padding: 8px 10px; border-radius: 8px; }
+    #view-live.is-studio-mode .studio-stage .feed-header { margin-bottom: 6px; font-size: .53rem; }
+    #view-live.is-studio-mode .studio-stage .feed-list { max-height: 52px; gap: 4px; }
+    #view-live.is-studio-mode .studio-stage .feed-item { padding: 4px 6px; font-size: .6rem; }
+    #view-live.is-studio-mode .studio-stage .feed-avatar { width: 22px; height: 22px; font-size: .55rem; }
+    #view-live.is-studio-mode .studio-stage .chart-box { display: none; }
+    #view-live.is-studio-mode .studio-controls { display: flex; flex-direction: column; height: auto; min-height: 0; gap: 12px; overflow: visible; }
+    #view-live.is-studio-mode .studio-connection, #view-live.is-studio-mode .studio-audio { flex: none; padding: 12px; border-radius: 12px; }
+    #view-live.is-studio-mode .studio-panel-title { margin-bottom: 10px; padding-bottom: 8px; }
+    #view-live.is-studio-mode .studio-panel-title > i { width: 24px; height: 24px; }
+    #view-live.is-studio-mode .studio-connection input { min-height: 36px; }
+    #view-live.is-studio-mode #btn-connect { min-height: 38px; padding-block: 9px; }
+    #view-live.is-studio-mode .studio-connection > p { font-size: .56rem; margin-bottom: 10px; }
+    #view-live.is-studio-mode #tiktok-sync-status { margin-bottom: 8px; padding: 7px 9px; }
+    #view-live.is-studio-mode .studio-audio .live-favorites-heading { margin-bottom: 10px; }
+    #view-live.is-studio-mode .studio-audio .live-favorite-card { min-height: 60px; }
+    #view-live.is-studio-mode .studio-audio .live-favorite-title { font-size: .48rem; }
+    #view-live.is-studio-mode .studio-audio .live-favorites-volume { width: 100%; }
+    #view-live.is-studio-mode.is-live-connected .studio-connection > label,
+    #view-live.is-studio-mode.is-live-connected #tiktok-user,
+    #view-live.is-studio-mode.is-live-connected #tiktok-user + div,
+    #view-live.is-studio-mode.is-live-connected .studio-connection > p { display: none; }
+}

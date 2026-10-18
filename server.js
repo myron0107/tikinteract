@@ -1,10 +1,11 @@
 import { createServer } from 'node:http';
 import { randomUUID } from 'node:crypto';
-import { readFile } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer, WebSocket } from 'ws';
 import { TikTokLiveConnection, WebcastEvent } from 'tiktok-live-connector';
+import { createLiveEventNormalizer } from './lib/live-events.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const HOST = '127.0.0.1';
@@ -42,6 +43,10 @@ const MIME_TYPES = {
     '.ogg': 'audio/ogg',
     '.png': 'image/png',
     '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.webp': 'image/webp',
+    '.gif': 'image/gif',
+    '.avif': 'image/avif',
     '.mp4': 'video/mp4',
     '.svg': 'image/svg+xml',
     '.wav': 'audio/wav',
@@ -75,11 +80,20 @@ const server = createServer(async (request, response) => {
     }
 
     try {
+        const immutableMedia = /^\/assets\/game-media\/[a-f0-9]{64}\.(png|jpg|webp|gif|avif|svg|mp3|ogg|wav|m4a)$/.test(requestedPath);
+        const etag = immutableMedia ? `"${path.basename(filePath)}"` : null;
+        if (etag && request.headers['if-none-match'] === etag) {
+            const file = await stat(filePath);
+            if (!file.isFile()) { response.writeHead(404).end('Not found'); return; }
+            response.writeHead(304, {'ETag':etag, 'Cache-Control':'public, max-age=31536000, immutable'}).end();
+            return;
+        }
         const content = await readFile(filePath);
         response.writeHead(200, {
             'Content-Type': MIME_TYPES[path.extname(filePath)] || 'application/octet-stream',
             'X-Content-Type-Options': 'nosniff',
-            'Cache-Control': 'no-store'
+            'Cache-Control': immutableMedia ? 'public, max-age=31536000, immutable' : 'no-store',
+            ...(etag ? {'ETag':etag} : {})
         });
         response.end(content);
     } catch (error) {
@@ -97,6 +111,7 @@ let liveConnection = null;
 let activeUsername = null;
 let connectionAttempt = 0;
 let connectionStatus = 'disconnected';
+let activeSessionId = null;
 
 function send(socket, message) {
     if (socket.readyState === WebSocket.OPEN) {
@@ -116,6 +131,7 @@ function getState() {
         connected: connectionStatus === 'connected',
         connecting: connectionStatus === 'connecting',
         username: activeUsername,
+        sessionId: activeSessionId,
         avatarUrl: liveConnection ? getProfilePhotoUrl(liveConnection.roomInfo?.data?.owner, liveConnection.roomInfo?.data?.user) : null
     };
 }
@@ -176,6 +192,7 @@ function stopLiveConnection() {
     liveConnection = null;
     activeUsername = null;
     connectionStatus = 'disconnected';
+    activeSessionId = null;
 
     if (connection) {
         try {
@@ -187,7 +204,7 @@ function stopLiveConnection() {
         }
     }
 
-    broadcast({ type: 'status', connected: false, username: null });
+    broadcast({ type: 'status', connected: false, username: null, sessionId: null });
 }
 
 async function startLiveConnection(rawUsername) {
@@ -202,43 +219,19 @@ async function startLiveConnection(rawUsername) {
     liveConnection = connection;
     activeUsername = username;
     connectionStatus = 'connecting';
-    broadcast({ type: 'connecting', username });
+    const sessionId = randomUUID();
+    activeSessionId = sessionId;
+    const normalize = createLiveEventNormalizer(sessionId);
+    broadcast({ type: 'connecting', username, sessionId });
 
-    connection.on(WebcastEvent.CHAT, (event) => {
-        broadcast({
-            type: 'chat',
-            username: event.user?.uniqueId || 'utilizator',
-            message: event.comment || '',
-            avatarUrl: getProfilePhotoUrl(event.user)
+    for (const [kind, webcastEvent] of [['chat', WebcastEvent.CHAT], ['like', WebcastEvent.LIKE], ['gift', WebcastEvent.GIFT]]) {
+        connection.on(webcastEvent, (event) => {
+            if (liveConnection !== connection || activeSessionId !== sessionId || connectionStatus !== 'connected') return;
+            const giftInfo = kind === 'gift' ? event.extendedGiftInfo || connection.availableGifts?.find(gift => String(gift.id) === String(event.giftId)) : null;
+            const normalized = normalize(kind, event, giftInfo);
+            if (normalized) broadcast({...normalized, avatarUrl: getProfilePhotoUrl(event.user)});
         });
-    });
-
-    connection.on(WebcastEvent.GIFT, (event) => {
-        const giftType = Number(event.giftDetails?.giftType);
-        const isFinalGiftEvent = giftType !== 1 || event.repeatEnd === true;
-        const extendedGiftInfo = event.extendedGiftInfo
-            || connection.availableGifts?.find((gift) => String(gift.id) === String(event.giftId));
-        const coinValue = Number(
-            extendedGiftInfo?.diamondCount
-            ?? extendedGiftInfo?.diamond_count
-            ?? event.giftDetails?.diamondCount
-            ?? event.giftDetails?.diamond_count
-            ?? 0
-        );
-        const repeatCount = Math.max(1, Math.floor(Number(event.repeatCount) || 1));
-        const coins = isFinalGiftEvent && Number.isFinite(coinValue)
-            ? Math.min(1000000, Math.max(0, Math.floor(coinValue * repeatCount)))
-            : 0;
-
-        broadcast({
-            type: 'gift',
-            username: event.user?.uniqueId || 'utilizator',
-            giftName: event.giftDetails?.giftName || event.giftName || 'Cadou',
-            avatarUrl: getProfilePhotoUrl(event.user),
-            eventId: coins > 0 ? randomUUID() : null,
-            coins
-        });
-    });
+    }
 
     connection.on(WebcastEvent.STREAM_END, () => {
         if (liveConnection === connection) {
@@ -254,6 +247,7 @@ async function startLiveConnection(rawUsername) {
                 type: 'status',
                 connected: true,
                 username,
+                sessionId,
                 avatarUrl: getProfilePhotoUrl(connection.roomInfo?.data?.owner, connection.roomInfo?.data?.user)
             });
         }
@@ -262,11 +256,12 @@ async function startLiveConnection(rawUsername) {
             liveConnection = null;
             activeUsername = null;
             connectionStatus = 'disconnected';
+            activeSessionId = null;
             broadcast({
                 type: 'error',
                 message: error instanceof Error ? error.message : 'Conectarea la LIVE a eșuat.'
             });
-            broadcast({ type: 'status', connected: false, username: null });
+            broadcast({ type: 'status', connected: false, username: null, sessionId: null });
         }
     }
 }

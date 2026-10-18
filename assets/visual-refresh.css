@@ -111,6 +111,9 @@ body > header { background: #080709e8; border-bottom-color: #ffffff12; box-shado
 .studio-stage { grid-column: 1; grid-row: 1; display: flex; flex-direction: column; min-width: 0; padding: 24px; }
 .studio-stage-heading { order: 0; gap: 16px; margin-bottom: 20px; }
 .studio-stage-heading h4 { font-size: 1.1rem; letter-spacing: -.025em; }
+.studio-stage-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.studio-stage .live-game-frame { scroll-margin-top: calc(var(--site-header-height, 88px) + 16px); }
+@media (max-width: 767px) { .studio-stage-actions { width: 100%; justify-content: flex-end; } }
 #view-live .studio-stats { order: 1; gap: 12px; margin-bottom: 20px; }
 .studio-stats .mini-stat-box { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; border-radius: 12px; background: #ffffff03; }
 .studio-stats .mini-stat-box strong { margin-top: 0; font-size: 1.4rem; font-variant-numeric: tabular-nums; }
