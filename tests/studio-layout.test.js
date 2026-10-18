@@ -34,6 +34,14 @@ test('hidden preview waits for a real size instead of setting invalid scaling', 
     context.window.TikInteractStudioLayout.fitGame();
     assert.deepEqual(properties,{});
 });
+test('standalone desktop Studio fits the preview to the available screen height',()=>{
+    const properties={},wrap={clientWidth:650,clientHeight:768,style:{setProperty(key,value){properties[key]=value;}}};
+    const context={document:{body:{classList:{contains:()=>true}},getElementById(){return{parentElement:wrap,style:wrap.style};},addEventListener(){}},window:{innerWidth:1366,innerHeight:768}};
+    vm.createContext(context);vm.runInContext(code,context);context.window.TikInteractStudioLayout.fitGame();
+    assert.equal(Number.parseFloat(properties['--studio-preview-height']),488);
+    context.window.innerHeight=1080;context.window.TikInteractStudioLayout.fitGame();
+    assert.equal(Number(properties['--game-fit-scale']),.8);
+});
 test('game viewport normalization applies only inside Studio', () => {
     const source = readFileSync(new URL('../assets/game-viewport.js',import.meta.url),'utf8');
     for (const embedded of [true,false]) {

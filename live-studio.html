@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ro" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LIVE Studio — TikInteract</title>
+    <meta name="description" content="Spațiul TikInteract pentru controlul jocurilor și sunetelor din TikTok LIVE.">
+    <meta name="theme-color" content="#030305">
+    <link rel="icon" type="image/png" href="assets/tikinteract-icon-v2.png">
+    <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="stylesheet" href="assets/fonts/font-faces.css?v=1">
+    
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#080809',
+                        cardbg: '#121212',
+                        accent: '#ff2636',
+                        red: {
+                            400: '#ff8892',
+                            500: '#ff3344',
+                            600: '#e02030',
+                            700: '#b91b29',
+                            800: '#821923',
+                            950: '#300c11'
+                        },
+                        zinc: {
+                            100: '#f5f5f7',
+                            200: '#e4e4e7',
+                            300: '#d4d4d8',
+                            400: '#aaaab2',
+                            500: '#85858e',
+                            800: '#2b2b30',
+                            900: '#1b1b1e',
+                            950: '#0b0b0d'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="assets/visual-refresh.css?v=30">
+    <link rel="stylesheet" href="assets/studio-test-menu.css?v=7">
+    <link rel="stylesheet" href="assets/mobile.css?v=3">
+    <link rel="stylesheet" href="assets/studio-layout.css?v=4">
+    <link rel="stylesheet" href="assets/modern-ui.css?v=11">
+    <link rel="stylesheet" href="assets/typography.css?v=1">
+<link rel="stylesheet" href="assets/site-template.css?v=13"><link rel="stylesheet" href="assets/studio-app.css?v=6"><link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=3"></script></head><body data-page="studio" class="studio-app studio-locked site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white"><header class="template-header app-topbar"><div class="site-header-inner"><a class="template-brand" href="index.html" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="38" height="38"><span>TIK<span>INTERACT</span></span></a><div class="app-topbar-title"><span>LIVE STUDIO</span><span class="app-browser-label"><i class="fa-solid fa-globe" aria-hidden="true"></i> Browser</span></div><div class="header-account-actions flex items-center gap-4">
+                <span id="account-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
+                <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
+                    <span id="header-account-avatar-fallback">U</span>
+                    <img id="header-account-avatar-image" class="hidden" alt="" referrerpolicy="no-referrer">
+                </span>
+                <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
+                    <i class="fa-solid fa-gear" aria-hidden="true"></i>
+                </button>
+                <!-- BUTON AUTENTIFICARE -->
+                <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-user"></i> Autentificare / Cont
+                </button>
+
+                <!-- PROFIL UTILIZATOR -->
+                <div id="user-profile-menu" class="hidden flex items-center">
+                    <button onclick="closeAccountMenu(); switchView('account')" class="account-menu-button text-xs px-3 py-2 rounded-xl transition cursor-pointer">
+                        <i class="fa-solid fa-user" aria-hidden="true"></i><span>CONTUL MEU</span>
+                    </button>
+                    <button onclick="logoutUser()" title="Deconectare" aria-label="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-2 transition cursor-pointer">
+                        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
+                        <span class="account-logout-label">Deconectare</span>
+                    </button>
+                </div>
+            </div></div></header><aside class="studio-app-rail" aria-label="Navigare aplicație"><div class="app-rail-heading">WORKSPACE</div><div class="live-studio-tabs studio-app-nav" role="tablist" aria-label="Instrumente LIVE Studio">
+            <button id="live-studio-tab" data-studio-tab="studio" class="live-studio-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="live-studio-panel" onclick="setLiveStudioTab('studio')">
+                <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> LIVE Studio
+            </button>
+            <button id="game-center-tab" data-studio-tab="games" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="game-center-panel" onclick="setLiveStudioTab('games')">
+                <i class="fa-solid fa-gamepad" aria-hidden="true"></i> Game Center
+            </button>
+            <button id="audio-center-tab" data-studio-tab="audio" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="audio-center-panel" onclick="setLiveStudioTab('audio')">
+                <i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center
+            </button>
+            <button id="tiktok-gifts-tab" data-studio-tab="gifts" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="tiktok-gifts-panel" onclick="setLiveStudioTab('gifts')">
+                <i class="fa-solid fa-gift" aria-hidden="true"></i> TikTok Gifts
+            </button>
+            <button id="studio-help-button" class="live-studio-tab studio-help-button" type="button" aria-haspopup="dialog" aria-controls="studio-help-dialog" onclick="openStudioHelp()">
+                <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Ajutor
+            </button>
+        </div><div class="app-rail-bottom"><span class="app-rail-note"><span></span> TikInteract Studio</span><a href="index.html"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Înapoi la site</a></div></aside><div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-zinc-800 w-full max-w-md rounded-3xl p-8 relative glow-red">
+            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-zinc-500 hover:text-white cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <h3 class="text-2xl font-bold text-white mb-2">Autentificare TikInteract</h3>
+            <p class="text-xs text-zinc-400 mb-6">Conectează-te rapid cu Google sau folosește e-mailul clasic.</p>
+
+            <div id="email-auth-options" class="space-y-4">
+                <!-- BUTON GOOGLE OAUTH -->
+                <button onclick="loginWithGoogle()" class="w-full bg-white hover:bg-zinc-100 text-zinc-900 font-bold py-3.5 rounded-xl text-xs flex items-center justify-center gap-3 transition cursor-pointer shadow-md">
+                    <i class="fa-brands fa-google text-red-600 text-base"></i> Continuă cu Google
+                </button>
+
+                <div class="flex items-center my-4">
+                    <div class="flex-grow border-t border-zinc-800"></div>
+                    <span class="px-3 text-[10px] text-zinc-500 uppercase tracking-wider font-bold">sau cu e-mail</span>
+                    <div class="flex-grow border-t border-zinc-800"></div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">E-MAIL</label>
+                    <input type="email" id="auth-email" placeholder="nume@example.com" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <div class="mb-1 flex items-center justify-between gap-2">
+                        <label class="block text-xs font-bold text-zinc-400" for="auth-password">PAROLĂ</label>
+                        <button type="button" onclick="requestPasswordReset()" class="text-[10px] font-semibold text-red-400 hover:text-red-300 transition cursor-pointer">
+                            Ai uitat parola?
+                        </button>
+                    </div>
+                    <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                </div>
+                
+                <button onclick="loginWithEmail()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition glow-red cursor-pointer">
+                    Intră în cont
+                </button>
+                
+                <button onclick="signUpWithEmail()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold py-3.5 rounded-xl text-xs border border-zinc-800 transition cursor-pointer">
+                    Creează cont nou instant
+                </button>
+                <p id="auth-email-status" class="hidden text-xs leading-relaxed text-zinc-400" role="status" aria-live="polite"></p>
+            </div>
+
+            <div id="password-recovery-form" class="hidden space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-zinc-400 mb-1" for="new-auth-password">PAROLĂ NOUĂ</label>
+                    <input type="password" id="new-auth-password" autocomplete="new-password" minlength="6" placeholder="Minimum 6 caractere" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-zinc-400 mb-1" for="confirm-auth-password">CONFIRMĂ PAROLA NOUĂ</label>
+                    <input type="password" id="confirm-auth-password" autocomplete="new-password" minlength="6" placeholder="Reintrodu parola nouă" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
+                </div>
+                <button type="button" onclick="updateRecoveredPassword()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition glow-red cursor-pointer">
+                    Salvează parola nouă
+                </button>
+                <p id="password-recovery-status" class="text-xs leading-relaxed text-zinc-400" role="status" aria-live="polite"></p>
+                <button type="button" onclick="closeAuthModal()" class="w-full text-xs font-semibold text-zinc-400 hover:text-white transition cursor-pointer">
+                    Închide
+                </button>
+            </div>
+
+            <div id="password-recovery-success" class="hidden space-y-4">
+                <p class="text-sm leading-relaxed text-green-400" role="status">Parola a fost schimbată cu succes. Ești conectat la cont.</p>
+                <button type="button" onclick="closeAuthModal()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition cursor-pointer">
+                    Continuă în TikInteract
+                </button>
+            </div>
+        </div>
+    </div><section id="studio-access-gate" class="studio-access-gate" aria-labelledby="studio-access-title"><div><span class="studio-access-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><span class="eyebrow">LIVE STUDIO</span><h1 id="studio-access-title">Verificăm contul tău…</h1><p>Jocurile, comenzile și conexiunea LIVE sunt disponibile după autentificare.</p><button id="studio-access-login" class="home-primary-button" type="button" onclick="openAuthModal()" hidden>Autentificare / Creează cont</button><a href="index.html">Mergi la pagina principală</a></div></section><main class="app-main"><div id="view-live" class="is-studio-mode flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
+        <div class="app-workspace-heading"><div><span class="eyebrow">Spațiul tău de creație</span><h1>LIVE Studio<span class="app-heading-dot" aria-hidden="true"></span></h1></div><a href="index.html#download-app" class="app-future-link"><i class="fa-solid fa-desktop" aria-hidden="true"></i> Aplicația desktop <span>În curând</span></a></div>
+
+        
+
+
+        <section id="live-studio-panel" role="tabpanel" aria-labelledby="live-studio-tab">
+        <div class="studio-workspace"><div class="studio-game-sidebar">
+                        
+                    <section class="studio-game-picker live-favorites-panel" aria-labelledby="studio-game-favorites-title">
+                        <div class="live-favorites-heading">
+                            <div><p class="section-kicker">Acces rapid</p><h4 id="studio-game-favorites-title">Favorite jocuri</h4></div>
+                            <span id="studio-game-favorites-count" class="live-favorites-count">0</span>
+                        </div>
+                        <div class="studio-game-options"></div>
+                        <p id="studio-quick-empty" class="studio-quick-empty" hidden>Adaugă jocuri cu ★ din Game Center.</p>
+                        <label class="studio-quick-search live-favorites-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="sr-only">Caută jocuri pentru acces rapid</span><input id="studio-quick-search" type="search" placeholder="Caută un joc și adaugă-l rapid…" oninput="renderQuickGames()" autocomplete="off"></label>
+                        <button class="studio-all-games" type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Deschide Game Center</button>
+                    </section>
+<section id="studio-test-panel" class="studio-test-panel" aria-labelledby="studio-test-title" aria-busy="false">
+                            <div class="studio-test-header">
+                                <div class="studio-test-identity"><span class="studio-test-symbol"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span><div><p class="studio-test-eyebrow">CONTROL JOC</p><h5 id="studio-test-title">Test Menu</h5></div></div>
+                                <span class="studio-test-status" hidden title="Comenzile controlează jocul selectat"><span></span> DIRECT</span>
+                            </div>
+                            <p id="studio-test-game-name">Alege un joc pentru a vedea comenzile.</p>
+                            <div id="studio-test-tabs" class="studio-test-tabs" role="tablist" aria-label="Comenzi de test"></div>
+                            <div id="studio-test-controls" role="tabpanel"></div>
+                            <p id="studio-test-feedback" class="studio-test-note" role="status" aria-live="polite"></p>
+                        </section>
+</div><div class="studio-stage dashboard-panel rounded-2xl p-6 min-h-[300px]">
+                <div class="studio-stage-heading flex items-center justify-between mb-6">
+                    <div>
+                        <p class="section-kicker">Joc LIVE</p>
+                        <h4 class="text-xl font-bold text-white"><i class="fa-solid fa-gamepad studio-stage-game-icon" aria-hidden="true"></i> Arena LIVE</h4>
+                    </div>
+                    <div class="studio-stage-actions">
+                        <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
+                    </div>
+                </div>
+
+                <div class="studio-game-browser">
+                    
+                    <select id="live-game-select" hidden aria-label="Joc selectat">
+                        <option value="" selected disabled>Alege un joc</option>
+                        <option value="neon-race">Neon Race</option>
+                        <option value="neon-riders">Neon Riders</option>
+                        <option value="country-derby">Country Derby</option>
+                        <option value="neon-race-2">Neon Interact</option>
+                        <option value="moto-interact">Moto Interact</option>
+                    </select>
+                <div class="live-game-frame-wrap is-empty mb-6 overflow-hidden rounded-xl border border-zinc-800">
+                    <div id="studio-game-empty" class="studio-game-empty">
+                        <span class="studio-game-empty-icon"><i class="fa-solid fa-gamepad" aria-hidden="true"></i></span>
+                        <h2>Arena ta este pregătită.</h2>
+                        <p>Alege un joc din favorite sau din Game Center pentru a începe.</p>
+                        <button type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Alege un joc</button>
+                    </div>
+                    <iframe id="live-game-frame" class="live-game-frame" hidden title="Joc TikTok LIVE" loading="eager" allow="autoplay" allowfullscreen></iframe>
+                </div>
+                </div>
+                <p id="live-game-status" class="mb-6 text-xs text-zinc-500" role="status" aria-live="polite">Niciun joc pornit. Tu alegi când începe.</p>
+
+                
+
+                
+            </div><aside class="studio-controls" aria-label="Configurare LIVE și sunete rapide">
+            <div class="studio-connection dashboard-card p-6 rounded-2xl">
+                <h3 class="studio-panel-title text-sm font-bold text-white mb-4"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Setări Streamer</h3>
+                <div id="tiktok-profile" class="hidden flex mb-4 items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-3">
+                    <div class="tiktok-profile-avatar">
+                        <span id="tiktok-profile-fallback">T</span>
+                        <img id="tiktok-profile-image" class="hidden" alt="Poza de profil TikTok" referrerpolicy="no-referrer">
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-[10px] uppercase tracking-wider text-zinc-500">Profil TikTok</p>
+                        <p id="tiktok-profile-name" class="truncate text-xs font-bold text-white"></p>
+                    </div>
+                </div>
+                <label class="block text-xs text-zinc-400 mb-1">TikTok Username</label>
+                <input type="text" id="tiktok-user" value="@numele_tau" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-3 focus:outline-none focus:border-red-600 font-mono">
+                <div class="flex gap-2 mb-4">
+                    <button onclick="syncTikTokAccount()" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2.5 rounded-xl text-[10px] border border-zinc-800 transition cursor-pointer">
+                        Salvează și caută poza
+                    </button>
+                    <button onclick="clearTikTokAccount()" class="w-10 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl border border-zinc-800 transition cursor-pointer" title="Resetare">
+                        <i class="fa-solid fa-rotate-left"></i>
+                    </button>
+                </div>
+                <div id="tiktok-sync-status" class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">Stare: neconectat</div>
+                <p class="mb-4 text-[10px] leading-relaxed text-zinc-400">
+                    Profilul și statisticile sunt adăugate automat în clasamentul public după salvarea username-ului TikTok.
+                </p>
+                <button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
+                    Pornește Conexiunea Live
+                </button>
+            </div>
+                <section class="live-favorites-panel studio-audio" aria-labelledby="live-favorites-title">
+                    <div class="live-favorites-heading">
+                        <div>
+                            <p class="section-kicker">Acces rapid</p>
+                            <h4 id="live-favorites-title">Favorite audio</h4>
+                        </div>
+                        <div class="live-favorites-controls">
+                            <button type="button" class="audio-stop-all live-favorites-stop" onclick="stopAllSoundEffects()" aria-label="Oprește toate sunetele" title="Oprește toate sunetele">
+                                <i class="fa-solid fa-circle-stop" aria-hidden="true"></i>
+                            </button>
+                            <span id="live-favorites-count" class="live-favorites-count">0</span>
+                        </div>
+                    </div>
+                    <label class="live-favorites-volume" for="audio-master-volume">
+                        <i class="fa-solid fa-volume-low" aria-hidden="true"></i>
+                        <span>Volum</span>
+                        <input id="audio-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio">
+                        <span id="audio-master-volume-value">75%</span>
+                    </label>
+                    <p id="live-favorites-empty" class="live-favorites-empty">
+                        Încă nu ai sunete favorite. Caută mai jos sau adaugă din Audio Center.
+                    </p>
+                    <div id="live-favorite-sounds" class="live-favorite-grid" role="list"></div>
+                    <label class="live-favorites-search" for="live-favorites-search-input">
+                        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                        <input id="live-favorites-search-input" type="search" placeholder="Caută un sunet și adaugă-l rapid..." oninput="searchLiveFavoriteSounds(this.value)" autocomplete="off">
+                    </label>
+                    <div id="live-favorites-search-results" class="live-favorites-search-results hidden" role="list" aria-label="Rezultate sunete"></div>
+                    <button class="studio-all-games" type="button" onclick="setLiveStudioTab('audio')"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Deschide Audio Center</button>
+                </section>
+            <div class="studio-stats dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                    <div class="mini-stat-box">
+                        <span>Scor</span>
+                        <strong id="score-display">0</strong>
+                    </div>
+                    <div class="mini-stat-box">
+                        <span>Gifts</span>
+                        <strong id="gift-count">0</strong>
+                    </div>
+                    <div class="mini-stat-box">
+                        <span>Evenimente</span>
+                        <strong id="event-count">0</strong>
+                    </div>
+                </div><div class="live-grid">
+                    <div class="feed-box">
+                        <div class="feed-header">
+                            <span>Live feed</span>
+                            <span class="pulse-indicator"></span>
+                        </div>
+                        <div id="feed-list" class="feed-list">
+                            <div class="feed-item text-zinc-500">Evenimentele TikTok LIVE vor apărea aici.</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-box">
+                        <div class="chart-labels">
+                            <span>Audience flow</span>
+                            <span>+24% today</span>
+                        </div>
+                        <div class="bars">
+                            <span style="height: 42%"></span>
+                            <span style="height: 58%"></span>
+                            <span style="height: 50%"></span>
+                            <span style="height: 71%"></span>
+                            <span style="height: 65%"></span>
+                            <span style="height: 80%"></span>
+                            <span style="height: 96%"></span>
+                        </div>
+                    </div>
+                </div></aside></div>
+        </section>
+
+        <section id="game-center-panel" class="hidden" role="tabpanel" aria-labelledby="game-center-tab">
+            <div class="game-center-shell">
+                <div class="game-center-heading">
+                    <div><span class="section-kicker">BIBLIOTECA TA</span><h3>Game Center</h3><p>Alege un joc și deschide-l în LIVE Studio.</p></div>
+                    <label class="game-center-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="game-center-search" type="search" placeholder="Caută un joc…" aria-label="Caută în Game Center" oninput="filterStudioGames(this.value)"></label>
+                </div>
+                <div class="mb-8" data-game-category>
+                    <h4 class="mb-4 text-sm font-extrabold tracking-wide text-white">GRATUITE</h4>
+                    <div class="game-center-grid">
+                    <article class="game-center-card" data-game-id="neon-race-2" data-game-center-card="Neon Interact night run curse masini noapte">
+                        <img src="assets/game-gallery/neon-race-2-night.webp" alt="Neon Interact pe pista de noapte" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">GRATUIT / NIGHT RUN</span><h4>Neon Interact</h4><p>Orașul de noapte, două echipe și mașini cu iluminare neon.</p><button type="button" onclick="launchStudioGame('neon-race-2')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                    <article class="game-center-card" data-game-id="moto-interact" data-game-center-card="Moto Interact motociclete moto motorete zi day ride wheelie nitro">
+                        <img src="assets/game-gallery/moto-interact-day.webp" alt="Moto Interact pe bulevardul de zi" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">GRATUIT / DAY RIDE</span><h4>Moto Interact</h4><p>Curse pe timp de zi și nitro pe roata din spate.</p><button type="button" onclick="launchStudioGame('moto-interact')">Deschide în Studio <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+                    </article>
+                    </div>
+                </div>
+                <div class="mb-8" data-game-category>
+                    <h4 class="mb-4 text-sm font-extrabold tracking-wide text-white">PLAY PASS</h4>
+                    <p class="mb-4 text-xs text-zinc-400">Necesită abonament. Abonamentele nu sunt încă disponibile.</p>
+                    <div class="game-center-grid">
+                    <article class="game-center-card" data-game-id="neon-race" data-game-center-card="Neon Race curse mașini">
+                        <img src="assets/neon-race-preview.png" alt="Captură din jocul Neon Race" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">PLAY PASS / CURSE AUTO</span><h4>Neon Race</h4><p>Like-urile și cadourile accelerează cursa.</p><button type="button" disabled aria-disabled="true" title="Necesită Play Pass; abonamentele nu sunt încă disponibile">Necesită Play Pass</button></div>
+                    </article>
+                    <article class="game-center-card" data-game-id="neon-riders" data-game-center-card="Neon Riders curse motociclete moto">
+                        <img src="assets/neon-riders-preview.png" alt="Captură din jocul Neon Riders" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">PLAY PASS / CURSE MOTO</span><h4>Neon Riders</h4><p>Două echipe moto, o singură linie de sosire.</p><button type="button" disabled aria-disabled="true" title="Necesită Play Pass; abonamentele nu sunt încă disponibile">Necesită Play Pass</button></div>
+                    </article>
+                    <article class="game-center-card" data-game-id="country-derby" data-game-center-card="Country Derby curse cai echipe">
+                        <img src="assets/country-derby-preview.png" alt="Captură din jocul Country Derby" loading="lazy">
+                        <div class="game-center-card-body"><span class="section-kicker">PLAY PASS / CURSE DE CAI</span><h4>Country Derby</h4><p>Alege un cal și adună-ți echipa în chat.</p><button type="button" disabled aria-disabled="true" title="Necesită Play Pass; abonamentele nu sunt încă disponibile">Necesită Play Pass</button></div>
+                    </article>
+                    </div>
+                </div>
+                <div class="mb-8" data-game-category>
+                    <h4 class="mb-4 text-sm font-extrabold tracking-wide text-white">PLAY PASS PRO</h4>
+                    <p class="text-xs text-zinc-400">Nu există jocuri în această categorie momentan.</p>
+                </div>
+                <p id="game-center-empty" class="game-center-empty" hidden>Nu am găsit jocuri. Încearcă altă căutare.</p>
+            </div>
+        </section>
+        <section id="tiktok-gifts-panel" class="hidden" role="tabpanel" aria-labelledby="tiktok-gifts-tab">
+            <div class="gifts-heading"><div><span class="eyebrow">Recompensele comunității</span><h2>TikTok Gifts</h2><p>Catalogul TikTok cu imaginile originale și colecția cadourilor primite în LIVE.</p></div><button id="gifts-refresh" class="gifts-outline-button" type="button"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> Actualizează</button></div>
+            <div class="gifts-collection-heading"><h3 id="gifts-owner">Toate cadourile TikTok</h3><span id="gifts-owner-note">Imagini originale de la TikTok</span></div>
+            <div id="gifts-summary" class="gifts-summary"></div>
+            <div class="gifts-view-tabs" role="tablist" aria-label="Afișare cadouri"><button type="button" data-gifts-view="catalog" role="tab" aria-controls="gifts-content" aria-selected="true">Toate cadourile</button><button type="button" data-gifts-view="collection" role="tab" aria-controls="gifts-content" aria-selected="false">Colecție</button><button type="button" data-gifts-view="recent" role="tab" aria-controls="gifts-content" aria-selected="false">Recente</button><button type="button" data-gifts-view="highlights" role="tab" aria-controls="gifts-content" aria-selected="false">Cele mai valoroase</button></div>
+            <div id="gift-catalog-controls"><span class="gifts-catalog-note">Catalog disponibil și fără un LIVE pornit.</span><label class="gifts-owned-filter"><input id="gifts-owned-only" type="checkbox"> Doar cele din colecție</label></div>
+            <div id="gifts-tools" class="gifts-tools"><label class="gifts-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="gifts-search" type="search" placeholder="Caută un cadou după nume sau ID…" aria-label="Caută un cadou"></label><label class="gifts-sort"><span>Ordonează</span><select id="gifts-sort"><option value="price">Valoare crescătoare</option><option value="value">Valoare descrescătoare</option><option value="count">Cantitate</option><option value="recent">Cel mai recent</option><option value="name">Nume A–Z</option></select></label></div>
+            <div class="gifts-results-heading"><span id="gifts-result-count"></span><p id="gifts-status" role="status" aria-live="polite"></p></div>
+            <div id="gifts-content" class="gifts-grid" role="tabpanel"></div><button id="gifts-more" class="gifts-outline-button gifts-more" type="button" hidden>Arată mai multe</button>
+        </section>
+        <section id="audio-center-panel" class="hidden" role="tabpanel" aria-labelledby="audio-center-tab">
+                    <div class="soundboard-shell">
+                        <div class="soundboard-topbar">
+                            <div class="soundboard-source-tabs" role="group" aria-label="Bibliotecă audio">
+                                <button id="audio-sounds-tab" class="soundboard-source-tab is-active" type="button" aria-pressed="true" onclick="setAudioLibraryTab('sounds')">Sounds</button>
+                                <button id="audio-music-tab" class="soundboard-source-tab" type="button" aria-pressed="false" onclick="setAudioLibraryTab('music')">Music</button>
+                            </div>
+                        </div>
+                        <div class="soundboard-sticky-controls">
+                        <div class="soundboard-monitor">
+                            <span class="soundboard-monitor-label"><i class="fa-solid fa-headphones" aria-hidden="true"></i> Monitorizare locală</span>
+                            <button type="button" class="audio-stop-all soundboard-stop" onclick="stopAllSoundEffects()" aria-label="Oprește toate sunetele" title="Oprește toate sunetele">
+                                <i class="fa-solid fa-circle-stop" aria-hidden="true"></i>
+                            </button>
+                            <label class="soundboard-volume-control" for="audio-center-master-volume">
+                                <i class="fa-solid fa-volume-low" aria-hidden="true"></i>
+                                <input id="audio-center-master-volume" type="range" min="0" max="100" value="75" oninput="setAudioMasterVolume(this.value)" aria-label="Volum audio în Audio Center">
+                                <span id="audio-center-volume-value">75%</span>
+                            </label>
+                        </div>
+
+                        </div>
+
+                        <div class="soundboard-library-controls">
+                            <div class="soundboard-scope-tabs" role="group" aria-label="Filtru sunete">
+                                <button id="audio-filter-all" class="soundboard-scope-tab is-active" type="button" aria-pressed="true" onclick="setAudioLibraryScope('all')">All</button>
+                                <button id="audio-filter-favorites" class="soundboard-scope-tab" type="button" aria-pressed="false" onclick="setAudioLibraryScope('favorites')">
+                                    <i class="fa-regular fa-star" aria-hidden="true"></i> Favorites
+                                    <span id="audio-favorites-count">0</span>
+                                </button>
+                            </div>
+                            <span id="audio-library-count" class="audio-library-count"></span>
+                        </div>
+
+                        <div class="audio-library-toolbar">
+                            <label class="audio-category-filter">
+                                <span class="sr-only">Categorie</span>
+                                <select id="audio-sound-category" onchange="filterSoundEffects()" aria-label="Categorie sunete">
+                                    <option value="all">Toate categoriile</option>
+                                    <option value="sfx">Reacții</option>
+                                    <option value="meme">Meme &amp; voci</option>
+                                    <option value="music">Music</option>
+                                </select>
+                            </label>
+                            <label class="audio-search">
+                                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                                <input id="audio-sound-search" type="search" placeholder="Caută sunete" oninput="filterSoundEffects()" autocomplete="off">
+                            </label>
+                        </div>
+
+                        <p id="audio-center-status" class="audio-center-status" role="status" aria-live="polite">Se pregătește biblioteca audio...</p>
+                        <div id="audio-sound-grid" class="audio-sound-grid"></div>
+                        <p class="soundboard-footnote">Sunetul este redat local. Pentru ca publicul să-l audă, include audio-ul browserului în sursa de streaming.</p>
+                    </div>
+                </section>
+</div></main><dialog id="studio-help-dialog" class="studio-tour-dialog" aria-labelledby="studio-tour-title" aria-describedby="studio-tour-description">
+        <div id="studio-tour-shade-top" class="studio-tour-shade" data-tour-advance aria-hidden="true"></div>
+        <div id="studio-tour-shade-left" class="studio-tour-shade" data-tour-advance aria-hidden="true"></div>
+        <div id="studio-tour-shade-right" class="studio-tour-shade" data-tour-advance aria-hidden="true"></div>
+        <div id="studio-tour-shade-bottom" class="studio-tour-shade" data-tour-advance aria-hidden="true"></div>
+        <div id="studio-tour-highlight" data-tour-advance aria-hidden="true"></div>
+        <section id="studio-tour-tooltip" aria-live="polite">
+            <div class="studio-tour-top"><span class="section-kicker">TUTORIAL LIVE STUDIO</span><button class="studio-help-close" type="button" onclick="closeStudioHelp()" aria-label="Închide tutorialul"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+            <h2 id="studio-tour-title"></h2><p id="studio-tour-description"></p>
+            <div class="studio-tour-navigation"><span id="studio-tour-progress"></span><button id="studio-tour-prev" type="button" onclick="showStudioTourStep(studioTourIndex - 1)">Înapoi</button><button id="studio-tour-next" type="button" onclick="showStudioTourStep(studioTourIndex + 1)">Următorul</button></div>
+        </section>
+    </dialog><div id="audio-favorite-toast" class="audio-favorite-toast hidden" role="status" aria-live="polite" aria-atomic="true">
+        <span class="audio-favorite-toast-icon" aria-hidden="true"><i class="fa-solid fa-star"></i></span>
+        <span id="audio-favorite-toast-message"></span>
+    </div><div id="cookie-preferences-modal" class="cookie-preferences-backdrop hidden" role="presentation" onclick="if (event.target === this) closeCookiePreferences()">
+        <section class="cookie-preferences-dialog" role="dialog" aria-modal="true" aria-labelledby="cookie-preferences-title" aria-describedby="cookie-preferences-description">
+            <button class="cookie-preferences-close" type="button" onclick="closeCookiePreferences()" aria-label="Închide preferințele">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+            </button>
+            <span class="eyebrow">Confidențialitate</span>
+            <h2 id="cookie-preferences-title">Cookie preferences</h2>
+            <p id="cookie-preferences-description">TikInteract nu folosește în prezent cookie-uri opționale de analiză sau publicitate. Stocarea necesară pentru autentificare și pentru păstrarea username-ului TikTok salvat rămâne activă pentru funcționarea serviciului.</p>
+            <p class="cookie-preferences-note">Poți șterge datele locale din setările browserului. Detalii despre datele prelucrate găsești în <a href="privacy-policy.html">Privacy Policy</a>.</p>
+            <button class="home-primary-button" type="button" onclick="closeCookiePreferences()">Am înțeles</button>
+        </section>
+    </div><script src="assets/studio-layout.js?v=3"></script>
+<script src="assets/studio-live-bridge.js?v=1"></script>
+<script src="assets/studio-test-menu.js?v=7"></script>
+<script src="assets/game-access.js?v=1"></script><script src="game.js?v=10"></script><script src="assets/site-app.js?v=4"></script></body></html>

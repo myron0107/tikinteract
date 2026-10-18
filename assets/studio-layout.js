@@ -8,7 +8,9 @@
         const frame = document.getElementById('live-game-frame');
         const wrap = frame?.parentElement;
         if (!frame || !wrap || !wrap.clientWidth || !wrap.clientHeight) return;
-        const scale = Math.min(wrap.clientWidth / nativeWidth, .8);
+        const desktopApp = document.body?.classList?.contains('studio-app') && window.innerWidth >= 1000;
+        const maxScale = desktopApp ? Math.min(.8, Math.max(.25, (window.innerHeight - 280) / nativeHeight)) : .8;
+        const scale = Math.min(wrap.clientWidth / nativeWidth, maxScale);
         wrap.style.setProperty('--studio-preview-height', `${nativeHeight * scale}px`);
         frame.style.setProperty('--game-native-width', `${nativeWidth}px`);
         frame.style.setProperty('--game-native-height', `${nativeHeight}px`);

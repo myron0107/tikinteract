@@ -4,7 +4,9 @@ let socket = null;
 let giftCount = 0;
 let connectedUsername = null;
 let platformSessionActive = false;
+let platformSessionUsername = null;
 let platformSessionPromise = null;
+let platformFinishPromise = null;
 let leaderboardRefreshTimer = null;
 let leaderboardPeriod = 'all';
 let leaderboardRequestId = 0;
@@ -595,8 +597,7 @@ function setLiveStudioTab(tab, options = {}) {
         button.classList.toggle('is-active', selected);
         button.setAttribute('aria-selected', String(selected));
     });
-    const backButton = document.getElementById('studio-back-button');
-    if (backButton) backButton.hidden = tab === 'studio' || tab === 'audio';
+    if (tab === 'gifts') window.TikInteractGifts?.open();
     if (options.focus !== false && tab === 'audio') document.getElementById('audio-sound-search')?.focus();
     if (options.focus !== false && tab === 'games') document.getElementById('game-center-search')?.focus();
 }
@@ -607,11 +608,11 @@ const studioTourSteps = [
     {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Aici apar jocurile favorite. Apasă imaginea pentru a deschide jocul. Caută un joc și folosește steluța pentru a-l adăuga sau elimina din Acces rapid.'},
     {tab:'studio', target:'#studio-test-panel', title:'Testează jocul din Studio', text:'Comenzile TEST MENU sunt permanent vizibile în stânga. Testezi echipele, controlezi cursa și ajustezi vremea sau sunetele direct de aici.'},
     {tab:'studio', target:'.studio-stats', title:'Urmărește sesiunea', text:'Scor, Gifts și Evenimente arată activitatea primită în sesiunea curentă. Datele se actualizează când conexiunea primește evenimente LIVE.'},
-    {tab:'studio', target:'.studio-stage .feed-box', title:'Evenimentele din LIVE', text:'Comentariile, like-urile și cadourile primite prin aceeași conexiune ajung automat la jocul deschis. Spectatorii aleg echipa prin chat: RED sau BLUE; Country Derby acceptă și GREEN.'},
+    {tab:'studio', target:'.studio-controls .feed-box', title:'Evenimentele din LIVE', text:'Comentariile, like-urile și cadourile primite prin aceeași conexiune ajung automat la jocul deschis. Spectatorii aleg echipa prin chat: RED sau BLUE; Country Derby acceptă și GREEN.'},
     {tab:'games', target:'.game-center-heading', title:'Game Center', text:'Aceasta este biblioteca de jocuri. Caută după nume, apoi apasă „Deschide în Studio” pentru a încărca jocul ales.'},
     {tab:'games', target:'.game-center-card > .game-favorite-star', title:'Steluța adaugă la favorite', text:'Apasă ☆ pentru a adăuga jocul în Acces rapid. Apasă din nou pe ★ pentru a-l elimina. Favoritele se păstrează în browser.'},
     {tab:'audio', target:'.soundboard-library-controls', title:'Audio Center', text:'Aici găsești biblioteca de sunete. Alege toate sunetele sau doar favoritele. Mai jos poți căuta după nume și filtra după categorie.'},
-    {tab:'audio', target:'.soundboard-monitor', title:'Control audio la îndemână', text:'Reglează volumul, oprește toate sunetele sau apasă ÎNAPOI pentru a reveni în LIVE Studio. Această bară te urmărește când derulezi.'},
+    {tab:'audio', target:'.soundboard-monitor', title:'Control audio la îndemână', text:'Reglează volumul sau oprește toate sunetele. Această bară te urmărește când derulezi. Revii în LIVE Studio din meniul de navigare.'},
     {tab:'studio', target:'.studio-audio', title:'Sunete rapide în timpul LIVE-ului', text:'Apasă un card pentru a reda un sunet favorit. Caută și adaugă sunete direct aici sau deschide Audio Center. Include audio-ul browserului în aplicația de streaming pentru ca publicul să le audă.'}
 ];
 let studioTourIndex = -1;
@@ -730,7 +731,7 @@ function initializeGameFavorites() {
     const select = document.getElementById('live-game-select');
     if (!select) return;
     const cards = [...document.querySelectorAll('[data-game-center-card]')];
-    studioGameCatalog = [...select.options].map((option, index) => ({
+    studioGameCatalog = [...select.options].filter(option => option.value).map((option, index) => ({
         id: option.value, name: option.textContent.trim(),
         image: cards.find(card => card.dataset.gameId === option.value)?.querySelector('img')?.getAttribute('src') || '',
         card: cards.find(card => card.dataset.gameId === option.value)
@@ -867,6 +868,7 @@ function createLeaderboardPerson(profile, rank) {
         rankLabel.textContent = `#${rank}`;
         person.prepend(rankLabel);
     }
+    if (window.TikInteractGifts) details.append(window.TikInteractGifts.createCollectionButton(profile));
     return person;
 }
 
@@ -1127,7 +1129,23 @@ function saveTikTokProfileFromSettings() {
     });
 }
 
+async function ensureLiveStreamerProfile(username) {
+    const user=window.tikInteractUser,client=window.tikInteractSupabase;
+    if(!user||!client)return false;
+    const stillCurrent=()=>window.tikInteractUser?.id===user.id&&connectedUsername===username;
+    const {data,error}=await client.from('streamer_profiles')
+        .select('tiktok_username').eq('user_id',user.id).maybeSingle();
+    if(error)throw error;
+    if(!stillCurrent())return false;
+    if(data?.tiktok_username?.toLowerCase()===username.toLowerCase())return true;
+    const saved=await saveTikTokLeaderboardProfile(username);
+    return saved&&stillCurrent();
+}
+
 function startPlatformLiveSession(username) {
+    if (platformFinishPromise) return platformFinishPromise.then(() => {
+        if (connectedUsername === username) return startPlatformLiveSession(username);
+    });
     if (platformSessionActive || platformSessionPromise) return;
     const supabase = window.tikInteractSupabase;
     if (!window.tikInteractUser || !supabase) {
@@ -1137,11 +1155,14 @@ function startPlatformLiveSession(username) {
     }
 
     platformSessionPromise = (async () => {
+        if(!await ensureLiveStreamerProfile(username))return;
         const { error } = await supabase.rpc('start_my_live_session', {
             p_tiktok_username: username
         });
         if (error) throw error;
         platformSessionActive = true;
+        platformSessionUsername = username;
+        window.TikInteractGifts?.flush(username);
         const status = document.getElementById('tiktok-sync-status');
         if (status) {
             status.textContent = `Conectat la @${username}; statisticile se salvează.`;
@@ -1160,23 +1181,37 @@ function startPlatformLiveSession(username) {
 }
 
 async function finishPlatformLiveSession() {
-    if (platformSessionPromise) await platformSessionPromise;
-    if (!platformSessionActive) return;
-    platformSessionActive = false;
-    const supabase = window.tikInteractSupabase;
-    if (!supabase) return;
-
-    try {
-        const { error } = await supabase.rpc('finish_my_live_session');
-        if (error) throw error;
-        loadLeaderboard();
-    } catch (error) {
-        console.error('Failed to finish leaderboard LIVE session:', error);
-        setLeaderboardStatus(`Timpul LIVE nu s-a putut salva: ${error.message}`, true);
-    }
+    if (platformFinishPromise) return platformFinishPromise;
+    platformFinishPromise = (async () => {
+        if (platformSessionPromise) await platformSessionPromise;
+        if (!platformSessionActive) return;
+        if (window.TikInteractGifts && platformSessionUsername) {
+            try {
+                // Finish the in-flight batch, then gifts received while it was saving.
+                await window.TikInteractGifts.flush(platformSessionUsername);
+                await window.TikInteractGifts.flush(platformSessionUsername);
+            } catch (error) {
+                console.warn('Gift details remain queued on this device:', error.message);
+            }
+        }
+        platformSessionActive = false;
+        platformSessionUsername = null;
+        const supabase = window.tikInteractSupabase;
+        if (!supabase) return;
+        try {
+            const { error } = await supabase.rpc('finish_my_live_session');
+            if (error) throw error;
+            loadLeaderboard();
+        } catch (error) {
+            console.error('Failed to finish leaderboard LIVE session:', error);
+            setLeaderboardStatus(`Timpul LIVE nu s-a putut salva: ${error.message}`, true);
+        }
+    })().finally(() => { platformFinishPromise = null; });
+    return platformFinishPromise;
 }
 
 async function recordLeaderboardGift(event) {
+    if (window.TikInteractGifts) return window.TikInteractGifts.record(event, connectedUsername);
     if (!event.eventId || !event.coins) return;
     const supabase = window.tikInteractSupabase;
     if (!window.tikInteractUser || !supabase) return;
@@ -1200,24 +1235,25 @@ function setStreamerProfile(username, avatarUrl, displayName = username) {
     const profileName = document.getElementById('tiktok-profile-name');
     const profileImage = document.getElementById('tiktok-profile-image');
     const profileFallback = document.getElementById('tiktok-profile-fallback');
-    if (!profile || !username) return;
-
-    profile.classList.remove('hidden');
-    if (profileName) profileName.textContent = displayName === username ? `@${username}` : `${displayName} · @${username}`;
-    if (profileFallback) {
-        profileFallback.textContent = username.charAt(0).toUpperCase() || 'T';
-        profileFallback.classList.remove('hidden');
-    }
+    if (!username) return;
 
     let safeAvatarUrl = null;
     try {
-        const parsedAvatarUrl = new URL(avatarUrl);
+        const parsedAvatarUrl = new URL(avatarUrl || window.tikInteractUser?.user_metadata?.avatar_url || window.tikInteractUser?.user_metadata?.picture);
         if (parsedAvatarUrl.protocol === 'https:') safeAvatarUrl = parsedAvatarUrl.href;
     } catch {
         safeAvatarUrl = null;
     }
 
     setAccountAvatar(displayName || username, safeAvatarUrl);
+
+    if (!profile) return;
+    profile.classList.remove('hidden');
+    if (profileName) profileName.textContent = displayName === username ? `@${username}` : `${displayName} · @${username}`;
+    if (profileFallback) {
+        profileFallback.textContent = username.charAt(0).toUpperCase() || 'T';
+        profileFallback.classList.remove('hidden');
+    }
 
     if (!profileImage) return;
     profileImage.onload = () => profileFallback?.classList.add('hidden');
@@ -1234,13 +1270,20 @@ function setStreamerProfile(username, avatarUrl, displayName = username) {
     }
 }
 
-function setAccountAvatar(displayName, avatarUrl) {
+function setAccountAvatar(displayName, avatarUrl, {preserve = false} = {}) {
     const avatar = document.getElementById('account-avatar-display');
     const image = document.getElementById('account-avatar-image');
     const headerAvatar = document.getElementById('header-account-avatar');
     const headerFallback = document.getElementById('header-account-avatar-fallback');
     const headerImage = document.getElementById('header-account-avatar-image');
     const initial = String(displayName || 'U').trim().charAt(0).toUpperCase() || 'U';
+    let safeAvatarUrl = null;
+    try {
+        const candidate = preserve && headerImage?.getAttribute('src') ? headerImage.getAttribute('src') : avatarUrl;
+        const parsed = new URL(candidate);
+        if (parsed.protocol === 'https:') safeAvatarUrl = parsed.href;
+    } catch {}
+    headerAvatar?.classList.toggle('hidden', !window.tikInteractUser);
 
     if (avatar) {
         avatar.textContent = initial;
@@ -1260,6 +1303,7 @@ function setAccountAvatar(displayName, avatarUrl) {
     }
     if (headerImage) {
         headerImage.onload = () => {
+            if (!window.tikInteractUser) return;
             headerImage.classList.remove('hidden');
             headerAvatar?.classList.remove('hidden');
             headerFallback?.classList.add('hidden');
@@ -1269,9 +1313,16 @@ function setAccountAvatar(displayName, avatarUrl) {
             headerFallback?.classList.remove('hidden');
         };
     }
-    if (avatarUrl) {
-        if (image) image.src = avatarUrl;
-        if (headerImage) headerImage.src = avatarUrl;
+    if (safeAvatarUrl) {
+        if (image && image.getAttribute('src') !== safeAvatarUrl) {
+            image.classList.add('hidden');
+            image.src = safeAvatarUrl;
+        } else if (image?.complete && image.naturalWidth) avatar?.classList.add('hidden');
+        if (headerImage && headerImage.getAttribute('src') !== safeAvatarUrl) {
+            headerImage.classList.add('hidden');
+            headerFallback?.classList.remove('hidden');
+            headerImage.src = safeAvatarUrl;
+        }
     } else {
         if (image) {
             image.removeAttribute('src');
@@ -1281,7 +1332,6 @@ function setAccountAvatar(displayName, avatarUrl) {
             headerImage.removeAttribute('src');
             headerImage.classList.add('hidden');
         }
-        headerAvatar?.classList.add('hidden');
         headerFallback?.classList.remove('hidden');
     }
 }
@@ -1300,6 +1350,7 @@ function updateConnectionStatus(connected, username, connecting = false, avatarU
     const badge = document.getElementById('live-overview-status');
 
     connectedUsername = connected ? username : null;
+    if (username) window.TikInteractGifts?.setProfile(username);
     document.getElementById('view-live')?.classList.toggle('is-live-connected', !!connected);
     window.TikInteractLive?.setState({connected:!!connected, connecting:!!connecting, username:username || null, sessionId});
     if (status) {
@@ -1335,12 +1386,19 @@ function showConnectionError(message) {
     window.alert(`Eroare TikTok LIVE: ${message}`);
 }
 
+function sendStudioServerMessage(message, target = socket) {
+    if (!window.tikInteractUser || !window.tikInteractAccessToken || target?.readyState !== WebSocket.OPEN) return false;
+    target.send(JSON.stringify({...message, accessToken: window.tikInteractAccessToken}));
+    return true;
+}
+
 function connectToLocalServer() {
+    if (!window.tikInteractUser || !window.tikInteractAccessToken) return;
     if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
 
     socket = new WebSocket('ws://127.0.0.1:3000/ws');
     socket.addEventListener('open', () => {
-        socket.send(JSON.stringify({ type: 'state' }));
+        sendStudioServerMessage({ type: 'state' });
     });
     socket.addEventListener('message', (event) => {
         let message;
@@ -1351,7 +1409,11 @@ function connectToLocalServer() {
             return;
         }
 
-        if (message.type === 'status') {
+        if (message.type === 'auth-required') {
+            socket?.close();
+            if (typeof updateUI === 'function') updateUI(null);
+            return;
+        } else if (message.type === 'status') {
             updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl, message.sessionId);
             if (message.connected && message.username) {
                 startPlatformLiveSession(message.username);
@@ -1360,7 +1422,10 @@ function connectToLocalServer() {
                     console.error('Failed to finish LIVE session:', error);
                 });
             }
+        } else if (message.type === 'gift-catalog') {
+            window.TikInteractGifts?.receiveCatalog(message);
         } else if (message.type === 'profile') {
+            window.TikInteractGifts?.setProfile(message.username);
             setStreamerProfile(message.username, message.avatarUrl, message.displayName);
             saveTikTokLeaderboardProfile(message.username, message.displayName, message.avatarUrl)
                 .then(() => loadLeaderboard())
@@ -1396,7 +1461,8 @@ function connectToLocalServer() {
             handleTikTokEvent(message);
         }
     });
-    socket.addEventListener('close', () => {
+    socket.addEventListener('close', (event) => {
+        if (socket !== event.target) return;
         updateConnectionStatus(false, null);
         finishPlatformLiveSession().catch((error) => {
             console.error('Failed to finish LIVE session:', error);
@@ -1408,9 +1474,25 @@ function connectToLocalServer() {
     });
 }
 
+async function waitForTikInteractLiveSession() {
+    if (platformSessionPromise) await platformSessionPromise;
+    return platformSessionActive;
+}
+
+function requestTikTokGiftCatalog(username, refresh = false) {
+    connectToLocalServer();
+    const requestSocket = socket;
+    const request = () => {
+        sendStudioServerMessage({type:'gift-catalog', username, refresh}, requestSocket);
+    };
+    if (requestSocket?.readyState === WebSocket.OPEN) { request(); return true; }
+    if (requestSocket?.readyState === WebSocket.CONNECTING) { requestSocket.addEventListener('open', request, {once:true}); return true; }
+    return false;
+}
+
 function disconnectTikTokConnection() {
     if (socket?.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'disconnect' }));
+        sendStudioServerMessage({ type: 'disconnect' });
     }
     updateConnectionStatus(false, null);
     finishPlatformLiveSession().catch((error) => {
@@ -1419,6 +1501,7 @@ function disconnectTikTokConnection() {
 }
 
 function toggleTikTokConnection() {
+    if (!window.tikInteractUser) { openAuthModal(); return; }
     const input = document.getElementById('tiktok-user');
     const button = document.getElementById('btn-connect');
     if (!input || !button) return;
@@ -1442,11 +1525,11 @@ function toggleTikTokConnection() {
 
     connectToLocalServer();
     if (socket?.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'connect', username }));
+        sendStudioServerMessage({ type: 'connect', username });
     } else if (socket?.readyState === WebSocket.CONNECTING) {
         const pendingSocket = socket;
         pendingSocket.addEventListener('open', () => {
-            pendingSocket.send(JSON.stringify({ type: 'connect', username }));
+            sendStudioServerMessage({ type: 'connect', username }, pendingSocket);
         }, { once: true });
         pendingSocket.addEventListener('close', (event) => {
             if (event.code === 1008) {
@@ -1461,6 +1544,7 @@ function toggleTikTokConnection() {
 }
 
 function lookupTikTokProfile(rawUsername) {
+    if (!window.tikInteractUser) { openAuthModal(); return; }
     const username = String(rawUsername || '').trim().replace(/^@/, '');
     if (!/^[A-Za-z0-9._]{2,24}$/.test(username)) {
         window.alert('Introdu un username TikTok valid.');
@@ -1477,7 +1561,7 @@ function lookupTikTokProfile(rawUsername) {
     connectToLocalServer();
     const requestProfile = () => {
         if (socket?.readyState === WebSocket.OPEN) {
-            socket.send(JSON.stringify({ type: 'profile', username }));
+            sendStudioServerMessage({ type: 'profile', username });
         }
     };
 
@@ -1504,7 +1588,7 @@ function handleTikTokEvent(event) {
     if (!text) return;
 
     totalScore += isGift ? 10 : isLike ? event.likeCount : 1;
-    if (isGift) giftCount += 1;
+    if (isGift) giftCount += Math.min(1000, Math.max(1, Math.floor(Number(event.repeatCount) || 1)));
     if (isGift) recordLeaderboardGift(event).catch((error) => {
         console.error('Failed to save gift statistics:', error);
     });
@@ -1618,14 +1702,53 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof ResizeObserver !== 'undefined') new ResizeObserver(updateHeaderHeight).observe(siteHeader);
         else window.addEventListener('resize', updateHeaderHeight);
     }
-    initializeGameFavorites();
-    connectToLocalServer();
-    runEngine();
-    loadSoundEffectLibrary();
+    if (window.tikInteractUser) window.startTikInteractStudio?.();
 });
+
+let studioInitialized = false;
+window.startTikInteractStudio = () => {
+    if (!window.tikInteractUser || !document.getElementById('view-live')) return;
+    if (!studioInitialized) {
+        studioInitialized = true;
+        initializeGameFavorites();
+        runEngine();
+        loadSoundEffectLibrary();
+    }
+    connectToLocalServer();
+};
+
+window.stopTikInteractStudio = () => {
+    socket?.close();
+    socket = null;
+    updateConnectionStatus(false, null);
+    window.TikInteractLive?.detach();
+    stopAllSoundEffects();
+    const frame = document.getElementById('live-game-frame');
+    if (frame) {
+        frame.onload = null;
+        frame.removeAttribute('src');
+        frame.removeAttribute('aria-busy');
+        delete frame.dataset.gameId;
+        frame.hidden = true;
+        frame.parentElement.classList.add('is-empty');
+    }
+    const select = document.getElementById('live-game-select');
+    if (select) select.value = '';
+    const empty = document.getElementById('studio-game-empty');
+    if (empty) empty.hidden = false;
+    if (typeof closeStudioHelp === 'function') closeStudioHelp();
+    if (typeof resetStudioTestMenu === 'function') resetStudioTestMenu();
+    const panel = document.getElementById('studio-test-panel');
+    panel?.setAttribute('aria-busy', 'false');
+    const name = document.getElementById('studio-test-game-name');
+    if (name) name.textContent = 'Alege un joc din Favorite sau Game Center.';
+    const status = document.querySelector('.studio-test-status');
+    if (status) status.hidden = true;
+    document.querySelectorAll('.studio-game-option.is-active').forEach(button => button.classList.remove('is-active'));
+};
 
 window.refreshTikInteractConnectionState = () => {
     if (socket?.readyState === WebSocket.OPEN) {
-        socket.send(JSON.stringify({ type: 'state' }));
+        sendStudioServerMessage({ type: 'state' });
     }
 };

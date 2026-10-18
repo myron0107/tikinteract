@@ -54,8 +54,7 @@
     #view-live .studio-audio .live-favorites-stop { width: 44px; height: 44px; }
     #view-live .soundboard-shell { width: 100%; padding: 12px; border-radius: 16px; }
     #audio-center-panel .soundboard-sticky-controls { top: calc(var(--site-header-height, 120px) + 8px); padding-bottom: 8px; }
-    #view-live .soundboard-monitor { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; width: fit-content; max-width: 100%; gap: 10px 8px; padding: 10px; }
-    #audio-center-panel .audio-back-button { min-height: 44px; padding: 9px 10px; font-size: .64rem; }
+    #view-live .soundboard-monitor { display: grid; grid-template-columns: minmax(0, 1fr) auto; width: fit-content; max-width: 100%; gap: 10px 8px; padding: 10px; }
     .soundboard-monitor .soundboard-monitor-label { min-width: 0; font-size: .6rem; line-height: 1.5; gap: 5px; }
     .soundboard-monitor .soundboard-stop.audio-stop-all { width: 44px; min-height: 44px; padding: 8px; }
     .soundboard-monitor .soundboard-volume-control { grid-column: 1 / -1; width: 100%; margin: 0; gap: 10px; padding-top: 8px; border-top: 1px solid #ffffff0c; }

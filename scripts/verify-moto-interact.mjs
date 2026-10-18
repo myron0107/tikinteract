@@ -4,6 +4,7 @@ import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import WebSocket from 'ws';
+import {installQAAuth} from './qa-auth-fixture.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(root, 'assets/game-gallery');
@@ -52,6 +53,7 @@ try {
     };
     await page('Page.enable');
     await page('Runtime.enable');
+    await page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true)'});
     await page('Emulation.setDeviceMetricsOverride',{width:540,height:960,deviceScaleFactor:2,mobile:false});
 
     const waitFor=async expression=>{for(let i=0;i<150;i++){try{if(await evaluate(expression))return;}catch{}await new Promise(r=>setTimeout(r,100));}throw new Error('Timed out: '+expression);};
@@ -92,7 +94,7 @@ try {
     `});
     const uiProfile=()=>({
         blocks:[...document.querySelectorAll('.race-heading,.race-dashboard,.night-track,.race-community,.race-footer')].map(element=>{const rect=element.getBoundingClientRect(),shell=document.getElementById('shell').getBoundingClientRect();return{x:rect.x-shell.x,y:rect.y-shell.y,width:rect.width,height:rect.height};}),
-        styles:['.race-heading h1','.race-heading em','.track-label','.lane-status','.car-nitro','.team-rankings h2'].map(selector=>{const style=getComputedStyle(document.querySelector(selector));return{font:style.font,color:style.color,background:style.backgroundColor};}),
+        styles:['.race-heading h1','.race-heading em','.track-label','.lane-status','.car-nitro','.team-rankings h2'].map(selector=>{const style=getComputedStyle(document.querySelector(selector));return{font:[style.fontFamily,style.fontSize,style.lineHeight].join(' '),color:style.color,background:style.backgroundColor};}),
         road:(()=>{const canvas=document.getElementById('raceCanvas');return [...canvas.getContext('2d').getImageData(Math.round(1100*canvas.width/1200),Math.round(500*canvas.height/900),1,1).data];})()
     });
     await page('Emulation.setDeviceMetricsOverride',{width:540,height:1080,deviceScaleFactor:1,mobile:false});
@@ -171,10 +173,10 @@ try {
         console.log('Verified Moto Interact at '+width+'px: generated daylight art, flat starts, nitro wheelie, grounded rear tire, gradual lowering, pause and reduced motion.');
     }
     await page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
-    await page('Page.navigate',{url:'http://localhost:3000/'});
+    await page('Page.navigate',{url:'http://localhost:3000/live-studio.html?game=moto-interact'});
     await waitFor("typeof loadLiveGame==='function' && typeof initializeGameFavorites==='function'");
     await assert("document.querySelector('[data-game-center-card*=\"Moto Interact\"] img').getAttribute('src').includes('moto-interact-day') && document.querySelector('#live-game-select option[value=moto-interact]').textContent==='Moto Interact'",'Moto catalog/Studio entry missing');
-    await evaluate("document.getElementById('view-home').classList.add('hidden');document.getElementById('view-live').classList.remove('hidden');loadLiveGame('moto-interact')");
+    await evaluate("closeAuthModal();loadLiveGame('moto-interact')");
     await waitFor("document.getElementById('studio-test-panel').getAttribute('aria-busy')==='false' && document.querySelector('[data-test-control=giftValue]')");
     await assert("document.getElementById('studio-test-game-name').textContent==='Moto Interact' && !document.getElementById('studio-test-tab-extra')",'Moto external test controls failed');
     await evaluate("TikInteractLive.setState({connected:true,username:'local-test',sessionId:'moto-browser-test'})");await settle(100);

@@ -1,5 +1,17 @@
 # TikInteract
 
+The public website is `index.html`; the standalone workspace is
+[`live-studio.html`](live-studio.html). The homepage includes one **LIVE Studio**
+navigation entry, shown only to signed-in accounts, and retains the animated game showcase.
+Direct Studio access requires sign-in; local LIVE commands are verified with Supabase Auth.
+See [template, routes and verification](docs/site-template.md).
+
+**TikTok Gifts** adds a live-synced gift catalog and a received-gift collection per
+streamer, including recent/high-value gifts and profile collection buttons.
+Public cloud collections require the additive
+[`supabase/tiktok_gifts.sql`](supabase/tiktok_gifts.sql) migration; until activated,
+new collection metadata remains on the receiving device. See [setup and verification](docs/tiktok-gifts.md).
+
 ## Local TikTok LIVE connector
 
 The LIVE connector uses the unofficial `tiktok-live-connector` Node.js package (AGPL-3.0-only). It connects by creator username only; it does not request TikTok passwords or session cookies. As it relies on TikTok's undocumented LIVE interface, it may stop working if TikTok changes that interface. Review the package license and TikTok's terms before distributing or using this prototype commercially.
@@ -16,9 +28,9 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 
 ## Home page
 
-- The home page introduces TikInteract, highlights the three available games, and displays the all-time top 10 from the public streamer leaderboard.
-- The featured games link to their presentation pages. Use **Începe un LIVE** to open the in-page LIVE setup.
-- The top 10 is loaded from Supabase using the same `get_streamer_leaderboard` RPC as the full leaderboard.
+- The home page introduces TikInteract, highlights the free Neon Interact and Moto Interact games, and displays the all-time top five from the public streamer leaderboard.
+- The featured games link to their presentation pages. Use **Deschide LIVE Studio** to open the separate workspace page.
+- The top five is loaded from Supabase using the same `get_streamer_leaderboard` RPC as the full leaderboard.
 - The footer links to the privacy policy, terms of use, usage guide, and updates; **Cookie preferences** explains the browser storage currently needed by the app.
 
 ## Game catalog and LIVE Studio

@@ -6,40 +6,41 @@
 .lane-status small{font-size:5px}
 .car-nitro{width:58px;height:2px}
 
-/* Day palette only: the original dimensions, typography and layout stay intact. */
-:root{color-scheme:light;background:#e5ecf2;color:#243849;--red:#cf2943;--blue:#2468b2}
-#shell{background:#eaf0f5;color:#203446;border-color:#cbd9e5;--red:#cf2943;--blue:#2468b2}
-.race-heading p{color:#657b8d}
+/* Muted daylight surfaces and stronger text, retaining the original layout. */
+:root{color-scheme:light;background:#d3dee8;color:#243849;--red:#bd213b;--blue:#205b9b}
+#shell{background:#dce5ed;color:#203446;border-color:#b8c9d8;--red:#bd213b;--blue:#205b9b}
+.race-heading p{color:#3d5265;font-weight:600}
 .race-heading h1{color:#203446}
-.round-number{color:#64798b}.round-number strong{color:#324d63}
-.race-dashboard{background:linear-gradient(#eaf0f5,#e3ebf2)}
-.race-clock>span{color:#587084}.race-clock>strong{color:#213c52}.race-clock>small{color:#60778a}
-.race-progress b{color:#587084}.race-progress [role=progressbar]{background:#d7e2ec}
+.round-number{color:#3c5367;font-weight:600}.round-number strong{color:#243e54;font-weight:600}
+.race-dashboard{background:linear-gradient(#dce5ed,#d3dfe9)}
+.race-clock>span{color:#344d62;font-weight:600}.race-clock>strong{color:#19364e;font-weight:600}.race-clock>small{color:#3b5267;font-weight:600}
+.race-progress b{color:#344d62;font-weight:600}.race-progress [role=progressbar]{background:#b8cbdc}
 .night-track{background:#b6d9ee}
-.track-label{color:#405e74;text-shadow:0 1px #ffffffb3}
+.track-label{color:#2c475e;font-weight:600;text-shadow:0 1px #ffffffb3}
 .track-brand{color:#314d63}
 .lane-status{text-shadow:0 1px 4px #172b458c}
 .lane-status.red{--team:#ffb0ba}.lane-status.blue{--team:#c3e1ff}
-.lane-status>strong{color:#f8fbff}.lane-status small{color:#e6eff7}
+.lane-status>span{font-weight:700}.lane-status>strong{color:#f8fbff;font-weight:700}.lane-status small{color:#f1f6fb;font-weight:700}
 .car-nitro{background:#1d3d6152}.car-nitro i{background:linear-gradient(90deg,#0077c8,#7ce7ff);box-shadow:0 0 7px #1497c555}
-.race-community{background:linear-gradient(#e5edf3,#eaf0f5)}
-.community-title{color:#5c7489}.community-title>span:last-child{color:#314e65}
-.team-rankings h2 span{color:#677f92}.team-rankings li{color:#344e64}
-.team-rankings li>span{color:#6f8496}.team-rankings .empty{color:#60798e}
-.supporter-gifts{color:#876d45!important}
-.race-footer{border-top-color:#d8e3ec;color:#647d91}.race-footer b{color:#3b566d}
+.race-community{background:linear-gradient(#d5e1eb,#dce5ed)}
+.community-title{color:#344e65;font-weight:600}.community-title>span:last-child{color:#263f55}
+.team-rankings h2 span{color:#3d566b;font-weight:600}.team-rankings li{color:#293f54}
+.team-rankings li>span{color:#435b70;font-weight:600}.team-rankings .empty{color:#3d5368;font-weight:600}
+.team-rankings li>b,.team-rankings li>small strong{font-weight:600}
+.supporter-gifts{color:#70512b!important}
+.race-footer{border-top-color:#b9cbd9;color:#3b5369;font-weight:600}.race-footer b{color:#263f56;font-weight:700}
 .controls a{color:#526f86}
-button,select,input{background:#e8eef3;border-color:#c7d6e3;color:#2b465c}
+button,select,input{background:#dce5ed;border-color:#b6c8d8;color:#243f54}
 button:hover{background:#e7eff7}
 button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline-color:#cf2943}
 input[type=range]{accent-color:#cf2943}
-#testPanel{border-top-color:#cbd9e5}#testPanel p{color:#60788c}
+#testPanel{border-top-color:#b9cad8}#testPanel p{color:#3d5368;font-weight:600}
 .team-test:first-of-type>span{color:#cf2943}.team-test:nth-of-type(2)>span{color:#2468b2}
-.race-overlay{background:#e8f1f5d4}
-.race-overlay-inner{border-color:#c5d6e4;background:linear-gradient(145deg,#e8eff4,#e1eaf1 65%);box-shadow:0 24px 70px #2d526b24}
-.overlay-kicker{color:#627f96}.overlay-symbol{color:#cf2943}
-.race-overlay h2{color:#213d53}.race-overlay p{color:#5a7388}
+.race-overlay{background:#c2d0dfd9}
+.race-overlay-inner{border-color:#acbfd0;background:linear-gradient(145deg,#d8e2eb,#cedbe7 65%);box-shadow:0 24px 70px #2d526b24}
+.overlay-kicker{color:#3a536b;font-weight:600}.overlay-symbol{color:#cf2943}
+.race-overlay h2{color:#213d53}.race-overlay p{color:#364f65;font-weight:600}
 .race-overlay button{background:#cf2943;border-color:#c12843;color:#fff}
 .race-overlay button:hover{background:#b7213a}.race-overlay.blue-win .overlay-symbol{color:#2468b2}
-.result-details{border-block-color:#d5e2ed}.result-details span{color:#4d6b83}
-.next-race>span,.next-race>small{color:#607d94}.next-race>strong{color:#24445e}
+.result-details{border-block-color:#afc3d4}.result-details span{color:#344f67;font-weight:600}
+.next-race>span,.next-race>small{color:#3b556d;font-weight:600}.next-race>strong{color:#24445e}

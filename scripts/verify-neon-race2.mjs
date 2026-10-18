@@ -4,6 +4,7 @@ import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import WebSocket from 'ws';
+import {installQAAuth} from './qa-auth-fixture.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(root, 'assets/game-gallery');
@@ -52,6 +53,7 @@ try {
     };
     await page('Page.enable');
     await page('Runtime.enable');
+    await page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true)'});
     await page('Emulation.setDeviceMetricsOverride',{width:540,height:960,deviceScaleFactor:2,mobile:false});
 
     const waitFor=async expression=>{for(let i=0;i<150;i++){try{if(await evaluate(expression))return;}catch{}await new Promise(r=>setTimeout(r,100));}throw new Error('Timed out: '+expression);};
@@ -88,9 +90,9 @@ try {
         console.log('Verified standalone Neon Interact at '+width+'px: native canvas, mobile fit, likes, nitro and pause.');
     }
     await page('Emulation.setDeviceMetricsOverride',{width:1280,height:1000,deviceScaleFactor:1,mobile:false});
-    await page('Page.navigate',{url:'http://localhost:3000/'});
+    await page('Page.navigate',{url:'http://localhost:3000/live-studio.html?game=neon-race-2'});
     await waitFor("typeof loadLiveGame==='function' && typeof initializeGameFavorites==='function'");
-    await evaluate("document.getElementById('view-home').classList.add('hidden');document.getElementById('view-live').classList.remove('hidden');loadLiveGame('neon-race-2')");
+    await evaluate("closeAuthModal();loadLiveGame('neon-race-2')");
     await waitFor("document.getElementById('studio-test-panel').getAttribute('aria-busy')==='false' && document.querySelector('[data-test-control=pause]')");
     await assert("document.getElementById('studio-test-game-name').textContent==='Neon Interact'",'Studio game label missing');
     await assert("document.getElementById('live-game-frame').contentDocument.body.classList.contains('embedded')",'Game is not embedded');

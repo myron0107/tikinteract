@@ -6,8 +6,21 @@ import { fileURLToPath } from 'node:url';
 import { WebSocketServer, WebSocket } from 'ws';
 import { TikTokLiveConnection, WebcastEvent } from 'tiktok-live-connector';
 import { createLiveEventNormalizer } from './lib/live-events.js';
+import {createGiftCatalog} from './lib/gift-catalog.js';
+import {createStudioAuthenticator} from './lib/studio-auth.js';
+import {fetchTikTokGiftCatalog} from './lib/tiktok-gift-source.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
+const importedGiftCatalog = JSON.parse(await readFile(path.join(ROOT, 'assets/tiktok-gifts-catalog.json'), 'utf8'));
+const knownGiftInfo = new Map(importedGiftCatalog.gifts.map(gift=>[gift.id,gift]));
+const supabaseConfig = JSON.parse(await readFile(path.join(ROOT, 'assets/supabase-config.json'), 'utf8'));
+const studioAuth = createStudioAuthenticator(supabaseConfig);
+const giftCatalog=createGiftCatalog({file:path.join(ROOT,'data/gift-catalog.json'),seedFile:path.join(ROOT,'assets/tiktok-gifts-catalog.json'),
+    async fetchGifts(){
+        const catalog=await fetchTikTokGiftCatalog({region:process.env.TIKTOK_GIFT_REGION||'RO',connection:liveConnection});
+        for(const gift of catalog.gifts)knownGiftInfo.set(gift.id,gift);
+        return catalog;
+    }});
 const HOST = '127.0.0.1';
 const PORT = Number(process.env.PORT || 3000);
 const ALLOWED_ORIGINS = new Set([
@@ -17,6 +30,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 const STATIC_FILES = new Set([
     '/index.html',
+    '/live-studio.html',
     '/style.css',
     '/game.js',
     '/public-info.css',
@@ -40,6 +54,7 @@ const MIME_TYPES = {
     '.css': 'text/css; charset=utf-8',
     '.html': 'text/html; charset=utf-8',
     '.js': 'text/javascript; charset=utf-8',
+    '.json': 'application/json; charset=utf-8',
     '.aac': 'audio/aac',
     '.flac': 'audio/flac',
     '.m4a': 'audio/mp4',
@@ -111,7 +126,7 @@ const server = createServer(async (request, response) => {
     }
 });
 
-const websocketServer = new WebSocketServer({ noServer: true, maxPayload: 4096 });
+const websocketServer = new WebSocketServer({ noServer: true, maxPayload: 8192 });
 let liveConnection = null;
 let activeUsername = null;
 let connectionAttempt = 0;
@@ -126,6 +141,7 @@ function send(socket, message) {
 
 function broadcast(message) {
     for (const client of websocketServer.clients) {
+        if (!studioAuth.isAuthorized(client)) continue;
         send(client, message);
     }
 }
@@ -232,7 +248,7 @@ async function startLiveConnection(rawUsername) {
     for (const [kind, webcastEvent] of [['chat', WebcastEvent.CHAT], ['like', WebcastEvent.LIKE], ['gift', WebcastEvent.GIFT]]) {
         connection.on(webcastEvent, (event) => {
             if (liveConnection !== connection || activeSessionId !== sessionId || connectionStatus !== 'connected') return;
-            const giftInfo = kind === 'gift' ? event.extendedGiftInfo || connection.availableGifts?.find(gift => String(gift.id) === String(event.giftId)) : null;
+            const giftInfo = kind === 'gift' ? event.extendedGiftInfo || connection.availableGifts?.find(gift => String(gift.id) === String(event.giftId)) || knownGiftInfo.get(String(event.giftId)) : null;
             const normalized = normalize(kind, event, giftInfo);
             if (normalized) broadcast({...normalized, avatarUrl: getProfilePhotoUrl(event.user)});
         });
@@ -248,6 +264,7 @@ async function startLiveConnection(rawUsername) {
         await connection.connect();
         if (attempt === connectionAttempt && liveConnection === connection) {
             connectionStatus = 'connected';
+            giftCatalog.ingest(connection.availableGifts,username).then(catalog=>broadcast({type:'gift-catalog',...catalog})).catch(error=>console.warn('Gift catalog cache:',error.message));
             broadcast({
                 type: 'status',
                 connected: true,
@@ -278,8 +295,7 @@ websocketServer.on('connection', (socket, request) => {
         return;
     }
 
-    send(socket, getState());
-    socket.on('message', (rawMessage) => {
+    socket.on('message', async (rawMessage) => {
         let message;
         try {
             message = JSON.parse(rawMessage.toString());
@@ -288,7 +304,22 @@ websocketServer.on('connection', (socket, request) => {
             return;
         }
 
-        if (message.type === 'profile') {
+        if (!message || typeof message !== 'object' || !await studioAuth.authorize(socket, message.accessToken)) {
+            delete socket.studioAuth;
+            send(socket, {type: 'auth-required', message: 'Autentifică-te în cont pentru a folosi LIVE Studio.'});
+            socket.close(1008, 'Authentication required');
+            return;
+        }
+        if (socket.readyState !== WebSocket.OPEN) return;
+
+        if (message.type === 'gift-catalog') {
+            const username=String(message.username||activeUsername||'').trim().replace(/^@/,'');
+            if(username&&!/^[A-Za-z0-9._]{2,24}$/.test(username))return;
+            const requestedAt=Date.now();
+            if(socket.lastGiftCatalogRequest&&requestedAt-socket.lastGiftCatalogRequest<5000){send(socket,{type:'gift-catalog',gifts:[],error:'Așteaptă câteva secunde înainte de următoarea sincronizare.'});return;}
+            socket.lastGiftCatalogRequest=requestedAt;
+            giftCatalog.get(username,{refresh:message.refresh===true}).then(catalog=>send(socket,{type:'gift-catalog',...catalog})).catch(()=>send(socket,{type:'gift-catalog',gifts:[],error:'Catalogul nu este disponibil momentan.'}));
+        } else if (message.type === 'profile') {
             sendTikTokProfile(socket, message.username).catch((error) => {
                 send(socket, {
                     type: 'profile-error',

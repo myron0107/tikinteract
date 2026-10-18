@@ -4,6 +4,7 @@ import {readFile, writeFile, mkdir} from 'node:fs/promises';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import WebSocket from 'ws';
+import {installQAAuth} from './qa-auth-fixture.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const output = path.join(root, 'assets/game-gallery');
@@ -52,6 +53,7 @@ try {
     };
     await page('Page.enable');
     await page('Runtime.enable');
+    await page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true)'});
     await page('Page.addScriptToEvaluateOnNewDocument',{source:`
         window.__gameAudioContexts=[];
         const NativeAudioContext=window.AudioContext;
@@ -121,9 +123,9 @@ try {
     for(let i=0;i<80;i++){if(await evaluate("document.getElementById('sound').getAttribute('aria-pressed')==='false'"))break;await new Promise(r=>setTimeout(r,100));}
     if(!await evaluate("document.getElementById('sound').getAttribute('aria-pressed')==='false'"))throw new Error('Game sound-off control failed');
     console.log('Verified native offline audio levels, one quieter shared engine, distinct sound cues, pause/mute, limiter/polyphony and actual game controls.');
-    await page('Page.navigate',{url:'http://localhost:3000/'});
+    await page('Page.navigate',{url:'http://localhost:3000/live-studio.html?game=neon-race-2'});
     for(let i=0;i<100;i++){if(await evaluate("typeof loadLiveGame==='function'"))break;await new Promise(r=>setTimeout(r,100));}
-    await evaluate("document.getElementById('view-home').classList.add('hidden');document.getElementById('view-live').classList.remove('hidden');loadLiveGame('neon-race-2')");
+    await evaluate("closeAuthModal();loadLiveGame('neon-race-2')");
     for(let i=0;i<100;i++){if(await evaluate("!!document.querySelector('[data-test-control=volumeEffects]')"))break;await new Promise(r=>setTimeout(r,100));}
     if(!await evaluate("!document.getElementById('studio-test-tab-extra') && !document.querySelector('[data-studio-test-category=extra]') && document.querySelectorAll('#studio-test-tabs > button').length===2"))throw new Error('Studio must show only the available Test and Audio tabs, without Extra');
     await evaluate("selectStudioTestTab('audio')");

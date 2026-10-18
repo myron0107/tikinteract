@@ -12,6 +12,10 @@
     --red-strong: #e02030;
     --red-soft: rgba(255, 38, 54, 0.14);
     --glow: 0 8px 28px rgba(255, 38, 62, 0.22);
+    --button-red: #b92b48;
+    --button-red-strong: #a2263f;
+    --button-red-soft: rgba(185, 43, 72, 0.14);
+    --button-glow: 0 8px 28px rgba(185, 43, 72, 0.22);
 }
 
 * {
@@ -24,7 +28,7 @@ html {
 
 /* Visual refresh: retain the original red, warm neutrals and dark surfaces. */
 button:focus-visible, a:focus-visible, video:focus-visible {
-    outline: 2px solid #ff8b80;
+    outline: 2px solid #e28295;
     outline-offset: 5px;
 }
 
@@ -398,9 +402,9 @@ header {
 }
 
 .home-primary-button {
-    background: linear-gradient(135deg, #f22b45, #bf102c);
+    background: linear-gradient(135deg, #b92b48, #7a1d2f);
     color: white;
-    box-shadow: 0 10px 28px rgba(230,25,50,0.25);
+    box-shadow: 0 10px 28px rgba(161, 38, 62,0.25);
 }
 
 .home-secondary-button {
@@ -873,16 +877,16 @@ header {
 }
 
 .account-menu-button {
-    border: 1px solid rgba(255,154,140,0.28);
-    background: linear-gradient(135deg, #be1029 0%, #e61932 55%, #f04443 100%);
+    border: 1px solid rgba(229, 146, 162,0.28);
+    background: linear-gradient(135deg, #791c2f 0%, #a1263e 55%, #cb304f 100%);
     color: white;
     font-weight: 750;
-    box-shadow: 0 5px 18px rgba(230,25,50,0.2);
+    box-shadow: 0 5px 18px rgba(161, 38, 62,0.2);
 }
 
 .account-menu-button:hover {
-    background: linear-gradient(135deg, #d41430 0%, #f0223d 55%, #fc594e 100%);
-    box-shadow: 0 7px 22px rgba(230,25,50,0.3);
+    background: linear-gradient(135deg, #8e2137 0%, #b02944 55%, #d2405d 100%);
+    box-shadow: 0 7px 22px rgba(161, 38, 62,0.3);
 }
 
 .account-heading {
@@ -966,9 +970,9 @@ header {
 .account-display-name-controls button {
     flex: 0 0 auto;
     padding: 0.55rem 0.7rem;
-    border: 1px solid rgba(255,154,140,0.28);
+    border: 1px solid rgba(229, 146, 162,0.28);
     border-radius: 0.65rem;
-    background: #e61932;
+    background: #a1263e;
     color: white;
     font-size: 0.7rem;
     font-weight: 750;
@@ -1092,7 +1096,7 @@ header {
 }
 
 .account-logout-button:hover {
-    border-color: rgba(255,38,62,0.5);
+    border-color: rgba(192, 45, 74,0.5);
     color: white;
 }
 
@@ -1105,19 +1109,19 @@ header {
 }
 
 button.bg-red-600 {
-    background: linear-gradient(135deg, #be1029 0%, #e61932 48%, #f04443 100%);
-    border: 1px solid rgba(255, 154, 140, 0.25);
-    box-shadow: inset 0 1px 0 rgba(255, 235, 225, 0.18), 0 8px 28px rgba(230, 25, 50, 0.24);
+    background: linear-gradient(135deg, #791c2f 0%, #a1263e 48%, #cb304f 100%);
+    border: 1px solid rgba(229, 146, 162, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 235, 225, 0.18), 0 8px 28px rgba(161, 38, 62, 0.24);
 }
 
 button.bg-red-600:hover {
-    background: linear-gradient(135deg, #d41430 0%, #f0223d 48%, #fc594e 100%);
-    box-shadow: inset 0 1px 0 rgba(255, 235, 225, 0.25), 0 10px 32px rgba(230, 25, 50, 0.34);
+    background: linear-gradient(135deg, #8e2137 0%, #b02944 48%, #d2405d 100%);
+    box-shadow: inset 0 1px 0 rgba(255, 235, 225, 0.25), 0 10px 32px rgba(161, 38, 62, 0.34);
 }
 
 button:focus-visible,
 a:focus-visible {
-    outline: 2px solid #ff9a8c;
+    outline: 2px solid #e592a2;
     outline-offset: 4px;
 }
 
@@ -1325,9 +1329,9 @@ select:focus {
 }
 
 .live-studio-tab.is-active {
-    border-color: rgba(255,38,62,0.2);
-    background: rgba(255,38,62,0.12);
-    color: #ff8794;
+    border-color: rgba(192, 45, 74,0.2);
+    background: rgba(192, 45, 74,0.12);
+    color: #e48b9d;
 }
 
 #live-studio-panel,
@@ -1379,10 +1383,10 @@ select:focus {
     align-items: center;
     justify-content: center;
     padding: 0.4rem;
-    border: 1px solid rgba(255,100,100,0.2);
+    border: 1px solid rgba(217, 95, 119,0.2);
     border-radius: 0.7rem;
-    background: rgba(255,38,62,0.09);
-    color: #ff9aa5;
+    background: rgba(192, 45, 74,0.09);
+    color: #e9a3b1;
     cursor: pointer;
     transition: background 160ms ease, color 160ms ease, border-color 160ms ease, transform 160ms ease;
 }
@@ -1393,14 +1397,14 @@ select:focus {
 }
 
 .audio-stop-all:hover {
-    border-color: rgba(255,100,100,0.42);
-    background: rgba(255,38,62,0.18);
+    border-color: rgba(217, 95, 119,0.42);
+    background: rgba(192, 45, 74,0.18);
     color: white;
     transform: translateY(-1px);
 }
 
 .audio-stop-all:focus-visible {
-    outline: 2px solid #ff9aa5;
+    outline: 2px solid #e9a3b1;
     outline-offset: 2px;
 }
 
@@ -1579,8 +1583,8 @@ select:focus {
 }
 
 .audio-sound-controls button:hover:not(:disabled) {
-    border-color: color-mix(in srgb, var(--sound-accent, #fb7185) 50%, transparent);
-    background: color-mix(in srgb, var(--sound-accent, #fb7185) 13%, transparent);
+    border-color: color-mix(in srgb, var(--sound-accent, #dc6a81) 50%, transparent);
+    background: color-mix(in srgb, var(--sound-accent, #dc6a81) 13%, transparent);
     color: white;
 }
 
@@ -1915,7 +1919,7 @@ select:focus {
 
 .live-favorite-trigger:focus-visible,
 .live-favorite-remove:focus-visible {
-    outline: 2px solid var(--sound-accent, #fb7185);
+    outline: 2px solid var(--sound-accent, #dc6a81);
     outline-offset: 2px;
 }
 
@@ -2355,8 +2359,8 @@ select:focus {
 
 .leaderboard-periods button:hover,
 .leaderboard-periods button.is-active {
-    border-color: rgba(230,25,50,0.55);
-    background: rgba(230,25,50,0.12);
+    border-color: rgba(161, 38, 62,0.55);
+    background: rgba(161, 38, 62,0.12);
     color: white;
 }
 
@@ -2877,8 +2881,8 @@ select:focus {
 
     .account-menu-toggle:hover,
     .account-menu-toggle[aria-expanded="true"] {
-        border-color: rgba(255,154,140,0.4);
-        color: #ff6b78;
+        border-color: rgba(229, 146, 162,0.4);
+        color: #dc687f;
     }
 
     .account-logout-label {

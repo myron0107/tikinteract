@@ -10,7 +10,7 @@
 .home-showcase-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; padding: 10px 12px; border-top: 1px solid #ffffff0c; background: #111114; }
 .home-showcase-controls button { min-width: 0; min-height: 36px; padding: 7px 4px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #a4a4af; font: 600 .63rem var(--font-body, sans-serif); cursor: pointer; }
 .home-showcase-controls button:hover { color: #fff; background: #ffffff06; }
-.home-showcase-controls button[aria-pressed="true"] { color: #fff; background: #b91f30; }
+.home-showcase-controls button[aria-pressed="true"] { color: #fff; background: #821e32; }
 .home-showcase-caption { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 16px 12px; background: #111114; }
 .home-showcase-caption strong { color: #b8b8c2; font: 500 .61rem var(--font-body, sans-serif); }
 .home-showcase-caption > span { color: #858591; font: 500 .48rem var(--font-body, sans-serif); letter-spacing: .08em; }
