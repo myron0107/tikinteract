@@ -331,6 +331,8 @@ function setStreamerProfile(username, avatarUrl, displayName = username) {
         safeAvatarUrl = null;
     }
 
+    setAccountAvatar(displayName || username, safeAvatarUrl);
+
     if (!profileImage) return;
     profileImage.onload = () => profileFallback?.classList.add('hidden');
     profileImage.onerror = () => {
@@ -346,11 +348,37 @@ function setStreamerProfile(username, avatarUrl, displayName = username) {
     }
 }
 
+function setAccountAvatar(displayName, avatarUrl) {
+    const avatar = document.getElementById('account-avatar-display');
+    const image = document.getElementById('account-avatar-image');
+    if (avatar) {
+        avatar.textContent = String(displayName || 'U').trim().charAt(0).toUpperCase() || 'U';
+        avatar.classList.remove('hidden');
+    }
+    if (!image) return;
+
+    image.onload = () => {
+        image.classList.remove('hidden');
+        avatar?.classList.add('hidden');
+    };
+    image.onerror = () => {
+        image.classList.add('hidden');
+        avatar?.classList.remove('hidden');
+    };
+    if (avatarUrl) {
+        image.src = avatarUrl;
+    } else {
+        image.removeAttribute('src');
+        image.classList.add('hidden');
+    }
+}
+
 function clearStreamerProfile() {
     const profile = document.getElementById('tiktok-profile');
     const profileImage = document.getElementById('tiktok-profile-image');
     if (profile) profile.classList.add('hidden');
     if (profileImage) profileImage.removeAttribute('src');
+    setAccountAvatar(document.getElementById('account-display-name')?.textContent, null);
 }
 
 function updateConnectionStatus(connected, username, connecting = false, avatarUrl = null) {
