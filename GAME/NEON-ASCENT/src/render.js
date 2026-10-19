@@ -212,6 +212,13 @@ export class Renderer {
         ctx.strokeStyle='#d22eaa';ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(x-8,sy+2);ctx.lineTo(x-3,sy+9);ctx.lineTo(x-6,sy+15);ctx.stroke();
       }
       ctx.restore();
+      if(sim.world.hasGift(p)){
+        const gift=ACTIONS[p.gift],float=Math.sin(sim.clock*3+p.phase)*3,gy=sy-27+float;
+        ctx.save();ctx.globalAlpha=unavailable?.2:1;ctx.shadowColor=gift.color;ctx.shadowBlur=sim.settings.visualQuality==='Low'?0:14;
+        ctx.fillStyle='#10152b';ctx.strokeStyle=gift.color;ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(x,gy,17,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.shadowBlur=0;
+        this.sprite(gift.sprite,x,gy,23,23);ctx.restore();
+      }
       if(sy>180&&!p.branch&&(p.level%10===0||p.level===0)){
         ctx.save();ctx.font='600 10px sans-serif';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='#10152bd9';ctx.strokeText(p.level+' m',x,sy+height+11);ctx.fillStyle='#d7f5ff';ctx.fillText(p.level+' m',x,sy+height+11);ctx.restore();
       }

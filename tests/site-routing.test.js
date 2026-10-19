@@ -70,6 +70,7 @@ test('the homepage and standalone Studio contain separate views and distinct Stu
     const home=readFileSync(new URL('../index.html',import.meta.url),'utf8'),studio=readFileSync(new URL('../live-studio.html',import.meta.url),'utf8');
     assert(!home.includes('id="live-game-frame"'));assert(!studio.includes('id="view-home"'));
     assert(home.includes('data-home-showcase'));assert(home.includes('id="download-app"'));
+    assert.match(home,/<a href="GAME\/NEON-ASCENT\/index\.html" class="home-hot-game home-hot-game-nova-vex">[\s\S]*?src="assets\/game-gallery\/nova-vex-cover\.webp"[\s\S]*?<h3>NOVA &amp; VEX<\/h3>[\s\S]*?orașul neon[\s\S]*?<\/a>/);
     assert(home.includes('Download App'));
     assert.match(home,/<a class="hero-app-link app-download-link" href="#download-app">/);
     assert.match(home,/<button id="download-app-button"[^>]+disabled>/);

@@ -151,7 +151,17 @@ export class Simulation {
     if (p.level === this.settings.finishDistance) {
       this.phase = 'holding'; this.hold = 0; this.player.vy = 0;
       this.emit({ kind: 'finishReached', clock: this.clock });
-    } else this.player.vy = JUMP_SPEED * (p.type === 'spring' ? 1.24 : 1);
+    } else {
+      this.player.vy = JUMP_SPEED * (p.type === 'spring' ? 1.24 : 1);
+      const gift = this.world.collectGift(p);
+      if (gift) this.action({
+        action: gift,
+        amount: 1,
+        actor: { username: 'Nova', displayName: 'Nova' },
+        gift: { name: ACTIONS[gift].name, repeatCount: 1 },
+        source: { simulated: true, gamePickup: true }
+      });
+    }
   }
   restart({ preserve = true, fromWin = false, effect = null } = {}) {
     if (this.active) {

@@ -15,7 +15,7 @@ export function capture(sim, renderer, labels = [], language = 'ro') {
     giftValuesVersion:GIFT_VALUES_VERSION,
     simulation: Object.fromEntries(SIMULATION.map(key => [key, sim[key]])),
     ids: { ranges: sim.seen.ranges, local: [...sim.seen.local] },
-    world: { cache: [...sim.world.cache], unavailable: [...sim.world.unavailable] },
+    world: { cache: [...sim.world.cache], unavailable: [...sim.world.unavailable], collectedGifts: [...sim.world.collectedGifts] },
     scenes: Object.fromEntries(SCENES.map(key => [key, renderer[key]])),
     effects: { bursts: renderer.giftFX.bursts, lastImpact: renderer.giftFX.lastImpact },
     labels,
@@ -41,6 +41,7 @@ export function restore(snapshot, sim, renderer) {
   sim.seen = new CommandIds(); sim.seen.ranges = saved.ids.ranges; sim.seen.local = new Set(saved.ids.local);
   sim.world = new World(sim.settings.worldSeed, sim.settings.finishDistance);
   sim.world.cache = new Map(saved.world.cache); sim.world.unavailable = new Map(saved.world.unavailable);
+  sim.world.collectedGifts = new Set(saved.world.collectedGifts || []);
   sim.releaseInput();
   for (const key of SCENES) renderer[key] = saved.scenes[key];
   renderer.giftFX.bursts = saved.effects.bursts; renderer.giftFX.lastImpact = saved.effects.lastImpact;

@@ -1,5 +1,8 @@
 import { WIDTH, clamp, lerp } from './config.js';
 
+const PICKUP_GIFTS = ['balloon', 'magnet', 'cloud', 'rocket'];
+const PICKUP_CHANCE = .14;
+
 function seedHash(text) {
   let h = 2166136261;
   for (const c of text) h = Math.imul(h ^ c.charCodeAt(0), 16777619);
@@ -22,7 +25,7 @@ const COURSES = [
 export class World {
   constructor(seed = 'NeonAscent-1', finish = 10000) {
     this.seed = seedHash(seed); this.phase = (this.seed % 6283) / 1000;
-    this.finish = finish; this.cache = new Map(); this.unavailable = new Map();
+    this.finish = finish; this.cache = new Map(); this.unavailable = new Map(); this.collectedGifts = new Set();
   }
   course(chunk) {
     return COURSES[chunk === 0 ? 0 : 1 + Math.floor(hash(chunk, this.seed ^ 741) * 3)];
@@ -55,7 +58,11 @@ export class World {
     const mirrored = chunk !== 0 && hash(chunk, this.seed ^ 649) > .5;
     const lane = this.course(chunk).x[slot];
     const x = level === 0 || type === 'finish' ? WIDTH / 2 : clamp((mirrored ? WIDTH - lane : lane) + (hash(level, this.seed ^ 341) - .5) * 22, w / 2 + 12, WIDTH - w / 2 - 12);
-    const p = Object.freeze({ id: 'p' + level, level, x, y: this.height(level), w, type, phase: hash(level, this.seed ^ 425) * Math.PI * 2, movingRange: 25 + hash(level, this.seed ^ 798) * 21 });
+    const giftRoll = hash(level, this.seed ^ 6721);
+    const gift = type !== 'finish' && type !== 'crumble' && type !== 'vanish' && giftRoll < PICKUP_CHANCE
+      ? PICKUP_GIFTS[Math.floor(hash(level, this.seed ^ 1987) * PICKUP_GIFTS.length)]
+      : null;
+    const p = Object.freeze({ id: 'p' + level, level, x, y: this.height(level), w, type, gift, phase: hash(level, this.seed ^ 425) * Math.PI * 2, movingRange: 25 + hash(level, this.seed ^ 798) * 21 });
     this.cache.set(level, p); return p;
   }
   branch(level) {
@@ -63,7 +70,15 @@ export class World {
     const id = 'b' + level; if (this.cache.has(id)) return;
     const primary = this.platform(level), w = 66 + hash(level, this.seed ^ 216) * 18;
     const x = Math.abs(primary.x - WIDTH / 2) < 74 ? (primary.x < WIDTH / 2 ? 395 : 85) : WIDTH - primary.x;
-    this.cache.set(id, Object.freeze({ ...primary, id, branch: true, x: clamp(x, w / 2 + 12, WIDTH - w / 2 - 12), w, type: hash(level, this.seed ^ 872) < .55 ? 'normal' : 'crumble' }));
+    this.cache.set(id, Object.freeze({ ...primary, id, branch: true, x: clamp(x, w / 2 + 12, WIDTH - w / 2 - 12), w, type: hash(level, this.seed ^ 872) < .55 ? 'normal' : 'crumble', gift: null }));
+  }
+  collectGift(platform) {
+    if (!platform.gift || this.collectedGifts.has(platform.id)) return null;
+    this.collectedGifts.add(platform.id);
+    return platform.gift;
+  }
+  hasGift(platform) {
+    return Boolean(platform.gift && !this.collectedGifts.has(platform.id));
   }
   x(p, clock) {
     return clamp(p.x + (p.type === 'moving' ? Math.sin(clock * 1.35 + p.phase) * p.movingRange : 0), p.w / 2 + 8, WIDTH - p.w / 2 - 8);
