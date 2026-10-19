@@ -38,6 +38,7 @@ const STATIC_FILES = new Set([
     '/terms-of-use.html',
     '/guide.html',
     '/updates.html',
+    '/about.html',
     '/GAME/game-pages.css',
     '/GAME/NEON-RACE/index.html',
     '/GAME/NEON-RACE/Neon-Race.html',

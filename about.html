@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ro" class="dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0b0b0e">
+    <meta name="description" content="Jocuri interactive pentru TikTok LIVE. Tu conduci streamul, iar publicul intră în joc.">
+    <title>Despre noi — TikInteract</title>
+    <link rel="icon" type="image/png" href="assets/tikinteract-icon-v2.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="public-info.css?v=4">
+    <link rel="stylesheet" href="assets/fonts/font-faces.css?v=1">
+    <link rel="stylesheet" href="assets/typography.css?v=1">
+    <link rel="stylesheet" href="assets/resources.css?v=2">
+    <script src="assets/resources.js?v=2" defer></script>
+</head>
+<body class="min-h-screen flex flex-col">
+    <header class="public-info-site-header"><a class="footer-brand" href="index.html" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="36" height="36"><span>TIK<span>INTERACT</span></span></a></header>
+    <main class="public-info-page about-page">
+        <a class="public-info-back" href="index.html"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Înapoi la site</a>
+        <header class="public-info-header"><span class="eyebrow">DESPRE NOI</span><h1>LIVE-ul se joacă împreună.</h1><p>Facem jocuri în care publicul are un rol. Un cadou schimbă cursa, un comentariu alege echipa, iar fiecare rundă aduce altă poveste.</p></header>
+        <div class="public-info-content">
+            <div class="about-grid">
+                <section class="public-info-card"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><h2>Jocuri pentru LIVE</h2><p>Curse cu mașini și motoare sau aventura Novei și a lui Vex. Alegi ce se potrivește comunității tale.</p></section>
+                <section class="public-info-card"><i class="fa-solid fa-sliders" aria-hidden="true"></i><h2>Tu faci regulile</h2><p>Pornești jocul, configurezi interacțiunile și testezi totul din Studio, înainte să intre publicul.</p></section>
+                <section class="public-info-card"><i class="fa-solid fa-heart" aria-hidden="true"></i><h2>Construim împreună</h2><p>O idee de joc sau o funcție care îți lipsește? Sugestiile creatorilor ne ajută să alegem ce urmează.</p></section>
+            </div>
+            <section class="public-info-card about-contact"><div><h2>Ce ai vrea să joci la următorul LIVE?</h2><p>Trimite-ne o idee sau spune-ne cum putem îmbunătăți platforma.</p></div><button class="support-submit" type="button" data-open-support>Hai să vorbim <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></section>
+        </div>
+    </main>
+    <footer class="public-info-footer"><span>© <span data-current-year>2026</span> TikInteract.</span><a href="guide.html">Ghiduri</a><a href="updates.html">Noutăți</a><a href="privacy-policy.html">Confidențialitate</a><a href="terms-of-use.html">Termeni</a></footer>
+    <script>document.querySelectorAll('[data-current-year]').forEach(node => {node.textContent = String(new Date().getFullYear());});</script>
+</body>
+</html>
