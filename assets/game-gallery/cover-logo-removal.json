@@ -1,0 +1,9 @@
+{
+  "tool": "built-in image_gen",
+  "edit": "Remove bottom TIKINTERACT wordmark; preserve game titles and artwork.",
+  "files": [
+    "assets/game-gallery/neon-interact-cover.webp",
+    "assets/game-gallery/moto-interact-cover.webp",
+    "assets/game-gallery/nova-vex-cover.webp"
+  ]
+}

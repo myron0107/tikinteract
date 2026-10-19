@@ -1,13 +1,15 @@
 /* Shared poster library: the complete cover remains visible at every width. */
 .site-template #view-catalog > section > .grid,
-.site-template #view-catalog > section:first-of-type > .grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 22px;
+.site-template #view-catalog > section:first-of-type > .grid,
+.studio-app .game-center-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 200px));
+    gap: 14px;
+    justify-content: start;
 }
 .site-template #view-catalog .game-cover-card {
     display: block;
     padding: 0;
-    border-radius: 16px;
+    border-radius: 11px;
     overflow: hidden;
     background: #111114;
 }
@@ -30,48 +32,47 @@
     outline-offset: 4px;
 }
 .studio-app .game-center-card.game-cover-card {
-    border-radius: 16px;
+    border-radius: 11px;
     overflow: hidden;
 }
 .studio-app .game-cover-card .game-center-card-body {
-    padding: 12px;
+    padding: 8px;
 }
 .studio-app .game-cover-card .game-center-card-body > button {
     margin: 0;
-    min-height: 44px;
-    font-size: 11px;
+    min-height: 40px;
+    padding: 10px 8px;
+    justify-content: center;
+    gap: 5px;
+    font-size: 10px;
 }
+.studio-app .game-cover-card .game-center-card-body > button > i { display: none; }
 .studio-app .game-cover-card > .game-favorite-star {
-    width: 34px;
-    height: 34px;
-    top: 10px;
-    right: 10px;
-    font-size: 21px;
+    width: 28px;
+    height: 28px;
+    top: auto;
+    bottom: 64px;
+    right: 7px;
+    font-size: 18px;
     border: 1px solid #ffffff40;
     border-radius: 50%;
     background: #0b0b12cf;
     backdrop-filter: blur(8px);
 }
-@media (max-width: 820px) {
-    .site-template #view-catalog > section > .grid,
-    .site-template #view-catalog > section:first-of-type > .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 16px;
-    }
-}
 @media (max-width: 600px) {
+    .site-template #view-catalog > section > .grid,
+    .site-template #view-catalog > section:first-of-type > .grid,
     .studio-app .game-center-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 9px;
     }
-    .studio-app .game-cover-card .game-center-card-body { padding: 8px; }
+    .studio-app .game-cover-card .game-center-card-body { padding: 5px; }
     .studio-app .game-cover-card .game-center-card-body > button {
-        padding: 10px 8px;
-        gap: 5px;
-        font-size: 10px;
-        justify-content: center;
+        padding: 7px 4px;
+        font-size: 9px;
+        line-height: 1.4;
     }
-    .studio-app .game-cover-card .game-center-card-body > button > i { display: none; }
+    .studio-app .game-cover-card > .game-favorite-star { bottom: 56px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .game-cover-card { transition: none; }
