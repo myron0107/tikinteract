@@ -12,8 +12,8 @@
     <link rel="preload" href="../../assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../assets/fonts/font-faces.css?v=1">
     <link rel="stylesheet" href="../../assets/typography.css?v=1">
-    <link rel="stylesheet" href="../../assets/game-gallery.css?v=2">
-    <script src="../../assets/game-gallery.js?v=2" defer></script>
+    <link rel="stylesheet" href="../../assets/game-gallery.css?v=3">
+    <script src="../../assets/game-gallery.js?v=4" defer></script>
 </head>
 <body>
     <main class="game-page-shell game-presentation">
@@ -29,12 +29,16 @@
             </header>
             <div class="game-detail-layout">
                 <section class="game-gallery" id="game-gallery" aria-label="Galerie {{title}}">
-                    <button type="button" class="game-gallery-featured" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
-                        <img data-gallery-featured src="{{firstImage}}" alt="{{title}} — {{firstLabel}}" width="1080" height="1920" fetchpriority="high" decoding="async">
-                        <span class="game-gallery-expand">Extinde ↗</span>
-                    </button>
+                    <div class="game-gallery-featured">
+                        <button type="button" class="game-gallery-image" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
+                            <img data-gallery-featured src="{{firstImage}}" alt="{{title}} — {{firstLabel}}" width="1080" height="1920" fetchpriority="high" decoding="async">
+                            <span class="game-gallery-expand">Mărește imaginea ↗</span>
+                        </button>
+                        <video data-gallery-video controls playsinline muted loop preload="none" hidden aria-label="Clip din {{title}}"></video>
+                    </div>
+                    <p class="game-gallery-status" data-gallery-status role="status" hidden></p>
                     <div class="game-gallery-caption"><span data-gallery-current>{{firstLabel}}</span><span data-gallery-position>1 / {{count}}</span></div>
-                    <div class="game-gallery-grid" role="group" aria-label="Alege imaginea din joc">
+                    <div class="game-gallery-grid" role="group" aria-label="Imagini și clipuri din joc">
 {{thumbnails}}
                     </div>
                 </section>
@@ -42,7 +46,7 @@
 {{details}}
                     <div class="game-detail-launch">
                         <a class="game-page-cta" href="../../live-studio.html?game={{game}}">Deschide în LIVE Studio <span aria-hidden="true">→</span></a>
-                        <p>Alege jocul și conectează transmisiunea ta din LIVE Studio.</p>
+                        <p>Deschide jocul în Studio și conectează LIVE-ul.</p>
                     </div>
                 </aside>
             </div>
@@ -52,9 +56,10 @@
             <div class="game-gallery-stage">
                 <button type="button" data-gallery-previous aria-label="Imaginea anterioară">‹</button>
                 <img data-gallery-full alt="" draggable="false">
+                <video data-gallery-full-video controls playsinline muted loop preload="none" hidden aria-label="Clip din {{title}}"></video>
                 <button type="button" data-gallery-next aria-label="Imaginea următoare">›</button>
             </div>
-            <p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p>
+            <div class="game-gallery-dialog-footer"><p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p><a data-gallery-original target="_blank" rel="noopener">Deschide originalul ↗</a></div>
         </dialog>
     </main>
 </body>

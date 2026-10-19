@@ -139,7 +139,6 @@ let soundMasterVolume = 0.75;
 const SOUND_FAVORITES_KEY = 'tikinteract-audio-favorites';
 const MAX_AUDIO_FAVORITES = 12;
 let favoriteSoundIds = new Set();
-let audioLibraryTab = 'sounds';
 let audioLibraryScope = 'all';
 let audioFavoriteToastTimer = null;
 let audioFavoriteToastHideTimer = null;
@@ -294,7 +293,7 @@ function searchLiveFavoriteSounds(query) {
     if (allMatches.length > matches.length) {
         const hint = document.createElement('p');
         hint.className = 'live-favorites-search-hint';
-        hint.textContent = 'Afișate primele 8 rezultate. Rafinează căutarea pentru mai multe.';
+        hint.textContent = 'Primele 8 rezultate. Caută mai precis pentru altele.';
         results.append(hint);
     }
 }
@@ -539,39 +538,14 @@ function filterSoundEffects() {
     document.querySelectorAll('.audio-sound-card').forEach((card) => {
         const matches = card.querySelector('h4')?.textContent.toLocaleLowerCase().includes(search) || false;
         const categoryMatches = category === 'all' || card.dataset.category === category;
-        const tabMatches = audioLibraryTab === 'music'
-            ? card.dataset.category === 'music'
-            : card.dataset.category !== 'music';
         const scopeMatches = audioLibraryScope === 'all' || favoriteSoundIds.has(card.dataset.soundId);
-        const visible = matches && categoryMatches && tabMatches && scopeMatches;
+        const visible = matches && categoryMatches && scopeMatches;
         card.classList.toggle('hidden', !visible);
         if (visible) visibleCount += 1;
     });
 
     const count = document.getElementById('audio-library-count');
     if (count) count.textContent = `${visibleCount} sunete`;
-}
-
-function setAudioLibraryTab(tab) {
-    audioLibraryTab = tab === 'music' ? 'music' : 'sounds';
-    const categoryFilter = document.getElementById('audio-sound-category');
-    if (categoryFilter) {
-        categoryFilter.value = 'all';
-        categoryFilter.querySelectorAll('option').forEach((option) => {
-            if (option.value === 'all') return;
-            option.hidden = audioLibraryTab === 'music'
-                ? option.value !== 'music'
-                : option.value === 'music';
-        });
-    }
-    const soundsTab = document.getElementById('audio-sounds-tab');
-    const musicTab = document.getElementById('audio-music-tab');
-    [[soundsTab, audioLibraryTab === 'sounds'], [musicTab, audioLibraryTab === 'music']].forEach(([button, isActive]) => {
-        if (!button) return;
-        button.classList.toggle('is-active', isActive);
-        button.setAttribute('aria-pressed', String(isActive));
-    });
-    filterSoundEffects();
 }
 
 function setAudioLibraryScope(scope) {
@@ -603,17 +577,17 @@ function setLiveStudioTab(tab, options = {}) {
 }
 
 const studioTourSteps = [
-    {tab:'studio', target:'.live-studio-tabs', title:'Bine ai venit în LIVE Studio', text:'Acestea sunt meniurile tale. Îți arătăm pe rând unde configurezi LIVE-ul, alegi jocurile și controlezi sunetele.'},
-    {tab:'studio', target:'.studio-connection', title:'Conectează streamerul', text:'Introdu username-ul creatorului care este LIVE, salvează profilul și pornește conexiunea. Serverul local TikInteract trebuie să ruleze pe același calculator.'},
-    {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Aici apar jocurile favorite. Apasă imaginea pentru a deschide jocul. Caută un joc și folosește steluța pentru a-l adăuga sau elimina din Acces rapid.'},
-    {tab:'studio', target:'#studio-test-panel', title:'Testează jocul din Studio', text:'Comenzile TEST MENU sunt permanent vizibile în stânga. Testezi echipele, controlezi cursa și ajustezi vremea sau sunetele direct de aici.'},
-    {tab:'studio', target:'.studio-stats', title:'Urmărește sesiunea', text:'Scor, Gifts și Evenimente arată activitatea primită în sesiunea curentă. Datele se actualizează când conexiunea primește evenimente LIVE.'},
-    {tab:'studio', target:'.studio-controls .feed-box', title:'Evenimentele din LIVE', text:'Comentariile, like-urile și cadourile primite prin aceeași conexiune ajung automat la jocul deschis. Spectatorii aleg echipa prin chat: RED sau BLUE; Country Derby acceptă și GREEN.'},
-    {tab:'games', target:'.game-center-heading', title:'Game Center', text:'Aceasta este biblioteca de jocuri. Caută după nume, apoi apasă „Deschide în Studio” pentru a încărca jocul ales.'},
-    {tab:'games', target:'.game-center-card > .game-favorite-star', title:'Steluța adaugă la favorite', text:'Apasă ☆ pentru a adăuga jocul în Acces rapid. Apasă din nou pe ★ pentru a-l elimina. Favoritele se păstrează în browser.'},
-    {tab:'audio', target:'.soundboard-library-controls', title:'Audio Center', text:'Aici găsești biblioteca de sunete. Alege toate sunetele sau doar favoritele. Mai jos poți căuta după nume și filtra după categorie.'},
-    {tab:'audio', target:'.soundboard-monitor', title:'Control audio la îndemână', text:'Reglează volumul sau oprește toate sunetele. Această bară te urmărește când derulezi. Revii în LIVE Studio din meniul de navigare.'},
-    {tab:'studio', target:'.studio-audio', title:'Sunete rapide în timpul LIVE-ului', text:'Apasă un card pentru a reda un sunet favorit. Caută și adaugă sunete direct aici sau deschide Audio Center. Include audio-ul browserului în aplicația de streaming pentru ca publicul să le audă.'}
+    {tab:'studio', target:'.live-studio-tabs', title:'Bine ai venit în LIVE Studio', text:'De aici alegi jocurile, sunetele și conexiunea LIVE.'},
+    {tab:'studio', target:'.studio-connection', title:'Conectează streamerul', text:'Salvează username-ul și conectează LIVE-ul. Serverul local trebuie să ruleze pe acest calculator.'},
+    {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Apasă o copertă ca să pornești jocul. Steluța adaugă sau elimină favorite.'},
+    {tab:'studio', target:'#studio-test-panel', title:'Testează jocul din Studio', text:'În stânga găsești comenzile de test și setările jocului ales.'},
+    {tab:'studio', target:'.studio-stats', title:'Urmărește sesiunea', text:'Aici vezi scorul, cadourile și evenimentele din sesiunea curentă.'},
+    {tab:'studio', target:'.studio-controls .feed-box', title:'Evenimentele din LIVE', text:'Aici apar comentariile, like-urile și cadourile primite. Jocul deschis le preia după regulile lui.'},
+    {tab:'games', target:'.game-center-heading', title:'Game Center', text:'Caută un joc și apasă „Deschide în Studio”.'},
+    {tab:'games', target:'.game-center-card > .game-favorite-star', title:'Steluța adaugă la favorite', text:'☆ adaugă jocul la favorite, ★ îl elimină. Lista se păstrează în acest browser.'},
+    {tab:'audio', target:'.soundboard-library-controls', title:'Audio Center', text:'Caută sunete după nume sau categorie. Poți afișa doar favoritele.'},
+    {tab:'audio', target:'.soundboard-monitor', title:'Control audio la îndemână', text:'Reglează volumul sau oprește sunetele. Bara rămâne la îndemână când derulezi.'},
+    {tab:'studio', target:'.studio-audio', title:'Sunete rapide în timpul LIVE-ului', text:'Apasă un sunet favorit pentru redare. Include sunetul browserului în aplicația de streaming ca să-l audă și publicul.'}
 ];
 let studioTourIndex = -1;
 let studioTourTarget = null;
@@ -1021,7 +995,7 @@ async function loadHomeLeaderboard() {
 
         status.textContent = rows.length
             ? `Top ${rows.length} · Clasament all-time`
-            : 'Clasamentul se va completa când streamerii își publică profilul și pornesc un LIVE prin TikInteract.';
+            : 'Clasamentul se completează după salvarea profilurilor și conectarea LIVE-urilor în Studio.';
     } catch (error) {
         console.error('Failed to load the home page leaderboard:', error);
         status.textContent = `Topul nu s-a putut încărca: ${error.message}`;
@@ -1047,7 +1021,7 @@ async function saveTikTokLeaderboardProfile(username, displayName = username, av
     if (!window.tikInteractUser || !supabase) {
         const status = document.getElementById('tiktok-sync-status');
         if (status) {
-            status.textContent = 'Conectează-te la contul TikInteract pentru a salva profilul în clasament.';
+            status.textContent = 'Intră în cont ca să salvezi profilul în clasament.';
             status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
         }
         return false;
@@ -1116,7 +1090,7 @@ function saveTikTokProfileFromSettings() {
         if (status && !connectedUsername) {
             status.textContent = isPublic
                 ? 'Profilul și statisticile sunt publicate automat în clasament.'
-                : 'Conectează-te la TikInteract pentru publicarea profilului în clasament.';
+                : 'Intră în cont ca să publici profilul în clasament.';
             status.className = `mb-4 text-[10px] font-bold uppercase tracking-[0.14em] ${isPublic ? 'text-green-400' : 'text-amber-400'}`;
         }
         loadLeaderboard();
@@ -1150,7 +1124,7 @@ function startPlatformLiveSession(username) {
     const supabase = window.tikInteractSupabase;
     if (!window.tikInteractUser || !supabase) {
         const status = document.getElementById('tiktok-sync-status');
-        if (status) status.textContent = 'LIVE conectat, dar conectează-te la TikInteract pentru a salva statistici.';
+        if (status) status.textContent = 'LIVE conectat. Intră în cont ca să salvezi statisticile.';
         return;
     }
 

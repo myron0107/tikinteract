@@ -76,7 +76,7 @@ function render(){
     $('gift-catalog-controls').hidden=!isCatalog;
     $('gifts-tools').hidden=view==='recent';
     const status=$('gifts-status');
-    status.textContent=storageError?'Spațiul de stocare este plin. Păstrează pagina deschisă până se sincronizează cadourile.':isCatalog?(catalogPending?'Se actualizează lista de la TikTok…':catalog.error|| (catalog.updatedAt?'Preluat de la TikTok · '+date(catalog.updatedAt):'Se încarcă catalogul TikTok…')):cloudUnavailable?'Salvat pe acest dispozitiv · sincronizarea publică nu este disponibilă momentan.':'Se contorizează cadourile primite prin TikInteract de la activarea colecției.';
+    status.textContent=storageError?'Spațiul de stocare este plin. Păstrează pagina deschisă până se sincronizează cadourile.':isCatalog?(catalogPending?'Se actualizează lista de la TikTok…':catalog.error|| (catalog.updatedAt?'Preluat de la TikTok · '+date(catalog.updatedAt):'Se încarcă catalogul TikTok…')):cloudUnavailable?'Salvat pe acest dispozitiv · sincronizarea publică nu este disponibilă momentan.':'Colecția include cadourile primite de la activare.';
     root.replaceChildren();root.className=view==='recent'?'gifts-recent-list':'gifts-grid';
     let rows;
     if(view==='recent')rows=display.recent;
@@ -143,7 +143,7 @@ function requestCatalog(refresh=false){
     if($('gift-catalog-username')&&requested)$('gift-catalog-username').value='@'+requested;
     catalogPending=true;render();
     const request=++catalogRequest;
-    if(!window.requestTikTokGiftCatalog?.(requested,refresh)){catalogPending=false;catalog.error='Pornește serverul local TikInteract pentru a sincroniza catalogul.';render();}
+    if(!window.requestTikTokGiftCatalog?.(requested,refresh)){catalogPending=false;catalog.error='Pornește serverul local ca să actualizezi catalogul.';render();}
     setTimeout(()=>{if(catalogPending&&request===catalogRequest){catalogPending=false;catalog.error='TikTok nu a răspuns încă. Catalogul salvat rămâne disponibil.';render();}},20000);
 }
 function setProfile(name){
@@ -166,7 +166,7 @@ function renderDialog(){
     dialog.querySelectorAll('[data-gift-dialog-view]').forEach(button=>button.setAttribute('aria-selected',String(button.dataset.giftDialogView===dialogView)));
     content.replaceChildren();content.className=dialogView==='recent'?'gifts-recent-list':'gifts-grid';
     const rows=dialogView==='recent'?dialogData.recent:filterGifts(dialogData.collection,{sort:dialogView==='highlights'?'value':'count'}).slice(0,60);
-    if(!rows.length)showEmpty(content,'Niciun cadou înregistrat încă','Colecția se completează cu cadourile noi primite prin TikInteract.');
+    if(!rows.length)showEmpty(content,'Niciun cadou înregistrat încă','Cadourile noi primite în Studio apar aici.');
     rows.forEach(gift=>content.append(dialogView==='recent'?recentRow(gift):card(gift)));
 }
 async function openCollection(profile){
@@ -184,7 +184,7 @@ async function openCollection(profile){
     try{const client=window.tikInteractSupabase;if(!client)throw new Error('unavailable');
         const{data,error}=await client.rpc('get_streamer_gift_collection',{p_tiktok_username:name});if(version!==dialogVersion)return;
         if(error)throw error;if(!data){status.textContent='Nu există o colecție publică disponibilă pentru acest profil.';return;}
-        dialogData=data;status.textContent='@'+name+' · Cadouri primite prin TikInteract';renderDialog();
+        dialogData=data;status.textContent='@'+name+' · Cadouri primite în Studio';renderDialog();
     }catch{if(version!==dialogVersion)return;
         const local=ledgerFor(name).summary;
         if(local.count){dialogData=local;status.textContent='@'+name+' · Colecție salvată pe acest dispozitiv';renderDialog();}

@@ -342,7 +342,7 @@ body.embedded .creator-only{display:none!important}
 <link rel="stylesheet" href="theme.css?v=2">
 </head>
 <body>
-  <main id="stage" aria-label="Nova &amp; Vex">
+  <main id="stage" tabindex="0" aria-label="Nova &amp; Vex" aria-keyshortcuts="ArrowLeft ArrowRight A D">
     <canvas id="scene" aria-label="Nova &amp; Vex game world"></canvas>
     <canvas id="hud-fx" aria-hidden="true"></canvas>
     <header id="hud"><div class="hud-heading"><div class="game-title"><span class="title-nova">NOVA</span> &amp; <span class="title-vex">VEX</span><small>REACH THE NEXT LEVEL</small></div><div class="brand" aria-label="TikInteract"><img src="../../assets/tikinteract-icon-v2.png" alt="" width="24" height="24"><span class="brand-name">TIK<span>INTERACT</span></span></div></div>
@@ -356,9 +356,6 @@ body.embedded .creator-only{display:none!important}
     <div id="notice" hidden role="status"></div>
     <div id="queue" hidden></div>
     <div id="biome"></div><div id="quick-test" class="creator-only" aria-label="Comenzi rapide de test"><span>TEST</span><button type="button" data-quick-action="cloud" title="Testează un cadou de urcare">Jetpack +150</button><button type="button" data-quick-action="meteor" title="Testează împingerea lui Vex">Vex −150</button><button type="button" data-quick-action="winRemove" title="Vex o trage de păr pe Nova">Vex</button></div>
-    <nav id="dock" aria-label="Game controls">
-      <button id="menu-toggle" class="dock-button" aria-label="Meniu" aria-expanded="false" aria-controls="game-menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.5 3h5l.7 2.6 2.2 1.3L20 6.2l2.5 4.3-1.9 1.9v2.5l1.9 1.9-2.5 4.3-2.6-.7-2.2 1.3-.7 2.6h-5l-.7-2.6-2.2-1.3-2.6.7L1.5 17l1.9-1.9v-2.5L1.5 10.7 4 6.4l2.6.7 2.2-1.3z" transform="translate(1 0) scale(.91)"/><circle cx="12" cy="12" r="3.6"/></svg></button>
-    </nav>
     <aside id="game-menu" hidden aria-label="Meniu Nova &amp; Vex">
       <div class="menu-title"><div><div class="menu-brand"><img src="../../assets/tikinteract-icon-v2.png" alt="" width="16" height="16"><span class="brand-name">TIK<span>INTERACT</span></span></div><strong>Nova &amp; Vex</strong><small data-copy="settings"></small></div><button id="menu-close" type="button" aria-label="Închide meniul"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div>
       <div class="menu-actions">
@@ -402,6 +399,6 @@ body.embedded .creator-only{display:none!important}
   <script src="../../assets/game-live-sdk.js?v=1"></script>
   <script src="art/manifest.js"></script>
 
-<script type="module">import "./src/main.js?v=2";</script>
+<script type="module">import "./src/main.js?v=4";</script>
 </body>
 </html>

@@ -1,7 +1,9 @@
 import { WIDTH, clamp, lerp } from './config.js';
 
 const PICKUP_GIFTS = ['balloon', 'magnet', 'cloud', 'rocket'];
-const PICKUP_CHANCE = .14;
+// Small occasional bonuses; the LIVE audience supplies the main gift actions.
+const PICKUP_CHANCE = .015;
+const PICKUP_CLEARANCE = 16;
 
 function seedHash(text) {
   let h = 2166136261;
@@ -59,7 +61,9 @@ export class World {
     const lane = this.course(chunk).x[slot];
     const x = level === 0 || type === 'finish' ? WIDTH / 2 : clamp((mirrored ? WIDTH - lane : lane) + (hash(level, this.seed ^ 341) - .5) * 22, w / 2 + 12, WIDTH - w / 2 - 12);
     const giftRoll = hash(level, this.seed ^ 6721);
-    const gift = type !== 'finish' && type !== 'crumble' && type !== 'vanish' && giftRoll < PICKUP_CHANCE
+    const spaced = giftRoll < PICKUP_CHANCE && Math.abs(level) >= 24 && Array.from({length:PICKUP_CLEARANCE*2+1},(_,i)=>level+i-PICKUP_CLEARANCE)
+      .every(other=>other===level || Math.abs(other)<24 || hash(other,this.seed ^ 6721)>=giftRoll);
+    const gift = type !== 'finish' && type !== 'crumble' && type !== 'vanish' && spaced
       ? PICKUP_GIFTS[Math.floor(hash(level, this.seed ^ 1987) * PICKUP_GIFTS.length)]
       : null;
     const p = Object.freeze({ id: 'p' + level, level, x, y: this.height(level), w, type, gift, phase: hash(level, this.seed ^ 425) * Math.PI * 2, movingRange: 25 + hash(level, this.seed ^ 798) * 21 });

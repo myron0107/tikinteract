@@ -40,3 +40,21 @@ test('Nova collects a platform gift once and starts its positive effect', () => 
     assert.equal(simulation.world.collectGift(platform), null);
     assert(events.some(event => event.kind === 'effectStart' && event.action === platform.gift));
 });
+
+test('route bonuses stay rare and separated, including below the starting height', () => {
+    let gifts = 0;
+    for (const seed of ['NeonAscent-1', 'pickup-seed', 'live-community', 'rare-bonuses']) {
+        const world = new World(seed, 10000);
+        let previous = -Infinity;
+        for (let level = -2000; level <= 2000; level++) {
+            const platform = world.platform(level);
+            if (Math.abs(level) < 24) assert.equal(platform.gift, null, 'No free gift at the starting platforms');
+            if (!platform.gift) continue;
+            assert(level - previous > 16, 'Route gifts must not cluster');
+            previous = level;
+            gifts++;
+        }
+    }
+    assert(gifts > 15, 'Occasional route bonuses are still available');
+    assert(gifts / (4 * 4001) < .015, 'LIVE actions must dominate over free route gifts');
+});

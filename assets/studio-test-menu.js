@@ -307,7 +307,7 @@ function initializeActionGameTestMenu(frame,doc){
 }
 
 async function buildActionGameGiftBindings(root,bridge){
-    const note=document.createElement('p');note.className='studio-test-note';note.textContent='Alege un cadou pentru fiecare acțiune. Cantitatea repetă efectul. Alegerile se salvează în acest browser. Cadourile nealese nu modifică jocul.';root.append(note);
+    const note=document.createElement('p');note.className='studio-test-note';note.textContent='Asociază cadouri cu acțiuni. Cantitatea repetă efectul; cadourile neasociate sunt ignorate. Setările se păstrează în browser.';root.append(note);
     const search=document.createElement('input');search.type='search';search.className='studio-test-input';search.placeholder='Caută un cadou sau ID';search.setAttribute('aria-label','Caută în cadourile TikTok');root.append(search);
     const refresh=document.createElement('button');refresh.type='button';refresh.className='studio-test-action';refresh.textContent='Actualizează lista';root.append(refresh);
     const list=document.createElement('div');list.className='studio-gift-bindings';root.append(list);

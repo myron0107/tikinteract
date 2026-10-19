@@ -1,14 +1,3 @@
-import {readFile,writeFile} from 'node:fs/promises';
-const root='GAME/NOVA-VEX';
-const template=await readFile('scripts/game-presentation.template.html','utf8');
-const modes=[['nova-vex-cover.webp','Coperta oficială'],['nova-vex-city.webp','Neon District'],['nova-vex-vex.webp','Cursa lui Vex']];
-const values={title:'NOVA &amp; VEX',game:'nova-vex',description:'NOVA & VEX — joc gratuit de parkour neon pentru TikTok LIVE. Cadouri configurabile, opt zone de înălțime și două personaje originale.',
-  tag:'GRATUIT / NEON PARKOUR / TIKTOK LIVE',summary:'Urcă prin orașul neon alături de Nova. Comunitatea îți deschide drumul cu trambuline, jetpack și portaluri — sau îl trimite pe Vex să te încurce.',
-  firstImage:'../../assets/game-gallery/nova-vex-cover.webp',firstLabel:'Coperta oficială',count:modes.length,
-  thumbnails:modes.map(([file,label],i)=>`<button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/${file}" data-gallery-label="NOVA &amp; VEX — ${label}" data-gallery-mode="${label}" aria-label="Vezi ${label}" aria-pressed="${i===0}"><img src="../../assets/game-gallery/${file}" alt="NOVA &amp; VEX — ${label}" width="360" height="640" loading="lazy" decoding="async"><span>${label}</span></button>`).join('\n'),
-  details:`<section class="game-page-info-card"><h2>Nova urcă. Vex schimbă planul.</h2><p>Un traseu vertical cu opt peisaje neon, platforme suspendate și două personaje: Nova și rivalul ei, Vex. Alege culoarea Novei și peisajul din Studio.</p></section>
-<section class="game-page-info-card"><h2>Comunitatea decide înălțimea</h2><ul><li>Trambulina: <strong>+5 m</strong>. Cârligul de salvare: <strong>+50 m</strong>.</li><li>Jetpack: <strong>+150 m</strong>. Portalul: <strong>+300 m</strong>.</li><li>Farsa lui Vex: <strong>−5 m</strong>. Boxul lui Vex: <strong>−50 m</strong>.</li><li>Împingerea lui Vex: <strong>−150 m</strong>. Cursa lui Vex: <strong>−300 m</strong>.</li><li>Coroana bonus adaugă o coroană; Atacul lui Vex elimină una.</li></ul></section>
-<section class="game-page-info-card"><h2>Cadourile tale, regulile tale</h2><p>În LIVE Studio → TEST MENU → Cadouri LIVE alegi ce cadou TikTok activează fiecare acțiune. Un cadou se asociază unei singure acțiuni, iar cantitatea repetă efectul. Alegerile se păstrează în acest browser.</p><p>Cadourile neasociate, comentariile și like-urile nu declanșează acțiuni implicite.</p></section>
-<section class="game-page-info-card"><h2>Pregătit pentru transmisiunea ta</h2><p>Format vertical 9:16, muzică arcade, efecte sonore sincronizate și comenzi de test în Studio. Poți activa urcarea automată sau poți controla Nova cu A / D și săgețile. Pe telefon, atinge partea stângă sau dreaptă a jocului.</p><p>Ajungi la înălțimea aleasă și păstrezi poziția până se termină numărătoarea inversă pentru a câștiga o coroană.</p></section>`};
-await writeFile(root+'/index.html',template.replace(/\{\{(\w+)\}\}/g,(_,key)=>values[key]));
-console.log('Built NOVA & VEX free game presentation with cover and actual gameplay gallery.');
+// Rebuild from the shared media manifest while preserving the current editorial details.
+process.argv[2] = 'nova-vex';
+await import('./build-game-presentations.mjs');

@@ -18,16 +18,23 @@ let recovery = null, recoveryScope = null, recovering = null, initSequence = 0;
 let assetsReady;
 const assetsGate = new Promise(resolve => { assetsReady = resolve; });
 const pending = [], cards = [], keys = new Set(), touches = new Set(), pointers = { left: new Set(), right: new Set() };
+const externalInput = { left: false, right: false };
 const audio = new GameAudio();
 const sim = new Simulation({}, event);
 if (embedded) audio.route({ enabled: false, volume: 0 });
 
 function releaseInput() {
-  keys.clear(); touches.clear(); pointers.left.clear(); pointers.right.clear(); sim.releaseInput();
+  keys.clear(); touches.clear(); pointers.left.clear(); pointers.right.clear(); externalInput.left = externalInput.right = false; sim.releaseInput();
 }
 function input() {
-  sim.input.left = keys.has('KeyA') || keys.has('ArrowLeft') || pointers.left.size > 0;
-  sim.input.right = keys.has('KeyD') || keys.has('ArrowRight') || pointers.right.size > 0;
+  sim.input.left = keys.has('KeyA') || keys.has('ArrowLeft') || pointers.left.size > 0 || externalInput.left;
+  sim.input.right = keys.has('KeyD') || keys.has('ArrowRight') || pointers.right.size > 0 || externalInput.right;
+}
+function setStudioInput(value) {
+  if (!value || typeof value.left !== 'boolean' || typeof value.right !== 'boolean') return false;
+  externalInput.left = value.left; externalInput.right = value.right; input();
+  if (value.left || value.right) audio.unlock();
+  return true;
 }
 function label(job) {
   const key = job.action || job.kind;
@@ -94,7 +101,7 @@ function localize(value = language) {
   document.documentElement.lang = language; $('language').value = language;
   if (renderer) renderer.language = language;
   for (const el of document.querySelectorAll('[data-copy]')) el.textContent = text(el.dataset.copy, language);
-  for (const [id, key] of [['menu-toggle', 'settings'], ['menu-close', 'closeMenu'], ['game-menu', 'gameMenu'], ['dock', 'gameControls'], ['scene', 'gameWorld'], ['language', 'language'], ['sound', 'audio'], ['test-toggle', 'test'], ['setup-toggle', 'settings']]) $(id).setAttribute('aria-label', text(key, language));
+  for (const [id, key] of [['menu-close', 'closeMenu'], ['game-menu', 'gameMenu'], ['scene', 'gameWorld'], ['language', 'language'], ['sound', 'audio'], ['test-toggle', 'test'], ['setup-toggle', 'settings']]) $(id).setAttribute('aria-label', text(key, language));
   $('victory-award').textContent = '+1 ' + winLabel(1, language).toUpperCase();
   for (const c of cards) refreshCard(c);
   for (const button of document.querySelectorAll('[data-color]')) button.setAttribute('aria-label', text(button.dataset.color, language));
@@ -221,11 +228,13 @@ function frame(now) {
 }
 
 const moveKeys = ['KeyA', 'KeyD', 'ArrowLeft', 'ArrowRight'];
+const moveCode = e => moveKeys.includes(e.code) ? e.code : ({a:'KeyA',d:'KeyD',ArrowLeft:'ArrowLeft',ArrowRight:'ArrowRight'}[e.key?.length === 1 ? e.key.toLowerCase() : e.key]);
 addEventListener('keydown', e => {
-  if (!moveKeys.includes(e.code) || e.target.closest?.('input,textarea,select')) return;
-  e.preventDefault(); keys.add(e.code); input(); audio.unlock();
+  const code = moveCode(e);
+  if (!code || !$('game-menu').hidden || e.ctrlKey || e.metaKey || e.altKey || e.isComposing || e.target.isContentEditable || e.target.closest?.('input,textarea,select,#game-menu')) return;
+  e.preventDefault(); keys.add(code); input(); audio.unlock();
 });
-addEventListener('keyup', e => { if (moveKeys.includes(e.code)) { keys.delete(e.code); input(); } });
+addEventListener('keyup', e => { const code = moveCode(e); if (code) { keys.delete(code); input(); } });
 function touchDirection(e) {
   const rect = $('stage').getBoundingClientRect(), position = (e.clientX - rect.left) / rect.width;
   pointers.left.delete(e.pointerId); pointers.right.delete(e.pointerId);
@@ -235,7 +244,7 @@ function touchDirection(e) {
 }
 $('stage').addEventListener('pointerdown', e => {
   if (e.button !== 0 || e.target.closest('button,input,select,textarea,#game-menu')) return;
-  closeMenu(); e.preventDefault(); $('stage').setPointerCapture(e.pointerId); touches.add(e.pointerId); touchDirection(e);
+  closeMenu(); $('stage').focus({preventScroll:true}); e.preventDefault(); $('stage').setPointerCapture(e.pointerId); touches.add(e.pointerId); touchDirection(e);
 });
 $('stage').addEventListener('pointermove', e => { if (touches.has(e.pointerId)) touchDirection(e); });
 for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) $('stage').addEventListener(type, e => { touches.delete(e.pointerId); pointers.left.delete(e.pointerId); pointers.right.delete(e.pointerId); input(); });
@@ -247,7 +256,11 @@ document.addEventListener('visibilitychange', () => {
 document.addEventListener('pointerdown', () => audio.unlock(), { capture: true, passive: true });
 $('sound').onclick = () => { audio.muted = !audio.muted; $('sound').setAttribute('aria-pressed', String(audio.muted)); audio.update(sim); };
 $('pause').onclick = () => sim.control({ action: sim.paused ? 'session.resume' : 'session.pause' });
-function closeMenu() { $('game-menu').hidden = true; $('menu-toggle').setAttribute('aria-expanded', 'false'); }
+function closeMenu() {
+  const wasOpen = !$('game-menu').hidden;
+  $('game-menu').hidden = true;
+  if (wasOpen) $('stage').focus({preventScroll:true});
+}
 const sliders = [['fx-volume', 'soundVolume'], ['music-volume', 'musicVolume'], ['detail-input', 'effectsIntensity']];
 function syncSettings() {
   const value = sim.pendingSettings || sim.settings;
@@ -263,7 +276,6 @@ function syncSettings() {
     if (amount) amount.textContent = spec.setting ? (spec.sign > 0 ? '+' : '−') + distance(value[spec.setting], language) + ' m' : kind === 'winAdd' ? '+1' : kind === 'winRemove' ? '−1' : '↻';
   }
 }
-$('menu-toggle').onclick = () => { releaseInput(); const open = $('game-menu').hidden; if (open) syncSettings(); $('game-menu').hidden = !open; $('menu-toggle').setAttribute('aria-expanded', String(open)); };
 $('menu-close').onclick = closeMenu;
 addEventListener('keydown', e => { if (e.code === 'Escape') closeMenu(); });
 function panel(name) {
@@ -327,7 +339,7 @@ async function boot() {
     for (const canvas of document.querySelectorAll('[data-sprite]')) renderer.icon(canvas, canvas.dataset.sprite);
     for (const c of cards) renderer.icon(c.icon, ACTIONS[c.job.action || c.job.kind].sprite);
     drainPending(); $('loading').hidden = true; draw(); sdk?.ready({ gameId: 'skyshift', commandAck: true });
-    connectStudioGame({action:payload=>sim.action(payload),control:payload=>sim.control(payload),
+    connectStudioGame({action:payload=>sim.action(payload),control:payload=>sim.control(payload),setInput:setStudioInput,
       getSettings:()=>({...sim.settings}),getState:()=>sim.stats()});
     frameId = requestAnimationFrame(frame);
     if (qa) window.__neonAscent = {

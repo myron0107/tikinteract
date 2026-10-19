@@ -9,8 +9,8 @@
   const json=async name=>{const response=await fetch(base+name);if(!response.ok)throw Error(name);return response.json();};
   async function load(){
     if(loading)return loading;
-    loading=Promise.all([image('district.webp'),image('atlas.webp'),image('rival.webp'),image('board.webp'),image('interactions.webp'),image('physical-gifts.webp'),json('metadata.json'),json('rig.json'),json('interactions-metadata.json'),json('physical-gifts-metadata.json')]).then(([background,atlas,rival,board,pairs,props,meta,rig,interactions,gifts])=>{
-      art={background,atlas,rival,board,pairs,props,meta:meta.sprites,rig,pair:interactions.sprites,gifts:gifts.sprites};root.dataset.ready='true';draw();start();
+    loading=Promise.all([image('district.webp'),image('atlas.webp'),image('rival.webp'),image('board.webp'),image('interactions.webp'),image('physical-gifts.webp'),json('metadata.json'),json('rig.json'),json('interactions-metadata.json'),json('physical-gifts-metadata.json'),image('reactions.webp'),json('reactions-metadata.json'),import('../GAME/NOVA-VEX/src/wins.js')]).then(([background,atlas,rival,board,pairs,props,meta,rig,interactions,gifts,reactions,reactionData,shows])=>{
+      art={background,atlas,rival,board,pairs,props,reactions,meta:{...meta.sprites,...reactionData.sprites},rig,pair:interactions.sprites,gifts:gifts.sprites,showFrame:shows.showFrame,show:new shows.WinShow({shipBounds:rig.board,props:{board,rival},rivalPoses:rig.poses})};root.dataset.ready='true';draw();start();
     }).catch(()=>{root.dataset.ready='false';button.disabled=true;});return loading;
   }
   function sprite(im,s,x,feet,h,angle=0){ctx.save();ctx.translate(x,feet-h/2);ctx.rotate(angle);ctx.drawImage(im,s.x,s.y,s.w,s.h,-h*s.w/s.h/2,-h/2,h*s.w/s.h,h);ctx.restore();}
@@ -18,9 +18,9 @@
   function pair(name,x,y){const s=art.pair[name],scale=140/(s.h*(s.vexFeet.v-s.vexHead));ctx.drawImage(art.pairs,s.x,s.y,s.w,s.h,x-s.vexFeet.u*s.w*scale,y-s.vexFeet.v*s.h*scale,s.w*scale,s.h*scale);}
   function draw(){
     if(!art)return;
-    const step=Math.floor(clock/3.5)%4,p=clock%3.5/3.5,t=clock;
-    const scenes=[['Nova își începe urcarea','TRAMBULINĂ · +5 m'],['Un cadou îi dă avânt','JETPACK · +150 m'],['Vex o prinde pe placa lui','CURSA LUI VEX · −300 m'],['Fiecare cadou schimbă povestea','TU ALEGI ACȚIUNILE ÎN STUDIO']];
-    if(scene!==step){scene=step;root.querySelector('[data-nova-scene]').textContent=scenes[step][0];root.querySelector('[data-nova-effect]').textContent=scenes[step][1];}
+    const cycle=clock%19,step=cycle<14?Math.floor(cycle/3.5):4,p=step===4?(cycle-14)/5:cycle%3.5/3.5,t=clock;
+    if(scene!==step){scene=step;canvas.dataset.scene=String(step);}
+    canvas.dataset.phase='';
     const width=600,height=720,im=art.background,scale=width/im.width,bgHeight=im.height*scale;
     const shift=(Math.sin(t*.14)*.5+.5)*(bgHeight-height);ctx.drawImage(im,0,-shift,width,bgHeight);
     ctx.fillStyle='#07132a33';ctx.fillRect(0,0,width,height);
@@ -44,6 +44,17 @@
       const vx=335+ease(p/.55)*460,feet=520-p*60;board(vx,feet+7,160);sprite(art.rival,art.rig.poses.idle,vx,feet,140);
       x=250-Math.sin(p*Math.PI)*58;y=520-Math.sin(p*Math.PI)*95;
       sprite(art.atlas,art.meta[p>.85?'idle':'fall'],x,y,140,-Math.sin(p*Math.PI)*.35);
+    }
+    if(step===4){
+      // Reuse the game's choreography so the hand, hair and reaction stay aligned.
+      const job={kind:'theft',clock:0,duration:5},sim={clock:p*5,settings:{effectsIntensity:.85}},hero={x:210,y:310},f=art.showFrame(job,sim.clock);
+      canvas.dataset.phase=f.phase;
+      ctx.save();ctx.translate(-96,0);ctx.scale(1.65,1.65);
+      sprite(art.atlas,art.meta.grass,hero.x,hero.y+27,40);
+      const source=art.meta[f.pose];
+      sprite(source.sheet==='reaction'?art.reactions:art.atlas,source,hero.x+f.offsetX,hero.y+f.recoil,88*(1-f.squash),f.tilt);
+      art.show.theft(ctx,sim,job,hero,hero,f);
+      ctx.restore();
     }
     canvas.dataset.frame=String(++frames);
   }

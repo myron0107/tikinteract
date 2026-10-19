@@ -12,8 +12,8 @@
     <link rel="preload" href="../../assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../assets/fonts/font-faces.css?v=1">
     <link rel="stylesheet" href="../../assets/typography.css?v=1">
-    <link rel="stylesheet" href="../../assets/game-gallery.css?v=2">
-    <script src="../../assets/game-gallery.js?v=2" defer></script>
+    <link rel="stylesheet" href="../../assets/game-gallery.css?v=3">
+    <script src="../../assets/game-gallery.js?v=4" defer></script>
 </head>
 <body>
     <main class="game-page-shell game-presentation">
@@ -25,30 +25,50 @@
             <header class="game-detail-header">
                 <span class="game-page-tag">GRATUIT / DAY RIDE / 2 ECHIPE</span>
                 <h1 class="game-page-title">Moto Interact</h1>
-                <p class="game-page-summary">Bulevardul de zi devine circuitul comunității tale. Două echipe, motociclete sport și nitro care ridică roata din față.</p>
+                <p class="game-page-summary">Curse moto pe timp de zi, două echipe și nitro pe o roată.</p>
             </header>
             <div class="game-detail-layout">
                 <section class="game-gallery" id="game-gallery" aria-label="Galerie Moto Interact">
-                    <button type="button" class="game-gallery-featured" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
-                        <img data-gallery-featured src="../../assets/game-gallery/moto-interact-day.webp" alt="Moto Interact — Day Ride" width="1080" height="1920" fetchpriority="high" decoding="async">
-                        <span class="game-gallery-expand">Extinde ↗</span>
-                    </button>
-                    <div class="game-gallery-caption"><span data-gallery-current>Day Ride</span><span data-gallery-position>1 / 1</span></div>
-                    <div class="game-gallery-grid" role="group" aria-label="Alege imaginea din joc">
-                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/moto-interact-day.webp" data-gallery-label="Moto Interact — Day Ride" data-gallery-mode="Day Ride" aria-label="Vezi Moto Interact — Day Ride" aria-pressed="true">
-                            <img src="../../assets/game-gallery/moto-interact-day-thumb.webp" alt="Moto Interact — Day Ride" width="360" height="640" loading="lazy" decoding="async">
-                            <span>Day Ride</span>
+                    <div class="game-gallery-featured">
+                        <button type="button" class="game-gallery-image" data-gallery-open aria-label="Mărește imaginea selectată" aria-haspopup="dialog" aria-controls="game-gallery-dialog">
+                            <img data-gallery-featured src="../../assets/game-gallery/moto-interact-track-hd.webp" alt="Moto Interact — Bulevardul de zi" width="1080" height="1920" fetchpriority="high" decoding="async">
+                            <span class="game-gallery-expand">Mărește imaginea ↗</span>
+                        </button>
+                        <video data-gallery-video controls playsinline muted loop preload="none" hidden aria-label="Clip din Moto Interact"></video>
+                    </div>
+                    <p class="game-gallery-status" data-gallery-status role="status" hidden></p>
+                    <div class="game-gallery-caption"><span data-gallery-current>Bulevardul de zi</span><span data-gallery-position>1 / 5</span></div>
+                    <div class="game-gallery-grid" role="group" aria-label="Imagini și clipuri din joc">
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/moto-interact-track-hd.webp" data-gallery-shape="landscape" data-gallery-label="Moto Interact — Bulevardul de zi" data-gallery-mode="Bulevardul de zi" aria-label="Vezi Moto Interact — Bulevardul de zi" aria-pressed="true">
+                            <img src="../../assets/game-gallery/moto-interact-track-hd-thumb.webp" alt="Moto Interact — Bulevardul de zi" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Bulevardul de zi</span>
+                        </button>
+                        <button class="game-gallery-item is-video" type="button" data-gallery-image="../../assets/game-gallery/moto-interact-nitro-red-hd.webp" data-gallery-clip="../../assets/game-gallery/moto-interact-preview.mp4" data-gallery-shape="landscape" data-gallery-label="Moto Interact — În mișcare" data-gallery-mode="În mișcare" aria-label="Redă Moto Interact — În mișcare" aria-pressed="false">
+                            <img src="../../assets/game-gallery/moto-interact-nitro-red-hd-thumb.webp" alt="Moto Interact — În mișcare" width="360" height="640" loading="lazy" decoding="async">
+                            <span>În mișcare</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/moto-interact-nitro-red-hd.webp" data-gallery-shape="landscape" data-gallery-label="Moto Interact — RED pe o roată" data-gallery-mode="RED pe o roată" aria-label="Vezi Moto Interact — RED pe o roată" aria-pressed="false">
+                            <img src="../../assets/game-gallery/moto-interact-nitro-red-hd-thumb.webp" alt="Moto Interact — RED pe o roată" width="360" height="640" loading="lazy" decoding="async">
+                            <span>RED pe o roată</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/moto-interact-nitro-blue-hd.webp" data-gallery-shape="landscape" data-gallery-label="Moto Interact — BLUE pe o roată" data-gallery-mode="BLUE pe o roată" aria-label="Vezi Moto Interact — BLUE pe o roată" aria-pressed="false">
+                            <img src="../../assets/game-gallery/moto-interact-nitro-blue-hd-thumb.webp" alt="Moto Interact — BLUE pe o roată" width="360" height="640" loading="lazy" decoding="async">
+                            <span>BLUE pe o roată</span>
+                        </button>
+                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/moto-interact-overview-hd.webp" data-gallery-shape="portrait" data-gallery-label="Moto Interact — Jocul complet" data-gallery-mode="Jocul complet" aria-label="Vezi Moto Interact — Jocul complet" aria-pressed="false">
+                            <img src="../../assets/game-gallery/moto-interact-overview-hd-thumb.webp" alt="Moto Interact — Jocul complet" width="360" height="640" loading="lazy" decoding="async">
+                            <span>Jocul complet</span>
                         </button>
                     </div>
                 </section>
                 <aside class="game-detail-info" aria-label="Detalii Moto Interact">
-<section class="game-page-info-card"><h2>Bulevardul devine circuit.</h2><p>Două motociclete sport RED și BLUE, o pistă de 4 km și un bulevard luminos. Peisaj și motociclete generate în același stil, roți animate și efecte de nitro.</p></section>
-<section class="game-page-info-card"><h2>Cum intră comunitatea în cursă</h2><ul><li>Scrie <strong>RED</strong> sau <strong>BLUE</strong> în chat pentru a alege echipa la fiecare rundă.</li><li>Viteză de bază 50 km/h. Like-urile cresc viteza până la 100, cadourile până la 150, iar nitro până la 200.</li><li>Primele 100 de puncte de cadouri activează nitro. Fiecare punct contribuie cu 0,03 secunde.</li><li>Prima motocicletă la 4 km câștigă. La 120 de secunde rezultatul combină 70% distanță și 30% puncte.</li><li>Top 5 pe echipe, cu totaluri separate de cadouri și like-uri. Următoarea cursă începe după 15 secunde.</li></ul></section>
-<section class="game-page-info-card"><h2>Nitro pe o roată</h2><p>Nitro ridică motocicleta pe roata din spate. Roata din față coboară progresiv când viteza scade; like-urile și cadourile sub pragul de nitro nu ridică motocicleta.</p></section>
-<section class="game-page-info-card"><h2>Pregătit pentru LIVE Studio</h2><p>Format vertical 9:16. Testează echipele, pauza, rundele automate, simularea și sunetul din TEST MENU.</p><p><a href="Moto-Interact.html">Deschide jocul separat / test local ↗</a></p></section>
+<section class="game-page-info-card"><h2>Bulevardul devine circuit.</h2><p>Motociclete RED și BLUE pe un bulevard de 4 km, în plină zi.</p></section>
+<section class="game-page-info-card"><h2>Cum se joacă</h2><ul><li>Alege echipa la fiecare rundă: <strong>RED</strong> sau <strong>BLUE</strong> în chat.</li><li>Pornești cu 50 km/h. Like-uri: până la 100; cadouri: 150; nitro: 200.</li><li>Nitro pornește la 100 de puncte de cadouri. Fiecare punct adaugă 0,03 secunde.</li><li>Prima motocicletă la 4 km câștigă. La 120 de secunde rezultatul combină 70% distanță și 30% puncte.</li><li>Top 5 pe echipe, cu like-uri și cadouri separate. Rundă nouă după 15 secunde.</li></ul></section>
+<section class="game-page-info-card"><h2>Nitro pe o roată</h2><p>Cu nitro, motocicleta se ridică pe o roată și coboară treptat când încetinește. Sub pragul de nitro, rămâne pe asfalt.</p></section>
+<section class="game-page-info-card"><h2>Pregătit pentru LIVE Studio</h2><p>Format 9:16. Testează echipele, pauza, rundele automate, simularea și sunetul din Test Menu.</p><p><a href="Moto-Interact.html">Deschide separat ↗</a></p></section>
                     <div class="game-detail-launch">
                         <a class="game-page-cta" href="../../live-studio.html?game=moto-interact">Deschide în LIVE Studio <span aria-hidden="true">→</span></a>
-                        <p>Alege jocul și conectează transmisiunea ta din LIVE Studio.</p>
+                        <p>Deschide jocul în Studio și conectează LIVE-ul.</p>
                     </div>
                 </aside>
             </div>
@@ -58,9 +78,10 @@
             <div class="game-gallery-stage">
                 <button type="button" data-gallery-previous aria-label="Imaginea anterioară">‹</button>
                 <img data-gallery-full alt="" draggable="false">
+                <video data-gallery-full-video controls playsinline muted loop preload="none" hidden aria-label="Clip din Moto Interact"></video>
                 <button type="button" data-gallery-next aria-label="Imaginea următoare">›</button>
             </div>
-            <p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p>
+            <div class="game-gallery-dialog-footer"><p class="game-gallery-counter" data-gallery-counter aria-live="polite"></p><a data-gallery-original target="_blank" rel="noopener">Deschide originalul ↗</a></div>
         </dialog>
     </main>
 </body>

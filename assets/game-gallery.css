@@ -73,3 +73,30 @@
     .game-detail-layout .game-gallery-item > span { min-height: 37px; padding: 6px 2px; font-size: .52rem; line-height: 1.35; }
     .game-detail-info { padding: 22px; }
 }
+
+/* HD gameplay and clips share one stage; thumbnails keep their full frame. */
+.game-gallery-featured { cursor: auto; }
+.game-gallery[data-media-shape="landscape"] .game-gallery-featured { height: auto; min-height: 0; aspect-ratio: 4 / 3; }
+.game-gallery[data-media-shape="square"] .game-gallery-featured { height: auto; min-height: 0; aspect-ratio: 1; }
+.game-gallery-image { position: relative; display: block; width: 100%; height: 100%; min-height: 0; padding: 0; border: 0; background: transparent; color: inherit; cursor: zoom-in; }
+.game-gallery-image > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.game-gallery-image:focus-visible { outline: 2px solid #ff8892; outline-offset: 3px; }
+.game-gallery-featured > video { display: block; width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.game-gallery-featured > [hidden], .game-gallery-stage > [hidden] { display: none; }
+.game-detail-layout .game-gallery-grid { grid-auto-columns: 112px; gap: 10px; overflow-x: auto; overscroll-behavior-inline: contain; scroll-snap-type: x proximity; padding: 2px 2px 12px; scrollbar-width: thin; scrollbar-color: #873449 #17171b; }
+.game-detail-layout .game-gallery-item { position: relative; scroll-snap-align: start; }
+.game-detail-layout .game-gallery-item img { height: 112px; object-fit: contain; object-position: center; }
+.game-detail-layout .game-gallery-item > span { font-size: .62rem; min-height: 36px; }
+.game-gallery-item.is-video::after { content: '▶'; position: absolute; top: 40px; left: 39px; display: grid; place-items: center; width: 32px; height: 32px; padding-left: 2px; border: 1px solid #ffffff80; border-radius: 50%; background: #771e36e8; color: #fff; font-size: 13px; }
+.game-gallery-dialog { width: min(100% - 24px, 1100px); }
+.game-gallery-stage > video { display: block; width: 100%; height: min(74dvh, 840px); min-width: 0; object-fit: contain; }
+.game-gallery-dialog-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-right: 16px; }
+.game-gallery-dialog-footer > a { color: #ffb1c2; font-size: .75rem; text-decoration: none; }
+.game-gallery-dialog-footer > a:hover { text-decoration: underline; }
+.game-gallery-status { color: #ffb1c2; font-size: .75rem; line-height: 1.6; }
+@media (max-width: 700px) {
+    .game-detail-layout .game-gallery-grid { grid-auto-columns: 100px; }
+    .game-detail-layout .game-gallery-item img { height: 100px; }
+    .game-gallery-item.is-video::after { top: 34px; left: 33px; }
+    .game-gallery-stage > video { height: 75dvh; }
+}

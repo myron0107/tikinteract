@@ -141,43 +141,104 @@
   },
   {
     "game": "neon-race-2",
-    "mode": "night",
-    "label": "Night Run",
-    "file": "neon-race-2-night.webp",
-    "thumbnail": "neon-race-2-night-thumb.webp",
-    "time": "night",
-    "weather": "clear",
-    "shell": ""
+    "mode": "track",
+    "label": "Cursa de noapte",
+    "file": "neon-interact-track-hd.webp",
+    "thumbnail": "neon-interact-track-hd-thumb.webp",
+    "shape": "landscape"
+  },
+  {
+    "game": "neon-race-2",
+    "mode": "overview",
+    "label": "Jocul complet",
+    "file": "neon-interact-overview-hd.webp",
+    "thumbnail": "neon-interact-overview-hd-thumb.webp",
+    "shape": "portrait"
+  },
+  {
+    "game": "neon-race-2",
+    "mode": "preview",
+    "label": "Cursa în mișcare",
+    "type": "video",
+    "video": "neon-interact-preview-v2.mp4",
+    "file": "neon-interact-track-hd.webp",
+    "thumbnail": "neon-interact-track-hd-thumb.webp",
+    "shape": "landscape"
   },
   {
     "game": "moto-interact",
-    "mode": "day",
-    "label": "Day Ride",
-    "file": "moto-interact-day.webp",
-    "thumbnail": "moto-interact-day-thumb.webp",
-    "time": "day",
-    "weather": "clear",
-    "shell": ""
+    "mode": "track",
+    "label": "Bulevardul de zi",
+    "file": "moto-interact-track-hd.webp",
+    "thumbnail": "moto-interact-track-hd-thumb.webp",
+    "shape": "landscape"
+  },
+  {
+    "game": "moto-interact",
+    "mode": "preview",
+    "label": "În mișcare",
+    "type": "video",
+    "video": "moto-interact-preview.mp4",
+    "file": "moto-interact-nitro-red-hd.webp",
+    "thumbnail": "moto-interact-nitro-red-hd-thumb.webp",
+    "shape": "landscape"
+  },
+  {
+    "game": "moto-interact",
+    "mode": "nitro-red",
+    "label": "RED pe o roată",
+    "file": "moto-interact-nitro-red-hd.webp",
+    "thumbnail": "moto-interact-nitro-red-hd-thumb.webp",
+    "shape": "landscape"
+  },
+  {
+    "game": "moto-interact",
+    "mode": "nitro-blue",
+    "label": "BLUE pe o roată",
+    "file": "moto-interact-nitro-blue-hd.webp",
+    "thumbnail": "moto-interact-nitro-blue-hd-thumb.webp",
+    "shape": "landscape"
+  },
+  {
+    "game": "moto-interact",
+    "mode": "overview",
+    "label": "Jocul complet",
+    "file": "moto-interact-overview-hd.webp",
+    "thumbnail": "moto-interact-overview-hd-thumb.webp",
+    "shape": "portrait"
   },
   {
     "game": "nova-vex",
-    "mode": "cover",
-    "label": "Coperta oficială",
-    "file": "nova-vex-cover.webp",
-    "thumbnail": "nova-vex-cover.webp"
+    "mode": "ride",
+    "label": "Nova și Vex",
+    "file": "nova-vex-ride-hd.webp",
+    "thumbnail": "nova-vex-ride-hd-thumb.webp",
+    "shape": "square"
   },
   {
     "game": "nova-vex",
-    "mode": "city",
-    "label": "Neon District",
-    "file": "nova-vex-city.webp",
-    "thumbnail": "nova-vex-city.webp"
+    "mode": "preview",
+    "label": "Nova în acțiune",
+    "type": "video",
+    "video": "nova-vex-preview-v2.mp4",
+    "file": "nova-vex-ride-hd.webp",
+    "thumbnail": "nova-vex-ride-hd-thumb.webp",
+    "shape": "portrait"
   },
   {
     "game": "nova-vex",
-    "mode": "vex",
-    "label": "Cursa lui Vex",
-    "file": "nova-vex-vex.webp",
-    "thumbnail": "nova-vex-vex.webp"
+    "mode": "earth",
+    "label": "Jocul complet",
+    "file": "nova-vex-earth-hd.webp",
+    "thumbnail": "nova-vex-earth-hd-thumb.webp",
+    "shape": "portrait"
+  },
+  {
+    "game": "nova-vex",
+    "mode": "push",
+    "label": "Vex o încurcă",
+    "file": "nova-vex-push-hd.webp",
+    "thumbnail": "nova-vex-push-hd-thumb.webp",
+    "shape": "square"
   }
 ]

@@ -62,11 +62,11 @@
     <script src="assets/home-showcase.js?v=9" defer></script>
     <link rel="stylesheet" href="assets/site-template.css?v=13">
     <link rel="stylesheet" href="assets/home-gifts.css?v=1">
-    <script src="assets/home-gifts.js?v=1" defer></script>
+    <script src="assets/home-gifts.js?v=2" defer></script>
     <link rel="stylesheet" href="assets/game-covers.css?v=2">
-    <link rel="stylesheet" href="assets/home-nova.css?v=1">
-    <script src="assets/home-nova.js?v=1" defer></script>
-<link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=3"></script></head>
+    <link rel="stylesheet" href="assets/home-nova.css?v=3">
+    <script src="assets/home-nova.js?v=3" defer></script>
+<link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=4"></script></head>
 <body data-page="site" class="site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
     <!-- NAVBAR -->
@@ -113,8 +113,8 @@
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
-            <h3 class="text-2xl font-bold text-white mb-2">Autentificare TikInteract</h3>
-            <p class="text-xs text-zinc-400 mb-6">Conectează-te rapid cu Google sau folosește e-mailul clasic.</p>
+            <h3 class="text-2xl font-bold text-white mb-2">Intră în cont</h3>
+            <p class="text-xs text-zinc-400 mb-6">Folosește Google sau adresa de e-mail.</p>
 
             <div id="email-auth-options" class="space-y-4">
                 <!-- BUTON GOOGLE OAUTH -->
@@ -147,7 +147,7 @@
                 </button>
 
                 <button onclick="signUpWithEmail()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold py-3.5 rounded-xl text-xs border border-zinc-800 transition cursor-pointer">
-                    Creează cont nou instant
+                    Creează un cont
                 </button>
                 <p id="auth-email-status" class="hidden text-xs leading-relaxed text-zinc-400" role="status" aria-live="polite"></p>
             </div>
@@ -171,9 +171,9 @@
             </div>
 
             <div id="password-recovery-success" class="hidden space-y-4">
-                <p class="text-sm leading-relaxed text-green-400" role="status">Parola a fost schimbată cu succes. Ești conectat la cont.</p>
+                <p class="text-sm leading-relaxed text-green-400" role="status">Parolă schimbată. Ești conectat.</p>
                 <button type="button" onclick="closeAuthModal()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition cursor-pointer">
-                    Continuă în TikInteract
+                    Continuă
                 </button>
             </div>
         </div>
@@ -184,9 +184,9 @@
         <section class="home-hero">
             <div class="home-hero-inner max-w-7xl mx-auto px-6">
                 <div class="home-hero-copy">
-                    <span class="home-kicker"><span class="home-kicker-dot"></span> PENTRU CREATORI. PENTRU COMUNITATE.</span>
+                    <span class="home-kicker"><span class="home-kicker-dot"></span> JOCURI PENTRU COMUNITATEA TA</span>
                     <h1>Fă din LIVE-ul tău<br><span>un joc de echipă.</span></h1>
-                    <p>Transformă fiecare like și cadou într-o parte din joc. Alege un joc, conectează LIVE-ul și lasă comunitatea să schimbe acțiunea în timp real.</p>
+                    <p>Alege jocul, conectează LIVE-ul și lasă chatul să intre în acțiune.</p>
                     <div class="home-hero-actions">
                         <button onclick="checkAccessAndGo('live')" class="home-primary-button"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Deschide LIVE Studio</button>
                         <button onclick="switchView('catalog')" class="home-secondary-button">Explorează jocurile <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
@@ -217,14 +217,14 @@
         <div class="home-content max-w-7xl mx-auto px-6 py-12">
             <section class="home-nova" data-home-nova aria-labelledby="home-nova-title">
                 <a class="home-nova-cover" href="GAME/NOVA-VEX/index.html"><img src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="Coperta NOVA &amp; VEX, Nova și Vex în orașul neon" width="720" height="1280" loading="lazy"><span>JOC GRATUIT</span></a>
-                <div class="home-nova-copy"><span class="eyebrow">NOU ÎN TIKINTERACT</span><h2 id="home-nova-title"><span>NOVA</span> &amp; <em>VEX</em></h2><h3>Nova urcă.<br>Vex schimbă planul.</h3><p>Un jetpack te ridică. Vex te prinde pe placa lui și te duce în jos. Comunitatea decide următoarea mișcare, prin cadourile alese de tine.</p><div class="home-nova-features"><span>8 peisaje neon</span><span>Cadouri configurabile</span><span>Format LIVE 9:16</span></div><a class="home-primary-button" href="GAME/NOVA-VEX/index.html">Descoperă jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-                <div class="home-nova-demo"><div class="home-nova-topline"><span>O PRIVIRE ÎN JOC</span><button type="button" data-nova-pause aria-label="Pauză animație NOVA &amp; VEX" aria-pressed="false">Pauză</button></div><canvas data-nova-canvas width="600" height="720" role="img" aria-label="Prezentare animată NOVA &amp; VEX: Nova sare, zboară cu jetpack-ul, iar Vex o prinde pe placa lui."></canvas><img class="home-nova-fallback" src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="" loading="lazy"><div class="home-nova-caption"><strong data-nova-scene>Nova își începe urcarea</strong><span data-nova-effect>GRATUIT</span></div></div>
+                <div class="home-nova-copy"><span class="eyebrow">NOU ÎN CATALOG</span><h2 id="home-nova-title"><span>NOVA</span> &amp; <em>VEX</em></h2><h3>Nova urcă.<br>Vex schimbă planul.</h3><p>Tu o conduci. Cei din LIVE schimbă cursa.</p><ol class="home-nova-how" aria-label="Cum se joacă"><li><strong>Urcă pe platforme</strong><span>Folosește ← → sau A / D. Pe telefon, atinge stânga sau dreapta.</span></li><li><strong>Lasă publicul să intervină</strong><span>Alegi în Studio ce cadouri o ajută pe Nova și care îl cheamă pe Vex.</span></li><li><strong>Câștigă coroana</strong><span>Atinge înălțimea aleasă și rezistă până se termină numărătoarea.</span></li></ol><div class="home-nova-features"><span>8 peisaje neon</span><span>Cadouri configurabile</span><span>Format LIVE 9:16</span></div><a class="home-primary-button" href="GAME/NOVA-VEX/index.html">Descoperă jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+                <div class="home-nova-demo"><div class="home-nova-topline"><span>O PRIVIRE ÎN JOC</span><button type="button" data-nova-pause aria-label="Pauză animație NOVA &amp; VEX" aria-pressed="false">Pauză</button></div><canvas data-nova-canvas width="600" height="720" role="img" aria-label="Prezentare animată NOVA &amp; VEX: Nova urcă pe platforme și folosește jetpack-ul. Vex vine pe placă, o prinde de păr, Nova reacționează, iar el pleacă."></canvas><img class="home-nova-fallback" src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="" loading="lazy"></div>
             </section>
             <section class="home-gifts" data-home-gifts aria-labelledby="home-gifts-title">
                 <div class="home-gifts-copy">
                     <span class="eyebrow"><i class="fa-solid fa-gift" aria-hidden="true"></i> TIKTOK GIFTS</span>
-                    <h2 id="home-gifts-title">Un cadou în LIVE.<br><span>O poveste în colecția ta.</span></h2>
-                    <p>De la primul Rose la TikTok Universe. Descoperă cadourile TikTok, iar pe cele primite în LIVE prin TikInteract le regăsești în colecția profilului tău.</p>
+                    <h2 id="home-gifts-title">Cadourile din LIVE,<br><span>în colecția ta.</span></h2>
+                    <p>Explorează cadourile TikTok și vezi în profil ce ai primit la LIVE.</p>
                     <div class="home-gifts-features"><span><i class="fa-regular fa-images" aria-hidden="true"></i> Imagini originale</span><span><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Colecția ta de cadouri</span></div>
                     <button class="home-gifts-browse" type="button" data-gifts-browse disabled>Explorează catalogul <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
                     <p class="home-gifts-note" data-gifts-note>Cadourile comunității, într-un singur loc.</p>
@@ -245,8 +245,8 @@
             </section>
 
             <section id="download-app" class="home-app-section" aria-labelledby="download-app-title">
-<div class="home-app-copy"><span class="eyebrow">DOWNLOAD APP</span><h2 id="download-app-title">Tot ce ai nevoie.<br><span>Într-o singură aplicație.</span></h2><p>Pregătim aplicația TikInteract pentru calculator, cu jocurile, sunetele și comenzile LIVE într-un singur loc. Până la lansare, poți folosi LIVE Studio în browser.</p><div class="app-capabilities"><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Game Center</span><span><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center</span><span><i class="fa-solid fa-sliders" aria-hidden="true"></i> Control LIVE</span></div><div class="home-app-actions"><button id="download-app-button" class="app-download-button" type="button" disabled><i class="fa-solid fa-download" aria-hidden="true"></i> Download App <span>În curând</span></button></div><p class="app-release-note">Aplicația pentru calculator este în pregătire. Descărcarea va fi disponibilă aici după lansare.</p></div>
-<div class="home-app-preview" role="img" aria-label="Previzualizare a interfeței LIVE Studio, cu jocul și comenzile alăturate"><div class="app-preview-titlebar"><span class="app-window-dots"><i></i><i></i><i></i></span><span>TikInteract / LIVE Studio</span><i class="fa-solid fa-window-maximize" aria-hidden="true"></i></div><div class="app-preview-body"><div class="app-preview-nav"><img src="assets/tikinteract-icon-v2.png" width="28" height="28" alt=""><i class="fa-solid fa-tower-broadcast is-active" aria-hidden="true"></i><i class="fa-solid fa-gamepad" aria-hidden="true"></i><i class="fa-solid fa-wave-square" aria-hidden="true"></i></div><div class="app-preview-controls"><span>ACCES RAPID</span><strong>Jocurile tale</strong><div class="app-mini-games"><img src="assets/game-gallery/neon-race-2-night-thumb.webp" alt="" loading="lazy"><img src="assets/game-gallery/moto-interact-day-thumb.webp" alt="" loading="lazy"></div><span>CONTROL JOC</span><strong>Test Menu</strong><div class="app-mini-team"><b>RED</b><span>+ Like</span><span>Cadou</span></div><div class="app-mini-team blue"><b>BLUE</b><span>+ Like</span><span>Cadou</span></div><div class="app-mini-audio"><i class="fa-solid fa-volume-low" aria-hidden="true"></i><span></span></div></div><div class="app-preview-game"><img src="assets/game-gallery/neon-race-2-night.webp" alt="" loading="lazy"></div></div><div class="app-preview-footer"><span><i></i> Interfața Studio în browser</span><span>Creat pentru LIVE</span></div></div>
+<div class="home-app-copy"><span class="eyebrow">DOWNLOAD APP</span><h2 id="download-app-title">Studioul tău,<br><span>în curând pe desktop.</span></h2><p>Jocuri, sunete și control LIVE într-o singură aplicație. Până atunci, folosește studioul în browser.</p><div class="app-capabilities"><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Game Center</span><span><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center</span><span><i class="fa-solid fa-sliders" aria-hidden="true"></i> Control LIVE</span></div><div class="home-app-actions"><button id="download-app-button" class="app-download-button" type="button" disabled><i class="fa-solid fa-download" aria-hidden="true"></i> Download App <span>În curând</span></button></div><p class="app-release-note">O vei putea descărca de aici după lansare.</p></div>
+<div class="home-app-preview" role="img" aria-label="Previzualizare a interfeței LIVE Studio, cu jocul și comenzile alăturate"><div class="app-preview-titlebar"><span class="app-window-dots"><i></i><i></i><i></i></span><span>TikInteract / LIVE Studio</span><i class="fa-solid fa-window-maximize" aria-hidden="true"></i></div><div class="app-preview-body"><div class="app-preview-nav"><img src="assets/tikinteract-icon-v2.png" width="28" height="28" alt=""><i class="fa-solid fa-tower-broadcast is-active" aria-hidden="true"></i><i class="fa-solid fa-gamepad" aria-hidden="true"></i><i class="fa-solid fa-wave-square" aria-hidden="true"></i></div><div class="app-preview-controls"><span>ACCES RAPID</span><strong>Jocurile tale</strong><div class="app-mini-games"><img src="assets/game-gallery/neon-race-2-night-thumb.webp" alt="" loading="lazy"><img src="assets/game-gallery/moto-interact-day-thumb.webp" alt="" loading="lazy"></div><span>CONTROL JOC</span><strong>CONTROL JOC</strong><div class="app-mini-team"><b>RED</b><span>+ Like</span><span>Cadou</span></div><div class="app-mini-team blue"><b>BLUE</b><span>+ Like</span><span>Cadou</span></div><div class="app-mini-audio"><i class="fa-solid fa-volume-low" aria-hidden="true"></i><span></span></div></div><div class="app-preview-game"><img src="assets/game-gallery/neon-race-2-night.webp" alt="" loading="lazy"></div></div><div class="app-preview-footer"><span><i></i> Interfața Studio în browser</span><span>Creat pentru LIVE</span></div></div>
 </section>
             <div class="home-community-grid">
             <section class="home-leaderboard-section" aria-labelledby="home-leaderboard-title">
@@ -254,7 +254,7 @@
                     <div>
                         <span class="eyebrow">Creatorii comunității</span>
                         <h2 id="home-leaderboard-title">Top 5 streameri</h2>
-                        <p>Streamerii TikInteract, ordonați după punctele din cadouri și timpul LIVE înregistrate.</p>
+                        <p>Topul după punctele din cadouri și timpul petrecut LIVE.</p>
                     </div>
                     <button onclick="switchView('leaderboard')" class="home-text-link">Clasament complet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
                 </div>
@@ -268,11 +268,11 @@
             <section class="home-how-it-works" aria-label="Cum funcționează TikInteract">
                 <div class="home-how-intro">
                     <span class="eyebrow">Simplu de pornit</span>
-                    <h2>Tu transmiți.<br><span>Chat-ul decide.</span></h2>
+                    <h2>Tu faci LIVE.<br><span>Chatul intră în joc.</span></h2>
                 </div>
-                <div class="home-how-step"><span>01</span><i class="fa-solid fa-gamepad" aria-hidden="true"></i><h3>Alege jocul</h3><p>Deschide unul dintre jocurile interactive din catalog.</p></div>
-                <div class="home-how-step"><span>02</span><i class="fa-solid fa-plug" aria-hidden="true"></i><h3>Conectează LIVE-ul</h3><p>Pornește TikInteract și conectează-te la transmisiunea ta.</p></div>
-                <div class="home-how-step"><span>03</span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><h3>Lasă chat-ul să joace</h3><p>Like-urile și cadourile declanșează acțiuni în joc.</p></div>
+                <div class="home-how-step"><span>01</span><i class="fa-solid fa-gamepad" aria-hidden="true"></i><h3>Alege jocul</h3><p>Găsește-ți preferatul în catalog.</p></div>
+                <div class="home-how-step"><span>02</span><i class="fa-solid fa-plug" aria-hidden="true"></i><h3>Conectează LIVE-ul</h3><p>Intră în Studio și conectează transmisiunea.</p></div>
+                <div class="home-how-step"><span>03</span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><h3>Lasă chatul să joace</h3><p>Like-urile și cadourile pun jocul în mișcare.</p></div>
             </section>
             </div>
         </div>
@@ -283,7 +283,7 @@
         <div class="mb-8">
             <span class="eyebrow">Catalog</span>
             <h1 class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-white">Jocuri disponibile</h1>
-            <p class="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">Alege un joc pentru a vedea imaginile, descrierea și modul de joc.</p>
+            <p class="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">Alege o copertă și descoperă jocul.</p>
         </div>
 
         <section class="mb-10" aria-labelledby="catalog-free-title">
@@ -307,9 +307,9 @@
     <section id="view-play-pass" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
         <div class="account-heading mb-8">
             <div>
-                <span class="eyebrow">TikInteract Play Pass</span>
+                <span class="eyebrow">Play Pass</span>
                 <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Alege abonamentul potrivit</h1>
-                <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">Alege planul potrivit pentru felul în care folosești TikInteract.</p>
+                <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">Începe gratuit. Abonamentele vin în curând.</p>
             </div>
             <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
@@ -359,11 +359,10 @@
     <section id="view-leaderboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
         <div class="leaderboard-heading mb-8">
             <div>
-                <span class="eyebrow">Comunitatea TikInteract</span>
+                <span class="eyebrow">Comunitate</span>
                 <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Clasament Streameri</h1>
                 <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
-                    Streamerii sunt clasificați după monedele câștigate prin cadourile primite în sesiunile LIVE pornite din TikInteract.
-                    Timpul transmis pe platformă departajează scorurile egale.
+                    Ordinea este dată de monedele primite în LIVE. La egalitate, contează timpul transmis prin Studio.
                 </p>
             </div>
             <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
@@ -375,7 +374,7 @@
             <div class="leaderboard-trophy"><i class="fa-solid fa-trophy"></i></div>
             <div>
                 <p id="leaderboard-period-label" class="text-sm font-bold text-white">Clasament all-time</p>
-                <p class="mt-1 text-xs text-zinc-400">Doar statisticile înregistrate de TikInteract sunt incluse.</p>
+                <p class="mt-1 text-xs text-zinc-400">Sunt incluse doar sesiunile conectate prin Studio.</p>
             </div>
             <button onclick="loadLeaderboard()" class="ml-auto bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-rotate mr-2"></i> Reîncarcă
@@ -412,7 +411,7 @@
             <div id="leaderboard-empty" class="hidden px-6 py-12 text-center">
                 <i class="fa-solid fa-ranking-star text-3xl text-zinc-600"></i>
                 <p class="mt-4 font-bold text-white">Clasamentul este încă gol</p>
-                <p class="mt-2 text-sm text-zinc-400">Salvează username-ul TikTok și pornește un LIVE prin TikInteract pentru a apărea aici. Profilul este public automat.</p>
+                <p class="mt-2 text-sm text-zinc-400">Salvează profilul TikTok și conectează LIVE-ul în Studio. Profilul apare public în clasament.</p>
             </div>
         </div>
     </section>
@@ -423,7 +422,7 @@
             <div>
                 <span class="eyebrow">Zona ta personală</span>
                 <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">CONTUL MEU</h2>
-                <p class="mt-2 text-sm text-zinc-400">Informațiile contului și abonamentul tău TikInteract.</p>
+                <p class="mt-2 text-sm text-zinc-400">Profilul și abonamentul tău.</p>
             </div>
             <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
@@ -466,7 +465,7 @@
             <div>
                 <span class="section-kicker">ABONAMENTUL TĂU</span>
                 <h3 class="text-lg font-bold text-white">FREE</h3>
-                <p class="mt-1 text-sm text-zinc-400">Play Pass și Play Pass PRO vor putea fi activate când plata online va fi configurată.</p>
+                <p class="mt-1 text-sm text-zinc-400">Abonamentele nu pot fi activate încă.</p>
             </div>
             <button onclick="goToPlayPass()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-4 py-2.5 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 Vezi planurile Play Pass
@@ -514,14 +513,14 @@
             </button>
             <span class="eyebrow">Confidențialitate</span>
             <h2 id="cookie-preferences-title">Cookie preferences</h2>
-            <p id="cookie-preferences-description">TikInteract nu folosește în prezent cookie-uri opționale de analiză sau publicitate. Stocarea necesară pentru autentificare și pentru păstrarea username-ului TikTok salvat rămâne activă pentru funcționarea serviciului.</p>
+            <p id="cookie-preferences-description">Folosim stocarea necesară pentru autentificare și username-ul TikTok salvat. Nu folosim cookie-uri opționale de analiză sau publicitate.</p>
             <p class="cookie-preferences-note">Poți șterge datele locale din setările browserului. Detalii despre datele prelucrate găsești în <a href="privacy-policy.html">Privacy Policy</a>.</p>
             <button class="home-primary-button" type="button" onclick="closeCookiePreferences()">Am înțeles</button>
         </section>
     </div>
 
     <script src="assets/game-access.js?v=2"></script>
-    <script src="game.js?v=10"></script>
+    <script src="game.js?v=12"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
     <script src="assets/site-app.js?v=5"></script>
