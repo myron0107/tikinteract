@@ -1,0 +1,16 @@
+{
+  "tool": "built-in image_gen",
+  "referenceCover": "assets/game-gallery/nova-vex-cover.webp",
+  "covers": [
+    {
+      "game": "NEON INTERACT",
+      "file": "assets/game-gallery/neon-interact-cover.webp",
+      "prompt": "Use case: ads-marketing. Create a premium portrait game cover, 9:16, filling the entire image edge-to-edge, for TikInteract game catalog. Reference image 1 is the NOVA & VEX cover: match its highly polished stylized 3D illustration quality, cinematic action, bold huge readable game-title lettering in the upper quarter and tiny TIKINTERACT brand at the bottom (TIK white, INTERACT red). Reference image 2 is actual gameplay: use it only to identify the vehicles, location, colors, and game identity, do NOT reproduce HUD, screenshots or interface. All title letters must stay inside frame with generous safe margins. No UI, no border, no subtitle, no badges, no extra text. Title exactly: NEON INTERACT, two stacked lines, white NEON and vivid red INTERACT, dynamic angular racing lettering. Scene: two fierce aerodynamic sports coupes, one scarlet red and one electric blue, based on gameplay reference, racing together on dark asphalt in a night city, wheels touching road, cyan nitro flames, red/cyan neon reflections, deep charcoal skyline with neon towers and dramatic atmosphere. Close low 3/4 front angle, cars large and clear, dramatic speed and depth, modern arcade racing key art. Keep subject readable at small thumbnail size. No people, no licensed car logos."
+    },
+    {
+      "game": "MOTO INTERACT",
+      "file": "assets/game-gallery/moto-interact-cover.webp",
+      "prompt": "Use case: ads-marketing. Asset: premium vertical 9:16 game cover for TikInteract catalog, full bleed. Reference image 1 is the NOVA & VEX cover: match its polished stylized 3D arcade key-art quality, dramatic perspective, huge beautifully designed readable game name in upper quarter, tiny TIKINTERACT at bottom (TIK white and INTERACT red). Reference image 2 is actual MOTO INTERACT gameplay: preserve its identity, red and blue sports motorcycles with helmeted matching red/blue riders, sunny modern waterfront city, distant mountains, trees, clean boulevard. Do NOT reproduce HUD or interface. Create thrilling low-angle 3/4 frontal racing composition, one red rider lifting front wheel in a wheelie with restrained cyan nitro behind the tail exhaust, blue motorcycle racing beside it, all road contact and motorcycle mechanics physically plausible. Saturated but tasteful blue daytime sky with clouds, premium cinematic lighting, sharp materials, readable silhouettes at small thumbnail size. Title text exactly MOTO INTERACT, two stacked lines, MOTO in bright silver/white with dark outline, INTERACT red; keep title completely inside generous safe margins. Brand exactly TIKINTERACT small at bottom. No extra captions, badges, UI, borders, licensed logos, or other text. Similar collectible game-poster family as NOVA & VEX but distinct bright daytime racing world."
+    }
+  ]
+}
