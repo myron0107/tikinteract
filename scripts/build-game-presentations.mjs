@@ -13,10 +13,11 @@ for (const [game,folder] of [['neon-race','NEON-RACE'],['neon-riders','NEON-RIDE
     const get=pattern=>{const match=source.match(pattern);if(!match)throw new Error(`Missing presentation content: ${filename}`);return match[1];};
     const modes=manifest.filter(item=>item.game===game);
     const title=get(/<h1 class="game-page-title">([\s\S]*?)<\/h1>/);
+    const labelTitle=title.replaceAll('&amp;','&');
     const details=[...source.matchAll(/<section class="game-page-info-card">[\s\S]*?<\/section>/g)].map(match=>match[0]).join('\n');
     if (!details || !modes.length) throw new Error(`Missing details or images: ${game}`);
-    const thumbnails=modes.map((mode,index)=>`                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/${mode.file}" data-gallery-label="${escape(title)} — ${escape(mode.label)}" data-gallery-mode="${escape(mode.label)}" aria-label="Vezi ${escape(title)} — ${escape(mode.label)}" aria-pressed="${index===0}">
-                            <img src="../../assets/game-gallery/${mode.thumbnail}" alt="${escape(title)} — ${escape(mode.label)}" width="360" height="640" loading="lazy" decoding="async">
+    const thumbnails=modes.map((mode,index)=>`                        <button class="game-gallery-item" type="button" data-gallery-image="../../assets/game-gallery/${mode.file}" data-gallery-label="${escape(labelTitle)} — ${escape(mode.label)}" data-gallery-mode="${escape(mode.label)}" aria-label="Vezi ${escape(labelTitle)} — ${escape(mode.label)}" aria-pressed="${index===0}">
+                            <img src="../../assets/game-gallery/${mode.thumbnail}" alt="${escape(labelTitle)} — ${escape(mode.label)}" width="360" height="640" loading="lazy" decoding="async">
                             <span>${escape(mode.label)}</span>
                         </button>`).join('\n');
     const values={title,description:get(/<meta name="description" content="([^"]*)"/),tag:get(/<span class="game-page-tag">([\s\S]*?)<\/span>/),summary:get(/<p class="game-page-summary">([\s\S]*?)<\/p>/),game,firstImage:`../../assets/game-gallery/${modes[0].file}`,firstLabel:escape(modes[0].label),count:modes.length,thumbnails,details};

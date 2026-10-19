@@ -1,13 +1,27 @@
 # NOVA & VEX
 
-A separate neon parkour prototype starring Nova and her rival Vex. The existing SkyShift edition and the
+A free neon parkour game starring Nova and her rival Vex, registered as `nova-vex`
+in the public catalog and LIVE Studio. The existing SkyShift edition and the
 supplied original file are preserved.
 
 Open `http://127.0.0.1:3001/GAME/NEON-ASCENT/Neon-Ascent.html` while the local
-preview server is running. This is a playable visual prototype, not a registered
-LIVE Studio game. A/D or touch the left/right side to steer. The three **TEST**
+preview server is running, or open its presentation at `GAME/NEON-ASCENT/index.html`.
+A/D or touch the left/right side to steer. The three **TEST**
 buttons preview upward/downward gifts and the rival; the gear opens all settings
 and test actions. No real LIVE gifts are sent by these controls.
+
+The shared TikInteract SDK forwards completed gifts to `src/studio-integration.js`.
+In TEST MENU → Cadouri LIVE, choose a real TikTok gift ID for each power. A gift
+can activate one power; quantity repeats the effect, independently of coin value.
+Assignments are saved in this browser. Unassigned gifts, likes and chat have no
+default movement rules. The Studio test controls use the original game controls.
+
+ACASĂ includes the generated cover and a short Canvas presentation using actual
+game art. It lazy-loads while visible, pauses offscreen and respects reduced
+motion, without starting a playable iframe or LIVE connection. The original
+road animation is preserved. Cover source: `art/source/cover-v1.png`; exact
+ImageGen prompt: `art/cover-prompts.json`; website copy from repository root:
+`assets/game-gallery/nova-vex-cover.webp`.
 
 Visual identity: cyan, violet, hot pink and navy; a human runner in a hoodie,
 a human masked street rival and a hoverboard. Six clothing colors preserve skin
@@ -128,3 +142,6 @@ preferences, already accepted commands and replay protection.
 The contact stages also verify paired poses, visible grip before descent,
 sustained pushing before freefall, no duplicate character sprites, and pause
 during the hands-on interaction.
+`node scripts/verify-nova-vex-studio.mjs` verifies free access, empty startup,
+native Studio controls, shared-SDK delivery and quantity, persisted bindings,
+title colors/brand placement, and the homepage animation on desktop/mobile.

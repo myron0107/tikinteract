@@ -158,5 +158,26 @@
     "time": "day",
     "weather": "clear",
     "shell": ""
+  },
+  {
+    "game": "nova-vex",
+    "mode": "cover",
+    "label": "Coperta oficială",
+    "file": "nova-vex-cover.webp",
+    "thumbnail": "nova-vex-cover.webp"
+  },
+  {
+    "game": "nova-vex",
+    "mode": "city",
+    "label": "Neon District",
+    "file": "nova-vex-city.webp",
+    "thumbnail": "nova-vex-city.webp"
+  },
+  {
+    "game": "nova-vex",
+    "mode": "vex",
+    "label": "Cursa lui Vex",
+    "file": "nova-vex-vex.webp",
+    "thumbnail": "nova-vex-vex.webp"
   }
 ]

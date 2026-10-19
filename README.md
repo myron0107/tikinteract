@@ -28,7 +28,8 @@ The local server listens only on `127.0.0.1` and accepts WebSocket requests from
 
 ## Home page
 
-- The home page introduces TikInteract, highlights the free Neon Interact and Moto Interact games, and displays the all-time top five from the public streamer leaderboard.
+- The home page introduces TikInteract, highlights the free Neon Interact, Moto Interact and NOVA & VEX games, and displays the all-time top five from the public streamer leaderboard.
+- NOVA & VEX has a generated cover and animated Canvas presentation on ACASĂ. The original road animation is preserved. Configure its gift-to-action bindings in Studio → TEST MENU → Cadouri LIVE. [Game details and checks](GAME/NEON-ASCENT/README.md).
 - The featured games link to their presentation pages. Use **Deschide LIVE Studio** to open the separate workspace page.
 - The top five is loaded from Supabase using the same `get_streamer_leaderboard` RPC as the full leaderboard.
 - The footer links to the privacy policy, terms of use, usage guide, and updates; **Cookie preferences** explains the browser storage currently needed by the app.
