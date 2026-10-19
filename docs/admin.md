@@ -3,7 +3,7 @@
 ## Activare
 
 1. Contul `mironsergiuflorin@gmail.com` trebuie să existe în platformă și să aibă e-mailul confirmat.
-2. În Supabase → SQL Editor, deschide **New query**, lipește TOT fișierul `supabase/install-admin.sql` și apasă **Run**. Acesta instalează administrarea, mesageria și cheile de acces în ordinea corectă, într-o singură tranzacție. Dacă administrarea și suportul sunt deja instalate, rulează doar `supabase/access-keys.sql` pentru această actualizare.
+2. În Supabase → SQL Editor, deschide **New query**, lipește TOT fișierul `supabase/install-admin.sql` și apasă **Run**. Acesta instalează administrarea, mesageria, cheile și evidența utilizatorilor într-o singură tranzacție. Pentru o instalare existentă, actualizarea utilizatorilor se activează cu `supabase/users.sql`; cheile de acces folosesc `supabase/access-keys.sql` dacă nu sunt deja instalate.
 3. După publicarea fișierelor site-ului, intră în cont și deschide **Administrare** din meniul contului sau accesează `/admin.html`.
 
 Dacă ai primit `function public.site_admin_role() does not exist` când ai rulat `support.sql`, administrarea nu era încă instalată în proiectul Supabase ales. Rulează instalatorul complet de mai sus. Fișierele separate `admin.sql`, apoi `support.sql` rămân disponibile pentru actualizări. Dacă apare un mesaj despre o tranzacție anulată, rulează `ROLLBACK;` într-un query separat înainte de a reîncerca.
@@ -21,6 +21,28 @@ Scriptul se poate rula din nou. Nu resetează configurația existentă, nu schim
 | Editor | Da | Nu | Nu |
 
 Proprietarul poate acorda sau retrage grade pentru conturi existente cu e-mail confirmat. Ultimul proprietar nu poate fi eliminat sau retrogradat. Datele echipei și configurațiile private nu sunt accesibile vizitatorilor.
+
+## Echipă și grade / evidența utilizatorilor
+
+Secțiunea afișează **toate conturile din Supabase Auth**, inclusiv utilizatorii obișnuiți și conturile cu e-mail neconfirmat. Nu cere introducerea manuală a unui e-mail pentru acordarea unui grad: alegi persoana din listă și deschizi **Gestionează**.
+
+Sunt disponibile căutarea după nume, e-mail, TikTok sau ID, filtre pentru grad și stare, paginare și numărul real al conturilor înregistrate, confirmate, din echipă, suspendate și cu ban. Fișa arată înregistrarea, ultima autentificare raportată de Auth, planul și datele TikTok disponibile. Ultima autentificare nu este un indicator de prezență online.
+
+**Numai proprietarul poate vedea directorul complet, acorda/retrage grade, suspenda, aplica ban, debloca sau șterge conturi.** Administratorii și editorii nu primesc aceste permisiuni, nici dacă apelează manual API-ul. Gradele disponibile sunt Utilizator, Editor, Administrator și Proprietar. Drepturile provin din tabelul privat `site_admins`; metadatele editabile ale profilului nu acordă privilegii.
+
+- **Suspendare temporară**: 1 oră, 24 de ore, 7 zile sau 30 de zile. Expiră automat pe server. Utilizatorul trebuie să intre din nou în cont după expirare sau deblocare.
+- **Ban permanent**: interdicție asupra funcțiilor contului în platformă, până la deblocare. Contul, profilul public, statisticile și perioadele sale sunt păstrate; timpul accesului Play Pass continuă să curgă. Nu este o ștergere a identității din serviciul de autentificare.
+- **Deblocare**: reactivează accesul și gradele atribuite anterior. Nu schimbă parola și nu trimite e-mailuri.
+- **Grade**: sunt necesare un e-mail confirmat și acces activ pentru un grad de echipă. Poți retrage gradul unui cont restricționat. Ultimul proprietar nu poate fi retrogradat; un proprietar poate preda rolul dacă există deja alt proprietar.
+- **Protecții**: nu îți poți suspenda, bloca sau șterge propriul cont. Un alt cont cu grad de proprietar trebuie retrogradat înainte de suspendare, ban sau ștergere.
+- **Ștergere definitivă**: are o secțiune separată, afișează numărul datelor asociate și cere adresa exactă a contului (ID-ul dacă nu are e-mail) și un motiv. Șterge rândul Auth și datele cu relații `ON DELETE CASCADE`: profil, sesiuni, evenimente cadouri, conversațiile proprii și accesul la planuri. Răspunsurile în conversațiile altor persoane rămân fără identitatea autorului. Cheile activate/rezervate contului sunt revocate și rezervarea pe e-mail eliminată; o cheie rezervată nu devine utilizabilă de oricine. Jurnalul administrativ păstrează ID-ul tehnic și motivul, nu o copie a profilului.
+- **Fișiere Storage**: Supabase restricționează ștergerea unui utilizator care deține fișiere. Fișa afișează numărul lor și oprește ștergerea până le muți sau elimini din Supabase. Nu ștergem automat coperți folosite de site. Dacă o altă relație din baza de date împiedică ștergerea, întreaga tranzacție este anulată; nu există ștergere parțială.
+
+Fiecare acțiune cere un motiv și este înregistrată în istoricul persoanei și în **Jurnalul administrării conturilor**. Jurnalul global păstrează evidența și după ștergere. Verificarea versiunii împiedică suprascrierea unei acțiuni făcute între timp de alt proprietar.
+
+Blocarea se verifică pe server la intrarea în funcțiile private de suport, acces, statistici și profil, inclusiv pentru JWT-uri deja emise. Conturile șterse sunt respinse deoarece identitatea Auth nu mai există. În browser, starea contului este verificată la 20 de secunde și la revenirea în pagină; un cont restricționat este scos local din sesiune, iar jocul se închide. Serverul local verifică proactiv conexiunile la 10 secunde și limitează fiecare autorizare la 30 de secunde. La eșecul verificării, accesul LIVE se închide. Fișierele statice publice ale jocurilor rămân în afara acestui control, ca și înainte.
+
+Rulează `users.sql` după migrările existente și **repornește serverul local după actualizarea codului** pentru verificarea conexiunilor active. Migrarea nu suspendă și nu șterge niciun cont. Migrarea poate fi reluată fără resetarea evidenței sau jurnalului. Fișierele sursă pentru profil, cadouri, suport și chei păstrează verificarea moderării și la reinstalare; pentru funcții private noi folosește `require_site_account()` înainte de operație. Nu pune o cheie `service_role` în browser.
 
 ## Mesaje și suport
 
@@ -101,5 +123,7 @@ Cu serverul local pornit, `node scripts/verify-admin.mjs` verifică și interfa�
 `node scripts/verify-support.mjs` verifică trimiterea din site, răspunsul din admin, notele interne, atribuirea, redeschiderea unei conversații, păstrarea ciornei, mobilul și eliminarea datelor la deconectare, pe aceeași infrastructură izolată de test. `tests/support.test.js` verifică migrarea reală PostgreSQL, separarea conturilor, drepturile, căutarea privată, limitele, paginarea și trimiterile repetate.
 
 `node scripts/verify-play-pass.mjs` verifică în browser cardurile, FAQ-ul, generarea, activarea unică, afișarea în cont, confirmarea lansării unui joc cu plan, revocarea, accesul gratuit și mobilul. Folosește exclusiv baza temporară de test. `tests/access-keys.test.js` verifică migrarea reală, permisiunile, duratele, prelungirile, upgrade-ul fără pierderea timpului Play Pass, sfârșitul de lună, rezervarea pe e-mail, limitele și revocarea.
+
+`node scripts/verify-users.mjs` verifică lista tuturor conturilor, alegerea din listă, gradele rezervate proprietarului, banul, suspendarea unui joc pornit, deblocarea, ștergerea, jurnalul și mobilul, exclusiv pe conturi și bază temporare. `tests/users.test.js` verifică SQL-ul real, conturi neconfirmate, accesul cu token vechi, protejarea proprietarilor, ștergerea în cascadă, fișierele Storage și păstrarea auditului. `tests/studio-auth.test.js` verifică suplimentar revalidarea autorizației LIVE.
 
 În pagina publică se folosește numai cheia publică Supabase existentă. Nu introduce cheia `service_role` în HTML sau JavaScript. Tabelele de administrare sunt protejate prin RLS și fără drepturi directe pentru clienți; operațiile trec prin funcții cu verificarea rolului pe server.

@@ -57,6 +57,9 @@ create or replace function public.support_require_account() returns uuid
 language plpgsql stable security definer set search_path='' as $$
 declare u uuid:=auth.uid();
 begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
  if u is null or not exists(select 1 from auth.users where id=u and email_confirmed_at is not null and not is_anonymous) then
   raise exception 'SUPPORT_ACCOUNT_REQUIRED' using errcode='42501';
  end if;

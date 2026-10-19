@@ -82,6 +82,9 @@ declare
     v_display_name text := left(trim(coalesce(p_tiktok_display_name, '')), 80);
     v_avatar_url text := nullif(trim(coalesce(p_avatar_url, '')), '');
 begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
     if v_user_id is null then
         raise exception 'Authentication required';
     end if;
@@ -125,6 +128,9 @@ declare
     v_session_id uuid;
     v_now timestamptz := now();
 begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
     if v_user_id is null then
         raise exception 'Authentication required';
     end if;
@@ -169,6 +175,9 @@ declare
     v_now timestamptz := now();
     v_duration bigint;
 begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
     if v_user_id is null then
         raise exception 'Authentication required';
     end if;
@@ -198,6 +207,9 @@ declare
     v_user_id uuid := auth.uid();
     v_session_id uuid;
 begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
     if v_user_id is null then
         raise exception 'Authentication required';
     end if;

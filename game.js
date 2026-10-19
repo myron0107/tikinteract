@@ -1682,6 +1682,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let studioInitialized = false;
 window.startTikInteractStudio = () => {
     if (!window.tikInteractUser || !document.getElementById('view-live')) return;
+    if (window.TikInteractAccount && !window.TikInteractAccount.isAllowed()) return;
     if (!studioInitialized) {
         studioInitialized = true;
         initializeGameFavorites();

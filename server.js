@@ -137,6 +137,19 @@ const server = createServer(async (request, response) => {
 });
 
 const websocketServer = new WebSocketServer({ noServer: true, maxPayload: 8192 });
+const accountRecheckTimer = setInterval(async () => {
+    for (const client of websocketServer.clients) {
+        const token = client.studioAuth?.token;
+        if (!token || client.readyState !== WebSocket.OPEN) continue;
+        if (!await studioAuth.authorize(client, token, {force: true})) {
+            delete client.studioAuth;
+            send(client, {type: 'auth-required', message: 'Accesul contului nu mai poate fi confirmat.'});
+            client.close(1008, 'Account access restricted');
+        }
+    }
+    if (liveConnection && ![...websocketServer.clients].some(client => studioAuth.isAuthorized(client))) stopLiveConnection();
+}, 10000);
+accountRecheckTimer.unref();
 let liveConnection = null;
 let activeUsername = null;
 let connectionAttempt = 0;
@@ -367,6 +380,7 @@ server.listen(PORT, HOST, () => {
 });
 
 function shutdown() {
+    clearInterval(accountRecheckTimer);
     stopLiveConnection();
     for (const client of websocketServer.clients) {
         client.terminate();

@@ -23,8 +23,15 @@ alter table public.site_config_history enable row level security;
 revoke all on public.site_admins,public.site_settings,public.site_config_history from anon,authenticated;
 
 create or replace function public.site_admin_role() returns text
-language sql stable security definer set search_path='' as $$
- select role from public.site_admins where user_id=auth.uid()
+language plpgsql stable security definer set search_path='' as $$
+declare result text;
+begin
+ if to_regprocedure('public.is_site_account_allowed(uuid)') is not null then
+  if not public.is_site_account_allowed(auth.uid()) then return null;end if;
+ end if;
+ select role into result from public.site_admins where user_id=auth.uid();
+ return result;
+end
 $$;
 revoke all on function public.site_admin_role() from public,anon;
 grant execute on function public.site_admin_role() to authenticated;

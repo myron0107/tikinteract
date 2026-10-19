@@ -36,6 +36,9 @@ declare
     v_created timestamptz;
     v_image text:=nullif(left(trim(coalesce(p_gift_image,'')),2048),'');
 begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
     if v_user is null then raise exception 'Authentication required'; end if;
     if p_event_id is null or p_coins is null or p_coins<0 or p_coins>1000000
        or p_quantity is null or p_quantity<1 or p_quantity>1000

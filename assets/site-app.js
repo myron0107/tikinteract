@@ -529,6 +529,11 @@ function loadLiveGame(gameId, verified = false) {
     const gameSelect = document.getElementById('live-game-select');
     const gameStatus = document.getElementById('live-game-status');
     if (!gameFrame || !gamePath) return false;
+    if (window.TikInteractAccount && !window.TikInteractAccount.isAllowed()) {
+        if (gameStatus) gameStatus.textContent = 'Contul trebuie verificat înainte de pornirea jocului.';
+        window.TikInteractAccount.showNotice();
+        return false;
+    }
     if (!window.TikInteractGameAccess?.isAvailable(gameId)) {
         if (gameSelect) gameSelect.value = gameFrame.dataset.gameId || '';
         document.querySelectorAll('[data-live-game]').forEach((button) => {
