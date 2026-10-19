@@ -9,9 +9,9 @@
     nav.innerHTML = `<button class="resources-trigger" type="button" aria-expanded="false" aria-controls="resources-menu"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span>RESURSE</span><i class="fa-solid fa-chevron-down resources-chevron" aria-hidden="true"></i></button>
         <div id="resources-menu" class="resources-menu" hidden>
             <div class="resources-links">
-                <a href="guide.html"><span class="resource-icon"><i class="fa-solid fa-book-open" aria-hidden="true"></i></span><span><strong>GHIDURI</strong><small>Configurare, jocuri și primii pași.</small></span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                <a href="updates.html"><span class="resource-icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span><span><strong>NOUTĂȚI</strong><small>Ce am adăugat și îmbunătățit.</small></span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                <a href="about.html"><span class="resource-icon"><i class="fa-solid fa-heart" aria-hidden="true"></i></span><span><strong>DESPRE NOI</strong><small>Jocuri construite pentru LIVE.</small></span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+                <a href="guide.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-book-open" aria-hidden="true"></i></span><span><strong>GHIDURI</strong><small>Configurare, jocuri și primii pași.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                <a href="updates.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span><span><strong>NOUTĂȚI</strong><small>Ce am adăugat și îmbunătățit.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                <a href="about.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-heart" aria-hidden="true"></i></span><span><strong>DESPRE NOI</strong><small>Jocuri construite pentru LIVE.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                 <button type="button" data-open-support><span class="resource-icon"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></span><span><strong>SUPORT</strong><small>O idee, o problemă sau o întrebare.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
             </div>
             <div class="resources-community"><span class="resource-discord-mark"><i class="fa-brands fa-discord" aria-hidden="true"></i></span><span><strong>Ne vedem și pe Discord.</strong><small>Pregătim un loc pentru comunitate.</small></span><button type="button" data-resources-discord aria-disabled="true">În curând</button></div>
@@ -45,6 +45,88 @@
         nav.querySelector('.resources-community small').textContent = 'Idei, ajutor și discuții între creatori.';
     }
 
+    // Render the existing public content in one centered dialog. The source pages
+    // remain the single place to edit copy, and ordinary links still work without JS.
+    const resourcePages = new Map([
+        ['/guide.html','Ghiduri'], ['/updates.html','Noutăți'], ['/about.html','Despre noi'],
+        ['/privacy-policy.html','Confidențialitate'], ['/terms-of-use.html','Termeni de utilizare']
+    ]);
+    const pageDialog = document.createElement('dialog');
+    pageDialog.id = 'resource-page-dialog'; pageDialog.className = 'resource-page-dialog';
+    pageDialog.setAttribute('aria-labelledby','resource-page-title');
+    pageDialog.innerHTML = `<div class="resource-page-topbar"><span class="resource-page-label"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> RESURSE <span aria-hidden="true">/</span> <strong id="resource-page-title"></strong></span><button class="support-icon-button" type="button" data-resource-close aria-label="Închide pagina" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="resource-reader" tabindex="-1"></div>`;
+    document.body.append(pageDialog);
+    const reader = pageDialog.querySelector('.resource-reader'), pageTitle = pageDialog.querySelector('#resource-page-title');
+    const pageCache = new Map();
+    let pagePreviousFocus, pageRequest = 0, pageAbort, currentPage;
+    function outsideDialog(event, target) {
+        const box = target.getBoundingClientRect();
+        return event.target === target && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom);
+    }
+    function renderPage(source) {
+        const main = source.cloneNode(true), ids = new Map();
+        main.querySelector('.public-info-back')?.remove();
+        main.querySelectorAll('script,style,link,iframe').forEach(node => node.remove());
+        for (const element of main.querySelectorAll('[id]')) {
+            ids.set(element.id,'resource-view-'+element.id); element.id = ids.get(element.id);
+        }
+        for (const link of main.querySelectorAll('a[href^="#"]')) {
+            const target = ids.get(link.getAttribute('href').slice(1));
+            if (target) link.setAttribute('href','#'+target);
+        }
+        reader.replaceChildren(main); reader.scrollTop = 0;
+        reader.setAttribute('aria-busy','false'); pageDialog.dataset.state = 'ready';
+    }
+    async function openResource(path) {
+        if (!resourcePages.has(path)) return;
+        const request = ++pageRequest; pageAbort?.abort(); pageAbort = new AbortController(); currentPage = path;
+        if (!pageDialog.open) {
+            pagePreviousFocus = nav.contains(document.activeElement) ? trigger : document.activeElement;
+            closeMenu(); pageDialog.showModal();
+        }
+        pageTitle.textContent = resourcePages.get(path); pageDialog.dataset.page = path;
+        if (pageCache.has(path)) {renderPage(pageCache.get(path)); return;}
+        reader.setAttribute('aria-busy','true'); pageDialog.dataset.state = 'loading';
+        const loading = document.createElement('p'); loading.className = 'resource-loading'; loading.setAttribute('role','status'); loading.textContent = 'Se încarcă…';
+        reader.replaceChildren(loading);
+        try {
+            const response = await fetch(path,{signal:pageAbort.signal});
+            if (!response.ok) throw Error('Resource unavailable');
+            const document = new DOMParser().parseFromString(await response.text(),'text/html');
+            const main = document.querySelector('main.public-info-page');
+            if (!main) throw Error('Missing resource content');
+            if (request !== pageRequest || !pageDialog.open) return;
+            pageCache.set(path,main); renderPage(main);
+        } catch (error) {
+            if (request !== pageRequest || error.name === 'AbortError' || !pageDialog.open) return;
+            reader.setAttribute('aria-busy','false'); pageDialog.dataset.state = 'error';
+            reader.innerHTML = `<div class="resource-load-error" role="status"><i class="fa-solid fa-arrow-rotate-right" aria-hidden="true"></i><h2>Pagina nu s-a încărcat.</h2><p>Verifică legătura la internet și încearcă din nou.</p><button type="button" data-resource-retry>Încearcă din nou</button></div>`;
+        }
+    }
+    pageDialog.querySelector('[data-resource-close]').addEventListener('click', () => pageDialog.close());
+    pageDialog.addEventListener('close', () => {
+        if (pageDialog.open) return; // A queued close must not cancel a newer opening.
+        pageRequest++; pageAbort?.abort();
+        if (pagePreviousFocus?.isConnected) pagePreviousFocus.focus({preventScroll:true});
+    });
+    pageDialog.addEventListener('click', event => {
+        if (outsideDialog(event,pageDialog)) pageDialog.close();
+        if (event.target.closest('[data-resource-retry]')) openResource(currentPage);
+        const anchor = event.target.closest('a[href^="#resource-view-"]');
+        if (anchor) {
+            const target = reader.querySelector('[id="'+anchor.getAttribute('href').slice(1)+'"]');
+            if (target) {event.preventDefault(); target.scrollIntoView({block:'start',behavior:'instant'});}
+        }
+    });
+    document.addEventListener('click', event => {
+        const link = event.target.closest('a[href]');
+        if (!link || event.defaultPrevented || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || link.target === '_blank' || link.hasAttribute('download')) return;
+        const url = new URL(link.href,location.href);
+        if (url.origin === location.origin && resourcePages.has(url.pathname) && !url.hash && !url.search) {
+            event.preventDefault(); openResource(url.pathname);
+        }
+    });
+
     const topics = {
         game: {title:'Propune un joc', description:'Ce ți-ar plăcea să joci cu publicul tău?', icon:'fa-gamepad', hint:'Descrie jocul, cum intervin spectatorii și cum se câștigă o rundă.'},
         bug: {title:'Raportează o problemă', description:'Ceva nu funcționează cum ar trebui?', icon:'fa-bug', hint:'Ce s-a întâmplat? Ce te așteptai să se întâmple? Spune-ne pașii prin care putem reproduce problema.'},
@@ -54,7 +136,7 @@
     const dialog = document.createElement('dialog');
     dialog.id = 'site-support'; dialog.className = 'resource-support';
     dialog.setAttribute('aria-labelledby','resource-support-title');
-    dialog.innerHTML = `<div class="support-topbar"><a class="support-brand" href="index.html"><img src="assets/tikinteract-icon-v2.png" width="25" height="25" alt=""><span>TIK<span>INTERACT</span></span></a><button type="button" class="support-icon-button" data-support-close aria-label="Închide suportul"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
+    dialog.innerHTML = `<div class="support-topbar"><a class="support-brand" href="index.html"><img src="assets/tikinteract-icon-v2.png" width="25" height="25" alt=""><span>TIK<span>INTERACT</span></span></a><button type="button" class="support-icon-button" data-support-close aria-label="Închide suportul" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div>
         <div class="support-content"><div class="support-intro">${robot}<span class="support-eyebrow">ÎMPREUNĂ ÎL FACEM MAI BUN</span><h2 id="resource-support-title">Cu ce te putem ajuta?</h2><p>O idee bună sau un lucru care nu merge? Spune-ne.</p></div>
         <div data-support-topics class="support-topics">${Object.entries(topics).map(([key,topic]) => `<button type="button" class="support-topic" data-support-topic="${key}"><span class="support-topic-icon"><i class="fa-solid ${topic.icon}" aria-hidden="true"></i></span><span><strong>${topic.title}</strong><small>${topic.description}</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>`).join('')}</div>
         <section data-support-write hidden><button class="support-back" type="button" data-support-back><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Alt subiect</button><div class="support-write-heading"><span class="support-topic-icon"><i data-support-type-icon class="fa-solid" aria-hidden="true"></i></span><h3 data-support-type-title></h3></div>
@@ -78,10 +160,9 @@
     function saveDraft() {if (activeTopic) drafts[activeTopic] = message.value;}
     document.addEventListener('click', event => {if (event.target.closest('[data-open-support]')) openSupport();});
     dialog.querySelector('[data-support-close]').addEventListener('click', () => dialog.close());
-    dialog.addEventListener('close', () => {saveDraft(); if (previousFocus?.isConnected) previousFocus.focus({preventScroll:true});});
+    dialog.addEventListener('close', () => {if (dialog.open) return; saveDraft(); if (previousFocus?.isConnected) previousFocus.focus({preventScroll:true});});
     dialog.addEventListener('click', event => {
-        const box = dialog.getBoundingClientRect();
-        if (event.target === dialog && (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom)) dialog.close();
+        if (outsideDialog(event,dialog)) dialog.close();
         const button = event.target.closest('[data-support-topic]');
         if (!button) return;
         activeTopic = button.dataset.supportTopic; const topic = topics[activeTopic];
