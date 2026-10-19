@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import {Simulation} from '../GAME/NEON-ASCENT/src/simulation.js';
-import {capture,restore} from '../GAME/NEON-ASCENT/src/recovery.js';
+import {Simulation} from '../GAME/NOVA-VEX/src/simulation.js';
+import {capture,restore} from '../GAME/NOVA-VEX/src/recovery.js';
 
 const renderer=()=>({giftFX:{bursts:[]}});
 const old=new Simulation({meteorMeters:300,vortexMeters:150,soundVolume:.17});

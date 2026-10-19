@@ -3,7 +3,7 @@ import {readFile, readdir, writeFile, mkdir} from 'node:fs/promises';
 import {createHash} from 'node:crypto';
 import {openSkyShiftBrowser} from './skyshift-browser.mjs';
 
-const root='GAME/NEON-ASCENT/audio';
+const root='GAME/NOVA-VEX/audio';
 const audit=JSON.parse(await readFile(root+'/sound-design.json','utf8'));
 assert.equal(audit.files.length,44);
 const oldHashes=new Set(await Promise.all((await readdir('GAME/SKYSHIFT-INTERACT/audio')).filter(x=>x.endsWith('.mp3')).map(async file=>createHash('sha256').update(await readFile('GAME/SKYSHIFT-INTERACT/audio/'+file)).digest('hex'))));
@@ -19,7 +19,7 @@ const browser=await openSkyShiftBrowser('neon-ascent-audio-qa');
 const {page,evaluate,waitFor}=browser;
 const check=async(expression,message)=>assert(await evaluate(expression),message);
 try {
-    await page('Page.navigate',{url:(process.env.SKYSHIFT_URL||'http://127.0.0.1:3001')+'/GAME/NEON-ASCENT/Neon-Ascent.html?qa'});
+    await page('Page.navigate',{url:(process.env.SKYSHIFT_URL||'http://127.0.0.1:3001')+'/GAME/NOVA-VEX/Neon-Ascent.html?qa'});
     await waitFor('!!window.__neonAscent && document.getElementById("loading").hidden');
     await evaluate('window.a=__neonAscent.audio;window.s=__neonAscent.sim;a.unlock()');
     await check('a.buffers.size===44 && a.failed.length===0 && a.context.state==="running"','All 44 new assets must load and decode');

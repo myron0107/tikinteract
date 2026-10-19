@@ -34,7 +34,7 @@ try{
     assert(await evaluate('document.documentElement.scrollWidth<=innerWidth'),'Studio horizontal overflow');
   }
   await page('Emulation.setDeviceMetricsOverride',{width:540,height:960,deviceScaleFactor:1,mobile:false});
-  await page('Page.navigate',{url:root+'/GAME/NEON-ASCENT/Neon-Ascent.html?qa'});await waitFor('!!window.__neonAscent&&document.getElementById("loading").hidden');
+  await page('Page.navigate',{url:root+'/GAME/NOVA-VEX/Neon-Ascent.html?qa'});await waitFor('!!window.__neonAscent&&document.getElementById("loading").hidden');
   const header=await evaluate('({nova:getComputedStyle(document.querySelector(".title-nova")).color,vex:getComputedStyle(document.querySelector(".title-vex")).color,top:document.querySelector(".brand").getBoundingClientRect().top,titleTop:document.querySelector(".game-title").getBoundingClientRect().top})');
   assert.equal(header.nova,'rgb(255, 121, 190)');assert.equal(header.vex,'rgb(175, 123, 255)');assert(Math.abs(header.top-header.titleTop)<15);
   await evaluate('__neonAscent.teleport(0);__neonAscent.render()');await b.screenshot('assets/game-gallery/nova-vex-city.webp');

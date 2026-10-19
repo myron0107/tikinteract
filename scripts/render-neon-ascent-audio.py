@@ -14,7 +14,7 @@ import subprocess
 import wave
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'GAME/NEON-ASCENT/audio'
+OUT = ROOT / 'GAME/NOVA-VEX/audio'
 MASTERS = ROOT / '.tools/neon-ascent/audio-masters'
 FFMPEG = os.environ.get('FFMPEG', str(ROOT / '.tools/video/imageio_ffmpeg/binaries/ffmpeg-win-x86_64-v7.1.exe'))
 RATE = 32000

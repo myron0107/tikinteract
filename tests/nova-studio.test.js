@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {GiftBindings} from '../GAME/NEON-ASCENT/src/studio-integration.js';
+import {GiftBindings} from '../GAME/NOVA-VEX/src/studio-integration.js';
 const gift={type:'gift',eventId:'gift-1',sessionId:'session',giftId:'rose',giftName:'Rose',username:'alice',displayName:'Alice',repeatCount:3,diamondCount:10,coins:30,giftType:1,repeatEnd:true};
 test('Nova bindings match real gift IDs and preserve quantity independently from coins',()=>{
   const calls=[],bindings=new GiftBindings(payload=>{calls.push(payload);return true;});

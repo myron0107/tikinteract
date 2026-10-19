@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Simulation } from '../GAME/NEON-ASCENT/src/simulation.js';
-import { World } from '../GAME/NEON-ASCENT/src/world.js';
+import { Simulation } from '../GAME/NOVA-VEX/src/simulation.js';
+import { World } from '../GAME/NOVA-VEX/src/world.js';
 
 test('world gifts are reproducible and only appear on safe, non-finish platforms', () => {
     const first = new World('pickup-seed', 500);

@@ -82,6 +82,11 @@ const server = createServer(async (request, response) => {
         return;
     }
 
+    if(pathname.startsWith('/GAME/NEON-ASCENT/')){
+        const destination=new URL(request.url,`http://${HOST}:${PORT}`);
+        destination.pathname=pathname.replace('/GAME/NEON-ASCENT/','/GAME/NOVA-VEX/');
+        response.writeHead(308,{Location:destination.pathname+destination.search}).end();return;
+    }
     const requestedPath = pathname === '/' ? '/index.html' : pathname;
     const filePath = path.resolve(ROOT, `.${requestedPath}`);
     const assetsPath = path.resolve(ROOT, 'assets');
@@ -89,14 +94,14 @@ const server = createServer(async (request, response) => {
     const isSoundFile = filePath.startsWith(`${soundsPath}${path.sep}`)
         && /\.(aac|flac|m4a|mp3|ogg|wav|webm)$/i.test(filePath);
     const isSkyShiftFile = /^\/GAME\/SKYSHIFT-INTERACT\/(?:index\.html|theme\.css|src\/[a-z-]+\.js|audio\/[a-z-]+\.mp3|art\/(?:source\/)?[a-z0-9-]+\.(?:js|json|png|webp))$/.test(requestedPath);
-    const isNeonAscentFile = /^\/GAME\/NEON-ASCENT\/(?:index\.html|Neon-Ascent\.html|theme\.css|src\/[a-z-]+\.js|audio\/[a-z-]+\.mp3|art\/(?:source\/)?[a-z0-9-]+\.(?:js|json|png|webp))$/.test(requestedPath);
+    const isNovaVexFile = /^\/GAME\/NOVA-VEX\/(?:index\.html|Neon-Ascent\.html|theme\.css|src\/[a-z-]+\.js|audio\/[a-z-]+\.mp3|art\/(?:source\/)?[a-z0-9-]+\.(?:js|json|png|webp))$/.test(requestedPath);
     if (filePath !== ROOT && !filePath.startsWith(`${ROOT}${path.sep}`)) {
         response.writeHead(403).end('Forbidden');
         return;
     }
     if (!STATIC_FILES.has(requestedPath)
         && !filePath.startsWith(`${assetsPath}${path.sep}`)
-        && !isSoundFile && !isSkyShiftFile && !isNeonAscentFile) {
+        && !isSoundFile && !isSkyShiftFile && !isNovaVexFile) {
         response.writeHead(404).end('Not found');
         return;
     }

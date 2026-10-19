@@ -3,7 +3,7 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import {openSkyShiftBrowser} from './skyshift-browser.mjs';
 
-const dir='GAME/NEON-ASCENT/art';
+const dir='GAME/NOVA-VEX/art';
 const browser=await openSkyShiftBrowser('neon-ascent-art-chrome');
 try {
     await browser.page('Page.navigate',{url:process.env.SKYSHIFT_URL||'http://localhost:3001/'});
@@ -15,7 +15,7 @@ try {
     for(const name of requested.length?requested:['atlas','rival','board','district','skyline','undergrid','rooftops','sky-circuit','neon-heights','power-core','deep-grid','actions','blast-neon']) {
         const source=name+'-v1.png';
         const result=await browser.evaluate('('+ (async function(name,source){
-            const image=new Image();image.src='/GAME/NEON-ASCENT/art/source/'+source;await image.decode();
+            const image=new Image();image.src='/GAME/NOVA-VEX/art/source/'+source;await image.decode();
             const canvas=document.createElement('canvas');canvas.width=image.width;canvas.height=image.height;
             const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(image,0,0);
             const {data}=ctx.getImageData(0,0,canvas.width,canvas.height),w=canvas.width,h=canvas.height;

@@ -2,10 +2,10 @@ import fs from 'node:fs';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import assert from 'node:assert/strict';
-import {World} from '../GAME/NEON-ASCENT/src/world.js';
-import {NEON_GIFTS} from '../GAME/NEON-ASCENT/src/gift-definitions.js';
+import {World} from '../GAME/NOVA-VEX/src/world.js';
+import {NEON_GIFTS} from '../GAME/NOVA-VEX/src/gift-definitions.js';
 
-const root='GAME/NEON-ASCENT',read=file=>JSON.parse(fs.readFileSync(root+'/'+file,'utf8'));
+const root='GAME/NOVA-VEX',read=file=>JSON.parse(fs.readFileSync(root+'/'+file,'utf8'));
 const art=JSON.parse(fs.readFileSync(root+'/art/manifest.js','utf8').replace(/^window.__NEON_ASCENT_ASSETS=/,'').replace(/;\s*$/,''));
 const generated=read('art/generated-manifest.json'),zones=read('art/zones.json'),actions=read(art.actionMetadata);
 const hash=file=>crypto.createHash('sha256').update(fs.readFileSync(root+'/'+file)).digest('hex');

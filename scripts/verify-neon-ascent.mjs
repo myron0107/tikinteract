@@ -8,7 +8,7 @@ const assert=async(expression,message)=>{if(!await evaluate(expression))throw ne
 try {
     for(const width of [1440,390]) {
         await page('Emulation.setDeviceMetricsOverride',{width,height:width===1440?1000:844,deviceScaleFactor:1,mobile:width<768});
-        await page('Page.navigate',{url:(process.env.SKYSHIFT_URL||'http://localhost:3001')+'/GAME/NEON-ASCENT/Neon-Ascent.html?qa'});
+        await page('Page.navigate',{url:(process.env.SKYSHIFT_URL||'http://localhost:3001')+'/GAME/NOVA-VEX/Neon-Ascent.html?qa'});
         await waitFor('!!window.__neonAscent && document.getElementById("loading").hidden');
         await assert("document.documentElement.scrollWidth<=innerWidth && document.documentElement.scrollHeight<=innerHeight",'Game must fit desktop/mobile without scrolling');
         await assert("__neonAscent.renderer.atlas.naturalWidth>0 && __neonAscent.renderer.props.rival.naturalWidth>0 && __neonAscent.renderer.props.board.naturalWidth>0 && Object.values(__neonAscent.renderer.backgrounds).every(image=>image.naturalWidth>0)",'All new art must load');
@@ -78,7 +78,7 @@ try {
         }
         console.log('Verified new art, six skins, gift quantity/up/down, rival animation, pause and layout at '+width+'px.');
     }
-    await page('Page.navigate',{url:(process.env.SKYSHIFT_URL||'http://localhost:3001')+'/GAME/NEON-ASCENT/Neon-Ascent.html'});
+    await page('Page.navigate',{url:(process.env.SKYSHIFT_URL||'http://localhost:3001')+'/GAME/NOVA-VEX/Neon-Ascent.html'});
     await waitFor('document.getElementById("loading")?.hidden===true');
     const before=await evaluate("document.getElementById('scene').toDataURL()");
     await new Promise(resolve=>setTimeout(resolve,300));

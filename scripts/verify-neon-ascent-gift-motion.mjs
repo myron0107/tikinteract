@@ -7,7 +7,7 @@ const browser=await openSkyShiftBrowser('neon-ascent-motion-qa');
 const {page,evaluate,waitFor}=browser;
 try{
   await page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
-  await page('Page.navigate',{url:'http://localhost:3001/GAME/NEON-ASCENT/Neon-Ascent.html?qa'});
+  await page('Page.navigate',{url:'http://localhost:3001/GAME/NOVA-VEX/Neon-Ascent.html?qa'});
   await waitFor('!!window.__neonAscent && document.getElementById("loading").hidden');
   await evaluate(`window.g=__neonAscent;window.s=g.sim;window.r=g.renderer;window.a=g.audio;window.cues=[];window.play=a.play.bind(a);a.play=(...args)=>{cues.push(args[0]);return play(...args)};a.unlock();window.frames=[]`);
   const results=[];

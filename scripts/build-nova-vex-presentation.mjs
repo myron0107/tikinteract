@@ -1,5 +1,5 @@
 import {readFile,writeFile} from 'node:fs/promises';
-const root='GAME/NEON-ASCENT';
+const root='GAME/NOVA-VEX';
 const template=await readFile('scripts/game-presentation.template.html','utf8');
 const modes=[['nova-vex-cover.webp','Coperta oficială'],['nova-vex-city.webp','Neon District'],['nova-vex-vex.webp','Cursa lui Vex']];
 const values={title:'NOVA &amp; VEX',game:'nova-vex',description:'NOVA & VEX — joc gratuit de parkour neon pentru TikTok LIVE. Cadouri configurabile, opt zone de înălțime și două personaje originale.',

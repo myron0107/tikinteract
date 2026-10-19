@@ -4,8 +4,8 @@ A free neon parkour game starring Nova and her rival Vex, registered as `nova-ve
 in the public catalog and LIVE Studio. The existing SkyShift edition and the
 supplied original file are preserved.
 
-Open `http://127.0.0.1:3001/GAME/NEON-ASCENT/Neon-Ascent.html` while the local
-preview server is running, or open its presentation at `GAME/NEON-ASCENT/index.html`.
+Open `http://127.0.0.1:3001/GAME/NOVA-VEX/Neon-Ascent.html` while the local
+preview server is running, or open its presentation at `GAME/NOVA-VEX/index.html`.
 A/D or touch the left/right side to steer. The three **TEST**
 buttons preview upward/downward gifts and the rival; the gear opens all settings
 and test actions. No real LIVE gifts are sent by these controls.

@@ -10,7 +10,7 @@ const report=[];
 try{
   for(const width of [1440,390]){
     await page('Emulation.setDeviceMetricsOverride',{width,height:width===390?844:1000,deviceScaleFactor:1,mobile:width===390});
-    await page('Page.navigate',{url:'http://localhost:3001/GAME/NEON-ASCENT/Neon-Ascent.html?qa'});
+    await page('Page.navigate',{url:'http://localhost:3001/GAME/NOVA-VEX/Neon-Ascent.html?qa'});
     await waitFor('!!window.__neonAscent&&document.getElementById("loading").hidden');
     await evaluate(`window.g=__neonAscent;window.s=g.sim;window.r=g.renderer;window.a=g.audio;window.cues=[];window.nodes=[];window.frames=[];const rival=r.winShow.rival.bind(r.winShow);r.winShow.rival=(ctx,x,y,...args)=>{nodes.push({x,y,pose:args[1],height:args[0]});return rival(ctx,x,y,...args)};const sprite=r.sprite.bind(r);r.sprite=(name,x,y,...args)=>{if(['pushTouch','pushExtend','rideCatch','rideHold'].includes(name))nodes.push({x,y,pose:name,height:args[1]});return sprite(name,x,y,...args)};const play=a.play.bind(a);a.play=(...args)=>{cues.push(args[0]);return play(...args)};a.unlock()`);
     for(const [side,x]of [['right',140],['left',340]])for(const [action,spec]of Object.entries(specs)){

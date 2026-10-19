@@ -320,7 +320,8 @@ async function boot() {
     localize(); renderer = new Renderer($('scene')); renderer.language = language;
     await Promise.all([renderer.loaded, audio.prepare(), document.fonts.ready]);
     assetsReady();
-    if (!embedded) await recover(qa ? params.get('persist') : 'review:' + location.pathname);
+    // Keep the existing browser save key after the public folder rename.
+    if (!embedded) await recover(qa ? params.get('persist') : 'review:' + location.pathname.replace('/GAME/NOVA-VEX/','/GAME/NEON-ASCENT/'));
     loaded = true; renderer.resize(); renderer.onCue = cue => audio.effect(cue); renderer.onScoreStart = job => { for (const source of job.contributions) card({ ...source, sceneId: 'utility-' + job.sequence + '@' + job.clock, duration: job.duration }, 'active'); };
     renderer.icon($('trophy'), 'trophy'); renderer.icon($('victory-cup'), 'trophy'); renderer.icon($('finish-flag'), 'finish'); syncSettings();
     for (const canvas of document.querySelectorAll('[data-sprite]')) renderer.icon(canvas, canvas.dataset.sprite);

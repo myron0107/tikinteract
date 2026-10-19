@@ -2,7 +2,7 @@
 (()=>{
   const root=document.querySelector('[data-home-nova]');if(!root)return;
   const canvas=root.querySelector('canvas'),ctx=canvas.getContext('2d'),button=root.querySelector('[data-nova-pause]');if(!ctx)return;
-  const base='GAME/NEON-ASCENT/art/',reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const base='GAME/NOVA-VEX/art/',reduced=matchMedia('(prefers-reduced-motion: reduce)');
   let art,loading,visible=false,paused=false,clock=0,last=0,request=0,scene=-1,frames=0;
   const ease=t=>{t=Math.max(0,Math.min(1,t));return t*t*(3-2*t);};
   const image=src=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=reject;im.src=base+src;});

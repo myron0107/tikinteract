@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/GAME/NEON-ASCENT/:path*",
+      "destination": "/GAME/NOVA-VEX/:path*",
+      "permanent": true
+    }
+  ]
+}
