@@ -8,8 +8,10 @@ let platformSessionUsername = null;
 let platformSessionPromise = null;
 let platformFinishPromise = null;
 let leaderboardRefreshTimer = null;
-let leaderboardPeriod = 'all';
+let leaderboardPeriod = '7d';
 let leaderboardRequestId = 0;
+let tiktokProfileSaveRequest = 0;
+let tiktokProfileWrite = Promise.resolve();
 const soundEffectCatalog = [
     ['Applause', 'sfx', 'applause-88e87f19.mp3'],
     ['Celebration', 'sfx', 'celebrate-81c37c6c.mp3'],
@@ -149,12 +151,24 @@ const leaderboardPeriods = {
     '7d': 'Clasament ultimele 7 zile',
     '30d': 'Clasament ultimele 30 de zile'
 };
+const leaderboardHeadings = {
+    all: 'de la început.',
+    '24h': 'în ultimele 24 de ore.',
+    '7d': 'în ultimele 7 zile.',
+    '30d': 'în ultimele 30 de zile.'
+};
+const leaderboardStatPeriods = {
+    all: 'Totaluri de la început',
+    '24h': 'Ultimele 24 de ore în cifre',
+    '7d': 'Ultimele 7 zile în cifre',
+    '30d': 'Ultimele 30 de zile în cifre'
+};
 
 function setLeaderboardStatus(message, isError = false) {
     const status = document.getElementById('leaderboard-status');
     if (!status) return;
     status.textContent = message;
-    status.className = `mb-5 text-sm ${isError ? 'text-amber-400' : 'text-zinc-400'}`;
+    status.className = `ranking-status${isError ? ' is-error' : ''}`;
 }
 
 function formatLiveTime(seconds) {
@@ -846,7 +860,55 @@ function createLeaderboardPerson(profile, rank) {
     return person;
 }
 
-function renderLeaderboard(rows) {
+function renderStreamerPodium(podium, rows, loading = false, unavailable = false) {
+    if (!podium) return;
+    podium.replaceChildren();
+    podium.setAttribute('aria-busy', String(loading));
+    [2, 1, 3].forEach((rank) => {
+        const profile = rows[rank - 1];
+        const card = document.createElement('article');
+        card.className = `ranking-spot ranking-spot-${rank}${profile ? '' : ' is-vacant'}${loading ? ' is-loading' : ''}`;
+        card.setAttribute('aria-label', `Locul ${rank}${profile ? `: ${profile.tiktok_display_name || profile.tiktok_username}` : loading ? ': se încarcă' : ': loc liber'}`);
+        if (rank === 1) {
+            const crown = document.createElement('i');
+            crown.className = 'fa-solid fa-crown ranking-crown';
+            crown.setAttribute('aria-hidden', 'true');
+            card.append(crown);
+        }
+        if (profile) card.append(createLeaderboardPerson(profile));
+        else {
+            const avatar = document.createElement('span');
+            avatar.className = 'ranking-free-avatar';
+            avatar.textContent = '?';
+            avatar.setAttribute('aria-hidden', 'true');
+            const name = document.createElement('strong');
+            name.className = 'ranking-free-name';
+            name.textContent = loading ? 'Se încarcă' : 'Loc liber';
+            const invitation = document.createElement('span');
+            invitation.className = 'ranking-free-invite';
+            invitation.textContent = loading ? 'Pregătim clasamentul' : 'Intră în LIVE';
+            card.append(avatar, name, invitation);
+        }
+        const block = document.createElement('div');
+        block.className = 'ranking-block';
+        const position = document.createElement('strong');
+        position.className = 'ranking-position';
+        position.textContent = String(rank);
+        position.setAttribute('aria-label', `Locul ${rank}`);
+        const coins = document.createElement('span');
+        coins.className = 'ranking-coins';
+        coins.textContent = loading || unavailable ? '—' : `${Number(profile?.total_coins || 0).toLocaleString('ro-RO')} monede`;
+        const time = document.createElement('span');
+        time.className = 'ranking-time';
+        time.textContent = profile ? `${formatLiveTime(profile.total_live_seconds)} LIVE` : '';
+        block.append(position, coins, time);
+        card.append(block);
+        podium.append(card);
+    });
+
+}
+
+function renderLeaderboard(rows, loading = false, unavailable = false) {
     const podium = document.getElementById('leaderboard-podium');
     const list = document.getElementById('leaderboard-list');
     const empty = document.getElementById('leaderboard-empty');
@@ -854,28 +916,11 @@ function renderLeaderboard(rows) {
 
     podium.replaceChildren();
     list.replaceChildren();
-    empty.classList.toggle('hidden', rows.length > 0);
+    empty.classList.toggle('hidden', loading || unavailable || rows.length > 0);
+    podium.setAttribute('aria-busy', String(loading));
+    document.getElementById('leaderboard-table-wrap')?.classList.toggle('hidden', !rows.length);
 
-    rows.slice(0, 3).forEach((profile, index) => {
-        const rank = index + 1;
-        const card = document.createElement('article');
-        card.className = `leaderboard-top-card leaderboard-top-${rank}`;
-        const label = document.createElement('p');
-        label.className = 'leaderboard-top-label';
-        label.textContent = rank === 1 ? 'Streamer #1' : `Locul ${rank}`;
-        const person = createLeaderboardPerson(profile);
-        const coins = document.createElement('strong');
-        coins.className = 'leaderboard-top-coins';
-        coins.textContent = Number(profile.total_coins || 0).toLocaleString('ro-RO');
-        const coinsLabel = document.createElement('span');
-        coinsLabel.className = 'leaderboard-top-caption';
-        coinsLabel.textContent = 'monede';
-        const time = document.createElement('span');
-        time.className = 'leaderboard-top-time';
-        time.textContent = formatLiveTime(profile.total_live_seconds);
-        card.append(label, person, coins, coinsLabel, time);
-        podium.append(card);
-    });
+    renderStreamerPodium(podium, rows, loading, unavailable);
 
     rows.forEach((profile, index) => {
         const row = document.createElement('tr');
@@ -893,6 +938,19 @@ function renderLeaderboard(rows) {
         row.append(rankCell, streamerCell, coinCell, timeCell);
         list.append(row);
     });
+    const statistics = {
+        'leaderboard-total-creators': rows.length.toLocaleString('ro-RO'),
+        'leaderboard-total-coins': rows.reduce((sum, row) => sum + Number(row.total_coins || 0), 0).toLocaleString('ro-RO'),
+        'leaderboard-total-time': formatLiveTime(rows.reduce((sum, row) => sum + Number(row.total_live_seconds || 0), 0)),
+        'leaderboard-leader': rows[0] ? `@${rows[0].tiktok_username}` : '—'
+    };
+    Object.entries(statistics).forEach(([id, value]) => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.textContent = loading || unavailable ? '—' : value;
+            element.title = loading || unavailable ? '' : value;
+        }
+    });
 }
 
 async function loadLeaderboard() {
@@ -901,7 +959,12 @@ async function loadLeaderboard() {
     if (!list) return;
 
     const requestId = ++leaderboardRequestId;
+    renderLeaderboard([], true);
+    const updated = document.getElementById('leaderboard-updated');
+    if (updated) updated.textContent = 'Actualizare în curs…';
     if (!supabase) {
+        renderLeaderboard([], false, true);
+        if (updated) updated.textContent = 'Date indisponibile momentan';
         setLeaderboardStatus('Nu s-a putut inițializa Supabase. Reîncarcă pagina și încearcă din nou.', true);
         return;
     }
@@ -914,61 +977,23 @@ async function loadLeaderboard() {
         if (error) throw error;
         if (requestId !== leaderboardRequestId) return;
 
-        const rows = data || [];
+        const rows = (data || []).filter(profile => profile.tiktok_username?.toLowerCase() !== 'numele_tau');
         renderLeaderboard(rows);
+        if (updated) updated.textContent = `Actualizat la ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})}`;
         setLeaderboardStatus(rows.length
-            ? `Afișăm ${rows.length} profiluri publice · ${leaderboardPeriods[leaderboardPeriod].toLowerCase()}.`
-            : leaderboardPeriod === 'all'
-                ? 'Nu există încă profiluri publice. Fii primul streamer din clasament!'
-                : `Nu există activitate în ${leaderboardPeriod === '24h' ? 'ultimele 24 de ore' : `ultimele ${leaderboardPeriod === '7d' ? '7 zile' : '30 de zile'}`}.`);
+            ? `${leaderboardPeriods[leaderboardPeriod]} · ${rows.length} ${rows.length === 1 ? 'profil public' : 'profiluri publice'}`
+            : '');
     } catch (error) {
         if (requestId !== leaderboardRequestId) return;
-        renderLeaderboard([]);
-        document.getElementById('leaderboard-empty')?.classList.add('hidden');
-        setLeaderboardStatus(
-            `Clasamentul nu s-a putut încărca: ${error.message}. Rulează supabase/leaderboard_periods.sql în Supabase.`,
-            true
-        );
+        renderLeaderboard([], false, true);
+        if (updated) updated.textContent = 'Actualizarea nu a reușit';
+        console.error('Failed to load leaderboard:', error);
+        setLeaderboardStatus('Clasamentul nu poate fi încărcat momentan. Încearcă din nou folosind butonul de actualizare.', true);
     }
 }
 
-function renderHomeLeaderboard(profiles) {
-    const list = document.getElementById('home-leaderboard-list');
-    if (!list) return;
-    list.replaceChildren();
-    profiles.slice(0, 5).forEach((profile, index) => {
-        const rank = index + 1;
-        const row = document.createElement('li');
-        row.className = `home-top-five-entry home-top-five-entry--${rank}`;
-        row.value = rank;
-        row.setAttribute('aria-label', `Locul ${rank}`);
-        const position = document.createElement('span');
-        position.className = 'home-top-five-position';
-        position.textContent = String(rank).padStart(2, '0');
-        position.setAttribute('aria-hidden', 'true');
-        const person = createLeaderboardPerson(profile);
-        person.classList.add('home-top-five-person');
-        const score = document.createElement('div');
-        score.className = 'home-top-five-score';
-        const coins = document.createElement('strong');
-        coins.textContent = Number(profile.total_coins || 0).toLocaleString('ro-RO');
-        const caption = document.createElement('span');
-        caption.textContent = 'monede';
-        score.append(coins, caption);
-        const time = document.createElement('span');
-        time.className = 'home-top-five-time';
-        time.textContent = `${formatLiveTime(profile.total_live_seconds)} LIVE`;
-        if (rank <= 3) {
-            const emblem = document.createElement('span');
-            emblem.className = 'home-top-five-emblem';
-            emblem.setAttribute('aria-hidden', 'true');
-            const icon = document.createElement('i');
-            icon.className = rank === 1 ? 'fa-solid fa-trophy' : 'fa-solid fa-medal';
-            emblem.append(icon);
-            row.append(emblem, person, score, time, position);
-        } else row.append(position, person, score, time);
-        list.append(row);
-    });
+function renderHomeLeaderboard(profiles, loading = false, unavailable = false) {
+    renderStreamerPodium(document.getElementById('home-leaderboard-list'), profiles.slice(0, 3), loading, unavailable);
 }
 
 async function loadHomeLeaderboard() {
@@ -976,7 +1001,9 @@ async function loadHomeLeaderboard() {
     const status = document.getElementById('home-leaderboard-status');
     const supabase = window.tikInteractSupabase;
     if (!list || !status) return;
+    renderHomeLeaderboard([], true);
     if (!supabase) {
+        renderHomeLeaderboard([], false, true);
         status.textContent = 'Clasamentul nu este disponibil momentan. Reîncarcă pagina pentru a încerca din nou.';
         status.classList.add('is-error');
         return;
@@ -990,13 +1017,14 @@ async function loadHomeLeaderboard() {
         });
         if (error) throw error;
 
-        const rows = (data || []).slice(0, 5);
+        const rows = (data || []).filter(profile => profile.tiktok_username?.toLowerCase() !== 'numele_tau').slice(0, 3);
         renderHomeLeaderboard(rows);
 
         status.textContent = rows.length
             ? `Top ${rows.length} · Clasament all-time`
             : 'Clasamentul se completează după salvarea profilurilor și conectarea LIVE-urilor în Studio.';
     } catch (error) {
+        renderHomeLeaderboard([], false, true);
         console.error('Failed to load the home page leaderboard:', error);
         status.textContent = `Topul nu s-a putut încărca: ${error.message}`;
         status.classList.add('is-error');
@@ -1012,11 +1040,13 @@ function setLeaderboardPeriod(period) {
         button.classList.toggle('is-active', isActive);
     });
     const label = document.getElementById('leaderboard-period-label');
-    if (label) label.textContent = leaderboardPeriods[period];
+    if (label) label.textContent = leaderboardStatPeriods[period];
+    const heading = document.getElementById('leaderboard-heading-period');
+    if (heading) heading.textContent = leaderboardHeadings[period];
     loadLeaderboard();
 }
 
-async function saveTikTokLeaderboardProfile(username, displayName = username, avatarUrl = null) {
+async function saveTikTokLeaderboardProfile(username) {
     const supabase = window.tikInteractSupabase;
     if (!window.tikInteractUser || !supabase) {
         const status = document.getElementById('tiktok-sync-status');
@@ -1027,14 +1057,30 @@ async function saveTikTokLeaderboardProfile(username, displayName = username, av
         return false;
     }
 
-    const { error } = await supabase.rpc('save_my_streamer_profile', {
-        p_tiktok_username: username.replace(/^@/, ''),
-        p_tiktok_display_name: displayName || username.replace(/^@/, ''),
-        p_avatar_url: avatarUrl,
-        p_is_public: true
+    const userId = window.tikInteractUser.id, request = ++tiktokProfileSaveRequest;
+    if (!window.TikInteractTikTokProfile) throw new Error('Verificarea TikTok nu este disponibilă. Numele nu a fost salvat.');
+    const profile = await window.TikInteractTikTokProfile.verify(username);
+    const current = () => window.tikInteractUser?.id === userId && request === tiktokProfileSaveRequest;
+    if (!current()) return false;
+    const write = tiktokProfileWrite.catch(() => {}).then(async () => {
+        if (!current()) return false;
+        const {error} = await supabase.rpc('save_my_streamer_profile', {
+            p_tiktok_username:profile.username,p_tiktok_display_name:profile.displayName,p_avatar_url:profile.avatarUrl,p_is_public:true
+        });
+        if (error) throw new Error('Profilul a fost verificat, dar nu a putut fi salvat. Încearcă din nou.');
+        if (!current()) return false;
+        setStreamerProfile(profile.username, profile.avatarUrl, profile.displayName);
+        window.TikInteractGifts?.setProfile(profile.username);
+        try { localStorage.setItem('tikinteract_tiktok_user', `@${profile.username}`); } catch {}
+        return true;
     });
-    if (error) throw error;
-    return true;
+    tiktokProfileWrite = write;
+    return write;
+}
+
+function cancelPendingTikTokProfile() {
+    tiktokProfileSaveRequest++;
+    window.TikInteractTikTokProfile?.reset();
 }
 
 async function restoreMyStreamerProfile() {
@@ -1059,22 +1105,14 @@ async function restoreMyStreamerProfile() {
         }
         if (!savedUsername) return;
 
-        const username = savedUsername.trim().replace(/^@/, '');
-        await saveTikTokLeaderboardProfile(username);
-        profile = {
-            tiktok_username: username,
-            tiktok_display_name: username,
-            avatar_url: null,
-            is_public: true
-        };
-    } else if (!profile.is_public) {
-        await saveTikTokLeaderboardProfile(
-            profile.tiktok_username,
-            profile.tiktok_display_name,
-            profile.avatar_url
-        );
-        profile.is_public = true;
+        // A local draft is never evidence that an account exists on TikTok.
+        if (savedUsername.replace(/^@/, '').toLowerCase() !== 'numele_tau') {
+            const input = document.getElementById('tiktok-user');
+            if (input) input.value = savedUsername;
+        }
+        return;
     }
+    if (window.tikInteractUser?.id !== user.id || profile.tiktok_username.toLowerCase() === 'numele_tau') return;
 
     const input = document.getElementById('tiktok-user');
     if (input) input.value = `@${profile.tiktok_username}`;
@@ -1085,16 +1123,25 @@ function saveTikTokProfileFromSettings() {
     const input = document.getElementById('tiktok-user');
     if (!input) return;
     const username = input.value.trim().replace(/^@/, '');
+    const userId = window.tikInteractUser?.id;
+    const current = () => window.tikInteractUser?.id === userId && input.value.trim().replace(/^@/, '').toLowerCase() === username.toLowerCase();
+    const status = document.getElementById('tiktok-sync-status');
+    if (status) {
+        status.textContent = 'Se verifică dacă profilul există pe TikTok…';
+        status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400';
+    }
     saveTikTokLeaderboardProfile(username).then((isPublic) => {
+        if (!current()) return;
         const status = document.getElementById('tiktok-sync-status');
         if (status && !connectedUsername) {
             status.textContent = isPublic
-                ? 'Profilul și statisticile sunt publicate automat în clasament.'
-                : 'Intră în cont ca să publici profilul în clasament.';
+                ? 'Profil TikTok verificat și salvat.'
+                : window.tikInteractUser ? 'Salvarea a fost anulată.' : 'Intră în cont ca să verifici profilul TikTok.';
             status.className = `mb-4 text-[10px] font-bold uppercase tracking-[0.14em] ${isPublic ? 'text-green-400' : 'text-amber-400'}`;
         }
         loadLeaderboard();
     }).catch((error) => {
+        if (!current()) return;
         const status = document.getElementById('tiktok-sync-status');
         if (status) {
             status.textContent = `Nu am putut salva profilul: ${error.message}`;
@@ -1106,7 +1153,10 @@ function saveTikTokProfileFromSettings() {
 async function ensureLiveStreamerProfile(username) {
     const user=window.tikInteractUser,client=window.tikInteractSupabase;
     if(!user||!client)return false;
+    if(!window.TikInteractTikTokProfile)throw new Error('Verificarea TikTok nu este disponibilă.');
+    await window.TikInteractTikTokProfile.verify(username);
     const stillCurrent=()=>window.tikInteractUser?.id===user.id&&connectedUsername===username;
+    if(!stillCurrent())return false;
     const {data,error}=await client.from('streamer_profiles')
         .select('tiktok_username').eq('user_id',user.id).maybeSingle();
     if(error)throw error;
@@ -1399,15 +1449,18 @@ function connectToLocalServer() {
         } else if (message.type === 'gift-catalog') {
             window.TikInteractGifts?.receiveCatalog(message);
         } else if (message.type === 'profile') {
-            window.TikInteractGifts?.setProfile(message.username);
-            setStreamerProfile(message.username, message.avatarUrl, message.displayName);
-            saveTikTokLeaderboardProfile(message.username, message.displayName, message.avatarUrl)
-                .then(() => loadLeaderboard())
+            const requestedInput = document.getElementById('tiktok-user');
+            if (requestedInput && requestedInput.value.trim().replace(/^@/, '').toLowerCase() !== String(message.username).toLowerCase()) return;
+            const profileUserId = window.tikInteractUser?.id;
+            const profileCurrent = () => window.tikInteractUser?.id === profileUserId && (!requestedInput || requestedInput.value.trim().replace(/^@/, '').toLowerCase() === String(message.username).toLowerCase());
+            saveTikTokLeaderboardProfile(message.username)
+                .then(saved => { if (saved && profileCurrent()) loadLeaderboard(); })
                 .catch((error) => {
+                    if (!profileCurrent()) return;
                     console.error('Failed to save TikTok profile:', error);
                     const status = document.getElementById('tiktok-sync-status');
                     if (status) {
-                        status.textContent = `Poza a fost găsită, dar profilul nu s-a salvat: ${error.message}`;
+                        status.textContent = error.message;
                         status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
                     }
                 });
@@ -1519,38 +1572,9 @@ function toggleTikTokConnection() {
 
 function lookupTikTokProfile(rawUsername) {
     if (!window.tikInteractUser) { openAuthModal(); return; }
-    const username = String(rawUsername || '').trim().replace(/^@/, '');
-    if (!/^[A-Za-z0-9._]{2,24}$/.test(username)) {
-        window.alert('Introdu un username TikTok valid.');
-        return;
-    }
-
-    setStreamerProfile(username, null);
-    const status = document.getElementById('tiktok-sync-status');
-    if (status) {
-        status.textContent = `Se caută profilul @${username}...`;
-        status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
-    }
-
-    connectToLocalServer();
-    const requestProfile = () => {
-        if (socket?.readyState === WebSocket.OPEN) {
-            sendStudioServerMessage({ type: 'profile', username });
-        }
-    };
-
-    if (socket?.readyState === WebSocket.OPEN) {
-        requestProfile();
-    } else if (socket?.readyState === WebSocket.CONNECTING) {
-        const pendingSocket = socket;
-        pendingSocket.addEventListener('open', requestProfile, { once: true });
-        pendingSocket.addEventListener('close', () => {
-            const profileStatus = document.getElementById('tiktok-sync-status');
-            if (profileStatus) profileStatus.textContent = 'Pornește serverul local și încearcă din nou.';
-        }, { once: true });
-    } else {
-        if (status) status.textContent = 'Pornește serverul local și încearcă din nou.';
-    }
+    const input = document.getElementById('tiktok-user');
+    if (input) input.value = String(rawUsername || '').trim();
+    saveTikTokProfileFromSettings();
 }
 
 function handleTikTokEvent(event) {

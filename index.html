@@ -61,6 +61,7 @@
     <link rel="stylesheet" href="assets/home-showcase.css?v=5">
     <script src="assets/home-showcase.js?v=9" defer></script>
     <link rel="stylesheet" href="assets/site-template.css?v=13">
+    <link rel="stylesheet" href="assets/leaderboard.css?v=2">
     <link rel="stylesheet" href="assets/home-gifts.css?v=1">
     <script src="assets/home-gifts.js?v=2" defer></script>
     <link rel="stylesheet" href="assets/game-covers.css?v=2">
@@ -255,14 +256,13 @@
                 <div class="home-section-heading">
                     <div>
                         <span class="eyebrow">Creatorii comunității</span>
-                        <h2 id="home-leaderboard-title">Top 5 streameri</h2>
-                        <p>Topul după punctele din cadouri și timpul petrecut LIVE.</p>
+                        <h2 id="home-leaderboard-title">Top 3 streameri</h2>
+                        <p>Cele mai multe monede din cadouri, de la primul LIVE.</p>
                     </div>
                     <button onclick="switchView('leaderboard')" class="home-text-link">Clasament complet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
                 </div>
-                <div class="home-leaderboard-card">
-                    <div class="home-top-five-heading"><span><i class="fa-solid fa-trophy" aria-hidden="true"></i> Podiumul comunității</span><span>ALL TIME</span></div>
-                    <ol id="home-leaderboard-list" class="home-top-five" aria-label="Top 5 streameri"></ol>
+                <div class="home-podium-wrap">
+                    <div id="home-leaderboard-list" class="ranking-podium" aria-label="Top 3 streameri" aria-busy="true"></div>
                     <p id="home-leaderboard-status" class="home-leaderboard-status" role="status" aria-live="polite">Se încarcă topul comunității...</p>
                 </div>
             </section>
@@ -375,50 +375,33 @@
 
     <!-- PUBLIC STREAMER LEADERBOARD -->
     <section id="view-leaderboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
-        <div class="leaderboard-heading mb-8">
+        <div class="ranking-heading">
             <div>
-                <span class="eyebrow">Comunitate</span>
-                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Clasament Streameri</h1>
-                <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">
-                    Ordinea este dată de monedele primite în LIVE. La egalitate, contează timpul transmis prin Studio.
-                </p>
+                <span class="ranking-eyebrow">CLASAMENT</span>
+                <h1>Top streameri<span id="leaderboard-heading-period">în ultimele 7 zile.</span></h1>
+                <p>Cadourile din LIVE te urcă în clasament. Contează monedele primite prin Studio, fără cele din modul de test.</p>
             </div>
-            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
-            </button>
-        </div>
-
-        <div class="leaderboard-summary dashboard-panel rounded-2xl p-5 mb-6">
-            <div class="leaderboard-trophy"><i class="fa-solid fa-trophy"></i></div>
-            <div>
-                <p id="leaderboard-period-label" class="text-sm font-bold text-white">Clasament all-time</p>
-                <p class="mt-1 text-xs text-zinc-400">Sunt incluse doar sesiunile conectate prin Studio.</p>
+            <div class="ranking-filters">
+                <div class="leaderboard-periods" role="group" aria-label="Perioada clasamentului">
+                    <button type="button" data-leaderboard-period="24h" aria-pressed="false" onclick="setLeaderboardPeriod('24h')">24 de ore</button>
+                    <button type="button" data-leaderboard-period="7d" aria-pressed="true" class="is-active" onclick="setLeaderboardPeriod('7d')">7 zile</button>
+                    <button type="button" data-leaderboard-period="30d" aria-pressed="false" onclick="setLeaderboardPeriod('30d')">30 de zile</button>
+                    <button type="button" data-leaderboard-period="all" aria-pressed="false" onclick="setLeaderboardPeriod('all')">Tot timpul</button>
+                </div>
+                <div class="ranking-update"><span id="leaderboard-updated">Date din LIVE-urile conectate</span><button type="button" onclick="loadLeaderboard()" aria-label="Actualizează clasamentul" title="Actualizează clasamentul"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button></div>
             </div>
-            <button onclick="loadLeaderboard()" class="ml-auto bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
-                <i class="fa-solid fa-rotate mr-2"></i> Reîncarcă
-            </button>
         </div>
-
-        <div class="leaderboard-periods mb-5" role="group" aria-label="Perioada clasamentului">
-            <button type="button" data-leaderboard-period="all" aria-pressed="true" class="is-active" onclick="setLeaderboardPeriod('all')">All-time</button>
-            <button type="button" data-leaderboard-period="24h" aria-pressed="false" onclick="setLeaderboardPeriod('24h')">Ultimele 24h</button>
-            <button type="button" data-leaderboard-period="7d" aria-pressed="false" onclick="setLeaderboardPeriod('7d')">7 zile</button>
-            <button type="button" data-leaderboard-period="30d" aria-pressed="false" onclick="setLeaderboardPeriod('30d')">30 zile</button>
-        </div>
-
-        <div id="leaderboard-status" class="mb-5 text-sm text-zinc-400" role="status" aria-live="polite">
-            Se încarcă clasamentul...
-        </div>
-
-        <div id="leaderboard-podium" class="leaderboard-podium mb-6"></div>
-
-        <div class="dashboard-panel overflow-hidden rounded-2xl">
-            <div class="overflow-x-auto">
+        <div id="leaderboard-podium" class="ranking-podium" aria-label="Primele trei locuri" aria-busy="true"></div>
+        <div class="ranking-body">
+          <div class="ranking-results">
+            <div id="leaderboard-status" class="ranking-status" role="status" aria-live="polite">Se încarcă clasamentul...</div>
+            <div id="leaderboard-table-wrap" class="ranking-table-wrap hidden">
                 <table class="leaderboard-table w-full text-left">
+                    <caption class="sr-only">Clasamentul complet al streamerilor</caption>
                     <thead>
                         <tr>
                             <th scope="col">Loc</th>
-                            <th scope="col">Streamer TikTok</th>
+                            <th scope="col">Streamer</th>
                             <th scope="col" class="text-right">Monede</th>
                             <th scope="col" class="text-right">Timp LIVE</th>
                         </tr>
@@ -426,12 +409,34 @@
                     <tbody id="leaderboard-list"></tbody>
                 </table>
             </div>
-            <div id="leaderboard-empty" class="hidden px-6 py-12 text-center">
-                <i class="fa-solid fa-ranking-star text-3xl text-zinc-600"></i>
-                <p class="mt-4 font-bold text-white">Clasamentul este încă gol</p>
-                <p class="mt-2 text-sm text-zinc-400">Salvează profilul TikTok și conectează LIVE-ul în Studio. Profilul apare public în clasament.</p>
+            <div id="leaderboard-empty" class="ranking-panel ranking-empty hidden">
+                <h2>Primul loc te așteaptă.</h2>
+                <p>Nu există încă activitate în această perioadă. Conectează LIVE-ul în Studio și intră în clasament.</p>
+                <button type="button" class="ranking-primary" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Intră în LIVE</button>
             </div>
+          </div>
+          <aside class="ranking-sidebar" aria-label="Statistici și informații">
+            <section class="ranking-panel ranking-numbers">
+                <h2 id="leaderboard-period-label">Ultimele 7 zile în cifre</h2>
+                <dl>
+                    <div><dt>Streameri în top</dt><dd id="leaderboard-total-creators">—</dd></div>
+                    <div><dt>Monede primite</dt><dd id="leaderboard-total-coins" class="is-gold">—</dd></div>
+                    <div><dt>Timp LIVE</dt><dd id="leaderboard-total-time" class="is-pink">—</dd></div>
+                    <div><dt>Liderul clasamentului</dt><dd id="leaderboard-leader" class="is-cyan">—</dd></div>
+                </dl>
+                <p>Totaluri pentru profilurile afișate.</p>
+            </section>
+            <section class="ranking-panel ranking-how">
+                <h2>Cum funcționează?</h2>
+                <p>Cadourile reale primite prin Studio aduc monede în clasament. La egalitate, contează timpul LIVE. Filtrele arată ultimele 24 de ore, 7 sau 30 de zile.</p>
+                <p>Doar profilurile publice apar în top. Testele din Control joc nu se contorizează.</p>
+            </section>
+          </aside>
         </div>
+        <section class="ranking-closing" aria-labelledby="ranking-closing-title">
+            <h2 id="ranking-closing-title">Următorul loc din top<br>poate fi al tău.</h2>
+            <button type="button" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-play" aria-hidden="true"></i> Deschide Studio</button>
+        </section>
     </section>
 
     <!-- ACCOUNT VIEW -->
@@ -539,9 +544,10 @@
     </div>
 
     <script src="assets/game-access.js?v=4"></script>
-    <script src="game.js?v=13"></script>
+    <script src="assets/tiktok-profile.js?v=1"></script>
+    <script src="game.js?v=16"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
-    <script src="assets/site-app.js?v=8"></script>
+    <script src="assets/site-app.js?v=10"></script>
 </body>
 </html>

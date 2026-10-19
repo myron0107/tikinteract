@@ -82,13 +82,13 @@ test('LIVE automatically links the connected profile to the signed-in owner and 
     const helper=source.slice(source.indexOf('async function ensureLiveStreamerProfile('),source.indexOf('function startPlatformLiveSession('));
     for(const [existing,shouldSave] of [[null,true],[{tiktok_username:'TestStreamer'},false]]){
         const saved=[],lookups=[];
-        const context={connectedUsername:'teststreamer',window:{tikInteractUser:{id:'owner-a'},tikInteractSupabase:{from(){return{select(){return{eq(column,id){lookups.push([column,id]);return{async maybeSingle(){return{data:existing,error:null};}};}};}};}}},async saveTikTokLeaderboardProfile(name){saved.push(name);return true;}};
+        const context={connectedUsername:'teststreamer',window:{TikInteractTikTokProfile:{async verify(){return {username:'teststreamer'};}},tikInteractUser:{id:'owner-a'},tikInteractSupabase:{from(){return{select(){return{eq(column,id){lookups.push([column,id]);return{async maybeSingle(){return{data:existing,error:null};}};}};}};}}},async saveTikTokLeaderboardProfile(name){saved.push(name);return true;}};
         vm.createContext(context);vm.runInContext(helper,context);
         assert.equal(await context.ensureLiveStreamerProfile('teststreamer'),true);
         assert.deepEqual(lookups,[['user_id','owner-a']]);assert.equal(saved.length,shouldSave?1:0);
     }
     let release;const waiting=new Promise(resolve=>{release=resolve;});let saved=false;
-    const context={connectedUsername:'teststreamer',window:{tikInteractUser:{id:'owner-a'},tikInteractSupabase:{from(){return{select(){return{eq(){return{maybeSingle:()=>waiting};}};}};}}},async saveTikTokLeaderboardProfile(){saved=true;return true;}};
+    const context={connectedUsername:'teststreamer',window:{TikInteractTikTokProfile:{async verify(){return {username:'teststreamer'};}},tikInteractUser:{id:'owner-a'},tikInteractSupabase:{from(){return{select(){return{eq(){return{maybeSingle:()=>waiting};}};}};}}},async saveTikTokLeaderboardProfile(){saved=true;return true;}};
     vm.createContext(context);vm.runInContext(helper,context);
     const pending=context.ensureLiveStreamerProfile('teststreamer');context.window.tikInteractUser={id:'owner-b'};release({data:null,error:null});
     assert.equal(await pending,false);assert.equal(saved,false);

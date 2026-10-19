@@ -16,7 +16,7 @@ alter table public.streamer_profiles
 
 update public.streamer_profiles
 set is_public = true
-where not is_public;
+where not is_public and lower(tiktok_username) <> 'numele_tau';
 
 create unique index if not exists streamer_profiles_tiktok_username_lower_idx
     on public.streamer_profiles (lower(tiktok_username));
@@ -81,7 +81,14 @@ declare
     v_username text := regexp_replace(trim(coalesce(p_tiktok_username, '')), '^@', '');
     v_display_name text := left(trim(coalesce(p_tiktok_display_name, '')), 80);
     v_avatar_url text := nullif(trim(coalesce(p_avatar_url, '')), '');
+    v_verified jsonb;
 begin
+ if to_regprocedure('public.require_verified_tiktok_profile(uuid,text)') is not null then
+  v_verified := public.require_verified_tiktok_profile(auth.uid(), p_tiktok_username);
+  v_username := v_verified->>'username';
+  v_display_name := v_verified->>'displayName';
+  v_avatar_url := v_verified->>'avatarUrl';
+ end if;
  if to_regprocedure('public.require_site_account()') is not null then
   perform public.require_site_account();
  end if;
@@ -110,7 +117,7 @@ begin
     on conflict (user_id) do update
     set tiktok_username = excluded.tiktok_username,
         tiktok_display_name = excluded.tiktok_display_name,
-        avatar_url = coalesce(excluded.avatar_url, public.streamer_profiles.avatar_url),
+        avatar_url = excluded.avatar_url,
         is_public = true,
         updated_at = now();
 end;
@@ -128,6 +135,9 @@ declare
     v_session_id uuid;
     v_now timestamptz := now();
 begin
+ if to_regprocedure('public.require_verified_tiktok_profile(uuid,text)') is not null then
+  perform public.require_verified_tiktok_profile(auth.uid(), p_tiktok_username);
+ end if;
  if to_regprocedure('public.require_site_account()') is not null then
   perform public.require_site_account();
  end if;

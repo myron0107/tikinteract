@@ -33,6 +33,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             supabaseClient = window.supabase.createClient(config.url, config.anonKey);
             window.tikInteractSupabase = supabaseClient;
             loadHomeLeaderboard();
+            if (!document.getElementById('view-leaderboard')?.classList.contains('hidden') && !isStudioPage) loadLeaderboard();
             const { data: { session } } = await supabaseClient.auth.getSession();
             updateUI(session);
             if (pendingAccountRoute && !session?.user) openAuthModal();
@@ -639,29 +640,18 @@ function syncTikTokAccount() {
     const normalized = username.startsWith('@') ? username : '@' + username;
     input.value = normalized;
 
-    try {
-        localStorage.setItem('tikinteract_tiktok_user', normalized);
-    } catch (err) {
-        console.warn('Local storage unavailable:', err);
-    }
-
     if (typeof saveTikTokProfileFromSettings === 'function') {
         saveTikTokProfileFromSettings();
     }
-
-    if (status) {
-        status.textContent = 'Username salvat; se caută poza profilului...';
-        status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400';
-    }
-    if (typeof lookupTikTokProfile === 'function') lookupTikTokProfile(normalized);
 }
 
 function clearTikTokAccount() {
     const input = document.getElementById('tiktok-user');
     const status = document.getElementById('tiktok-sync-status');
+    if (typeof cancelPendingTikTokProfile === 'function') cancelPendingTikTokProfile();
     if (typeof disconnectTikTokConnection === 'function') disconnectTikTokConnection();
     if (typeof clearStreamerProfile === 'function') clearStreamerProfile();
-    if (input) input.value = '@numele_tau';
+    if (input) input.value = '';
     try {
         localStorage.removeItem('tikinteract_tiktok_user');
     } catch (err) {
@@ -680,7 +670,8 @@ function restoreTikTokState() {
 
     try {
         const savedUser = localStorage.getItem('tikinteract_tiktok_user');
-        if (savedUser) {
+        if (savedUser?.replace(/^@/, '').toLowerCase() === 'numele_tau') localStorage.removeItem('tikinteract_tiktok_user');
+        if (savedUser && savedUser.replace(/^@/, '').toLowerCase() !== 'numele_tau') {
             input.value = savedUser;
             status.textContent = 'Stare: neconectat';
             status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500';
@@ -690,7 +681,7 @@ function restoreTikTokState() {
         console.warn('Local storage unavailable:', err);
     }
 
-    input.value = '@numele_tau';
+    input.value = '';
     status.textContent = 'Stare: neconectat';
     status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500';
 }
