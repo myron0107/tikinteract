@@ -100,3 +100,8 @@
     .game-gallery-item.is-video::after { top: 34px; left: 33px; }
     .game-gallery-stage > video { height: 75dvh; }
 }
+/* Match the site identity in every active game's presentation header. */
+.game-presentation .game-page-brand{display:inline-flex;align-items:center;gap:9px;flex-shrink:0;font-size:18px;line-height:1;letter-spacing:-.04em;color:#f4f4f6}
+.game-presentation .game-page-brand>img{display:block;width:28px;height:28px;object-fit:contain;flex:none}
+.game-presentation .game-page-brand>span>span{color:#ed405d}
+@media(max-width:700px){.game-presentation .game-page-brand{gap:7px;font-size:16px;letter-spacing:-.04em}.game-presentation .game-page-brand>img{width:25px;height:25px}}
