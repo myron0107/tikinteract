@@ -21,7 +21,7 @@ test('support protects conversations, notes and grades; handles replies, unread,
   await assert.rejects(db.exec(migration),/Administrarea nu este activată/);
   await db.exec('rollback');
   const installer=await readFile(new URL('../supabase/install-admin.sql',import.meta.url),'utf8');
-  assert.equal(installer,composeAdminInstall(adminMigration,migration),'Installer must stay synchronized with both source migrations');
+  assert.equal(installer,composeAdminInstall(adminMigration,migration,await readFile(new URL('../supabase/access-keys.sql',import.meta.url),'utf8')),'Installer must stay synchronized with the source migrations');
   await db.exec(installer);await db.exec(installer); // Fresh installation and rerun, without prerequisite steps.
   await db.exec(adminMigration);await db.exec(migration);
   async function call(user,sql,args=[]){await db.exec(`reset role;set request.jwt.claim.sub='${ids[user]||''}';set role ${user?'authenticated':'anon'}`);try{return await db.query(sql,args);}finally{await db.exec('reset role');}}

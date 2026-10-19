@@ -2,8 +2,8 @@ export const DEFAULT_CONFIG = {
     schemaVersion:1,
     plans:[
         {id:'free',name:'FREE',priceCents:0,currency:'RON',enabled:true,features:['Acces la funcțiile de bază','Conectare TikTok LIVE','Profil și clasament public']},
-        {id:'play_pass',name:'Play Pass',priceCents:2900,currency:'RON',enabled:true,features:['Jocuri LIVE extinse','Evenimente interactive','Statistici de bază']},
-        {id:'play_pass_pro',name:'Play Pass PRO',priceCents:7900,currency:'RON',enabled:true,features:['Jocuri și opțiuni avansate','Instrumente pentru moderatori','Automatizări pentru chat']}
+        {id:'play_pass',name:'Play Pass',priceCents:2900,currency:'RON',enabled:true,features:['Jocurile marcate Play Pass','Conectare TikTok LIVE','Acces prin cheie, în cont']},
+        {id:'play_pass_pro',name:'Play Pass PRO',priceCents:7900,currency:'RON',enabled:true,features:['Jocurile Play Pass și PRO','Conectare TikTok LIVE','Timpul Play Pass rămas se păstrează']}
     ],
     games:[
         {id:'neon-race-2',name:'NEON INTERACT',cover:'assets/game-gallery/neon-interact-cover.webp?v=2',entryPath:'GAME/NEON-INTERACT/Neon-Interact.html',presentationPath:'GAME/NEON-INTERACT/index.html',status:'published',plan:'free',description:'Alege RED sau BLUE și intră în cursa de noapte.'},

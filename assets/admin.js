@@ -1,17 +1,18 @@
 import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES} from './platform-schema.js';
 import {SupportInbox,supportError} from './support-center.js';
+import {mountAdminAccessKeys} from './admin-access-keys.js';
 const $=id=>document.getElementById(id),escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const labels={overview:'Tablou de bord',messages:'Mesaje și suport',games:'Jocuri',plans:'Abonamente',studio:'LIVE Studio',content:'Conținut',team:'Echipă și grade',history:'Istoric'};
+const labels={overview:'Tablou de bord',messages:'Mesaje și suport',keys:'Chei de acces',games:'Jocuri',plans:'Abonamente',studio:'LIVE Studio',content:'Conținut',team:'Echipă și grade',history:'Istoric'};
 const roles={owner:'Proprietar',admin:'Administrator',editor:'Editor'};
 let client,state,draft,tab='overview',dirty=false,busy=false,authRequest=0,editingGame=null,previewToken,previewTarget='index.html';
-let messageInbox,messageDrafts=new Map(),messageRequests=new Map(),supportStats;
+let messageInbox,messageDrafts=new Map(),messageRequests=new Map(),supportStats,keyManager;
 function closeInbox(clear=false){if(messageInbox){messageDrafts=messageInbox.drafts;messageRequests=messageInbox.requests;messageInbox.destroy({clear});messageInbox=null;}if(clear){messageDrafts.clear();messageRequests.clear();supportStats=null;}}
 function updateSupportStats(stats){supportStats=stats;document.querySelectorAll('[data-admin-unread]').forEach(b=>{b.textContent=stats.unread;b.hidden=!stats.unread;});}
 const status=(message,error=false)=>{$('admin-status').textContent=message;$('admin-status').hidden=!message;$('admin-status').dataset.error=String(error);};
 function errorText(error){if(error?.message?.includes('CONFIG_CONFLICT'))return 'Alt membru a salvat modificări între timp. Copiază textele nesalvate și reîncarcă panoul pentru ultima versiune.';if(error?.message?.includes('ADMIN_REQUIRED')||error?.message?.includes('OWNER_REQUIRED'))return 'Nu ai drepturile necesare pentru această acțiune.';return error?.message||'Acțiunea nu a reușit. Încearcă din nou.';}
 function markDirty(){dirty=true;$('admin-save-state').textContent='Modificări nesalvate · versiunea de bază '+state.revision;}
 function setBusy(value){busy=value;for(const id of ['admin-save','admin-publish','admin-preview'])$(id).disabled=value;}
-function showGate(title,message,login=false){closeInbox(true);authRequest++;state=null;draft=null;dirty=false;editingGame=null;$('admin-game-form').reset();$('admin-app').hidden=true;$('admin-content').replaceChildren();$('admin-gate').hidden=false;$('admin-gate-title').textContent=title;$('admin-gate-message').textContent=message;$('admin-login').hidden=!login;document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());$('admin-preview-dialog').querySelector('iframe').removeAttribute('src');}
+function showGate(title,message,login=false){closeInbox(true);keyManager?.destroy();keyManager=null;authRequest++;state=null;draft=null;dirty=false;editingGame=null;$('admin-game-form').reset();$('admin-app').hidden=true;$('admin-content').replaceChildren();$('admin-gate').hidden=false;$('admin-gate-title').textContent=title;$('admin-gate-message').textContent=message;$('admin-login').hidden=!login;document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());$('admin-preview-dialog').querySelector('iframe').removeAttribute('src');}
 async function rpc(name,args={}){const {data,error}=await client.rpc(name,args);if(error)throw error;return data;}
 async function load(){
  const request=++authRequest;
@@ -21,7 +22,7 @@ async function load(){
   const next=await rpc('get_site_admin_state');if(request!==authRequest)return;
   if(!next?.draft||!roles[next.role])throw Error('Administrarea nu este încă activată. Rulează supabase/admin.sql în SQL Editor, apoi reîncarcă pagina.');
   state=next;draft=validateConfig(next.draft);dirty=false;$('admin-gate').hidden=true;$('admin-app').hidden=false;$('admin-identity').textContent=data.user.email;$('admin-role').textContent=roles[next.role];
-  $('admin-publish').hidden=next.role==='editor';document.querySelectorAll('[data-owner-only]').forEach(el=>el.hidden=next.role!=='owner');document.querySelectorAll('[data-support-staff-only]').forEach(el=>el.hidden=next.role==='editor');if((tab==='team'&&next.role!=='owner')||(tab==='messages'&&next.role==='editor'))tab='overview';
+  $('admin-publish').hidden=next.role==='editor';document.querySelectorAll('[data-owner-only]').forEach(el=>el.hidden=next.role!=='owner');document.querySelectorAll('[data-support-staff-only]').forEach(el=>el.hidden=next.role==='editor');if((tab==='team'&&next.role!=='owner')||(['messages','keys'].includes(tab)&&next.role==='editor'))tab='overview';
   $('admin-save-state').textContent='Ciornă v'+state.revision+' · publicat v'+state.publishedRevision;status('');render();
  }catch(error){if(request!==authRequest)return;const missing=/PGRST202|schema cache|function.*does not exist/i.test(error.code+' '+error.message);showGate(missing?'Administrarea trebuie activată':'Acces restricționat',missing?'Rulează fișierul supabase/admin.sql în Supabase → SQL Editor. Contul proprietarului trebuie să fie înregistrat și confirmat.':error.message?.includes('ADMIN_REQUIRED')?'Contul tău nu are un grad de administrare.':errorText(error));}
 }
@@ -36,15 +37,17 @@ function renderOverview(root){
  }).catch(e=>{if(request===authRequest&&tab==='overview')$('admin-recent-messages').innerHTML='<p class="admin-note">'+escape(supportError(e))+'</p>';});}
 }
 function render(){
- closeInbox();document.querySelector('.admin-actions').hidden=tab==='messages';$('admin-save-state').hidden=tab==='messages';
+ closeInbox();keyManager?.destroy();keyManager=null;document.querySelector('.admin-actions').hidden=['messages','keys'].includes(tab);$('admin-save-state').hidden=['messages','keys'].includes(tab);
  $('admin-section-title').textContent=labels[tab];document.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('is-active',b.dataset.adminTab===tab));
  const root=$('admin-content');
  if(tab==='overview'){
   renderOverview(root);
  }else if(tab==='messages'){
   root.innerHTML='<div id="admin-inbox"></div>';messageInbox=new SupportInbox({root:$('admin-inbox'),rpc,staff:true,onStats:updateSupportStats});messageInbox.drafts=messageDrafts;messageInbox.requests=messageRequests;messageInbox.start();
+ }else if(tab==='keys'){
+  keyManager=mountAdminAccessKeys({root,rpc});
  }else if(tab==='plans'){
-  root.innerHTML=heading('Abonamente','Modifici prețurile și beneficiile afișate pe site. Procesarea plăților și accesul plătit trebuie activate separat.')+`<div class="admin-grid">${draft.plans.map((p,i)=>`<article class="admin-card"><h2>${escape(p.name)}</h2><label>Nume<input data-plan="${i}" data-field="name" value="${escape(p.name)}" maxlength="60"></label><label>Preț lunar<input data-plan="${i}" data-field="priceCents" type="number" min="0" max="100000" step="0.01" value="${p.priceCents/100}" ${p.id==='free'?'readonly':''}></label><label>Monedă<select data-plan="${i}" data-field="currency">${['RON','EUR','USD'].map(x=>`<option ${p.currency===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Beneficii (câte unul pe rând)<textarea data-plan="${i}" data-field="features" rows="5">${escape(p.features.join('\n'))}</textarea></label><label><input data-plan="${i}" data-field="enabled" type="checkbox" ${p.enabled?'checked':''}> Afișează planul</label></article>`).join('')}</div>`;
+  root.innerHTML=heading('Abonamente','Modifici prețurile și beneficiile afișate pe site. Accesul se poate acorda prin Chei de acces; plata cu cardul se configurează separat.')+`<div class="admin-grid">${draft.plans.map((p,i)=>`<article class="admin-card"><h2>${escape(p.name)}</h2><label>Nume<input data-plan="${i}" data-field="name" value="${escape(p.name)}" maxlength="60"></label><label>Preț lunar<input data-plan="${i}" data-field="priceCents" type="number" min="0" max="100000" step="0.01" value="${p.priceCents/100}" ${p.id==='free'?'readonly':''}></label><label>Monedă<select data-plan="${i}" data-field="currency">${['RON','EUR','USD'].map(x=>`<option ${p.currency===x?'selected':''}>${x}</option>`).join('')}</select></label><label>Beneficii (câte unul pe rând)<textarea data-plan="${i}" data-field="features" rows="5">${escape(p.features.join('\n'))}</textarea></label><label><input data-plan="${i}" data-field="enabled" type="checkbox" ${p.enabled?'checked':''}> Afișează planul</label></article>`).join('')}</div>`;
  }else if(tab==='games'){
   root.innerHTML=heading('Catalogul jocurilor','Adaugi prezentări, schimbi coperta, ordinea și accesul. Dezactivarea nu șterge fișierele jocului.','<button class="admin-primary" type="button" data-new-game>+ Adaugă joc</button>')+`<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Joc</th><th>Stare</th><th>Acces</th><th>Ordine</th><th>Acțiuni</th></tr></thead><tbody>${draft.games.map((g,i)=>`<tr><td><img src="${escape(g.cover)}" alt="" loading="lazy">${escape(g.name)}</td><td><span class="admin-badge ${g.status==='published'?'is-live':g.status==='draft'?'is-draft':''}">${{published:'Publicat',draft:'Ciornă',disabled:'Dezactivat'}[g.status]}</span></td><td>${escape(draft.plans.find(p=>p.id===g.plan)?.name)}</td><td><div class="admin-row-actions"><button data-game-move="${i}" data-delta="-1" aria-label="Mută în sus: ${escape(g.name)}" ${i===0?'disabled':''}>↑</button><button data-game-move="${i}" data-delta="1" aria-label="Mută în jos: ${escape(g.name)}" ${i===draft.games.length-1?'disabled':''}>↓</button></div></td><td><div class="admin-row-actions"><button data-edit-game="${i}">Editează</button><button data-toggle-game="${i}">${g.status==='published'?'Dezactivează':'Activează'}</button></div></td></tr>`).join('')}</tbody></table></div>`;
  }else if(tab==='content'){
@@ -76,7 +79,7 @@ document.addEventListener('input',event=>{
 });
 document.addEventListener('click',async event=>{
  const b=event.target.closest('button');if(!b)return;
- if(b.dataset.adminTab){tab=b.dataset.adminTab;if((tab==='team'&&state?.role!=='owner')||(tab==='messages'&&state?.role==='editor')){tab='overview';return;}status('');render();}
+ if(b.dataset.adminTab){tab=b.dataset.adminTab;if((tab==='team'&&state?.role!=='owner')||(['messages','keys'].includes(tab)&&state?.role==='editor')){tab='overview';return;}status('');render();}
  if(b.dataset.overviewTicket){const id=b.dataset.overviewTicket;tab='messages';render();messageInbox.open(id);}
  if(b.hasAttribute('data-new-game'))editGame(null);
  if(b.dataset.editGame!==undefined)editGame(Number(b.dataset.editGame));

@@ -519,7 +519,10 @@ function closeCookiePreferences() {
     cookiePreferencesPreviousFocus = null;
 }
 
-function loadLiveGame(gameId) {
+let paidLaunchSequence = 0;
+window.addEventListener('tikinteract:auth', () => {paidLaunchSequence++;});
+function loadLiveGame(gameId, verified = false) {
+    const accessRequest = verified ? paidLaunchSequence : ++paidLaunchSequence;
     if (!currentUser) { openAuthModal(); return false; }
     const gamePath = window.TikInteractPlatform?.getGame(gameId)?.entryPath || LIVE_GAME_PATHS[gameId];
     const gameFrame = document.getElementById('live-game-frame');
@@ -538,6 +541,21 @@ function loadLiveGame(gameId) {
         return false;
     }
 
+    if (window.TikInteractGameAccess.getPlan(gameId) !== 'free' && !verified) {
+        const userId = currentUser.id;
+        if (gameStatus) gameStatus.textContent = 'Verificăm accesul la joc…';
+        if (!supabaseClient) return false;
+        supabaseClient.rpc('check_game_access', {p_game: gameId}).then(({data, error}) => {
+            if (accessRequest !== paidLaunchSequence || currentUser?.id !== userId) return;
+            if (error || data !== true) {
+                if (gameStatus) gameStatus.textContent = 'Accesul nu a putut fi confirmat. Verifică perioada în PLAY PASS.';
+                window.TikInteractPass?.refresh();
+                return;
+            }
+            if (loadLiveGame(gameId, true)) window.setLiveStudioTab?.('studio');
+        }).catch(() => {if (accessRequest === paidLaunchSequence && currentUser?.id === userId && gameStatus) gameStatus.textContent = 'Nu am putut verifica accesul. Încearcă din nou.';});
+        return false;
+    }
     if (gameSelect && gameSelect.value !== gameId) gameSelect.value = gameId;
     document.querySelectorAll('[data-live-game]').forEach((button) => {
         const selected = button.dataset.liveGame === gameId;

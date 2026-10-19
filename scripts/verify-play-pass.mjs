@@ -1,0 +1,60 @@
+import assert from 'node:assert/strict';
+import {mkdir} from 'node:fs/promises';
+import {createAdminQABridge} from './qa-admin-database.mjs';
+import {openSkyShiftBrowser} from './skyshift-browser.mjs';
+import {installQAAuth} from './qa-auth-fixture.mjs';
+import {DEFAULT_CONFIG,cloneConfig} from '../assets/platform-schema.js';
+
+function installPassQA(apiRoot){
+ const client=window.supabase.createClient(),realFetch=window.fetch.bind(window);
+ const role=()=>sessionStorage.getItem('qa-admin-role')||'owner';
+ const users={owner:{id:'10000000-0000-0000-0000-000000000001',email:'mironsergiuflorin@gmail.com'},editor:{id:'10000000-0000-0000-0000-000000000002',email:'editor@example.invalid'},visitor:{id:'10000000-0000-0000-0000-000000000004',email:'visitor@example.invalid'}};
+ const user=()=>users[role()]||null;window.__qaRPC=[];
+ client.auth.getUser=async()=>({data:{user:user()},error:null});
+ client.auth.getSession=async()=>({data:{session:user()?{user:user(),access_token:'isolated-browser-test-token'}:null},error:null});
+ client.rpc=async(name,args={})=>{window.__qaRPC.push(name);return(await realFetch(apiRoot,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,args,role:role()})})).json();};
+ window.fetch=async(input,options)=>{if(!String(input).includes('/rest/v1/rpc/get_site_public_config'))return realFetch(input,options);const response=await realFetch(apiRoot,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'get_site_public_config',role:'anon'})});const result=await response.json();return new Response(JSON.stringify(result.data),{status:result.error?400:200,headers:{'Content-Type':'application/json'}});};
+}
+const root=process.env.MEDIA_ROOT||'http://127.0.0.1:3005';
+if(!['127.0.0.1','localhost'].includes(new URL(root).hostname))throw Error('Play Pass QA is restricted to localhost.');
+await mkdir('.tools/play-pass-qa',{recursive:true});
+const bridge=await createAdminQABridge(new URL(root).origin),b=await openSkyShiftBrowser('play-pass-real-postgres');
+const call=async(name,args={},role='owner')=>{const result=await(await fetch(bridge.url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,args,role})})).json();if(result.error)throw Error(result.error.message);return result.data;};
+try{
+ const config=cloneConfig(DEFAULT_CONFIG);config.games[0].plan='play_pass';config.games[1].plan='play_pass_pro';await call('save_site_config',{p_config:config,p_revision:0,p_publish:true});
+ await b.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true);('+installPassQA.toString()+')('+JSON.stringify(bridge.url)+');'});
+ await b.page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+ await b.page('Page.navigate',{url:root+'/admin.html'});await b.waitFor('document.getElementById("admin-app")?.hidden===false');
+ await b.evaluate('document.querySelector(\'[data-admin-tab="keys"]\').click();true');await b.waitFor('document.querySelector(\'[data-ak-stat="unused"]\')?.textContent==="0"');
+ assert.deepEqual(await b.evaluate('[...document.querySelector(".ak-generate-form").elements.months.options].map(o=>o.value)'),['1','3','6','12']);
+ await b.evaluate('var f=document.querySelector(".ak-generate-form");f.elements.plan.value="play_pass_pro";f.elements.months.value="12";f.elements.count.value="2";f.elements.email.value="visitor@example.invalid";f.elements.label.value="Colaborare LIVE";f.requestSubmit();true');
+ await b.waitFor('document.querySelector(".ak-generated")?.open&&document.querySelectorAll(".ak-code").length===2');
+ const codes=await b.evaluate('[...document.querySelectorAll(".ak-code code")].map(e=>e.textContent)');assert.equal(new Set(codes).size,2);
+ await b.screenshot('.tools/play-pass-qa/admin-generated.webp');
+ await b.evaluate('document.querySelector("[data-ak-close]").click();true');assert.equal(await b.evaluate('document.querySelector(".ak-code-list").children.length'),0);
+ await b.waitFor('document.querySelectorAll(".ak-table tbody tr").length===2');await b.screenshot('.tools/play-pass-qa/admin-keys.webp');
+ await b.evaluate('sessionStorage.setItem("qa-admin-role","visitor");true');await b.page('Page.navigate',{url:root+'/index.html?view=play-pass'});
+ await b.waitFor('window.TikInteractPass?.getAccess()?.plan==="free"');
+ assert.equal(await b.evaluate('document.querySelectorAll("#pricing>.pricing-card").length'),3);
+ assert(await b.evaluate('!!document.querySelector(\'[data-nav-item="play-pass"] .fa-ticket\')'));
+ await b.screenshot('.tools/play-pass-qa/tickets-desktop.webp');
+ await b.evaluate('document.querySelector(".pp-faq summary").click();true');assert(await b.evaluate('document.querySelector(".pp-faq details").open'));
+ await b.evaluate('var f=document.getElementById("pp-redeem-form");f.elements.code.value="wrong-key";f.requestSubmit();true');await b.waitFor('document.getElementById("pp-redeem-status").dataset.error==="true"');
+ await b.evaluate('var f=document.getElementById("pp-redeem-form");f.elements.code.value='+JSON.stringify(codes[0])+';f.requestSubmit();true');
+ await b.waitFor('window.TikInteractPass?.getAccess()?.plan==="play_pass_pro"&&document.getElementById("pp-redeem-status").textContent.includes("Cheie activat")');
+ assert.equal(await b.evaluate('document.getElementById("pp-code").value'),'');assert.equal(await b.evaluate('document.querySelector("[data-account-pass]").textContent'),'PLAY PASS PRO');
+ await b.evaluate('document.getElementById("pp-access-key").scrollIntoView({block:"center",behavior:"instant"});true');await b.screenshot('.tools/play-pass-qa/redeem-desktop.webp');
+ const before=await b.evaluate('TikInteractPass.getAccess().validUntil');
+ await b.evaluate('var f=document.getElementById("pp-redeem-form");f.elements.code.value='+JSON.stringify(codes[0])+';f.requestSubmit();true');await b.waitFor('document.getElementById("pp-redeem-status").textContent.includes("deja")');assert.equal(await b.evaluate('TikInteractPass.getAccess().validUntil'),before);
+ await b.page('Page.navigate',{url:root+'/live-studio.html'});await b.waitFor('window.TikInteractPass?.canAccess("play_pass_pro")===true');assert.equal(await b.evaluate('!!document.getElementById("live-game-frame").getAttribute("src")'),false);
+ await b.evaluate('launchStudioGame("moto-interact");true');await b.waitFor('document.getElementById("live-game-frame").dataset.gameId==="moto-interact"');assert(await b.evaluate('__qaRPC.includes("check_game_access")'));
+ const used=(await call('list_access_keys',{p_filter:'redeemed',p_search:'',p_limit:30,p_offset:0})).items[0];await call('revoke_access_key',{p_key:used.id});
+ await b.evaluate('TikInteractPass.refresh().then(()=>true)');await b.waitFor('!document.getElementById("live-game-frame").getAttribute("src")');assert.equal(await b.evaluate('TikInteractGameAccess.isAvailable("moto-interact")'),false);assert.equal(await b.evaluate('TikInteractGameAccess.isAvailable("nova-vex")'),true);
+ await b.page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await b.page('Page.navigate',{url:root+'/index.html?view=play-pass'});await b.waitFor('window.TikInteractPass?.getAccess()?.plan==="free"');
+ assert.equal(await b.evaluate('document.documentElement.scrollWidth>innerWidth'),false);await b.screenshot('.tools/play-pass-qa/tickets-mobile.webp');
+ await b.evaluate('document.getElementById("pp-access-key").scrollIntoView({block:"start",behavior:"instant"});true');await b.screenshot('.tools/play-pass-qa/redeem-mobile.webp');
+ await b.evaluate('document.querySelectorAll(".pp-faq summary")[2].click();document.querySelector(".pp-faq").scrollIntoView({block:"start",behavior:"instant"});true');await b.screenshot('.tools/play-pass-qa/questions-mobile.webp');
+ await b.evaluate('document.getElementById("pp-code").value="secret draft";sessionStorage.setItem("qa-admin-role","guest");__qaSignOut();true');await b.waitFor('TikInteractPass.getAccess()===null');assert.equal(await b.evaluate('document.getElementById("pp-code").value'),'');
+ await b.evaluate('sessionStorage.setItem("qa-admin-role","editor");true');await b.page('Page.navigate',{url:root+'/admin.html'});await b.waitFor('document.getElementById("admin-app")?.hidden===false');assert(await b.evaluate('document.querySelector(\'[data-admin-tab="keys"]\').hidden'));
+ assert.deepEqual(b.errors,[]);console.log('Play Pass + real PostgreSQL browser checks passed: ticket cards, key generation, all durations, single-use activation, account display, paid launch verification, revocation, FREE access, FAQ, mobile and logout privacy.');
+}finally{await b.close();await bridge.close();}

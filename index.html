@@ -68,7 +68,7 @@
     <script src="assets/home-nova.js?v=3" defer></script>
 <link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=4"></script>    <link rel="stylesheet" href="assets/resources.css?v=3">
     <script src="assets/resources.js?v=6" defer></script>
-<link rel="stylesheet" href="assets/platform.css?v=2"><script type="module" src="assets/platform.js?v=2"></script></head>
+<link rel="stylesheet" href="assets/platform.css?v=3"><link rel="stylesheet" href="assets/play-pass.css?v=1"><script type="module" src="assets/play-pass.js?v=1"></script><script type="module" src="assets/platform.js?v=3"></script></head>
 <body data-page="site" class="site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
     <!-- NAVBAR -->
@@ -79,7 +79,7 @@
 <button data-nav-item="catalog" onclick="switchView('catalog')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span></button>
 <button data-nav-item="live" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span>LIVE STUDIO</span></button>
 <button data-nav-item="leaderboard" onclick="switchView('leaderboard')"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span></button>
-<button data-nav-item="play-pass" onclick="goToPlayPass()"><i class="fa-solid fa-crown" aria-hidden="true"></i><span>PLAY PASS</span></button>
+<button data-nav-item="play-pass" onclick="goToPlayPass()"><i class="fa-solid fa-ticket" aria-hidden="true"></i><span>PLAY PASS</span></button>
 </nav>
 <div class="header-account-actions flex items-center gap-4">
                 <span id="account-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
@@ -307,11 +307,11 @@
 
     <!-- PLAY PASS VIEW -->
     <section id="view-play-pass" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
-        <div class="account-heading mb-8">
+        <div class="pp-heading">
             <div>
-                <span class="eyebrow">Play Pass</span>
-                <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight text-white">Alege abonamentul potrivit</h1>
-                <p class="mt-3 max-w-2xl text-sm leading-7 text-zinc-400">Începe gratuit. Abonamentele vin în curând.</p>
+                <span class="eyebrow"><i class="fa-solid fa-ticket" aria-hidden="true"></i> PLAY PASS</span>
+                <h1>Un tichet. Mai multă joacă.</h1>
+                <p>Alege accesul potrivit pentru LIVE-ul tău. Începe gratuit sau activează un Play Pass cu o cheie de acces.</p>
             </div>
             <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
@@ -319,42 +319,58 @@
         </div>
         <div id="pricing" class="pricing-grid">
             <div class="pricing-card pricing-card--free">
-                <span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-gamepad"></i></span>
-                <p class="eyebrow">Începe gratuit</p>
+                <div class="pp-ticket-head"><span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-ticket"></i></span>
+                <p class="eyebrow">TICHETUL TĂU DE START</p>
                 <h3>FREE</h3>
                 <div class="price">0<span> lei</span></div>
-                <ul>
+                <span class="pp-plan-note">Fără cheie. Fără termen de expirare.</span><span class="pp-ticket-serial" aria-hidden="true">LIVE / 001</span></div>
+                <div class="pp-ticket-body"><ul>
                     <li>Acces la funcțiile de bază</li>
                     <li>Conectare TikTok LIVE locală</li>
                     <li>Profil și clasament public</li>
                 </ul>
-                <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Plan de bază</button>
+                <button type="button" data-pp-plan="free">Deschide LIVE Studio</button><div class="pp-ticket-footer" aria-hidden="true"><span>READY TO PLAY</span><span class="pp-barcode"></span></div></div>
             </div>
             <div class="pricing-card featured pricing-card--pass">
-                <span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-bolt"></i></span>
-                <p class="eyebrow">Pentru creatori</p>
+                <div class="pp-ticket-head"><span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-ticket"></i></span>
+                <p class="eyebrow">TICHETUL CREATORULUI</p>
                 <h3>Play Pass</h3>
                 <div class="price">29<span>/lună</span></div>
-                <ul>
-                    <li>Jocuri LIVE extinse</li>
-                    <li>Evenimente interactive</li>
-                    <li>Statistici de bază</li>
+                <span class="pp-plan-note">Acces pentru perioada activată.</span><span class="pp-ticket-serial" aria-hidden="true">LIVE / 002</span></div>
+                <div class="pp-ticket-body"><ul>
+                    <li>Jocurile marcate Play Pass</li>
+                    <li>Conectare TikTok LIVE</li>
+                    <li>Acces prin cheie, în cont</li>
                 </ul>
-                <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
+                <button type="button" data-pp-plan="play_pass">Activează cu o cheie</button><div class="pp-ticket-footer" aria-hidden="true"><span>MAKE IT A LIVE</span><span class="pp-barcode"></span></div></div>
             </div>
             <div class="pricing-card pricing-card--pro">
-                <span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-crown"></i></span>
-                <p class="eyebrow">Pentru studiouri</p>
+                <div class="pp-ticket-head"><span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-ticket"></i></span>
+                <p class="eyebrow">TICHETUL PRO</p>
                 <h3>Play Pass PRO</h3>
                 <div class="price">79<span>/lună</span></div>
-                <ul>
-                    <li>Jocuri și opțiuni avansate</li>
-                    <li>Instrumente pentru moderatori</li>
-                    <li>Automatizări pentru chat</li>
+                <span class="pp-plan-note">Include accesul Play Pass.</span><span class="pp-ticket-serial" aria-hidden="true">LIVE / 003</span></div>
+                <div class="pp-ticket-body"><ul>
+                    <li>Jocurile Play Pass și PRO</li>
+                    <li>Conectare TikTok LIVE</li>
+                    <li>Timpul Play Pass rămas se păstrează</li>
                 </ul>
-                <button class="w-full bg-zinc-900 text-zinc-400 font-bold py-3 rounded-xl text-xs border border-zinc-800" disabled>Disponibil în curând</button>
+                <button type="button" data-pp-plan="play_pass_pro">Activează cu o cheie</button><div class="pp-ticket-footer" aria-hidden="true"><span>ALL IN. LIVE ON.</span><span class="pp-barcode"></span></div></div>
             </div>
         </div>
+        <p class="pp-checkout-note"><i class="fa-regular fa-credit-card" aria-hidden="true"></i> Plata cu cardul vine în curând. Momentan, accesul se activează prin cheie.</p>
+        <div id="pp-account-status" class="pp-access-status" aria-live="polite"><i class="fa-solid fa-ticket" aria-hidden="true"></i><div><strong>Accesul tău, în contul tău.</strong><p>Intră în cont pentru a vedea perioada de acces.</p><div id="pp-account-periods" class="pp-periods"></div></div><a href="live-studio.html">Deschide Studio →</a></div>
+        <section id="pp-access-key" class="pp-redeem-section" aria-labelledby="pp-key-title"><div><span class="pp-section-label"><i class="fa-solid fa-key" aria-hidden="true"></i> ACCESS KEY</span><h2 id="pp-key-title">Got an access key?</h2><p>If you received an access key, redeem it here and the access is added to your account right away.</p></div><form id="pp-redeem-form" class="pp-redeem-form"><label for="pp-code">Cheia ta de acces</label><div class="pp-key-input"><i class="fa-solid fa-ticket" aria-hidden="true"></i><input id="pp-code" name="code" required maxlength="80" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TI-XXXXXXXX-XXXXXXXX-…"><button type="submit">Activează cheia</button></div><p class="pp-redeem-help">Se activează în contul conectat. Cheia este de unică folosință; perioada începe la activare.</p><p id="pp-redeem-status" class="pp-redeem-status" role="status"></p></form></section>
+        <section class="pp-faq" aria-labelledby="pp-faq-title"><div class="pp-faq-heading"><span class="pp-section-label">QUESTIONS</span><h2 id="pp-faq-title">Before you upgrade</h2><p>Câteva răspunsuri înainte să alegi.</p><button type="button" data-open-support><i class="fa-regular fa-comments" aria-hidden="true"></i> Mai ai o întrebare?</button></div><div>
+            <details><summary>Pot folosi platforma gratuit?</summary><p>Da. Planul FREE îți oferă acces la jocurile marcate gratuite. Ai nevoie de cont pentru LIVE Studio.</p></details>
+            <details><summary>Care este diferența dintre Play Pass și PRO?</summary><p>Play Pass deblochează jocurile marcate cu acest plan. PRO include și jocurile Play Pass, plus cele marcate PRO. Poți verifica jocurile disponibile în catalog.</p></details>
+            <details><summary>Cum activez o cheie de acces?</summary><p>Intră în cont, introdu cheia în secțiunea Access key și apasă Activează cheia. Accesul este asociat contului tău și îl poți folosi în Studio.</p></details>
+            <details><summary>Când începe și cât durează accesul?</summary><p>O cheie oferă 1, 3, 6 sau 12 luni calendaristice. Perioada începe când o activezi, nu când a fost generată. Dacă ai deja același plan activ, noua perioadă se adaugă la final.</p></details>
+            <details><summary>Ce se întâmplă dacă activez PRO peste Play Pass?</summary><p>PRO se activează imediat. Timpul Play Pass rămas se păstrează și continuă după perioada PRO. Dacă activezi o cheie Play Pass când ai PRO, perioada Play Pass este programată după PRO.</p></details>
+            <details><summary>Pot folosi aceeași cheie pe două conturi?</summary><p>Nu. Fiecare cheie poate fi activată o singură dată, într-un singur cont. Unele chei pot fi rezervate unei anumite adrese de e-mail.</p></details>
+            <details><summary>Accesul se reînnoiește automat?</summary><p>Nu. Cheile oferă acces doar pentru perioada afișată. Nu salvăm date de card și nu există debitări automate în acest sistem.</p></details>
+            <details><summary>Ce se întâmplă când expiră?</summary><p>Contul revine la planul FREE dacă nu ai altă perioadă activă sau programată. Jocurile gratuite rămân disponibile, iar contul și preferințele tale se păstrează.</p></details>
+        </div></section>
     </section>
 
     <!-- PUBLIC STREAMER LEADERBOARD -->
@@ -458,7 +474,7 @@
                     <div><dt>Created</dt><dd id="account-created-at">—</dd></div>
                     <div><dt>User ID</dt><dd id="account-user-id">—</dd></div>
                     <div class="account-detail-status"><dt>Status</dt><dd><span id="account-status-label" class="account-status-text is-inactive">Inactiv</span></dd></div>
-                    <div><dt>Abonament</dt><dd><span class="account-plan-pill">FREE</span></dd></div>
+                    <div><dt>Abonament</dt><dd><span class="account-plan-pill" data-account-pass>FREE</span></dd></div>
                 </dl>
             </div>
         </div>
@@ -466,8 +482,8 @@
         <div class="account-plan-note dashboard-panel mt-6">
             <div>
                 <span class="section-kicker">ABONAMENTUL TĂU</span>
-                <h3 class="text-lg font-bold text-white">FREE</h3>
-                <p class="mt-1 text-sm text-zinc-400">Abonamentele nu pot fi activate încă.</p>
+                <h3 class="text-lg font-bold text-white" data-account-pass>FREE</h3>
+                <p id="account-pass-description" class="mt-1 text-sm text-zinc-400">Activează o cheie în PLAY PASS pentru a adăuga acces în cont.</p>
             </div>
             <button onclick="goToPlayPass()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 px-4 py-2.5 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
                 Vezi planurile Play Pass
@@ -522,10 +538,10 @@
         </section>
     </div>
 
-    <script src="assets/game-access.js?v=3"></script>
+    <script src="assets/game-access.js?v=4"></script>
     <script src="game.js?v=12"></script>
 
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
-    <script src="assets/site-app.js?v=6"></script>
+    <script src="assets/site-app.js?v=7"></script>
 </body>
 </html>

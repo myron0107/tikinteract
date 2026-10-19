@@ -12,7 +12,7 @@
     window.TikInteractGameAccess = Object.freeze({
         isAvailable(gameId) {
             const configured = window.TikInteractPlatform?.getGame(gameId);
-            if (window.TikInteractPlatform) return configured?.status === 'published' && configured.plan === 'free';
+            if (window.TikInteractPlatform) return configured?.status === 'published' && (configured.plan === 'free' || window.TikInteractPass?.canAccess(configured.plan) === true);
             return plans[gameId] === 'free';
         },
         getPlan(gameId) {
@@ -22,7 +22,7 @@
         getLockMessage(gameId) {
             const plan = planNames[this.getPlan(gameId)];
             if (!plan) return 'Jocul nu este disponibil.';
-            return `${plan}: abonamentele nu sunt încă disponibile. Jocul va putea fi pornit după configurarea plății.`;
+            return `Ai nevoie de ${plan}. Activează o cheie de acces în pagina PLAY PASS.`;
         }
     });
 })();

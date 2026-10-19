@@ -26,16 +26,20 @@ function catalog(){
    const option=node('option','',game.name);option.value=game.id;select.append(option);
    const card=node('article','game-center-card game-cover-card');card.dataset.gameId=game.id;card.dataset.gameCenterCard=(game.name+' '+game.description).toLowerCase();card.setAttribute('aria-label',game.name);
    const image=node('img');image.src=game.cover;image.alt='Coperta '+game.name;image.width=720;image.height=1280;image.loading='lazy';
-   const body=node('div','game-center-card-body'),button=node('button','',game.plan==='free'?'Deschide în Studio':config.plans.find(p=>p.id===game.plan).name);button.type='button';button.addEventListener('click',()=>window.launchStudioGame?.(game.id));body.append(button);card.append(image,body);grid.append(card);
+   const body=node('div','game-center-card-body'),button=node('button','',game.plan==='free'||window.TikInteractPass?.canAccess(game.plan)?'Deschide în Studio':config.plans.find(p=>p.id===game.plan).name);button.type='button';button.dataset.planGame=game.id;button.addEventListener('click',()=>window.launchStudioGame?.(game.id));body.append(button);card.append(image,body);grid.append(card);
   }
   if(byId(selected)?.status==='published')select.value=selected;else select.value='';
   window.initializeGameFavorites?.();window.filterStudioGames?.(document.getElementById('game-center-search')?.value||'');
-  const current=document.getElementById('live-game-frame')?.dataset.gameId;
-  if(current&&(!byId(current)||byId(current).status!=='published'||byId(current).plan!=='free')){
-   window.TikInteractLive?.detach();const frame=document.getElementById('live-game-frame');frame.removeAttribute('src');delete frame.dataset.gameId;frame.hidden=true;frame.parentElement.classList.add('is-empty');document.getElementById('studio-game-empty').hidden=false;window.resetStudioTestMenu?.();document.getElementById('live-game-status').textContent='Jocul a fost retras. Alege alt joc din Game Center.';
-  }
+  updateAccess();
  }
  const nova=document.querySelector('[data-home-nova]');if(nova)nova.hidden=byId('nova-vex')?.status!=='published';
+}
+function updateAccess(){
+ for(const button of document.querySelectorAll('[data-plan-game]')){const game=byId(button.dataset.planGame);if(game)button.textContent=game.plan==='free'||window.TikInteractPass?.canAccess(game.plan)?'Deschide în Studio':config.plans.find(p=>p.id===game.plan).name;}
+ const frame=document.getElementById('live-game-frame'),id=frame?.dataset.gameId,game=byId(id);
+ if(id&&(!game||game.status!=='published'||(game.plan!=='free'&&!window.TikInteractPass?.canAccess(game.plan)))){
+  window.TikInteractLive?.detach();frame.removeAttribute('src');delete frame.dataset.gameId;frame.hidden=true;frame.parentElement.classList.add('is-empty');document.getElementById('studio-game-empty').hidden=false;window.resetStudioTestMenu?.();document.getElementById('live-game-status').textContent='Jocul nu mai este disponibil pentru contul tău. Alege un joc gratuit sau verifică PLAY PASS.';
+ }
 }
 function prices(){for(const [i,p]of config.plans.entries()){const card=document.querySelectorAll('#pricing>.pricing-card')[i];if(!card)continue;card.hidden=!p.enabled;card.querySelector('h3').textContent=p.name;const price=card.querySelector('.price');price.replaceChildren(document.createTextNode(new Intl.NumberFormat('ro-RO',{maximumFractionDigits:2}).format(p.priceCents/100)));price.append(node('span','',p.currency+(p.id==='free'?'':' / lună')));card.querySelector('ul').replaceChildren(...p.features.map(f=>node('li','',f)));}}
 function home(){const copy=document.querySelector('.home-hero-copy');if(!copy)return;const title=copy.querySelector('h1');title.replaceChildren(document.createTextNode(config.home.heading),document.createElement('br'),node('span','',config.home.accent));copy.querySelector(':scope>p').textContent=config.home.intro;}
@@ -53,5 +57,6 @@ if(preview){
 function initialize(){apply(config);if(preview)window.parent.postMessage({channel:'tikinteract-preview-ready',token:previewToken},location.origin);else refresh();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();
 window.addEventListener('tikinteract:auth',updateAdminLink);
+window.addEventListener('tikinteract:access',()=>{updateAccess();window.refreshGameFavorites?.();});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!preview)refresh();updateAdminLink();}});
 setInterval(()=>{if(!document.hidden&&!preview)refresh();},60000);
