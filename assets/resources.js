@@ -32,9 +32,12 @@
     });
     document.addEventListener('click', event => {if (!nav.contains(event.target)) closeMenu();});
     document.addEventListener('keydown', event => {if (event.key === 'Escape' && !menu.hidden) {event.preventDefault(); closeMenu(true);}});
-    nav.addEventListener('focusout', () => {queueMicrotask(() => {if (!nav.contains(document.activeElement)) closeMenu();});});
+    // During pointer focus changes, activeElement can briefly be body. Use the
+    // actual destination so the menu survives until the link/button receives click.
+    nav.addEventListener('focusout', event => {
+        if (event.relatedTarget && !nav.contains(event.relatedTarget)) closeMenu();
+    });
     addEventListener('resize', () => {if (!menu.hidden) positionMenu();});
-    menu.addEventListener('click', event => {if (event.target.closest('a')) closeMenu();});
     if (/^https:\/\/(?:discord\.gg\/|discord\.com\/invite\/)/.test(config.discordUrl)) {
         const old = nav.querySelector('[data-resources-discord]'), link = document.createElement('a');
         link.href = config.discordUrl; link.target = '_blank'; link.rel = 'noopener noreferrer';
