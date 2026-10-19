@@ -5,12 +5,9 @@ let currentUser = null;
 let cookiePreferencesPreviousFocus = null;
 let isPasswordRecovery = false;
 const LIVE_GAME_PATHS = Object.freeze({
-    'neon-race': 'GAME/NEON-RACE/Neon-Race.html',
     'neon-race-2': 'GAME/NEON-INTERACT/Neon-Interact.html',
     'moto-interact': 'GAME/MOTO-INTERACT/Moto-Interact.html',
-    'nova-vex': 'GAME/NOVA-VEX/Neon-Ascent.html',
-    'neon-riders': 'GAME/NEON-RIDERS/NEON-RIDERS.html',
-    'country-derby': 'GAME/COUNTRY-DERBY/COUNTRY-DERBY.html'
+    'nova-vex': 'GAME/NOVA-VEX/Neon-Ascent.html'
 });
 const isStudioPage = document.body.dataset.page === 'studio';
 const initialRoute = new URLSearchParams(window.location.search);

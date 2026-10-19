@@ -82,6 +82,10 @@ const server = createServer(async (request, response) => {
         return;
     }
 
+    if (/^\/GAME\/(?:NEON-RACE|NEON-RIDERS|COUNTRY-DERBY)(?:\/|$)/.test(pathname)) {
+        response.writeHead(307, {Location: '/index.html?view=catalog'}).end();
+        return;
+    }
     if(pathname.startsWith('/GAME/NEON-ASCENT/')){
         const destination=new URL(request.url,`http://${HOST}:${PORT}`);
         destination.pathname=pathname.replace('/GAME/NEON-ASCENT/','/GAME/NOVA-VEX/');

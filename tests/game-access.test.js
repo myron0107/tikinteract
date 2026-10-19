@@ -11,13 +11,17 @@ function createGameAccess() {
     return window.TikInteractGameAccess;
 }
 
-test('Play Pass games remain categorized but unavailable until billing is configured', () => {
+test('retired games cannot be launched and remain preserved for future use', () => {
     const access = createGameAccess();
     for (const gameId of ['neon-race', 'neon-riders', 'country-derby']) {
-        assert.equal(access.getPlan(gameId), 'play_pass');
+        assert.equal(access.getPlan(gameId), null);
         assert.equal(access.isAvailable(gameId), false);
-        assert.match(access.getLockMessage(gameId), /Play Pass/);
-        assert.match(access.getLockMessage(gameId), /configurarea plății/);
+        assert.equal(access.getLockMessage(gameId), 'Jocul nu este disponibil.');
+        const studio = readFileSync(new URL('../live-studio.html', import.meta.url), 'utf8');
+        assert(!studio.includes(`data-game-id="${gameId}"`));
+        assert(!studio.includes(`<option value="${gameId}">`));
+        const folder = gameId.toUpperCase();
+        assert(readFileSync(new URL(`../GAME/${folder}/index.html`, import.meta.url), 'utf8').length > 0);
     }
 });
 

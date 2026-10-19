@@ -1,8 +1,5 @@
 (() => {
     const plans = Object.freeze({
-        'neon-race': 'play_pass',
-        'neon-riders': 'play_pass',
-        'country-derby': 'play_pass',
         'neon-race-2': 'free',
         'moto-interact': 'free',
         'nova-vex': 'free'
