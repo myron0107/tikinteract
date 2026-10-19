@@ -36,7 +36,7 @@ async function centered(selector) {
     assert(layout.x>=0&&layout.y>=0&&layout.width<=layout.viewportWidth&&layout.height<=layout.viewportHeight);
 }
 try {
-    await browser.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(false)'});
+    await browser.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(false);window.supabase.createClient().auth.getUser=async()=>({data:{user:null},error:null});'});
     for (const width of [1440,390]) {
         touch = width < 600;
         await browser.page('Emulation.setDeviceMetricsOverride',{width,height:950,deviceScaleFactor:1,mobile:touch});
@@ -66,11 +66,8 @@ try {
         await press('.resources-links [data-open-support]');
         await browser.waitFor('document.getElementById("site-support").open');
         await centered('#site-support');
-        for (const topic of ['game','bug','idea','question']) {
-            await press(`[data-support-topic="${topic}"]`);
-            assert.equal(await browser.evaluate('document.querySelector("[data-support-write]").hidden'),false);
-            await press('[data-support-back]');
-        }
+        await browser.waitFor('!!document.querySelector(".support-login-notice")');
+        assert.equal(await browser.evaluate('document.querySelectorAll(".si-message").length'),0);
         await press('[data-support-close]');
         await browser.waitFor('!document.getElementById("site-support").open');
         await openMenu();

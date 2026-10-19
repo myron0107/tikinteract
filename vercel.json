@@ -5,21 +5,6 @@
       "source": "/GAME/NEON-ASCENT/:path*",
       "destination": "/GAME/NOVA-VEX/:path*",
       "permanent": true
-    },
-    {
-      "source": "/GAME/NEON-RACE/:path*",
-      "destination": "/index.html?view=catalog",
-      "permanent": false
-    },
-    {
-      "source": "/GAME/NEON-RIDERS/:path*",
-      "destination": "/index.html?view=catalog",
-      "permanent": false
-    },
-    {
-      "source": "/GAME/COUNTRY-DERBY/:path*",
-      "destination": "/index.html?view=catalog",
-      "permanent": false
     }
   ]
 }

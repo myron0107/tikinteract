@@ -31,6 +31,7 @@ const ALLOWED_ORIGINS = new Set([
 const STATIC_FILES = new Set([
     '/index.html',
     '/live-studio.html',
+    '/admin.html',
     '/style.css',
     '/game.js',
     '/public-info.css',
@@ -83,10 +84,6 @@ const server = createServer(async (request, response) => {
         return;
     }
 
-    if (/^\/GAME\/(?:NEON-RACE|NEON-RIDERS|COUNTRY-DERBY)(?:\/|$)/.test(pathname)) {
-        response.writeHead(307, {Location: '/index.html?view=catalog'}).end();
-        return;
-    }
     if(pathname.startsWith('/GAME/NEON-ASCENT/')){
         const destination=new URL(request.url,`http://${HOST}:${PORT}`);
         destination.pathname=pathname.replace('/GAME/NEON-ASCENT/','/GAME/NOVA-VEX/');
@@ -104,9 +101,10 @@ const server = createServer(async (request, response) => {
         response.writeHead(403).end('Forbidden');
         return;
     }
+    const isGameBundle = /^\/GAME\/[A-Za-z0-9_-]+\/[A-Za-z0-9_./-]+\.(?:html|js|css|json|png|webp|jpe?g|svg|avif|gif|mp3|wav|ogg|m4a|mp4|woff2)$/.test(requestedPath);
     if (!STATIC_FILES.has(requestedPath)
         && !filePath.startsWith(`${assetsPath}${path.sep}`)
-        && !isSoundFile && !isSkyShiftFile && !isNovaVexFile) {
+        && !isSoundFile && !isSkyShiftFile && !isNovaVexFile && !isGameBundle) {
         response.writeHead(404).end('Not found');
         return;
     }

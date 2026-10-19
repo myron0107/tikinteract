@@ -1,0 +1,67 @@
+import assert from 'node:assert/strict';
+import {mkdir} from 'node:fs/promises';
+import {createAdminQABridge} from './qa-admin-database.mjs';
+import {openSkyShiftBrowser} from './skyshift-browser.mjs';
+import {installQAAuth} from './qa-auth-fixture.mjs';
+
+function installSupportQA(apiRoot){
+ const client=window.supabase.createClient(),realFetch=window.fetch.bind(window);
+ const role=()=>sessionStorage.getItem('qa-admin-role')||'visitor';
+ const users={owner:{id:'10000000-0000-0000-0000-000000000001',email:'mironsergiuflorin@gmail.com'},editor:{id:'10000000-0000-0000-0000-000000000002',email:'editor@example.invalid'},visitor:{id:'10000000-0000-0000-0000-000000000004',email:'visitor@example.invalid'}};
+ const user=()=>users[role()]||null;
+ client.auth.getUser=async()=>({data:{user:user()},error:null});
+ client.auth.getSession=async()=>({data:{session:user()?{user:user(),access_token:'isolated-browser-test-token'}:null},error:null});
+ client.rpc=async(name,args={})=>(await realFetch(apiRoot,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,args,role:role()})})).json();
+ window.fetch=async(input,options)=>{if(!String(input).includes('/rest/v1/rpc/get_site_public_config'))return realFetch(input,options);const response=await realFetch(apiRoot,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:'get_site_public_config',role:'anon'})});const result=await response.json();return new Response(JSON.stringify(result.data),{status:result.error?400:200,headers:{'Content-Type':'application/json'}});};
+}
+const root=process.env.MEDIA_ROOT||'http://127.0.0.1:3005';
+if(!['127.0.0.1','localhost'].includes(new URL(root).hostname))throw Error('Support QA is restricted to localhost.');
+await mkdir('.tools/admin-qa',{recursive:true});
+const bridge=await createAdminQABridge(new URL(root).origin),b=await openSkyShiftBrowser('support-real-postgres-browser');
+try{
+ await b.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true);('+installSupportQA.toString()+')('+JSON.stringify(bridge.url)+');'});
+ await b.page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
+ await b.page('Page.navigate',{url:root+'/'});await b.waitFor('!!document.querySelector("[data-account-support]")');
+ await b.evaluate('document.querySelector(".resources-links [data-open-support]").click();true');
+ await b.waitFor('!!document.querySelector(\'[data-support-topic="bug"]\')');
+ await b.evaluate('document.querySelector(\'[data-support-topic="bug"]\').click();var f=document.querySelector(".support-form");f.elements.subject.value="Conexiune LIVE instabila";f.elements.message.value="Conexiunea se opreste dupa ce pornesc jocul. Ma puteti ajuta?";f.requestSubmit();true');
+ await b.waitFor('document.querySelectorAll(".si-message").length===1');
+ const id=await b.evaluate('document.querySelector("[data-si-ticket]").dataset.siTicket');
+ assert.equal(await b.evaluate('document.querySelectorAll(".si-ticket-controls").length'),0);
+ await b.screenshot('.tools/admin-qa/customer-support.webp');
+ await b.evaluate('sessionStorage.setItem("qa-admin-role","owner");true');
+ await b.page('Page.navigate',{url:root+'/admin.html'});await b.waitFor('!!document.querySelector("[data-overview-ticket]")');
+ assert.equal(await b.evaluate('document.getElementById("admin-unread-metric").textContent'),'1');
+ await b.screenshot('.tools/admin-qa/dashboard-modern.webp');
+ await b.evaluate('document.querySelector("[data-overview-ticket]").click();true');
+ await b.waitFor('!!document.querySelector(".si-compose")');
+ await b.evaluate('var f=document.querySelector(".si-compose");f.elements.internal.checked=true;f.elements.body.value="Nota confidentiala: investighez conexiunea.";f.requestSubmit();true');
+ await b.waitFor('document.querySelectorAll(".si-message").length===2&&document.querySelector(".si-compose button[type=submit]").disabled===false');
+ await b.evaluate('var f=document.querySelector(".si-compose");f.elements.internal.checked=false;f.elements.body.value="Am verificat. Reporneste conexiunea din LIVE Studio si incearca din nou.";f.requestSubmit();true');
+ await b.waitFor('document.querySelectorAll(".si-message").length===3&&document.querySelector(".si-compose button[type=submit]").disabled===false');
+ await b.evaluate('var c=document.querySelector(".si-ticket-controls");c.querySelector("[name=state]").value="resolved";c.querySelector("[name=priority]").value="high";c.querySelector("[name=assigned]").value="10000000-0000-0000-0000-000000000001";c.querySelector("button").click();true');
+ await b.waitFor('document.querySelector(".si-thread-state").dataset.state==="resolved"');
+ await b.screenshot('.tools/admin-qa/messages-modern.webp');
+ await b.evaluate('document.querySelector(".si-compose textarea").value="Ciorna raspunsului meu";document.querySelector(\'[data-admin-tab="games"]\').click();document.querySelector(\'[data-admin-tab="messages"]\').click();true');
+ await b.waitFor('!!document.querySelector("[data-si-ticket]")');await b.evaluate('document.querySelector("[data-si-ticket]").click();true');await b.waitFor('!!document.querySelector(".si-compose")');
+ assert.equal(await b.evaluate('document.querySelector(".si-compose textarea").value'),'Ciorna raspunsului meu');
+ await b.page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
+ await b.screenshot('.tools/admin-qa/messages-mobile.webp');
+ assert.equal(await b.evaluate('document.documentElement.scrollWidth>innerWidth'),false);
+ assert(await b.evaluate('document.querySelector(".si-compose button[type=submit]").getBoundingClientRect().width>40'));
+ await b.evaluate('document.querySelector("[data-si-back]").click();true');assert(await b.evaluate('!document.querySelector(".support-inbox").classList.contains("si-thread-open")'));
+ await b.evaluate('sessionStorage.setItem("qa-admin-role","visitor");true');await b.page('Page.navigate',{url:root+'/'});await b.waitFor('!!document.querySelector("[data-account-support]")');
+ await b.evaluate('document.querySelector("[data-account-support]").click();true');await b.waitFor('!!document.querySelector("[data-si-ticket]")');
+ await b.evaluate('document.querySelector("[data-si-ticket]").click();true');await b.waitFor('document.querySelectorAll(".si-message").length===2');
+ assert.equal(await b.evaluate('document.querySelector(".si-messages").textContent.includes("Nota confidentiala")'),false);
+ assert.equal(await b.evaluate('document.querySelectorAll("[name=internal]").length'),0);
+ await b.evaluate('var f=document.querySelector(".si-compose");f.elements.body.value="Multumesc, dar problema a reaparut.";f.requestSubmit();true');
+ await b.waitFor('document.querySelector(".si-thread-state").dataset.state==="open"&&document.querySelectorAll(".si-message").length===3');
+ await b.screenshot('.tools/admin-qa/customer-support-mobile.webp');assert.equal(await b.evaluate('document.documentElement.scrollWidth>innerWidth'),false);
+ await b.evaluate('sessionStorage.setItem("qa-admin-role","guest");window.tikInteractUser=null;dispatchEvent(new Event("tikinteract:auth"));true');await b.waitFor('!!document.querySelector(".support-login-notice")');
+ assert.equal(await b.evaluate('document.querySelectorAll(".si-message").length'),0,'Logout clears the private thread');
+ await b.evaluate('sessionStorage.setItem("qa-admin-role","editor");true');await b.page('Page.navigate',{url:root+'/admin.html'});await b.waitFor('document.getElementById("admin-app")?.hidden===false');
+ assert(await b.evaluate('document.querySelector("[data-support-staff-only]").hidden'));
+ assert.deepEqual(b.errors,[]);
+ console.log('Support browser + real PostgreSQL passed: submit, dashboard, replies, internal notes, statuses, assignment, drafts, mobile, customer follow-up, logout and editor privacy. Ticket '+id);
+}finally{await b.close();await bridge.close();}

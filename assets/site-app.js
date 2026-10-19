@@ -13,7 +13,7 @@ const isStudioPage = document.body.dataset.page === 'studio';
 const initialRoute = new URLSearchParams(window.location.search);
 let pendingAccountRoute = !isStudioPage && initialRoute.get('view') === 'account';
 function studioUrl(gameId) {
-    return 'live-studio.html' + (LIVE_GAME_PATHS[gameId] ? '?game=' + encodeURIComponent(gameId) : '');
+    return 'live-studio.html' + ((window.TikInteractPlatform?.getGame(gameId) || LIVE_GAME_PATHS[gameId]) ? '?game=' + encodeURIComponent(gameId) : '');
 }
 let shouldOpenLiveFromUrl = isStudioPage || initialRoute.get('view') === 'live';
 let requestedLiveGame = initialRoute.get('game');
@@ -87,6 +87,7 @@ function updateUI(session) {
     const accountStatus = document.getElementById('account-status-label');
     window.tikInteractUser = session?.user || null;
     window.tikInteractAccessToken = session?.access_token || null;
+    window.dispatchEvent?.(new Event('tikinteract:auth'));
     if (isStudioPage) {
         document.body.classList.toggle('studio-locked', !session?.user);
         const gate = document.getElementById('studio-access-gate');
@@ -520,7 +521,7 @@ function closeCookiePreferences() {
 
 function loadLiveGame(gameId) {
     if (!currentUser) { openAuthModal(); return false; }
-    const gamePath = LIVE_GAME_PATHS[gameId];
+    const gamePath = window.TikInteractPlatform?.getGame(gameId)?.entryPath || LIVE_GAME_PATHS[gameId];
     const gameFrame = document.getElementById('live-game-frame');
     const gameSelect = document.getElementById('live-game-select');
     const gameStatus = document.getElementById('live-game-status');
