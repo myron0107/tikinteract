@@ -8,6 +8,7 @@ const LIVE_GAME_PATHS = Object.freeze({
     'neon-race': 'GAME/NEON-RACE/Neon-Race.html',
     'neon-race-2': 'GAME/NEON-INTERACT/Neon-Interact.html',
     'moto-interact': 'GAME/MOTO-INTERACT/Moto-Interact.html',
+    'nova-vex': 'GAME/NEON-ASCENT/Neon-Ascent.html',
     'neon-riders': 'GAME/NEON-RIDERS/NEON-RIDERS.html',
     'country-derby': 'GAME/COUNTRY-DERBY/COUNTRY-DERBY.html'
 });
@@ -89,9 +90,6 @@ function updateUI(session) {
     const accountStatus = document.getElementById('account-status-label');
     window.tikInteractUser = session?.user || null;
     window.tikInteractAccessToken = session?.access_token || null;
-    document.querySelectorAll('[data-requires-account]').forEach(element => {
-        element.hidden = !session?.user;
-    });
     if (isStudioPage) {
         document.body.classList.toggle('studio-locked', !session?.user);
         const gate = document.getElementById('studio-access-gate');
@@ -565,7 +563,7 @@ function loadLiveGame(gameId) {
     const complete = (viewport) => {
         if (gameFrame.dataset.gameId !== gameId) return;
         window.TikInteractStudioLayout?.fitGame(viewport);
-        if (completed) return;
+        if (completed) { if(gameFrame.contentWindow?.TikInteractStudioControls)initializeStudioTestMenu();return; }
         completed = true;
         gameFrame.removeAttribute('aria-busy');
         initializeStudioTestMenu();

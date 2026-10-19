@@ -23,7 +23,7 @@ test('Play Pass games remain categorized but unavailable until billing is config
 
 test('free games remain available in LIVE Studio', () => {
     const access = createGameAccess();
-    for (const gameId of ['neon-race-2', 'moto-interact']) {
+    for (const gameId of ['neon-race-2', 'moto-interact', 'nova-vex']) {
         assert.equal(access.getPlan(gameId), 'free');
         assert.equal(access.isAvailable(gameId), true);
     }

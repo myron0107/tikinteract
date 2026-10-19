@@ -1,5 +1,4 @@
 /* Creator platform template: shared identity for the website and Studio app. */
-[data-requires-account][hidden]{display:none!important}
 .site-template{--font-display:'Inter',system-ui,sans-serif;--page-bg:#0b0b0e;--surface:#131317;--line:#ffffff12;--muted:#a4a4b0;--accent:#f13e50;background:var(--page-bg);color:#f4f4f7;font-family:var(--font-body);-webkit-font-smoothing:antialiased}
 .site-template h1,.site-template h2,.site-template h3,.site-template h4,.site-template h5{font-family:var(--font-display);letter-spacing:-.04em}
 .site-template button,.site-template a{-webkit-tap-highlight-color:transparent}

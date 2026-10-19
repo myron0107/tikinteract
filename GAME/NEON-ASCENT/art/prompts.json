@@ -1,0 +1,54 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "date": "2026-10-19",
+  "assets": [
+    {
+      "asset": "atlas",
+      "source": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-9970d8ea-54e1-4dce-9cca-5569e00d72f8.png",
+      "prompt": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept. Production transparent 2D game sprite atlas for NEON ASCENT, a vertical arcade parkour game, NOT robots or aliens. One square canvas, exact 4x4 equal-sized grid, 16 separate sprites centered within their equal cells. Fully transparent gutters, at least 7% empty margin INSIDE EACH cell, no cell borders, no labels, no background or backdrop. Coherent high-end colorful stylized 3D cartoon arcade rendering, crisp silhouettes and white edge highlights. Main character is an ORIGINAL cute young-adult HUMAN street runner, warm brown skin, visible friendly human face, fluffy dark hair, teal/cyan hooded jacket with hood DOWN, off-white t-shirt, dark indigo joggers, white high-top sneakers with pink soles. Human proportions stylized about 3 heads tall, no helmet, no robot face, no mask. First row exact same human in FOUR separate full-body poses facing front/three-quarter: idle standing, jumping upwards one knee lifted, falling with arms raised and bent knees, crouched landing. Keep consistent identity, clothes and head size in all four. Second row: floating sleek rectangular cyan-lit techno ledge, violet-lit spring ledge, pink crystal ledge, finish ledge with a small checkered flag. Third row: chunky horseshoe magnet cyan/magenta, small friendly pearly cloud, small silver and cyan booster rocket with pink exhaust, purple-blue swirling energy vortex. Fourth row: cyan-white tornado spiral, magenta-cyan energy portal, holographic silver trophy with a golden star, small soft blue-white cloud cluster. Front view on game props except floating ledges top surface slightly visible. Large readable forms, saturated cyan electric violet hot pink with navy shadows. EACH sprite must remain entirely within its own cell and NOT overlap adjacent cells. Real transparent RGBA alpha background, not black and not a checkerboard."
+      }
+    },
+    {
+      "asset": "rival",
+      "source": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-75787cd3-e083-4e45-88ba-25c17ec3f2e2.png",
+      "prompt": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept. Production 2D NPC sprite sheet for neon cyberpunk cartoon vertical arcade game. Wide landscape sheet, EXACTLY THREE separate full-body poses of the SAME original HUMAN masked street trickster, horizontally arranged in three equal cells with ample completely transparent padding. Character: a cheeky small cartoon street thief, about 3 heads tall, human face visible above a plain magenta lower-face bandana, short silver-white hair under violet hood, expressive eyebrow and human eyes, purple cropped bomber hoodie with pink lining, charcoal cargo trousers, white sneakers with magenta trim, small black crossbody bag. Not an alien, robot, skull, monster or superhero, no weapons. Left: hovering standing relaxed arms at sides. Middle: playful outstretched fist/arm forward as a comic shove with feet balanced. Right: grabbing/reaching one hand upward with mischievous grin in eyes, the other hand clutching bag. Same perspective front/three-quarter, same size and proportions in all three cells. Premium polished stylized 3D cartoon game character, crisp outlines and soft material detail, electric violet/cyan/pink rim lights but no glow outside cutouts. Each whole body fits its own cell with minimum 9% padding; no overlapping parts, no detached body parts. NO text or labels. Actual transparent alpha background and empty transparent gaps, no black/gray/gradient background, no floor or cast shadow."
+      }
+    },
+    {
+      "asset": "board",
+      "source": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-0085695f-83a9-4a56-9367-cf8843780db7.png",
+      "prompt": {
+        "transparent_background": true,
+        "prompt": "Use case: stylized-concept. Production 2D game prop transparent cutout for NEON ASCENT. A sleek playful sci-fi HOVERBOARD for a human cyberpunk street trickster, empty with no rider. Board shaped like a wide short skateboard with gently lifted nose and tail, black graphite deck, violet metal rails, two compact cyan glowing circular lift engines underneath and magenta light strips. No cockpit, no dome, no UFO silhouette or flying saucer. Front/three-quarter slightly low camera so top deck and underside engines both readable. Long horizontal board about 3:1 object aspect ratio, centered in a wide canvas with generous transparent margins. High-end 3D cartoon arcade illustration, chunky readable polished forms with crisp edges. Entire board visible, no text, letters, logos, scenery, ground, shadows or colored backdrop. Output real RGBA transparent background; all pixels outside the board are alpha 0."
+      }
+    },
+    {
+      "asset": "district",
+      "source": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-a7001155-212c-4991-acf3-d6b4269877da.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Production portrait 2:3 background illustration for NEON ASCENT, a vertical neon arcade parkour game starring a cute human runner. Entirely NEW environment, cheerful fast-paced arcade world, vivid electric CYAN, violet, hot PINK, indigo and dark navy, no burgundy theme, no realistic photo look, no Gothic castles, no medieval architecture. Stylish high-end 3D cartoon video-game concept art with softly rounded clean geometric architecture, emissive neon tubes, beautiful atmosphere, readable light/dark shapes. Camera sees a vertical open urban canyon, scenery at far left and far right, broad clear quiet central 60% for jumping platforms and a character to be added in code. No drawn game platforms across the center, no people, robot, alien, cars, HUD, text, writing, logos, letters, borders, grid, checkerboard or interface. Background should be richly designed but not so busy that game objects are lost. Scene: Nighttime NEON CITY district viewed from between rooftops high up, cyan rim-lit tower on the left, magenta/violet rooftop air-conditioners, antenna dishes, cable loops and small abstract holographic shapes on the right. Distant brightly lit futuristic city skyline in the lower third with warm windows, indigo sky and thin pink horizon fog. No road or ground. Strong depth layering, playful inviting futuristic city, not bleak dystopia. Faint vertical rain catches neon light near edges only. Keep the entire middle uncluttered.",
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "skyline",
+      "source": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-0b6b9ce2-47de-4b12-826f-d2dd8a6f5a5f.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Production portrait 2:3 background illustration for NEON ASCENT, a vertical neon arcade parkour game starring a cute human runner. Entirely NEW environment, cheerful fast-paced arcade world, vivid electric CYAN, violet, hot PINK, indigo and dark navy, no burgundy theme, no realistic photo look, no Gothic castles, no medieval architecture. Stylish high-end 3D cartoon video-game concept art with softly rounded clean geometric architecture, emissive neon tubes, beautiful atmosphere, readable light/dark shapes. Camera sees a vertical open urban canyon, scenery at far left and far right, broad clear quiet central 60% for jumping platforms and a character to be added in code. No drawn game platforms across the center, no people, robot, alien, cars, HUD, text, writing, logos, letters, borders, grid, checkerboard or interface. Background should be richly designed but not so busy that game objects are lost. Scene: ABOVE THE ROOFTOPS among luminous white and lavender clouds, stacked futuristic sky towers and cyan-glass high-rise balconies seen at outer edges, small neon pink antenna lamps, distant violet mountains and a stylized large pale moon near an upper corner. A dreamy midnight blue to violet sky, immense depth, pink mist and cyan-lit pearl cloud banks along lower sides. Floaty nighttime neon arcade mood, uncluttered central area, no castles, no medieval buildings, no floating rocky islands.",
+        "transparent_background": false
+      }
+    },
+    {
+      "asset": "undergrid",
+      "source": "C:\\Users\\miron\\.codex\\generated_images\\01a14d33-1459-7ed0-a456-4579aa67fe83\\exec-16399756-acf0-455e-a0a2-52d6cc823829.png",
+      "prompt": {
+        "prompt": "Use case: stylized-concept. Production portrait 2:3 background illustration for NEON ASCENT, a vertical neon arcade parkour game starring a cute human runner. Entirely NEW environment, cheerful fast-paced arcade world, vivid electric CYAN, violet, hot PINK, indigo and dark navy, no burgundy theme, no realistic photo look, no Gothic castles, no medieval architecture. Stylish high-end 3D cartoon video-game concept art with softly rounded clean geometric architecture, emissive neon tubes, beautiful atmosphere, readable light/dark shapes. Camera sees a vertical open urban canyon, scenery at far left and far right, broad clear quiet central 60% for jumping platforms and a character to be added in code. No drawn game platforms across the center, no people, robot, alien, cars, HUD, text, writing, logos, letters, borders, grid, checkerboard or interface. Background should be richly designed but not so busy that game objects are lost. Scene: NEON UNDERCITY industrial service shaft, towering violet and deep navy technological walls at far side edges, electric cyan conduit pipes, magenta power cables, glowing hexagonal service vents, distant holographic light panels without writing. Looking down into a vast pink-violet haze over tiny city lights and suspended machinery far below. Cinematic moody but bright and playful modern cartoon game art, central corridor wide and unobstructed, pale cyan light spills from the sides, no lava, no natural cave crystals, no rust or brown.",
+        "transparent_background": false
+      }
+    }
+  ]
+}

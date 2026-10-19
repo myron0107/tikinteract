@@ -1,0 +1,406 @@
+{
+  "game": "NOVA & VEX",
+  "version": "physical-arcade",
+  "author": "TIKINTERACT",
+  "provenance": "Original procedural foley and composition. No third-party samples or recordings.",
+  "generator": "scripts/render-neon-ascent-foley.py",
+  "sampleRate": 32000,
+  "files": [
+    {
+      "file": "runner-hop.mp3",
+      "description": "Light rubber-sole hop.",
+      "loop": false,
+      "seconds": 0.3,
+      "peak": 0.78,
+      "rms": 0.3459,
+      "sha256": "1fce7e6737fad51022bbe99f5d6f2d2a1d7c47f08233381e2141870311928c3c"
+    },
+    {
+      "file": "sneaker-step.mp3",
+      "description": "Soft compact sneaker contact.",
+      "loop": false,
+      "seconds": 0.48,
+      "peak": 0.78,
+      "rms": 0.1872,
+      "sha256": "e071e166408c570bdb8b00ea7e6501ea00d10d9147e55cd9f2036ba174509a12"
+    },
+    {
+      "file": "spring-compress.mp3",
+      "description": "Spring winding under the runner, short rubber squeak.",
+      "loop": false,
+      "seconds": 0.5,
+      "peak": 0.78,
+      "rms": 0.2475,
+      "sha256": "4936b5591b41a26cdf6e1022ea8350cfd919c5a61403e8f36365f2c1150dbdbe"
+    },
+    {
+      "file": "spring-boing.mp3",
+      "description": "Bouncy elastic boing released at takeoff.",
+      "loop": false,
+      "seconds": 0.65,
+      "peak": 0.78,
+      "rms": 0.1893,
+      "sha256": "458238ce7c48bb29861cb257a2ef811e6c1eb509e591c39bd6885e6c00286369"
+    },
+    {
+      "file": "banana-skid.mp3",
+      "description": "Short rubber squeak and sliding shoe.",
+      "loop": false,
+      "seconds": 0.55,
+      "peak": 0.78,
+      "rms": 0.2135,
+      "sha256": "7873c5fa7952a3f0f88713543c0ac30b957e980e34d64aeb936bdd9b6ddc75fc"
+    },
+    {
+      "file": "slip-tumble.mp3",
+      "description": "Comic soft tumble after the slip.",
+      "loop": false,
+      "seconds": 0.48,
+      "peak": 0.78,
+      "rms": 0.182,
+      "sha256": "98b7ef0d32b0c232185310f96ff28d1fccaecd8fc02b0a86d4feee86a80356ac"
+    },
+    {
+      "file": "hook-cast.mp3",
+      "description": "Grappling hook cast with a tight cable swish.",
+      "loop": false,
+      "seconds": 0.45,
+      "peak": 0.78,
+      "rms": 0.1536,
+      "sha256": "f6534d769843a2bef8f4230de4aabad0767351767eaba42f2943683d0d2dac21"
+    },
+    {
+      "file": "hook-latch.mp3",
+      "description": "Steel hook latches onto the anchor.",
+      "loop": false,
+      "seconds": 0.48,
+      "peak": 0.78,
+      "rms": 0.1605,
+      "sha256": "2aad584da1add4bdb31cf9cfd1e6555c9e9355eba413adbed78e519b1e1e07f3"
+    },
+    {
+      "file": "jetpack-buckle.mp3",
+      "description": "Jetpack clips into the harness.",
+      "loop": false,
+      "seconds": 0.48,
+      "peak": 0.78,
+      "rms": 0.1799,
+      "sha256": "447e4670318678e8640b5b52c7caacc4d2f8797e417ad16d617e57af786bef88"
+    },
+    {
+      "file": "jetpack-ignite.mp3",
+      "description": "Short warm gas ignition; no laser chirp.",
+      "loop": false,
+      "seconds": 0.65,
+      "peak": 0.78,
+      "rms": 0.239,
+      "sha256": "0dcae1ef181a851096dcb62b2f2b553656827ed6fb1a9a068933711f6f1e2661"
+    },
+    {
+      "file": "portal-unfold.mp3",
+      "description": "Air folds open with a restrained resonant shimmer.",
+      "loop": false,
+      "seconds": 0.85,
+      "peak": 0.78,
+      "rms": 0.2724,
+      "sha256": "fed9d7d1c080fe239f364df61ee8182a47896e039e029e760c1b3b87608f3dd0"
+    },
+    {
+      "file": "portal-cross.mp3",
+      "description": "Quick close air sweep when passing through the portal.",
+      "loop": false,
+      "seconds": 0.55,
+      "peak": 0.78,
+      "rms": 0.1522,
+      "sha256": "48a9514dbdc1d0d2561b7401c6f76809eb937f3cbc1c07a6fc3ce04fb185ea82"
+    },
+    {
+      "file": "boxing-thump.mp3",
+      "description": "Rounded padded boxing impact.",
+      "loop": false,
+      "seconds": 0.48,
+      "peak": 0.78,
+      "rms": 0.1901,
+      "sha256": "cb29da646a031b65542c297938fa0154fc6065a829dfcf5a4c38299c42d0f40e"
+    },
+    {
+      "file": "gear-detach.mp3",
+      "description": "Short harness or cable release.",
+      "loop": false,
+      "seconds": 0.35,
+      "peak": 0.78,
+      "rms": 0.1763,
+      "sha256": "12a1c5996c7c23c25aa1d9e0cac324a1f56f37dbb22700770ce79334f07d62c2"
+    },
+    {
+      "file": "checkpoint-return.mp3",
+      "description": "Gentle checkpoint restore cue.",
+      "loop": false,
+      "seconds": 0.75,
+      "peak": 0.78,
+      "rms": 0.2926,
+      "sha256": "4e94dd3393186df9add4776996a2c879ca680e8f274d81e1562632c14642b2a1"
+    },
+    {
+      "file": "crown-shine.mp3",
+      "description": "Short glass-like crown reward sparkle.",
+      "loop": false,
+      "seconds": 0.85,
+      "peak": 0.78,
+      "rms": 0.1712,
+      "sha256": "fdd7dc0ecbf689b4f931b12fb2a69ec9769b57f8657376ad9fe231d0c709b15b"
+    },
+    {
+      "file": "crown-swipe.mp3",
+      "description": "Crown whisked away by Vex.",
+      "loop": false,
+      "seconds": 0.45,
+      "peak": 0.78,
+      "rms": 0.1536,
+      "sha256": "d8e991dd4de127c5ba48bcce41d4bf22729573875b22aac7c0cfc8549aa51acb"
+    },
+    {
+      "file": "vex-skate-in.mp3",
+      "description": "Vex arrives with rolling wheels and a gentle brake.",
+      "loop": false,
+      "seconds": 0.95,
+      "peak": 0.78,
+      "rms": 0.2619,
+      "sha256": "235064a908e3b08594c98650d28a11be4528778fba837987ab1db09959906b7d"
+    },
+    {
+      "file": "vex-brake.mp3",
+      "description": "Quick rubber skate brake.",
+      "loop": false,
+      "seconds": 0.32,
+      "peak": 0.78,
+      "rms": 0.158,
+      "sha256": "89749ad00db88604db70083d8663fd9dfa948a1c35b7a91a6251a1822bcc8bf0"
+    },
+    {
+      "file": "vex-bump.mp3",
+      "description": "Small padded shoulder bump.",
+      "loop": false,
+      "seconds": 0.48,
+      "peak": 0.78,
+      "rms": 0.1784,
+      "sha256": "4d065d064dd221248d63f7334a9ec15d5e75a290367d72658e27ab342f7e5d33"
+    },
+    {
+      "file": "vex-whistle.mp3",
+      "description": "Brief cheeky two-part whistle instead of alien laughter.",
+      "loop": false,
+      "seconds": 0.9,
+      "peak": 0.78,
+      "rms": 0.2863,
+      "sha256": "56975fe948b299a0060372478c1b7582be8cd3f208d91af4d55c656fc7fc44fe"
+    },
+    {
+      "file": "vex-skate-out.mp3",
+      "description": "Vex skating away with a soft wheel swish.",
+      "loop": false,
+      "seconds": 0.75,
+      "peak": 0.78,
+      "rms": 0.1653,
+      "sha256": "88217a3cd025a92071a7fa78a3185694da86d0015a061e987aff87f7cef4213a"
+    },
+    {
+      "file": "crown-float.mp3",
+      "description": "Delicate crown descent, three quiet glass notes.",
+      "loop": false,
+      "seconds": 1.2,
+      "peak": 0.78,
+      "rms": 0.2011,
+      "sha256": "176a98034bd51c110ae4075d18cf39c41b4854698d2059353d9e69f393646891"
+    },
+    {
+      "file": "crown-ding.mp3",
+      "description": "Single clear crown catch ding.",
+      "loop": false,
+      "seconds": 0.5,
+      "peak": 0.78,
+      "rms": 0.2344,
+      "sha256": "ae06c0d6718a0e8fe504f7c090c17403fd4919b5b904153234d03010d0ba0dab"
+    },
+    {
+      "file": "champion-sting.mp3",
+      "description": "Short warm arcade victory sting, no long fanfare.",
+      "loop": false,
+      "seconds": 1.65,
+      "peak": 0.78,
+      "rms": 0.1563,
+      "sha256": "a3eb0381ae6d5c301d0cba3a03c9c12632782b98fd739c953d16ffb3b4db44c0"
+    },
+    {
+      "file": "crown-swish.mp3",
+      "description": "Light crown flight swish.",
+      "loop": false,
+      "seconds": 0.35,
+      "peak": 0.78,
+      "rms": 0.1763,
+      "sha256": "834b0b053164030959a66ea6f91f8c31f8ada718840ace0acc458067c683bb92"
+    },
+    {
+      "file": "finish-bell.mp3",
+      "description": "Simple two-note finish bell.",
+      "loop": false,
+      "seconds": 0.7,
+      "peak": 0.78,
+      "rms": 0.2013,
+      "sha256": "d68465b6f02d96c928c15ce46053d869c826809ade806f74b7fb9eb4cfdee556"
+    },
+    {
+      "file": "countdown-tock.mp3",
+      "description": "Rounded wooden-style countdown tock, no piercing beep.",
+      "loop": false,
+      "seconds": 0.15,
+      "peak": 0.78,
+      "rms": 0.2934,
+      "sha256": "8349de5b0b11ce3733c7268fa416ff7d176057964d675bdba8ff9d73e2dc83b9"
+    },
+    {
+      "file": "cable-reel.mp3",
+      "description": "Quiet reel motor pulling the grappling cable.",
+      "loop": true,
+      "seconds": 2.0,
+      "peak": 0.78,
+      "rms": 0.3077,
+      "sha256": "de1d7a66f1fb4ca9864022fd0cc25e3384a2740ccfded56ec100dae6806ab368"
+    },
+    {
+      "file": "jetpack-air.mp3",
+      "description": "Soft filtered air thrust, not two loud engines.",
+      "loop": true,
+      "seconds": 2.0,
+      "peak": 0.78,
+      "rms": 0.2145,
+      "sha256": "1fda678185fd2959f17faa1e4ec994eeb3afbb48bda21161ff867a4434d7fc93"
+    },
+    {
+      "file": "portal-breeze.mp3",
+      "description": "Low airy portal resonance.",
+      "loop": true,
+      "seconds": 2.0,
+      "peak": 0.78,
+      "rms": 0.2903,
+      "sha256": "11ac72244b40531105fa4b2345cbda5eb673d629d9eceedd713eb562ce105e00"
+    },
+    {
+      "file": "neon-arcade-run.mp3",
+      "description": "Original rhythmic arcade score: 132 BPM, four-on-the-floor drums, syncopated bass, short chord stabs, melodic hook and B section.",
+      "loop": true,
+      "seconds": 29.0909,
+      "peak": 0.78,
+      "rms": 0.1773,
+      "sha256": "f662a06ff71f791ccab43ed998270d3f54a99b632a8c46bfc8ea3e3a9d0090e0"
+    },
+    {
+      "file": "vex-hair-grab.mp3",
+      "description": "Soft glove and clothing rustle as the hand closes; no punch.",
+      "loop": false,
+      "seconds": 0.3,
+      "peak": 0.78,
+      "rms": 0.0948,
+      "sha256": "544cbb21dfac7f3a887066d4f8d794e8908c6775308a41c88089d482fbc8bf93"
+    },
+    {
+      "file": "vex-hair-tug.mp3",
+      "description": "Short cartoon tug swish and gentle elastic squeak; no impact or tearing.",
+      "loop": false,
+      "seconds": 0.42,
+      "peak": 0.78,
+      "rms": 0.155,
+      "sha256": "5af104d30000858655389f568cf8a76ef934bbec91ad728f9a26f1aa3c73ac06"
+    },
+    {
+      "file": "vex-let-go.mp3",
+      "description": "Small airy release when the hand opens.",
+      "loop": false,
+      "seconds": 0.25,
+      "peak": 0.78,
+      "rms": 0.1836,
+      "sha256": "dc3e00262ca1d0f2834e85bb1f59a6748eef7e718f3b1cd9ba2660bd2d08e1dd"
+    },
+    {
+      "file": "vex-banana-toss.mp3",
+      "description": "Vex throws the peel: a short cloth-and-air swish.",
+      "loop": false,
+      "seconds": 0.38,
+      "peak": 0.78,
+      "rms": 0.1652,
+      "sha256": "7a4e5c1830a9918e715c2169c8c698fd4cdd80847ed8b4dba7eb7baad32a65bd"
+    },
+    {
+      "file": "vex-glove-spring.mp3",
+      "description": "Vex cocks and releases a compact spring boxing glove.",
+      "loop": false,
+      "seconds": 0.58,
+      "peak": 0.78,
+      "rms": 0.2164,
+      "sha256": "5f0f2d7ef919d0101b143c956e8fe5a757acb0a38380e0aae9947ddec7473464"
+    },
+    {
+      "file": "vex-board-catch.mp3",
+      "description": "Clothing rustle and a soft step as Vex pulls Nova onto the shared board; no chain or metal.",
+      "loop": false,
+      "seconds": 0.45,
+      "peak": 0.78,
+      "rms": 0.1873,
+      "sha256": "16094fd7133bd2671e119bce8962e591bb8a429cfcb61a44b24605242c3e74a3"
+    },
+    {
+      "file": "vex-board-descent.mp3",
+      "description": "Board thrusters bank downward once both riders are aboard.",
+      "loop": false,
+      "seconds": 0.7,
+      "peak": 0.78,
+      "rms": 0.259,
+      "sha256": "2bed37fadee19e4902d149c77199d339ee8daab76d4574c7cd419da17b09290d"
+    },
+    {
+      "file": "vex-board-throw.mp3",
+      "description": "Vex releases Nova from the board with a quick clothing-and-air toss.",
+      "loop": false,
+      "seconds": 0.5,
+      "peak": 0.78,
+      "rms": 0.1516,
+      "sha256": "81bcd99f17ed9ebb6832ccbfc68dfb1673e36c329a902e0ee619a6d4cf320a16"
+    },
+    {
+      "file": "vex-push-reach.mp3",
+      "description": "Short sleeve rustle as Vex reaches toward Nova before the push.",
+      "loop": false,
+      "seconds": 0.4,
+      "peak": 0.78,
+      "rms": 0.1556,
+      "sha256": "807e6782aeb83e4f455f3124091a8b9325dad5e149b83243ca3d486337f495e6"
+    },
+    {
+      "file": "vex-push-contact.mp3",
+      "description": "Soft fabric friction and airy hand release after a sustained open-palmed push; no hit, thump or punch.",
+      "loop": false,
+      "seconds": 0.55,
+      "peak": 0.78,
+      "rms": 0.1674,
+      "sha256": "f233974629d633f0da6d65742f95298af412b52e897fce4abe22e132524d4395"
+    },
+    {
+      "file": "vex-board-rush.mp3",
+      "description": "Quiet shared hoverboard air rush while Vex carries Nova downward.",
+      "loop": true,
+      "seconds": 2.0,
+      "peak": 0.78,
+      "rms": 0.2385,
+      "sha256": "8f2f2e39317746e3ecb8d747fdc820dc4ac2123db8f0f8cb99f233c5658c5c54"
+    },
+    {
+      "file": "vex-freefall.mp3",
+      "description": "Soft looping falling-air rush after Nova is pushed off the ledge; no motor.",
+      "loop": true,
+      "seconds": 2.0,
+      "peak": 0.78,
+      "rms": 0.1638,
+      "sha256": "8965f7a0a0e6674529c7b92fd9c55f89e9feb8c08eb75c7f653ddedf994e865f"
+    }
+  ]
+}

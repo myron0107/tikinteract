@@ -22,6 +22,7 @@ function initializeStudioTestMenu() {
     if (!frame?.dataset.gameId) { showStudioTestUnavailable('Alege un joc pentru a vedea comenzile.'); return; }
     try {
         const gameDocument = frame.contentDocument;
+        if(frame.contentWindow.TikInteractStudioControls){initializeActionGameTestMenu(frame,gameDocument);return;}
         const isDerby = frame.dataset.gameId === 'country-derby';
         const original = gameDocument?.getElementById(isDerby ? 'settings' : 'testPanel');
         if (!original) { showStudioTestUnavailable('Acest joc nu oferă încă un panou de test.'); return; }
@@ -75,7 +76,7 @@ function createStudioTestGroup(title, kind, category = kind) {
 function initializeStudioTestTabs() {
     const nav = document.getElementById('studio-test-tabs');
     if (!nav || !studioTestBridge) return;
-    const categories = [['teams','Test'],['weather','Decor'],['audio','Audio'],['music','Muzică']];
+    const categories = [['teams','Test'],['gifts','Cadouri LIVE'],['appearance','Aspect'],['weather','Decor'],['audio','Audio'],['music','Muzică']];
     for (const [key, label] of categories) {
         if (!studioTestBridge.groups.some(group => group.category === key)) continue;
         const button = document.createElement('button');
@@ -110,6 +111,7 @@ function selectStudioTestTab(key) {
 }
 
 function studioTestActionLabel(source) {
+    if(source.dataset.color)return source.getAttribute('aria-label')||source.dataset.color;
     if (source.dataset.team !== undefined) {
         const kind = source.dataset.kind || source.dataset.action;
         return ({like:'+1 like', like25:'+25 likes', likes:'+100 likes', gift:source.dataset.action ? '+100 pct.' : 'Cadou'})[kind] || source.textContent;
@@ -139,6 +141,7 @@ function addStudioTestControl(group, source, labelText) {
     }
     if (tag === 'button') {
         proxy.type = 'button';
+        if(source.dataset.action)proxy.dataset.testAction=source.dataset.action;
         if (source.dataset.team !== undefined) proxy.dataset.testTeam = source.dataset.team;
         proxy.addEventListener('click', () => {
             if (!studioTestBridge || !source.isConnected) return;
@@ -177,6 +180,13 @@ function addStudioTestControl(group, source, labelText) {
             }
         });
     }
+    if(source.matches?.('.gift-button')){
+        proxy.classList.add('studio-test-gift');
+        const image=document.createElement('canvas');image.width=image.height=64;image.setAttribute('aria-hidden','true');image.getContext('2d').drawImage(source.querySelector('canvas'),0,0);
+        const copy=document.createElement('span'),title=document.createElement('strong'),amount=document.createElement('small');
+        copy.append(title,amount);proxy.append(image,copy);proxy.giftCopy={title,amount};
+    }
+    if(source.hasAttribute('aria-label'))proxy.setAttribute('aria-label',source.getAttribute('aria-label'));
     if (labelText) {
         const label = document.createElement('label');
         label.className = `studio-test-field studio-test-field--${source.type || 'select'}`;
@@ -259,13 +269,76 @@ function syncStudioTestMenu() {
             if (proxy.setCustomValidity && source.validity) proxy.setCustomValidity(source.validity.customError ? source.validationMessage : '');
         } else {
             const text = tag === 'BUTTON' ? studioTestActionLabel(source) : source.textContent;
-            if (proxy.textContent !== text) proxy.textContent = text;
+            if(proxy.giftCopy){proxy.giftCopy.title.textContent=source.querySelector('strong').textContent;proxy.giftCopy.amount.textContent=source.querySelector('small').textContent;}
+            else if (proxy.textContent !== text) proxy.textContent = text;
             if (tag === 'BUTTON' && source.dataset.team !== undefined) {
                 const team = ({0:'RED',1:'BLUE',2:'GREEN'})[source.dataset.team] || source.dataset.team;
                 proxy.setAttribute('aria-label', `${team}: ${text}`);
             }
         }
         if (source.hasAttribute('aria-pressed')) proxy.setAttribute('aria-pressed', source.getAttribute('aria-pressed'));
+        if (source.hasAttribute('aria-checked')) proxy.setAttribute('aria-checked', source.getAttribute('aria-checked'));
     }
+}
+
+function initializeActionGameTestMenu(frame,doc){
+    studioTestBridge={frame,gameDocument:doc,pairs:[],groups:[],tabs:[],api:frame.contentWindow.TikInteractStudioControls};
+    const api=studioTestBridge.api,add=(group,id,label)=>addStudioTestControl(group,doc.getElementById(id),label);
+    document.getElementById('studio-test-game-name').textContent=document.getElementById('live-game-select').selectedOptions[0].textContent;
+    const gifts=createStudioTestGroup('Cadouri de test','native-gifts','teams');
+    add(gifts,'viewer','Spectator');add(gifts,'gift-quantity','Cantitate');
+    const grid=document.createElement('div');grid.className='studio-test-gift-grid';gifts.append(grid);
+    for(const source of doc.querySelectorAll('#gift-buttons .gift-button'))addStudioTestControl(grid,source);
+    const control=createStudioTestGroup('Control joc','race','teams');add(control,'pause');
+    const restart=doc.createElement('button');restart.textContent='Rundă nouă';restart.type='button';restart.hidden=true;
+    restart.addEventListener('click',()=>api.control({action:'session.restart'}));doc.getElementById('test-panel').append(restart);addStudioTestControl(control,restart);
+    add(control,'autoplay-input','Urcare automată');
+    const appearance=createStudioTestGroup('Personaj și peisaj','appearance','appearance');
+    add(appearance,'background-input','Peisaj');add(appearance,'detail-input','Intensitate efecte');
+    const colors=document.createElement('div');colors.className='studio-native-colors';appearance.append(colors);
+    for(const source of doc.querySelectorAll('[data-color]')){const proxy=addStudioTestControl(colors,source);proxy.style.cssText=source.style.cssText;proxy.textContent=source.dataset.color;}
+    const audio=createStudioTestGroup('Sunetele jocului','audio','audio');
+    add(audio,'sound');add(audio,'fx-volume','Efecte sonore');add(audio,'music-volume','Muzică');add(audio,'music-input','Muzică activă');
+    const bindings=createStudioTestGroup('Cadouri TikTok → acțiuni','bindings','gifts');
+    buildActionGameGiftBindings(bindings,studioTestBridge);
+    initializeStudioTestTabs();syncStudioTestMenu();
+    document.getElementById('studio-test-panel').setAttribute('aria-busy','false');
+    studioTestSyncTimer=setInterval(()=>{if(!document.hidden)syncStudioTestMenu();},300);
+}
+
+async function buildActionGameGiftBindings(root,bridge){
+    const note=document.createElement('p');note.className='studio-test-note';note.textContent='Alege un cadou pentru fiecare acțiune. Cantitatea repetă efectul. Alegerile se salvează în acest browser. Cadourile nealese nu modifică jocul.';root.append(note);
+    const search=document.createElement('input');search.type='search';search.className='studio-test-input';search.placeholder='Caută un cadou sau ID';search.setAttribute('aria-label','Caută în cadourile TikTok');root.append(search);
+    const refresh=document.createElement('button');refresh.type='button';refresh.className='studio-test-action';refresh.textContent='Actualizează lista';root.append(refresh);
+    const list=document.createElement('div');list.className='studio-gift-bindings';root.append(list);
+    let catalog=[];
+    const paint=()=>{
+        const query=search.value.trim().toLocaleLowerCase('ro'),assigned=bridge.api.getBindings();list.replaceChildren();
+        for(const action of bridge.api.getDefinitions()){
+            const label=document.createElement('label');label.className='studio-gift-binding';
+            const title=document.createElement('span');title.textContent=action.name+(action.value?' · '+(action.value>0?'+':'−')+Math.abs(action.value)+(Math.abs(action.value)>1?' m':'' ):'');
+            const row=document.createElement('div'),image=document.createElement('img'),select=document.createElement('select');image.alt='';image.hidden=true;image.referrerPolicy='no-referrer';image.onerror=()=>{image.hidden=true;};
+            select.className='studio-test-input';select.dataset.giftBinding=action.id;select.setAttribute('aria-label','Cadou TikTok pentru '+action.name);
+            const empty=document.createElement('option');empty.value='';empty.textContent='Fără cadou asociat';select.append(empty);
+            const matching=catalog.filter(gift=>gift.id===assigned[action.id]||!query||`${gift.name} ${gift.id}`.toLocaleLowerCase('ro').includes(query));
+            if(assigned[action.id]&&!matching.some(gift=>gift.id===assigned[action.id]))matching.unshift({id:assigned[action.id],name:'Cadou ID '+assigned[action.id],coins:0});
+            for(const gift of matching){const option=document.createElement('option');option.value=gift.id;option.textContent=gift.name+' · '+gift.coins+' monede · #'+gift.id;select.append(option);}
+            select.value=assigned[action.id]||'';
+            const showImage=()=>{const gift=catalog.find(gift=>gift.id===select.value);image.hidden=!gift?.image;if(gift?.image&&gift.image.startsWith('https://'))image.src=gift.image;};showImage();
+            select.onchange=()=>{const result=bridge.api.setBinding(action.id,select.value);if(!result.ok){select.value=assigned[action.id]||'';document.getElementById('studio-test-feedback').textContent=result.message;}else{assigned[action.id]=select.value;document.getElementById('studio-test-feedback').textContent='Asocierea a fost salvată.';}showImage();};
+            row.append(image,select);label.append(title,row);list.append(label);
+        }
+    };
+    const load=async()=>{
+        refresh.disabled=true;
+        try{
+            const response=await fetch('assets/tiktok-gifts-catalog.json');if(!response.ok)throw Error();const bundled=await response.json();
+            let synced=[];try{synced=JSON.parse(localStorage.getItem('tikinteract-gift-catalog-v1')||'{}').gifts||[];}catch{}
+            catalog=[...new Map([...bundled.gifts,...synced].map(gift=>[String(gift.id),{...gift,id:String(gift.id)}])).values()].sort((a,b)=>a.coins-b.coins||a.name.localeCompare(b.name));
+            if(studioTestBridge!==bridge)return;paint();
+        }catch{if(studioTestBridge===bridge)note.textContent='Lista nu s-a putut încărca. Apasă Actualizează lista.';}
+        finally{refresh.disabled=false;}
+    };
+    search.oninput=paint;refresh.onclick=load;await load();
 }
 

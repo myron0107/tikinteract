@@ -1,4 +1,9 @@
 /* An open control surface: headings and rows instead of nested cards. */
+.studio-test-gift-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.studio-test-gift{justify-content:flex-start!important;gap:5px;padding:7px!important;text-align:left;min-height:52px!important}
+.studio-test-gift canvas{width:29px;height:29px;flex-shrink:0;object-fit:contain}.studio-test-gift>span{display:grid;gap:2px;min-width:0}.studio-test-gift strong{font-size:9px;line-height:1.35}.studio-test-gift small{font-size:9px;color:#bfa4db}
+.studio-native-colors{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.studio-native-colors button{color:#14121b;font-size:10px;min-height:30px}.studio-native-colors button[aria-checked=true]{outline:2px solid #fff;outline-offset:1px}
+.studio-gift-bindings{display:grid;gap:16px}.studio-gift-binding{display:grid;gap:5px;min-width:0}.studio-gift-binding>span{font-size:10px;color:#e6ccf6}.studio-gift-binding>div{display:flex;gap:5px;min-width:0;align-items:center}.studio-gift-binding img{width:28px;height:28px;object-fit:contain}.studio-gift-binding select{flex:1;min-width:0;font-size:10px!important}
 .studio-game-sidebar { min-width: 0; }
 .studio-test-panel { margin-top: 28px; padding: 0 2px; color: var(--text); }
 .studio-test-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

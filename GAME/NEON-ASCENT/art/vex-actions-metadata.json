@@ -1,0 +1,54 @@
+{
+  "width": 2172,
+  "height": 724,
+  "poses": {
+    "vexThrow": {
+      "x": 51,
+      "y": 35,
+      "w": 486,
+      "h": 677,
+      "sheet": "vexAction",
+      "mirror": false,
+      "hand": {
+        "u": 0.15,
+        "v": 0.55
+      }
+    },
+    "vexPush": {
+      "x": 604,
+      "y": 20,
+      "w": 447,
+      "h": 691,
+      "sheet": "vexAction",
+      "mirror": true,
+      "hand": {
+        "u": 0.89,
+        "v": 0.385
+      }
+    },
+    "vexPull": {
+      "x": 1141,
+      "y": 29,
+      "w": 485,
+      "h": 681,
+      "sheet": "vexAction",
+      "mirror": false,
+      "hand": {
+        "u": 0.22,
+        "v": 0.51
+      }
+    },
+    "vexDive": {
+      "x": 1680,
+      "y": 176,
+      "w": 409,
+      "h": 532,
+      "sheet": "vexAction",
+      "mirror": false,
+      "hand": {
+        "u": 0.5,
+        "v": 0.6
+      }
+    }
+  }
+}

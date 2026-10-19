@@ -1,0 +1,603 @@
+[
+  {
+    "name": "atlas",
+    "source": "atlas-v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "transparentRatio": 0.5842993012471733,
+    "metadata": {
+      "width": 1254,
+      "height": 1254,
+      "sprites": {
+        "idle": {
+          "x": 95,
+          "y": 13,
+          "w": 156,
+          "h": 350
+        },
+        "rise": {
+          "x": 357,
+          "y": 10,
+          "w": 227,
+          "h": 344
+        },
+        "fall": {
+          "x": 666,
+          "y": 56,
+          "w": 268,
+          "h": 289
+        },
+        "land": {
+          "x": 989,
+          "y": 123,
+          "w": 245,
+          "h": 245
+        },
+        "grass": {
+          "x": 10,
+          "y": 467,
+          "w": 310,
+          "h": 146
+        },
+        "spring": {
+          "x": 344,
+          "y": 457,
+          "w": 275,
+          "h": 186
+        },
+        "ice": {
+          "x": 657,
+          "y": 464,
+          "w": 295,
+          "h": 184
+        },
+        "finish": {
+          "x": 970,
+          "y": 394,
+          "w": 272,
+          "h": 276
+        },
+        "magnet": {
+          "x": 44,
+          "y": 665,
+          "w": 244,
+          "h": 255
+        },
+        "cloud": {
+          "x": 339,
+          "y": 744,
+          "w": 274,
+          "h": 179
+        },
+        "rocket": {
+          "x": 673,
+          "y": 693,
+          "w": 236,
+          "h": 246
+        },
+        "vortex": {
+          "x": 968,
+          "y": 693,
+          "w": 270,
+          "h": 267
+        },
+        "tornado": {
+          "x": 23,
+          "y": 950,
+          "w": 270,
+          "h": 283
+        },
+        "portal": {
+          "x": 358,
+          "y": 961,
+          "w": 252,
+          "h": 270
+        },
+        "trophy": {
+          "x": 683,
+          "y": 954,
+          "w": 223,
+          "h": 281
+        },
+        "clouds": {
+          "x": 968,
+          "y": 1032,
+          "w": 269,
+          "h": 171
+        }
+      }
+    }
+  },
+  {
+    "name": "rival",
+    "source": "rival-v1.png",
+    "size": [
+      1774,
+      887
+    ],
+    "transparentRatio": 0.6374177172715244,
+    "metadata": {
+      "width": 1774,
+      "height": 887,
+      "poses": {
+        "idle": {
+          "x": 111,
+          "y": 20,
+          "w": 377,
+          "h": 847
+        },
+        "shove": {
+          "x": 680,
+          "y": 15,
+          "w": 437,
+          "h": 853
+        },
+        "grab": {
+          "x": 1301,
+          "y": 29,
+          "w": 375,
+          "h": 838
+        }
+      }
+    }
+  },
+  {
+    "name": "board",
+    "source": "board-v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "transparentRatio": 0.6693890347262497,
+    "metadata": {
+      "x": 34,
+      "y": 117,
+      "w": 2104,
+      "h": 500
+    }
+  },
+  {
+    "name": "district",
+    "source": "district-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "skyline",
+    "source": "skyline-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "undergrid",
+    "source": "undergrid-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "rooftops",
+    "source": "rooftops-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "sky-circuit",
+    "source": "sky-circuit-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "neon-heights",
+    "source": "neon-heights-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "power-core",
+    "source": "power-core-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "deep-grid",
+    "source": "deep-grid-v1.png",
+    "size": [
+      1024,
+      1536
+    ],
+    "transparentRatio": 0
+  },
+  {
+    "name": "actions",
+    "source": "actions-v1.png",
+    "size": [
+      1448,
+      1086
+    ],
+    "transparentRatio": 0.5347300652198244,
+    "metadata": {
+      "width": 1448,
+      "height": 1086,
+      "sprites": {
+        "energy": {
+          "x": 61,
+          "y": 45,
+          "w": 245,
+          "h": 304
+        },
+        "glitch": {
+          "x": 391,
+          "y": 58,
+          "w": 301,
+          "h": 282
+        },
+        "drone": {
+          "x": 729,
+          "y": 54,
+          "w": 352,
+          "h": 308
+        },
+        "boardGift": {
+          "x": 1098,
+          "y": 99,
+          "w": 326,
+          "h": 216
+        },
+        "laser": {
+          "x": 37,
+          "y": 378,
+          "w": 310,
+          "h": 325
+        },
+        "blackout": {
+          "x": 388,
+          "y": 407,
+          "w": 320,
+          "h": 278
+        },
+        "gravity": {
+          "x": 759,
+          "y": 362,
+          "w": 286,
+          "h": 362
+        },
+        "emp": {
+          "x": 1101,
+          "y": 378,
+          "w": 322,
+          "h": 346
+        },
+        "reboot": {
+          "x": 44,
+          "y": 760,
+          "w": 305,
+          "h": 272
+        },
+        "crown": {
+          "x": 402,
+          "y": 743,
+          "w": 298,
+          "h": 272
+        },
+        "vex": {
+          "x": 767,
+          "y": 724,
+          "w": 295,
+          "h": 326
+        },
+        "checkpoint": {
+          "x": 1160,
+          "y": 724,
+          "w": 211,
+          "h": 309
+        }
+      }
+    }
+  },
+  {
+    "name": "blast-neon",
+    "source": "blast-neon-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentRatio": 0.6235167185465494
+  },
+  {
+    "name": "physical-gifts",
+    "source": "physical-gifts-v1.png",
+    "size": [
+      1448,
+      1086
+    ],
+    "transparentRatio": 0.5608065484366574,
+    "metadata": {
+      "width": 1448,
+      "height": 1086,
+      "sprites": {
+        "springPad": {
+          "x": 30,
+          "y": 96,
+          "w": 329,
+          "h": 233
+        },
+        "banana": {
+          "x": 403,
+          "y": 44,
+          "w": 321,
+          "h": 297
+        },
+        "grapple": {
+          "x": 724,
+          "y": 19,
+          "w": 317,
+          "h": 337
+        },
+        "jetpack": {
+          "x": 1114,
+          "y": 44,
+          "w": 309,
+          "h": 299
+        },
+        "gate": {
+          "x": 69,
+          "y": 368,
+          "w": 241,
+          "h": 340
+        },
+        "glove": {
+          "x": 426,
+          "y": 372,
+          "w": 245,
+          "h": 334
+        },
+        "weight": {
+          "x": 751,
+          "y": 387,
+          "w": 335,
+          "h": 321
+        },
+        "press": {
+          "x": 1086,
+          "y": 466,
+          "w": 347,
+          "h": 175
+        },
+        "reboot": {
+          "x": 23,
+          "y": 728,
+          "w": 333,
+          "h": 318
+        },
+        "crown": {
+          "x": 393,
+          "y": 750,
+          "w": 326,
+          "h": 277
+        },
+        "vex": {
+          "x": 750,
+          "y": 726,
+          "w": 293,
+          "h": 323
+        },
+        "checkpoint": {
+          "x": 1096,
+          "y": 735,
+          "w": 321,
+          "h": 310
+        }
+      }
+    }
+  },
+  {
+    "name": "reactions",
+    "source": "reactions-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "transparentRatio": 0.5465475718180338,
+    "metadata": {
+      "width": 1536,
+      "height": 1024,
+      "sprites": {
+        "reactStart": {
+          "x": 43,
+          "y": 42,
+          "w": 463,
+          "h": 920,
+          "sheet": "reaction"
+        },
+        "reactPull": {
+          "x": 566,
+          "y": 48,
+          "w": 449,
+          "h": 913,
+          "sheet": "reaction"
+        },
+        "reactRecover": {
+          "x": 1073,
+          "y": 54,
+          "w": 451,
+          "h": 912,
+          "sheet": "reaction"
+        }
+      }
+    }
+  },
+  {
+    "name": "vex-actions",
+    "source": "vex-actions-v1.png",
+    "size": [
+      2172,
+      724
+    ],
+    "transparentRatio": 0.6107382507656461,
+    "metadata": {
+      "width": 2172,
+      "height": 724,
+      "poses": {
+        "vexThrow": {
+          "x": 51,
+          "y": 35,
+          "w": 486,
+          "h": 677,
+          "sheet": "vexAction",
+          "mirror": false,
+          "hand": {
+            "u": 0.15,
+            "v": 0.55
+          }
+        },
+        "vexPush": {
+          "x": 604,
+          "y": 20,
+          "w": 447,
+          "h": 691,
+          "sheet": "vexAction",
+          "mirror": true,
+          "hand": {
+            "u": 0.89,
+            "v": 0.385
+          }
+        },
+        "vexPull": {
+          "x": 1141,
+          "y": 29,
+          "w": 485,
+          "h": 681,
+          "sheet": "vexAction",
+          "mirror": false,
+          "hand": {
+            "u": 0.22,
+            "v": 0.51
+          }
+        },
+        "vexDive": {
+          "x": 1680,
+          "y": 176,
+          "w": 409,
+          "h": 532,
+          "sheet": "vexAction",
+          "mirror": false,
+          "hand": {
+            "u": 0.5,
+            "v": 0.6
+          }
+        }
+      }
+    }
+  },
+  {
+    "name": "interactions",
+    "source": "interactions-v1.png",
+    "size": [
+      1254,
+      1254
+    ],
+    "transparentRatio": 0.7871080485031631,
+    "metadata": {
+      "width": 1254,
+      "height": 1254,
+      "sprites": {
+        "pushTouch": {
+          "x": 162,
+          "y": 214,
+          "w": 411,
+          "h": 331,
+          "sheet": "interaction",
+          "vexFeet": {
+            "u": 0.7518248175182481,
+            "v": 0.9848942598187311
+          },
+          "novaFeet": {
+            "u": 0.30170316301703165,
+            "v": 0.9848942598187311
+          },
+          "vexHead": 0
+        },
+        "pushExtend": {
+          "x": 717,
+          "y": 222,
+          "w": 426,
+          "h": 322,
+          "sheet": "interaction",
+          "vexFeet": {
+            "u": 0.7863849765258216,
+            "v": 0.9875776397515528
+          },
+          "novaFeet": {
+            "u": 0.3075117370892019,
+            "v": 0.9875776397515528
+          },
+          "vexHead": -0.012422360248447204
+        },
+        "rideCatch": {
+          "x": 149,
+          "y": 767,
+          "w": 449,
+          "h": 337,
+          "sheet": "interaction",
+          "vexFeet": {
+            "u": 0.7461024498886414,
+            "v": 0.9881305637982196
+          },
+          "novaFeet": {
+            "u": 0.27839643652561247,
+            "v": 0.9881305637982196
+          },
+          "vexHead": -0.002967359050445104
+        },
+        "rideHold": {
+          "x": 724,
+          "y": 768,
+          "w": 425,
+          "h": 340,
+          "sheet": "interaction",
+          "vexFeet": {
+            "u": 0.6964705882352941,
+            "v": 0.9823529411764705
+          },
+          "novaFeet": {
+            "u": 0.28,
+            "v": 0.9823529411764705
+          },
+          "vexHead": 0.020588235294117647
+        }
+      }
+    }
+  },
+  {
+    "name": "cover",
+    "source": "cover-v1.png",
+    "size": [
+      941,
+      1672
+    ],
+    "transparentRatio": 0
+  }
+]

@@ -1,0 +1,237 @@
+{
+  "passed": true,
+  "zones": [
+    {
+      "id": "abyss",
+      "name": "Deep Grid",
+      "min": null,
+      "maxExclusive": -1000,
+      "file": "art/deep-grid.webp"
+    },
+    {
+      "id": "crystal",
+      "name": "Power Core",
+      "min": -1000,
+      "maxExclusive": -400,
+      "file": "art/power-core.webp"
+    },
+    {
+      "id": "lava",
+      "name": "Undergrid",
+      "min": -400,
+      "maxExclusive": -80,
+      "file": "art/undergrid.webp"
+    },
+    {
+      "id": "earth",
+      "name": "Neon District",
+      "min": -80,
+      "maxExclusive": 80,
+      "file": "art/district.webp"
+    },
+    {
+      "id": "grass",
+      "name": "Rooftop Run",
+      "min": 80,
+      "maxExclusive": 300,
+      "file": "art/rooftops.webp"
+    },
+    {
+      "id": "clouds",
+      "name": "Skyline",
+      "min": 300,
+      "maxExclusive": 800,
+      "file": "art/skyline.webp"
+    },
+    {
+      "id": "space",
+      "name": "Sky Circuit",
+      "min": 800,
+      "maxExclusive": 1600,
+      "file": "art/sky-circuit.webp"
+    },
+    {
+      "id": "cosmos",
+      "name": "Neon Heights",
+      "min": 1600,
+      "maxExclusive": null,
+      "file": "art/neon-heights.webp"
+    }
+  ],
+  "gifts": {
+    "balloon": {
+      "name": "Trambulină",
+      "sprite": "springPad"
+    },
+    "anvil": {
+      "name": "Farsa lui Vex",
+      "sprite": "banana"
+    },
+    "magnet": {
+      "name": "Cârlig de salvare",
+      "sprite": "grapple"
+    },
+    "cloud": {
+      "name": "Jetpack",
+      "sprite": "jetpack"
+    },
+    "rocket": {
+      "name": "Portal",
+      "sprite": "gate"
+    },
+    "wind": {
+      "name": "Boxul lui Vex",
+      "sprite": "glove"
+    },
+    "vortex": {
+      "name": "Cursa lui Vex",
+      "sprite": "vexCarry"
+    },
+    "meteor": {
+      "name": "Împingerea lui Vex",
+      "sprite": "vexShove"
+    },
+    "reset": {
+      "name": "Reboot",
+      "sprite": "reboot"
+    },
+    "winAdd": {
+      "name": "Coroană bonus",
+      "sprite": "crown"
+    },
+    "winRemove": {
+      "name": "Atacul lui Vex",
+      "sprite": "vex"
+    }
+  },
+  "images": [
+    {
+      "file": "art/atlas.webp",
+      "sha256": "06bf704e5a05fb3b8a9fffa30f8c65e4a7d4279ec181ec4b406c392f936144f5",
+      "source": "art/source/atlas-v1.png",
+      "sourceSha256": "ea0bcd285c7318cd5daa8703ec55272fb58389086fd8010641d1f0afe77a9f65",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.5842993012471733
+    },
+    {
+      "file": "art/rival.webp",
+      "sha256": "35072fdde2dd640f8e224ed41821cfef4ff361eec70ac6a9b01361e9db03b0e1",
+      "source": "art/source/rival-v1.png",
+      "sourceSha256": "65e86ed47466018c30d80b4046d9febe6e6ea10062394971a15d957fed9ce380",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.6374177172715244
+    },
+    {
+      "file": "art/board.webp",
+      "sha256": "eedb1d48f110880429d45ef8564b4ea7a90b0634406498159a2988962d607cab",
+      "source": "art/source/board-v1.png",
+      "sourceSha256": "cc033b21622946fd37183ec60055a6bdaa7b4a6a4d7aa7a4597ba13925eca9be",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.6693890347262497
+    },
+    {
+      "file": "art/physical-gifts.webp",
+      "sha256": "6b00562e9ac8baef5d25d4310f7151e542492e4b2f533429d660dd809f717d71",
+      "source": "art/source/physical-gifts-v1.png",
+      "sourceSha256": "9d2e31909a2174b45f35556cc55eed15283e4f88ef48965ce1f4c55a44079d30",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.5608065484366574
+    },
+    {
+      "file": "art/blast-neon.webp",
+      "sha256": "ed6040f667c4b6af7d62dc7d968dca4617ce73bc637379cce261b0fcee68aac8",
+      "source": "art/source/blast-neon-v1.png",
+      "sourceSha256": "37d549e387e09841c07a0cb6f06a93f06f6c5f6919031f40c422e9b33b05fd9a",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.6235167185465494
+    },
+    {
+      "file": "art/reactions.webp",
+      "sha256": "79ca2524be82dc56f3d3d749873e555312c726d7caf934f9a6ef565ee6b38b62",
+      "source": "art/source/reactions-v1.png",
+      "sourceSha256": "9a3f3174904d80e4ac84838ae442df69db93bb2eb6dd13e692a24ee2ebc4e1ec",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.5465475718180338
+    },
+    {
+      "file": "art/vex-actions.webp",
+      "sha256": "4944573199c39999d511b15862d3fc681e20b0478cc4f5eb3da5e8ba784371ea",
+      "source": "art/source/vex-actions-v1.png",
+      "sourceSha256": "b3166883e7342d823f301117a8efcefbfc7191f0fffeb7fcecf9371ab34313e3",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.6107382507656461
+    },
+    {
+      "file": "art/interactions.webp",
+      "sha256": "6328cc73901b893100695316e089ebba0c75ee779475e4db004caa189eac881a",
+      "source": "art/source/interactions-v1.png",
+      "sourceSha256": "32a75c256ab6bd1d6c91bc161428867bf5ae9e08e977639edb6ef81adaa4d836",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0.7871080485031631
+    },
+    {
+      "file": "art/deep-grid.webp",
+      "sha256": "cbcf1ef055509f8dfa512c6feb82401e8018a3a85f0a8f48ee9a6ac2970b2b1f",
+      "source": "art/source/deep-grid-v1.png",
+      "sourceSha256": "4ec3f077d2a88cde59c15c8d253856c234283421ff2c9bd14a5dbd81450a45ea",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/power-core.webp",
+      "sha256": "a488aeb17d1c90d86cd39062ad9df6953e5a638910b6270567725425018df329",
+      "source": "art/source/power-core-v1.png",
+      "sourceSha256": "a471eb051cd48bcd97d013a86e74241657f04ad811b5e85d5af18ac1efb02f0e",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/undergrid.webp",
+      "sha256": "80370d8d2f1bb48be30e55b560bfbf9576a470215c600a688ab6b1962968d42a",
+      "source": "art/source/undergrid-v1.png",
+      "sourceSha256": "f5c1c3c99ac622132777363cfa202e6ce3c6abbd86d1e85e484350f65060d78b",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/district.webp",
+      "sha256": "4851e9510d24fab9920ab746df5cd350eb93b331fa949e61a4acd423beb59cb8",
+      "source": "art/source/district-v1.png",
+      "sourceSha256": "6d9d1b2386c288fa8d4cc2122273bc2f1c6d09dd40c5b1a3b7202976cebf1132",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/rooftops.webp",
+      "sha256": "f8188182f0a0ebdbc4a7420e7dcac3c3d34baccb8234afe7fe8e1b9e62962027",
+      "source": "art/source/rooftops-v1.png",
+      "sourceSha256": "0ff826a743cf6bc0d3fb9e40d76a7d14a2ee0262074538d6d1d00218cf00c4f6",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/skyline.webp",
+      "sha256": "919422f00246c279d16c57a5c1f9e80193535636158da905350d21b359a45c06",
+      "source": "art/source/skyline-v1.png",
+      "sourceSha256": "9f1c5c140ba5d428d3188fe68803bd3b2a16e4a9ace83e9393c37bfe4a9d57c4",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/sky-circuit.webp",
+      "sha256": "f099afc78c50aca5d3f95b2576235e5d82b9f6a0221edb41c16fa363948d834c",
+      "source": "art/source/sky-circuit-v1.png",
+      "sourceSha256": "c93f6023ad7cb0c56e5af0ab42be7ad11dfe5a07b29057ddae481f2f21b4004a",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    },
+    {
+      "file": "art/neon-heights.webp",
+      "sha256": "18d6d371a83e3153c6f9a29e992a0312fb38e58d53301c1dce235fecb512cb03",
+      "source": "art/source/neon-heights-v1.png",
+      "sourceSha256": "101b6a875563eb8bc79f5cf3193d5e6bd02970a0a52dfc8afb3812e54d7a1950",
+      "generator": "OpenAI built-in imagegen",
+      "transparentRatio": 0
+    }
+  ]
+}

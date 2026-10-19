@@ -4,7 +4,8 @@
         'neon-riders': 'play_pass',
         'country-derby': 'play_pass',
         'neon-race-2': 'free',
-        'moto-interact': 'free'
+        'moto-interact': 'free',
+        'nova-vex': 'free'
     });
     const planNames = Object.freeze({
         play_pass: 'Play Pass',

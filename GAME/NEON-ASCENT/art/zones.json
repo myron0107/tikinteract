@@ -1,0 +1,10 @@
+[
+  {"id":"abyss","name":"Deep Grid","min":null,"maxExclusive":-1000,"file":"art/deep-grid.webp"},
+  {"id":"crystal","name":"Power Core","min":-1000,"maxExclusive":-400,"file":"art/power-core.webp"},
+  {"id":"lava","name":"Undergrid","min":-400,"maxExclusive":-80,"file":"art/undergrid.webp"},
+  {"id":"earth","name":"Neon District","min":-80,"maxExclusive":80,"file":"art/district.webp"},
+  {"id":"grass","name":"Rooftop Run","min":80,"maxExclusive":300,"file":"art/rooftops.webp"},
+  {"id":"clouds","name":"Skyline","min":300,"maxExclusive":800,"file":"art/skyline.webp"},
+  {"id":"space","name":"Sky Circuit","min":800,"maxExclusive":1600,"file":"art/sky-circuit.webp"},
+  {"id":"cosmos","name":"Neon Heights","min":1600,"maxExclusive":null,"file":"art/neon-heights.webp"}
+]

@@ -91,11 +91,13 @@ try {
         await waitFor("document.querySelector('[data-home-showcase] canvas') && typeof switchView==='function'");
         await evaluate('document.fonts.ready');await settle(1200);
         await evaluate('__qaSignOut()');
-        await assert("[...document.querySelectorAll('[data-requires-account]')].every(element=>element.hidden && getComputedStyle(element).display==='none')",'Studio entries must be hidden for visitors');
-        await evaluate("checkAccessAndGo('live')");
+        await assert("!document.querySelector('[data-nav-item=\"live\"]').hidden && getComputedStyle(document.querySelector('[data-nav-item=\"live\"]')).display!=='none' && !document.querySelector('.home-hero-actions .home-primary-button').hidden && getComputedStyle(document.querySelector('.home-hero-actions .home-primary-button')).display!=='none'",'Studio navigation and homepage entry must remain visible for visitors');
+        await evaluate("document.querySelector('[data-nav-item=\"live\"]').click()");
         await assert("location.pathname==='/' && !document.getElementById('auth-modal').classList.contains('hidden')",'Visitors must authenticate before Studio navigation');
+        await evaluate("closeAuthModal();shouldOpenLiveFromUrl=false;document.querySelector('.home-hero-actions .home-primary-button').click()");
+        await assert("location.pathname==='/' && !document.getElementById('auth-modal').classList.contains('hidden')",'Homepage Studio button must require authentication');
         await evaluate("closeAuthModal();shouldOpenLiveFromUrl=false;__qaSignIn()");
-        await assert("[...document.querySelectorAll('[data-requires-account]')].every(element=>!element.hidden)",'Studio entries must appear after sign-in');
+        await assert("!document.querySelector('[data-nav-item=\"live\"]').hidden && !document.querySelector('.home-hero-actions .home-primary-button').hidden",'Studio entries must remain visible after sign-in');
         await verifyAccountMenu();
         await evaluate("document.getElementById('account-menu-toggle').click();document.querySelector('#user-profile-menu .account-menu-button').click()");
         await assert("!document.getElementById('view-account').classList.contains('hidden') && !document.getElementById('user-profile-menu').classList.contains('is-open')",'Account dropdown must open the account page and close itself');
@@ -197,4 +199,3 @@ try {
     console.log('Verified laptop preview fit and legacy Studio/game deep links. No real TikTok connection opened.');
     await send('Browser.close');
 } finally {socket?.close();processChrome.kill();}
-

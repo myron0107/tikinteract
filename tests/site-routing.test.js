@@ -25,6 +25,13 @@ test('visitors must authenticate before opening Studio through any public route'
     assert.deepEqual(navigations,[]);assert.deepEqual(loaded,['auth','auth']);
     assert.equal(context.shouldOpenLiveFromUrl,true);
 });
+test('Studio entry points remain visible in the homepage markup for visitors',()=>{
+    const home=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+    assert.match(home,/<button data-nav-item="live" onclick="checkAccessAndGo\('live'\)">/);
+    assert.match(home,/<button onclick="checkAccessAndGo\('live'\)" class="home-primary-button">/);
+    assert.doesNotMatch(home,/<button[^>]*data-nav-item="live"[^>]*\bhidden\b/);
+    assert.doesNotMatch(home,/<button[^>]*class="home-primary-button"[^>]*\bhidden\b/);
+});
 test('public views work without Studio DOM and account still requires authentication',()=>{
     const {context,views,loaded}=setup();context.switchView('catalog');
     assert.equal(views.get('catalog').hidden,false);assert.equal(views.get('home').hidden,true);

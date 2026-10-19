@@ -1,0 +1,11 @@
+{
+  "generator": "OpenAI built-in imagegen",
+  "source": "source/cover-v1.png",
+  "output": "../../assets/game-gallery/nova-vex-cover.webp",
+  "references": [
+    "vex-actions.webp",
+    "reactions.webp",
+    "neon-heights.webp"
+  ],
+  "prompt": "Use case: ads-marketing. Asset type: final premium portrait 9:16 video-game COVER for NOVA & VEX, a free neon vertical parkour LIVE game on TIKINTERACT. References: image1 is exact Vex character identity; image2 exact Nova identity; image3 exact game environment style. Create a polished 3D animated-game key art poster, very legible at small card size. NOVA in left/center foreground, warm brown skin, expressive brown eyes, wavy short dark auburn hair, CYAN hoodie over white cropped shirt, navy cargo trousers and white/pink sneakers; she springs upward toward a glowing pink floating platform, playful determined face looking toward viewer. VEX on right behind her, silver-white hair, purple hooded jacket hood up, PINK lower-face bandana, black cargo trousers, white/pink sneakers, on his own violet/cyan hoverboard, mischievous expressive eyes, reaching toward Nova's sleeve like a cheeky rival. Do not swap their colors or identities. Both are large recognizable full characters, no cropped heads or hands. Neon sky-city at night, layered floating cyan and pink platforms rising into luminous skyscrapers and purple/pink nebula sky; cinematic clean light, detailed professional glossy game assets matching reference, no realistic humans or robots/aliens. Plenty of contrast between characters and environment. At top, exact large readable title 'NOVA & VEX', NOVA in bright PINK, ampersand white, VEX vivid PURPLE, bold dynamic game lettering. At bottom center a discreet exact 'TIKINTERACT', TIK white and INTERACT red. No other text, no fake UI, no pricing, no download buttons, no watermark, no border. Finished promotional cover, native portrait layout, not a screenshot, not a sprite sheet."
+}

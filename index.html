@@ -72,7 +72,7 @@
 <nav class="template-navigation" aria-label="Navigare principală">
 <button data-nav-item="home" class="is-active" aria-current="page" onclick="switchView('home')"><i class="fa-solid fa-house" aria-hidden="true"></i><span>ACASĂ</span></button>
 <button data-nav-item="catalog" onclick="switchView('catalog')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span></button>
-<button data-requires-account hidden data-nav-item="live" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span>LIVE STUDIO</span></button>
+<button data-nav-item="live" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span>LIVE STUDIO</span></button>
 <button data-nav-item="leaderboard" onclick="switchView('leaderboard')"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span></button>
 <button data-nav-item="play-pass" onclick="goToPlayPass()"><i class="fa-solid fa-crown" aria-hidden="true"></i><span>PLAY PASS</span></button>
 </nav>
@@ -185,7 +185,7 @@
                     <h1>Fă din LIVE-ul tău<br><span>un joc de echipă.</span></h1>
                     <p>Transformă fiecare like și cadou într-o parte din joc. Alege un joc, conectează LIVE-ul și lasă comunitatea să schimbe acțiunea în timp real.</p>
                     <div class="home-hero-actions">
-                        <button data-requires-account hidden onclick="checkAccessAndGo('live')" class="home-primary-button"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Deschide LIVE Studio</button>
+                        <button onclick="checkAccessAndGo('live')" class="home-primary-button"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Deschide LIVE Studio</button>
                         <button onclick="switchView('catalog')" class="home-secondary-button">Explorează jocurile <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
                     </div>
                     <a class="hero-app-link app-download-link" href="#download-app"><i class="fa-solid fa-download" aria-hidden="true"></i> Download App <span>În curând</span></a>
@@ -316,6 +316,13 @@
                     <span class="badge-top mb-3"><span>02</span> GRATUIT / DAY RIDE</span>
                     <h2 class="text-lg font-bold text-white mb-2">Moto Interact</h2>
                     <p class="text-zinc-400 text-sm leading-6">Motociclete sport, peisaj de zi și nitro care ridică roata din față. Comunitatea dă ritmul.</p>
+                    <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
+                <a href="GAME/NEON-ASCENT/index.html" class="premium-card game-catalog-card rounded-2xl p-5">
+                    <img src="assets/game-gallery/nova-vex-cover.webp" alt="Nova și Vex în orașul neon, coperta jocului" class="game-card-preview mb-5" loading="lazy">
+                    <span class="badge-top mb-3"><span>03</span> GRATUIT / NEON PARKOUR</span>
+                    <h2 class="text-lg font-bold text-white mb-2">NOVA &amp; VEX</h2>
+                    <p class="text-zinc-400 text-sm leading-6">Urcă alături de Nova prin orașul neon. Cadourile te ajută să avansezi sau îl aduc pe Vex pe traseu.</p>
                     <span class="game-card-details-link">Vezi prezentarea <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></span>
                 </a>
             </div>

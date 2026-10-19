@@ -6,7 +6,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 const template=await readFile(path.join(root,'scripts/game-presentation.template.html'),'utf8');
 const manifest=JSON.parse(await readFile(path.join(root,'assets/game-gallery/manifest.json'),'utf8'));
 const escape=value=>String(value).replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;').replaceAll('>','&gt;');
-for (const [game,folder] of [['neon-race','NEON-RACE'],['neon-riders','NEON-RIDERS'],['country-derby','COUNTRY-DERBY'],['neon-race-2','NEON-INTERACT'],['moto-interact','MOTO-INTERACT']]) {
+for (const [game,folder] of [['neon-race','NEON-RACE'],['neon-riders','NEON-RIDERS'],['country-derby','COUNTRY-DERBY'],['neon-race-2','NEON-INTERACT'],['moto-interact','MOTO-INTERACT'],['nova-vex','NEON-ASCENT']]) {
     if (process.argv[2] && process.argv[2] !== game) continue;
     const filename=path.join(root,'GAME',folder,'index.html');
     const source=await readFile(filename,'utf8');
