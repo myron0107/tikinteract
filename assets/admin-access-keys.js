@@ -1,6 +1,6 @@
 const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const PLANS={play_pass:'PLAY PASS',play_pass_pro:'PLAY PASS PRO'},STATES={unused:'Disponibilă',redeemed:'Activată',revoked:'Revocată',expired:'Expirată'};
-const date=value=>value?new Date(value).toLocaleDateString('ro-RO',{day:'2-digit',month:'short',year:'numeric'}):'Fără termen';
+const date=value=>value?new Date(value).toLocaleDateString((window.TikInteractLanguage?.locale() || 'ro-RO'),{day:'2-digit',month:'short',year:'numeric'}):'Fără termen';
 function errorText(error){const message=error?.message||'';if(/PGRST202|schema cache|does not exist/.test(error?.code+' '+message))return 'Activează cheile rulând supabase/access-keys.sql în Supabase → SQL Editor. Administrarea trebuie să fie deja instalată.';if(message.includes('ACCESS_BATCH_EXISTS'))return 'Această serie a fost deja creată. Dacă nu ai primit codurile, revocă seria din listă și generează altele. Codurile complete nu se pot recupera.';if(message.includes('ACCESS_GENERATION_LIMIT'))return 'Ai atins limita de 250 de chei într-o oră. Încearcă mai târziu.';if(message.includes('ACCESS_ADMIN_REQUIRED'))return 'Doar proprietarul și administratorii pot gestiona cheile.';if(message.includes('ACCESS_INVALID'))return 'Verifică planul, durata, cantitatea și e-mailul opțional.';return 'Acțiunea nu a reușit. Verifică legătura și încearcă din nou.';}
 export function mountAdminAccessKeys({root,rpc}){
  let alive=true,offset=0,request=0,generating=false,debounce,batch=crypto.randomUUID(),batchOptions='',codes=[];
@@ -25,7 +25,7 @@ export function mountAdminAccessKeys({root,rpc}){
   if(b.hasAttribute('data-ak-refresh'))await refresh();
   if(b.hasAttribute('data-ak-prev')){offset=Math.max(0,offset-30);await refresh();}
   if(b.hasAttribute('data-ak-next')){offset+=30;await refresh();}
-  if(b.dataset.akRevoke){if(!confirm(b.dataset.redeemed==='true'?'Retragi perioada de acces acordată prin această cheie? Alte chei ale contului rămân valabile.':'Revoci cheia? Aceasta nu va mai putea fi activată.'))return;b.disabled=true;try{await rpc('revoke_access_key',{p_key:b.dataset.akRevoke});if(alive)await refresh();}catch(error){if(alive)showError(error);}finally{if(b.isConnected)b.disabled=false;}}
+  if(b.dataset.akRevoke){if(!confirm((window.TikInteractLanguage?.translate ?? (value=>value))(b.dataset.redeemed==='true'?'Retragi perioada de acces acordată prin această cheie? Alte chei ale contului rămân valabile.':'Revoci cheia? Aceasta nu va mai putea fi activată.')))return;b.disabled=true;try{await rpc('revoke_access_key',{p_key:b.dataset.akRevoke});if(alive)await refresh();}catch(error){if(alive)showError(error);}finally{if(b.isConnected)b.disabled=false;}}
  };
  const search=event=>{if(!event.target.matches('[data-ak-search]'))return;clearTimeout(debounce);debounce=setTimeout(()=>{offset=0;refresh();},280);};
  const change=event=>{if(event.target.matches('[data-ak-filter]')){offset=0;refresh();}};

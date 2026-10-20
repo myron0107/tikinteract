@@ -3,7 +3,7 @@ export const supportEscape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':
 const esc=supportEscape;
 export const SUPPORT_TOPICS={game:'Propunere de joc',bug:'Problemă tehnică',idea:'Sugestie',question:'Întrebare'};
 const STATES={open:'De răspuns',pending:'În așteptare',resolved:'Rezolvat'};
-const date=value=>new Date(value).toLocaleString('ro-RO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+const date=value=>new Date(value).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'),{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 export function supportError(error){
  const message=error?.message||'';
  if(/PGRST202|schema cache|does not exist/.test(error?.code+' '+message))return 'Mesageria nu este încă activată. Echipa trebuie să configureze serviciul de suport.';
@@ -38,7 +38,7 @@ export class SupportInbox{
    list.innerHTML=data.items.length?data.items.map(t=>`<button type="button" class="si-ticket ${t.id===this.selected?'is-selected':''}" data-si-ticket="${esc(t.id)}" aria-pressed="${t.id===this.selected}"><span class="si-ticket-top"><span class="si-avatar">${esc((t.ownerEmail||'?').slice(0,1).toUpperCase())}</span><span class="si-ticket-person">${esc(this.staff?t.ownerEmail:SUPPORT_TOPICS[t.topic])}</span><time>${esc(date(t.updatedAt))}</time>${t.unread?`<span class="si-unread" aria-label="${Number(t.unread)} mesaje necitite">${Number(t.unread)}</span>`:''}</span><strong>${esc(t.subject)}</strong><span class="si-ticket-preview">${esc(t.preview)}</span><span class="si-ticket-tags"><span class="si-state" data-state="${esc(t.state)}">${STATES[t.state]}</span>${this.staff&&t.priority!=='normal'?`<span class="si-priority">${t.priority==='urgent'?'Urgent':'Prioritate mare'}</span>`:''}</span></button>`).join(''):`<div class="si-empty"><i class="fa-regular fa-inbox" aria-hidden="true"></i><h3>${this.search?'Niciun rezultat':'Nicio conversație aici'}</h3><p>${this.search?'Încearcă un alt cuvânt.':'Mesajele noi vor apărea în această listă.'}</p></div>`;
    list.scrollTop=top;this.root.querySelector('[data-si-prev]').disabled=this.offset===0;this.root.querySelector('[data-si-next]').disabled=this.offset+30>=data.total;
    this.root.querySelector('.si-pagination span').textContent=data.total?`${this.offset+1}–${Math.min(this.offset+30,data.total)} / ${data.total}`:'0 conversații';
-   this.root.querySelector('.si-sync').textContent='Actualizat '+new Date().toLocaleTimeString('ro-RO',{hour:'2-digit',minute:'2-digit'});
+   this.root.querySelector('.si-sync').textContent='Actualizat '+new Date().toLocaleTimeString((window.TikInteractLanguage?.locale() || 'ro-RO'),{hour:'2-digit',minute:'2-digit'});
   }catch(e){if(this.alive&&request===this.listRequest){this.showError(e);this.root.querySelector('.si-list').innerHTML='<div class="si-empty">Mesajele nu sunt disponibile. Apasă Actualizează pentru a reîncerca.</div>';}}
  }
  saveDraft(){const form=this.root.querySelector('.si-compose');if(form&&this.selected)this.drafts.set(this.selected,{body:form.elements.body.value,internal:form.elements.internal?.checked||false});}

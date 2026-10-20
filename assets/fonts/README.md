@@ -6,3 +6,7 @@ https://fonts.googleapis.com/css2?family=Inter:wght@400..800&family=Oxanium:wght
 
 Licenses are included in inter-OFL.txt and oxanium-OFL.txt.
 The site does not request fonts from Google at runtime.
+
+Fredoka variable (width/weight axes, including Romanian diacritics):
+https://github.com/google/fonts/tree/main/ofl/fredoka
+Downloaded 2026-10-20, OFL license in fredoka-LICENSE.txt. Served locally.

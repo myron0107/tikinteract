@@ -588,6 +588,7 @@ function setLiveStudioTab(tab, options = {}) {
     if (tab === 'gifts') window.TikInteractGifts?.open();
     if (options.focus !== false && tab === 'audio') document.getElementById('audio-sound-search')?.focus();
     if (options.focus !== false && tab === 'games') document.getElementById('game-center-search')?.focus();
+    window.dispatchEvent(new CustomEvent('tikinteract:studio-tab',{detail:{tab}}));
 }
 
 const studioTourSteps = [
@@ -897,7 +898,7 @@ function renderStreamerPodium(podium, rows, loading = false, unavailable = false
         position.setAttribute('aria-label', `Locul ${rank}`);
         const coins = document.createElement('span');
         coins.className = 'ranking-coins';
-        coins.textContent = loading || unavailable ? '—' : `${Number(profile?.total_coins || 0).toLocaleString('ro-RO')} monede`;
+        coins.textContent = loading || unavailable ? '—' : `${Number(profile?.total_coins || 0).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'))} monede`;
         const time = document.createElement('span');
         time.className = 'ranking-time';
         time.textContent = profile ? `${formatLiveTime(profile.total_live_seconds)} LIVE` : '';
@@ -931,7 +932,7 @@ function renderLeaderboard(rows, loading = false, unavailable = false) {
         streamerCell.append(createLeaderboardPerson(profile));
         const coinCell = document.createElement('td');
         coinCell.className = 'leaderboard-number';
-        coinCell.textContent = Number(profile.total_coins || 0).toLocaleString('ro-RO');
+        coinCell.textContent = Number(profile.total_coins || 0).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'));
         const timeCell = document.createElement('td');
         timeCell.className = 'leaderboard-number';
         timeCell.textContent = formatLiveTime(profile.total_live_seconds);
@@ -939,8 +940,8 @@ function renderLeaderboard(rows, loading = false, unavailable = false) {
         list.append(row);
     });
     const statistics = {
-        'leaderboard-total-creators': rows.length.toLocaleString('ro-RO'),
-        'leaderboard-total-coins': rows.reduce((sum, row) => sum + Number(row.total_coins || 0), 0).toLocaleString('ro-RO'),
+        'leaderboard-total-creators': rows.length.toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO')),
+        'leaderboard-total-coins': rows.reduce((sum, row) => sum + Number(row.total_coins || 0), 0).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO')),
         'leaderboard-total-time': formatLiveTime(rows.reduce((sum, row) => sum + Number(row.total_live_seconds || 0), 0)),
         'leaderboard-leader': rows[0] ? `@${rows[0].tiktok_username}` : '—'
     };
@@ -979,7 +980,7 @@ async function loadLeaderboard() {
 
         const rows = (data || []).filter(profile => profile.tiktok_username?.toLowerCase() !== 'numele_tau');
         renderLeaderboard(rows);
-        if (updated) updated.textContent = `Actualizat la ${new Date().toLocaleTimeString('ro-RO', {hour: '2-digit', minute: '2-digit'})}`;
+        if (updated) updated.textContent = `Actualizat la ${new Date().toLocaleTimeString((window.TikInteractLanguage?.locale() || 'ro-RO'), {hour: '2-digit', minute: '2-digit'})}`;
         setLeaderboardStatus(rows.length
             ? `${leaderboardPeriods[leaderboardPeriod]} · ${rows.length} ${rows.length === 1 ? 'profil public' : 'profiluri publice'}`
             : '');
@@ -1182,7 +1183,7 @@ function startPlatformLiveSession(username) {
         if(!await ensureLiveStreamerProfile(username))return;
         const currentGame = document.getElementById('live-game-select')?.value
             || document.getElementById('live-game-frame')?.dataset?.gameId
-            || 'neon-race-2';
+            || 'unselected';
         let startRes = await supabase.rpc('start_my_live_session', {
             p_tiktok_username: username,
             p_current_game: currentGame
@@ -1195,6 +1196,7 @@ function startPlatformLiveSession(username) {
         if (startRes.error) throw startRes.error;
         platformSessionActive = true;
         platformSessionUsername = username;
+        if (typeof CustomEvent !== 'undefined') window.dispatchEvent(new CustomEvent('tikinteract:session-started',{detail:{session:startRes.data,user:window.tikInteractUser?.id,username}}));
         window.TikInteractGifts?.flush(username);
         const status = document.getElementById('tiktok-sync-status');
         if (status) {
@@ -1224,6 +1226,7 @@ async function finishPlatformLiveSession() {
     platformFinishPromise = (async () => {
         if (platformSessionPromise) await platformSessionPromise;
         if (!platformSessionActive) return;
+        if (window.TikInteractMetrics) await window.TikInteractMetrics.flush();
         if (window.TikInteractGifts && platformSessionUsername) {
             try {
                 // Finish the in-flight batch, then gifts received while it was saving.
@@ -1235,6 +1238,7 @@ async function finishPlatformLiveSession() {
         }
         platformSessionActive = false;
         platformSessionUsername = null;
+        window.TikInteractMetrics?.clear();
         const supabase = window.tikInteractSupabase;
         if (!supabase) return;
         try {
@@ -1270,6 +1274,8 @@ async function recordLeaderboardGift(event) {
 }
 
 function setStreamerProfile(username, avatarUrl, displayName = username) {
+    window.TikInteractStreamerProfile = Object.freeze({userId:window.tikInteractUser?.id,username,avatarUrl,displayName});
+    if (typeof CustomEvent !== 'undefined') window.dispatchEvent(new CustomEvent('tikinteract:streamer-profile',{detail:window.TikInteractStreamerProfile}));
     const profile = document.getElementById('tiktok-profile');
     const profileName = document.getElementById('tiktok-profile-name');
     const profileImage = document.getElementById('tiktok-profile-image');
@@ -1422,7 +1428,7 @@ function updateConnectionStatus(connected, username, connecting = false, avatarU
 
 function showConnectionError(message) {
     updateConnectionStatus(false, null);
-    window.alert(`Eroare TikTok LIVE: ${message}`);
+    window.alert((window.TikInteractLanguage?.translate ?? (value=>value))(`Eroare TikTok LIVE: ${message}`));
 }
 
 function sendStudioServerMessage(message, target = socket) {
@@ -1448,6 +1454,7 @@ function connectToLocalServer() {
             return;
         }
 
+        window.dispatchEvent(new CustomEvent('tikinteract:live-event',{detail:message}));
         if (message.type === 'auth-required') {
             socket?.close();
             if (typeof updateUI === 'function') updateUI(null);
@@ -1555,7 +1562,7 @@ function toggleTikTokConnection() {
 
     const username = input.value.trim().replace(/^@/, '');
     if (!/^[A-Za-z0-9._]{2,24}$/.test(username)) {
-        window.alert('Introdu un username TikTok valid (2-24 caractere).');
+        window.alert((window.TikInteractLanguage?.translate ?? (value=>value))('Introdu un username TikTok valid (2-24 caractere).'));
         return;
     }
 
@@ -1648,6 +1655,8 @@ function handleTikTokEvent(event) {
 
         const content = document.createElement('span');
         content.className = 'min-w-0';
+        // Chat is authored by viewers, even when it matches an interface label.
+        if (!isGift && !isLike) content.setAttribute('translate', 'no');
         content.append(sender, document.createTextNode(` ${text}`));
         row.append(avatar, content);
         feed.prepend(row);

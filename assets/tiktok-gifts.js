@@ -3,10 +3,10 @@ import {normalizeGiftCatalog,addGiftToLedger,filterGifts,giftImageSources} from 
 const $=id=>document.getElementById(id),ledgers=new Map(),flights=new Map();
 const empty=()=>({count:0,coins:0,types:0,collection:[],recent:[]});
 const username=value=>/^[A-Za-z0-9._]{2,24}$/.test(String(value||'').replace(/^@/,''))?String(value).replace(/^@/,'').toLowerCase():'';
-const format=value=>new Intl.NumberFormat('ro-RO').format(value||0);
+const format=value=>new Intl.NumberFormat((window.TikInteractLanguage?.locale() || 'ro-RO')).format(value||0);
 const coinText=value=>format(value)+(Number(value)===1?' monedă':' monede');
 const receivedText=count=>'×'+format(count)+(Number(count)===1?' primit':' primite');
-const date=value=>new Date(value).toLocaleString('ro-RO',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+const date=value=>new Date(value).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'),{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
 let receiver='',view='catalog',limit=60,cloudUnavailable=false,storageError=false,display=empty(),readVersion=0;
 let catalog={gifts:[],updatedAt:null,username:null},catalogPending=false,catalogRequest=0;
 let bundledPromise=null;

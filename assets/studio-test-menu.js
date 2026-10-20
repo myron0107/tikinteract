@@ -120,9 +120,9 @@ function studioTestActionLabel(source) {
     const labels = {
         pause:/resume|▶/i.test(source.textContent) ? 'Reia cursa' : 'Pauză',
         reset:'Cursă nouă', nextRace:'Cursa următoare',
-        auto:/OFF/i.test(source.textContent) ? 'Simulare: oprită' : 'Simulare: pornită',
-        demo:/OFF/i.test(source.textContent) ? 'Simulare: oprită' : 'Simulare: pornită',
-        sound:/OFF/i.test(source.textContent) ? 'Sunet oprit' : 'Sunet pornit',
+        auto:/OFF|OPRIT/i.test(source.textContent) ? 'Simulare: oprită' : 'Simulare: pornită',
+        demo:/OFF|OPRIT/i.test(source.textContent) ? 'Simulare: oprită' : 'Simulare: pornită',
+        sound:pressed ? 'Sunet pornit' : 'Sunet oprit',
         christmasToggle:pressed ? 'Crăciun activ' : 'Mod Crăciun',
         randomWeather:pressed ? 'Vreme aleatorie: da' : 'Vreme aleatorie: nu',
         defaultMusic:'Muzica originală', resetSupporters:'Resetează clasamentul', resetTops:'Resetează clasamentul', sendChat:'Trimite comentariul'

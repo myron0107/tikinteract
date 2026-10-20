@@ -161,6 +161,7 @@
         }catch{}
     }
     function accountMessages(){
+        if(window.TikInteractCreator){window.TikInteractCreator.refreshMenu();return;}
         supportBadgeRequest++;
         document.querySelectorAll('[data-account-support]').forEach(node=>node.remove());
         const profile=document.getElementById('user-profile-menu');

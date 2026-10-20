@@ -1,6 +1,6 @@
 // The database makes the decision. This module closes the workspace and explains it to the user.
 let identity=null,state=null,request=0,notice,lastRestriction,signingOut=false;
-const date=value=>new Date(value).toLocaleString('ro-RO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const date=value=>new Date(value).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'),{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
 const isAllowed=()=>!!window.tikInteractUser&&identity===window.tikInteractUser.id&&state?.allowed===true;
 function showNotice(reason=lastRestriction||state){
  if(!notice){notice=document.createElement('dialog');notice.className='account-access-notice';notice.setAttribute('aria-labelledby','account-notice-title');notice.innerHTML='<header><span><i class="fa-solid fa-user-shield" aria-hidden="true"></i> CONTUL TĂU</span><button type="button" aria-label="Închide">×</button></header><h2 id="account-notice-title"></h2><p></p><div><a href="mailto:mironsergiuflorin@gmail.com">Contactează-ne</a><button type="button" data-account-notice-close>Am înțeles</button></div>';document.body.append(notice);notice.querySelector('header button').onclick=()=>notice.close();notice.querySelector('[data-account-notice-close]').onclick=()=>notice.close();}

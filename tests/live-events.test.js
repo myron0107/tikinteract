@@ -1,6 +1,11 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createLiveEventNormalizer } from '../lib/live-events.js';
+import { createLiveEventNormalizer,liveViewerCount } from '../lib/live-events.js';
+
+test('audience uses the same viewer field across TikTok schemas and never substitutes lifetime viewers',()=>{
+ assert.equal(liveViewerCount({viewerCount:42}),42);assert.equal(liveViewerCount({total:'71',totalUser:'9020'}),71);assert.equal(liveViewerCount({total:'0'}),0);
+ for(const event of [{totalUser:'9020'},{total:''},{total:null},{total:'NaN'},{total:'1.5'},{total:'10000001'},{viewerCount:-1}])assert.equal(liveViewerCount(event),null);
+});
 
 const user = {uniqueId:'alice', nickname:'Alice'};
 test('chat and v3 batched likes preserve viewer identity and get session IDs', () => {

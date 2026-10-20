@@ -260,8 +260,10 @@ export class Renderer {
     const hitSide=scene&&this.scoreMoment.kind==='theft'?(x>WIDTH/2?-1:1):1;
     ctx.save(); ctx.translate(x+(gift?.x||0)+(scene?.offsetX||0)*hitSide, y - h / 2 + (scene?.recoil || 0)+(gift?.y||0)+(gift?h/2*(1-gift.sy):0)); ctx.rotate((scene?.tilt || 0)*hitSide+(gift?.rotation||0) + p.vx / 420 * 0.045 * (scene ? 0 : 1));
     if(gift){ctx.scale(gift.sx,gift.sy);ctx.globalAlpha*=gift.alpha;}
-    if(gift?.flip<0)ctx.scale(-1,1);
-    if(scene?.reaction&&hitSide<0)ctx.scale(-1,1);
+    // Ordinary movement follows the last direction of travel. Authored gift
+    // scenes keep their own orientation so Vex's contact poses stay aligned.
+    const facing=scene?(scene.reaction?hitSide:1):(gift?.flip??p.facing);
+    if(facing<0)ctx.scale(-1,1);
     if (false) {
       // The authored trophy arms replace the baked sprite arms while lifting.
       ctx.beginPath(); ctx.rect(-w * .345, -h / 2 - 1, w * .69, h + 2); ctx.clip();

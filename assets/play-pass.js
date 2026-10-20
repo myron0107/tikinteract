@@ -1,7 +1,7 @@
 const PLAN_NAMES={free:'FREE',play_pass:'PLAY PASS',play_pass_pro:'PLAY PASS PRO'};
 let access=null,identity=null,request=0,serverOffset=0,checking=false,timer,redeeming=false;
 const ui=()=>document.getElementById('pp-account-status');
-const date=value=>new Date(value).toLocaleString('ro-RO',{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+const date=value=>new Date(value).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'),{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
 export function accessError(error){
  const message=error?.message||error?.code||'';
  if(/PGRST202|schema cache|does not exist/.test(error?.code+' '+message))return 'Activarea cheilor nu este încă disponibilă. Încearcă din nou mai târziu.';

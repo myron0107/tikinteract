@@ -2,6 +2,8 @@ import {NEON_GIFTS,NEON_LABELS} from './gift-definitions.js';
 // Complete dictionaries: every visible label and accessibility label uses these keys.
 export const COPY = Object.freeze({
   "ro": {
+    "quickTest": "Comenzi rapide de test", "testRise":"Testează un cadou de urcare", "testPush":"Testează împingerea lui Vex", "testHair":"Vex o trage de păr pe Nova",
+    "tagline": "URC\u0102 LA NIVELUL URM\u0102TOR",
     "remaining": "până la sosire",
     "victory": "VICTORIE",
     "hold": "Rămâi la sosire",
@@ -22,13 +24,13 @@ export const COPY = Object.freeze({
     "rocket": "Rachetă",
     "wind": "Tornadă",
     "vortex": "Vortex",
-    "reset": "Restart",
+    "reset": "Repornire",
     "win": "Victorie",
     "pending": "Setările se aplică runda următoare",
     "rejected": "Comanda nu a fost acceptată",
     "queued": "În așteptare",
     "meadow": "Luncă",
-    "clouds": "Skyline",
+    "clouds": "Panoramă",
     "frost": "Gheață",
     "aurora": "Auroră",
     "twilight": "Amurg",
@@ -50,17 +52,17 @@ export const COPY = Object.freeze({
     "balanced": "Echilibrată",
     "low": "Redusă",
     "cavern": "Cristale",
-    "abyss": "Deep Grid",
+    "abyss": "Rețea adâncă",
     "ember": "Jar",
     "sunset": "Apus",
     "meteor": "Meteorit",
-    "characterColor": "Skinul Novei",
-    "Cyan": "CYAN",
-    "Mint": "MINT",
+    "characterColor": "Ținuta Novei",
+    "Cyan": "CIAN",
+    "Mint": "MENTĂ",
     "Violet": "VIOLET",
-    "Rose": "PINK",
-    "Amber": "GOLD",
-    "Red": "ICE",
+    "Rose": "ROZ",
+    "Amber": "AURIU",
+    "Red": "GHEAȚĂ",
     "giftQuantity": "Cantitate",
     "wins": "Victorii",
     "pause": "Pauză",
@@ -68,12 +70,12 @@ export const COPY = Object.freeze({
     "autoplay": "Joc automat",
     "background": "Decor",
     "Auto": "Automat, în funcție de înălțime",
-    "earth": "Neon District",
-    "grass": "Rooftop Run",
-    "space": "Sky Circuit",
-    "cosmos": "Spa?iul ?ndep?rtat",
-    "lava": "Ad?ncuri",
-    "crystal": "Power Core",
+    "earth": "Cartier neon",
+    "grass": "Acoperișuri",
+    "space": "Circuit aerian",
+    "cosmos": "Spațiul îndepărtat",
+    "lava": "Adâncuri",
+    "crystal": "Nucleu energetic",
     "finishLabel": "Sosire",
     "winAdd": "Adaugă victorii",
     "winRemove": "Fură victorii",
@@ -84,6 +86,8 @@ export const COPY = Object.freeze({
     "recoveryFailed": "Salvarea cadourilor a eșuat. Cadourile rămân în așteptare."
   },
   "en": {
+    "quickTest":"Quick test controls", "testRise":"Test an upward gift", "testPush":"Test Vex’s push", "testHair":"Vex pulls Nova’s hair",
+    "tagline": "REACH THE NEXT LEVEL",
     "remaining": "to finish",
     "victory": "VICTORY",
     "hold": "Hold the finish",
@@ -661,10 +665,10 @@ export const COPY = Object.freeze({
 export const LANGUAGES = Object.keys(COPY);
 export const text = (key, language = 'en') => NEON_GIFTS[key]?.[language==='ro'?'name':'en'] || NEON_LABELS[key]?.[language==='ro'?'ro':'en'] || COPY[language]?.[key] || COPY.en[key] || key;
 export const winLabel = (amount, language = 'en') => text(Math.abs(amount) === 1 ? 'win' : 'wins', language);
-export function quantity(value) {
+export function quantity(value, language = 'ro') {
   const [whole, fraction] = String(Math.round(value * 100) / 100).split('.');
-  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, '.') + (fraction ? ',' + fraction : '');
+  return whole.replace(/\B(?=(\d{3})+(?!\d))/g, language === 'ro' ? '.' : ',') + (fraction ? (language === 'ro' ? ',' : '.') + fraction : '');
 }
-export function distance(value) {
-  return String(Math.floor(value + 1e-7)).replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+export function distance(value, language = 'ro') {
+  return String(Math.floor(value + 1e-7)).replace(/\B(?=(\d{3})+(?!\d))/g, language === 'ro' ? '.' : ',');
 }

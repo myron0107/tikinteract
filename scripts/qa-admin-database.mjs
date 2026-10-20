@@ -2,7 +2,7 @@
 import {PGlite} from '@electric-sql/pglite';
 import {readFile} from 'node:fs/promises';
 import {createServer} from 'node:http';
-export async function createAdminQABridge(origin){
+export async function createAdminQABridge(origin,{creator=false}={}){
 const db=new PGlite();
 const ids={owner:'10000000-0000-0000-0000-000000000001',editor:'10000000-0000-0000-0000-000000000002',visitor:'10000000-0000-0000-0000-000000000004'};
 await db.exec(`create role anon;create role authenticated;create schema auth;create schema storage;
@@ -16,9 +16,16 @@ await db.exec(`create role anon;create role authenticated;create schema auth;cre
 await db.exec(await readFile(new URL('../supabase/admin.sql',import.meta.url),'utf8'));
 await db.exec(await readFile(new URL('../supabase/support.sql',import.meta.url),'utf8'));
 await db.exec(await readFile(new URL('../supabase/access-keys.sql',import.meta.url),'utf8'));
+if(creator){
+ await db.exec(await readFile(new URL('../supabase/leaderboard.sql',import.meta.url),'utf8'));
+ await db.exec(await readFile(new URL('../supabase/leaderboard_periods.sql',import.meta.url),'utf8'));
+ await db.exec(await readFile(new URL('../supabase/tiktok_gifts.sql',import.meta.url),'utf8'));
+}
 await db.exec(await readFile(new URL('../supabase/users.sql',import.meta.url),'utf8'));
+if(creator)for(const file of ['community.sql','analytics.sql','site-inbox.sql'])await db.exec(await readFile(new URL('../supabase/'+file,import.meta.url),'utf8'));
 await db.exec(`set request.jwt.claim.sub='${ids.owner}';select public.manage_site_admin('editor@example.invalid','editor');`);
 const routes={get_my_account_status:[],list_site_users:['p_search','p_role','p_state','p_limit','p_offset'],get_site_user:['p_user'],set_site_user_role:['p_user','p_role','p_reason','p_version'],moderate_site_user:['p_user','p_action','p_hours','p_reason','p_version'],delete_site_user:['p_user','p_confirmation','p_reason','p_version'],list_site_user_audit:['p_limit','p_offset'],get_my_access:[],check_game_access:['p_game'],generate_access_keys:['p_plan','p_months','p_count','p_label','p_email','p_redeem_days','p_batch'],list_access_keys:['p_filter','p_search','p_limit','p_offset'],redeem_access_key:['p_code'],revoke_access_key:['p_key'],site_admin_role:[],get_site_public_config:[],get_site_admin_state:[],list_site_admins:[],save_site_config:['p_config','p_revision','p_publish'],restore_site_config:['p_version','p_revision'],manage_site_admin:['p_email','p_role'],list_support_team:[],list_support_tickets:['p_filter','p_search','p_limit','p_offset'],get_support_thread:['p_ticket','p_before'],mark_support_read:['p_ticket','p_seen'],create_support_ticket:['p_topic','p_subject','p_body','p_area','p_request_id'],send_support_message:['p_ticket','p_body','p_internal','p_request_id'],update_support_ticket:['p_ticket','p_state','p_priority','p_assigned','p_version']};
+if(creator)Object.assign(routes,{community_join:[],community_people:['p_search'],community_thread:['p_channel','p_peer','p_before'],community_send:['p_channel','p_peer','p_body','p_client'],community_delete:['p_message'],community_mark_read:['p_channel','p_peer','p_seen'],record_my_live_metrics:['p_session','p_chat','p_likes','p_peak','p_people'],get_my_stream_analytics:['p_days','p_session'],get_streams_directory:[],get_my_site_inbox:['p_unread','p_offset'],mark_my_site_messages_read:['p_id','p_all'],send_site_notification:['p_user','p_title_ro','p_body_ro','p_title_en','p_body_en']});
 let queue=Promise.resolve();
 const server=createServer(async(req,res)=>{
  res.setHeader('Access-Control-Allow-Origin',origin);res.setHeader('Access-Control-Allow-Headers','Content-Type');res.setHeader('Content-Type','application/json');
@@ -29,12 +36,12 @@ const server=createServer(async(req,res)=>{
   if(!Object.hasOwn(routes,body.name)){res.end(JSON.stringify({data:body.name?.startsWith('get_')?[]:null,error:null}));return;}
   const role=Object.hasOwn(ids,body.role)?'authenticated':'anon',id=ids[body.role]||'';await db.exec(`reset role;set request.jwt.claim.sub='${id}';set role ${role}`);
   const args=routes[body.name].map(key=>body.args?.[key]);
-  const result=await db.query(`select public.${body.name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) as data`,args.map(x=>typeof x==='object'&&x!==null?JSON.stringify(x):x));
+  const result=await db.query(`select public.${body.name}(${args.map((_,i)=>'$'+(i+1)).join(',')}) as data`,args.map(x=>typeof x==='object'&&x!==null&&!Array.isArray(x)?JSON.stringify(x):x));
   res.end(JSON.stringify({data:result.rows[0].data,error:null}));
  }catch(error){res.end(JSON.stringify({data:null,error:{message:error.message,code:error.code}}));}finally{await db.exec('reset role');}};
  queue=queue.then(run,run);
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-return {url:'http://127.0.0.1:'+server.address().port+'/',async close(){await new Promise(resolve=>server.close(resolve));await db.close();}};
+return {url:'http://127.0.0.1:'+server.address().port+'/',db,ids,async close(){await new Promise(resolve=>server.close(resolve));await db.close();}};
 }
 

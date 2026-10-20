@@ -341,11 +341,11 @@ body.embedded .creator-only{display:none!important}
 </style>
 <link rel="stylesheet" href="theme.css?v=2">
 </head>
-<body>
+<body data-native-i18n>
   <main id="stage" tabindex="0" aria-label="Nova &amp; Vex" aria-keyshortcuts="ArrowLeft ArrowRight A D">
     <canvas id="scene" aria-label="Nova &amp; Vex game world"></canvas>
     <canvas id="hud-fx" aria-hidden="true"></canvas>
-    <header id="hud"><div class="hud-heading"><div class="game-title"><span class="title-nova">NOVA</span> &amp; <span class="title-vex">VEX</span><small>REACH THE NEXT LEVEL</small></div><div class="brand" aria-label="TikInteract"><img src="../../assets/tikinteract-icon-v2.png" alt="" width="24" height="24"><span class="brand-name">TIK<span>INTERACT</span></span></div></div>
+    <header id="hud"><div class="hud-heading"><div class="game-title"><span class="title-nova">NOVA</span> &amp; <span class="title-vex">VEX</span><small><span data-copy="tagline"></span></small></div><div class="brand" aria-label="TikInteract"><img src="../../assets/tikinteract-icon-v2.png" alt="" width="24" height="24"><span class="brand-name">TIK<span>INTERACT</span></span></div></div>
       <div class="metrics"><div class="distance-number"><span id="distance">0</span><span class="unit">m</span></div><div class="wins-bubble"><canvas id="trophy" width="80" height="80" aria-hidden="true"></canvas><strong id="wins">0</strong></div></div>
       <div class="progress"><div class="progress-track"><div id="progress-fill"></div></div><span id="remaining"></span><canvas id="finish-flag" class="finish-flag" width="96" height="112" aria-hidden="true"></canvas></div>
     </header>
@@ -389,7 +389,7 @@ body.embedded .creator-only{display:none!important}
         <label for="background-input" data-copy="background"></label><select id="background-input"><option value="Auto" data-copy="Auto"></option><option value="earth" data-copy="earth"></option><option value="grass" data-copy="grass"></option><option value="clouds" data-copy="clouds"></option><option value="space" data-copy="space"></option><option value="cosmos" data-copy="cosmos"></option><option value="lava" data-copy="lava"></option><option value="crystal" data-copy="crystal"></option><option value="abyss" data-copy="abyss"></option></select>
         <label class="range-label" for="detail-input"><span data-copy="particles"></span><output id="detail-input-value">80%</output></label><input id="detail-input" type="range" min="0" max="100" value="80">
         <label for="quality-input" data-copy="quality"></label><select id="quality-input"><option value="High" data-copy="high"></option><option value="Balanced" data-copy="balanced"></option><option value="Low" data-copy="low"></option></select>
-        <label for="language" data-copy="language"></label><select id="language" aria-label="Language"><option value="ro">Română</option><option value="en">English</option><option value="fr">Français</option><option value="de">Deutsch</option><option value="es">Español</option><option value="hu">Magyar</option><option value="it">Italiano</option><option value="pt">Português</option></select>
+        <label for="language" data-copy="language"></label><select id="language" aria-label="Language"><option value="ro">Română</option><option value="en">English</option></select>
       </section>
       <button type="submit" class="apply" data-copy="apply"></button>
     </form>
@@ -399,6 +399,6 @@ body.embedded .creator-only{display:none!important}
   <script src="../../assets/game-live-sdk.js?v=1"></script>
   <script src="art/manifest.js"></script>
 
-<script type="module">import "./src/main.js?v=4";</script>
+<script type="module">import "./src/main.js?v=7";</script>
 </body>
 </html>

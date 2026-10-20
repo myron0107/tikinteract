@@ -1,38 +1,18 @@
-import {english} from './language-en.js?v=1';
+import {localizeText} from './language-copy.js?v=2';
 
 const preferenceKey='tikinteract_language';
 const texts=new WeakMap(),attributes=new WeakMap();
-const attributeNames=['title','placeholder','aria-label','alt'];
-const ignored='script,style,code,pre,textarea,[contenteditable="true"],[translate="no"],#header-account-name,#account-display-name,#account-avatar-display,#tiktok-profile-name,.leaderboard-avatar,.header-account-avatar,a[href^="https://www.tiktok.com/@"],.support-message-body,.support-message-text,.support-message-content,.audio-sound-card h4';
+const attributeNames=['title','placeholder','aria-label','aria-valuetext','alt'];
+const ignored='script,style,code,pre,textarea,[contenteditable="true"],[translate="no"],#header-account-name,#account-display-name,#account-avatar-display,#tiktok-profile-name,.leaderboard-avatar,.header-account-avatar,a[href^="https://www.tiktok.com/@"]:not(.stream-tiktok-btn),.support-message-body,.support-message-text,.support-message-content,.audio-sound-card h4,.team-rankings li b,[data-native-i18n],.au-identity-name,.si-ticket>strong,.si-ticket-preview,.si-thread-heading h3,.si-message>p,.si-message header>strong,.gift-card h3,.gift-recent-info>strong,.gifts-stat:last-child>strong,[data-gifts-featured] h3,.home-gift-catalog-grid h3,.home-gifts-pick>span,.stream-creator-name,.stream-creator-handle';
 let language='ro',queued=false;
 try{if(localStorage.getItem(preferenceKey)==='en')language='en';}catch{}
+const requestedLanguage=new URLSearchParams(location.search).get('lang');
+if(['ro','en'].includes(requestedLanguage))language=requestedLanguage;
 
-function translate(value){
-    const trimmed=value.trim(),key=trimmed.replace(/\s+/g,' ');
-    let result=english[key];
-    if(result===undefined){
-        const patterns=[
-            [/^(\d[\d., ]*) monede$/,m=>`${m[1]} coins`],
-            [/^Top (\d+) · Clasament all-time$/,m=>`Top ${m[1]} · All-time leaderboard`],
-            [/^Locul (\d+)(.*)$/,m=>`Rank ${m[1]}${m[2]}`],
-            [/^Deschide profilul TikTok (.+)$/,m=>`Open TikTok profile ${m[1]}`],
-            [/^Colecția de cadouri a lui (.+)$/,m=>`Gift collection for ${m[1]}`],
-            [/^Meniu cont: (.+)$/,m=>`Account menu: ${m[1]}`],
-            [/^Actualizat la (.+)$/,m=>`Updated at ${m[1]}`],
-            [/^Top (\d+) streameri$/,m=>`Top ${m[1]} creators`],
-            [/^(\d+) streameri activi$/,m=>`${m[1]} active creators`],
-            [/^Deschide în Studio: (.+)$/,m=>`Open in Studio: ${m[1]}`],
-            [/^Adaugă la favorite: (.+)$/,m=>`Add to favorites: ${m[1]}`],
-            [/^Elimină din favorite: (.+)$/,m=>`Remove from favorites: ${m[1]}`]
-        ];
-        for(const [pattern,format] of patterns){const match=key.match(pattern);if(match){result=format(match);break;}}
-    }
-    if(result===undefined)return value;
-    return value.slice(0,value.indexOf(trimmed))+result+value.slice(value.indexOf(trimmed)+trimmed.length);
-}
+function translate(value){return localizeText(value,'en');}
 
 function targetValue(state,current){
-    if(!state || (current!==state.ro && current!==state.en))state={ro:current,en:translate(current)};
+    if(!state || (current!==state.ro && current!==state.en))state={ro:localizeText(current,'ro'),en:translate(current)};
     return {state,value:language==='en'?state.en:state.ro};
 }
 
@@ -45,7 +25,7 @@ function apply(root=document.body){
         const next=targetValue(texts.get(node),node.nodeValue);texts.set(node,next.state);
         if(node.nodeValue!==next.value)node.nodeValue=next.value;
     }
-    const elements=[...(root instanceof Element?[root]:[]),...root.querySelectorAll('[title],[placeholder],[aria-label],[alt]')];
+    const elements=[...(root instanceof Element?[root]:[]),...root.querySelectorAll('[title],[placeholder],[aria-label],[aria-valuetext],[alt]')];
     for(const element of elements){
         if(element.closest(ignored))continue;
         const saved=attributes.get(element)||new Map();attributes.set(element,saved);
@@ -67,12 +47,13 @@ function choose(next,{persist=true}={}){
     language=next;document.documentElement.lang=language;
     if(persist){try{localStorage.setItem(preferenceKey,language);}catch{}}
     document.querySelectorAll('[data-language-label]').forEach(node=>{node.textContent=language.toUpperCase();});
-    document.querySelectorAll('[data-language-flag]').forEach(image=>{image.src=`assets/language-${language}.svg`;});
+    document.querySelectorAll('[data-language-flag]').forEach(image=>{image.src=new URL(`./language-${language}.svg`,import.meta.url).href;});
     document.querySelector('.language-trigger')?.setAttribute('aria-label',language==='en'?'Choose language: English':'Alege limba: Română');
     document.querySelectorAll('[data-language]').forEach(button=>button.setAttribute('aria-checked',String(button.dataset.language===language)));
     apply();
     const title=document.querySelector('title');if(title){const nextTitle=targetValue(texts.get(title),title.textContent);texts.set(title,nextTitle.state);title.textContent=nextTitle.value;}
     window.dispatchEvent(new CustomEvent('tikinteract:language',{detail:{language}}));
+    document.querySelectorAll('iframe').forEach(frame=>{try{if(new URL(frame.src,location.href).origin===location.origin)frame.contentWindow?.postMessage({type:'tikinteract:language',language},location.origin);}catch{}});
 }
 
 function initialize(){
@@ -100,7 +81,12 @@ function initialize(){
                 items[next]?.focus();
             }
         });
-        picker.addEventListener('focusout',()=>queueMicrotask(()=>{if(!picker.contains(document.activeElement))close();}));
+        picker.addEventListener('focusout',event=>{
+            // During native pointer focus changes, activeElement can briefly be
+            // BODY. Keep the menu open when focus moves to one of its options.
+            if(event.relatedTarget instanceof Node && picker.contains(event.relatedTarget))return;
+            requestAnimationFrame(()=>{if(!picker.contains(document.activeElement))close();});
+        });
         document.addEventListener('click',event=>{if(!picker.contains(event.target))close();});
     }
     choose(language,{persist:false});
@@ -120,7 +106,8 @@ function initialize(){
     }).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:attributeNames});
 }
 
+window.addEventListener('message',event=>{if(parent!==window && event.source===parent && event.origin===location.origin && event.data?.type==='tikinteract:language' && ['ro','en'].includes(event.data.language))choose(event.data.language,{persist:false});});
 window.addEventListener('resize',close);
 window.addEventListener('storage',event=>{if(event.key===preferenceKey)choose(event.newValue==='en'?'en':'ro',{persist:false});});
-window.TikInteractLanguage=Object.freeze({get:()=>language,set:choose,close,translate:value=>language==='en'?translate(value):value});
+window.TikInteractLanguage=Object.freeze({get:()=>language,set:choose,close,locale:()=>language==='en'?'en-GB':'ro-RO',translate:value=>localizeText(value,language)});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();

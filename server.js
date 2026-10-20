@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer, WebSocket } from 'ws';
 import { TikTokLiveConnection, WebcastEvent } from 'tiktok-live-connector';
-import { createLiveEventNormalizer } from './lib/live-events.js';
+import { createLiveEventNormalizer, liveViewerCount } from './lib/live-events.js';
 import {createGiftCatalog} from './lib/gift-catalog.js';
 import {createStudioAuthenticator} from './lib/studio-auth.js';
 import {fetchTikTokGiftCatalog} from './lib/tiktok-gift-source.js';
@@ -277,6 +277,13 @@ async function startLiveConnection(rawUsername) {
         });
     }
 
+    let lastAudienceAt=0;
+    connection.on(WebcastEvent.ROOM_USER,event=>{
+        if(liveConnection!==connection||activeSessionId!==sessionId||connectionStatus!=='connected')return;
+        const viewerCount=liveViewerCount(event);
+        if(viewerCount===null||Date.now()-lastAudienceAt<1000)return;
+        lastAudienceAt=Date.now();broadcast({type:'audience',viewerCount,sessionId});
+    });
     connection.on(WebcastEvent.STREAM_END, () => {
         if (liveConnection === connection) {
             stopLiveConnection();

@@ -1,6 +1,9 @@
+import '../../../assets/language.js?v=4';
+import '../../../assets/game-format.js?v=1';
+import {GIFT_DESCRIPTIONS_EN} from './gift-definitions.js';
 import { STEP, ACTIONS, CHARACTER_COLORS, clamp } from './config.js';
 import { Simulation } from './simulation.js';
-import { Renderer } from './render.js';
+import { Renderer } from './render.js?v=2';
 import { GameAudio } from './audio.js';
 import { LANGUAGES, text, distance, quantity, winLabel } from './copy.js';
 import { capture, restore, openRecovery, Checkpoints } from './recovery.js';
@@ -11,7 +14,7 @@ const embedded = false;
 const params = new URLSearchParams(location.search);
 const qa = ['localhost', '127.0.0.1'].includes(location.hostname) && params.has('qa');
 document.body.classList.toggle('embedded', window.parent!==window);
-let language = LANGUAGES.includes(params.get('lang')) ? params.get('lang') : 'ro';
+let language = LANGUAGES.includes(params.get('lang')) ? params.get('lang') : window.TikInteractLanguage?.get() || 'ro';
 let renderer = null, loaded = false, initialized = !embedded, manualClock = qa, disposed = false;
 let frameId, last = 0, accumulator = 0, reportAt = 0, noticeUntil = 0, dirty = true;
 let recovery = null, recoveryScope = null, recovering = null, initSequence = 0;
@@ -46,7 +49,7 @@ function refreshCard(c) {
   const key = c.job.action || c.job.kind;
   c.element.classList.toggle('negative', ACTIONS[key]?.sign < 0 || key === 'winRemove');
   c.caption.textContent = label(c.job);
-  const count = quantity(c.job.gift?.repeatCount || c.job.amount);
+  const count = quantity(c.job.gift?.repeatCount || c.job.amount, language);
   c.multiplier.textContent = 'x' + count;
   const length = c.caption.textContent.length + Math.max(0, count.length - 2);
   c.caption.style.fontSize = Math.max(16, Math.min(29, $('stage').clientWidth * .075) - Math.max(0, length - 9)) + 'px';
@@ -107,7 +110,14 @@ function localize(value = language) {
   for (const button of document.querySelectorAll('[data-color]')) button.setAttribute('aria-label', text(button.dataset.color, language));
   $('character-colors').setAttribute('aria-label', text('characterColor', language));
   $('character-color-value').value = text(sim.settings.characterColor, language);
-  for (const button of document.querySelectorAll('.gift-button[data-action]')) button.querySelector('strong').textContent = text(button.dataset.action, language);
+  for (const button of document.querySelectorAll('.gift-button[data-action]')) {
+    button.querySelector('strong').textContent = text(button.dataset.action, language);
+    button.title=language==='ro'?ACTIONS[button.dataset.action]?.description||'':GIFT_DESCRIPTIONS_EN[button.dataset.action]||'';
+  }
+  $('quick-test').setAttribute('aria-label',text('quickTest',language));
+  document.querySelector('[data-quick-action="cloud"]').title=text('testRise',language);
+  document.querySelector('[data-quick-action="meteor"]').title=text('testPush',language);
+  document.querySelector('[data-quick-action="winRemove"]').title=text('testHair',language);
 }
 async function recover(scope) {
   if (!scope || scope === recoveryScope) return recovering;
@@ -119,7 +129,7 @@ async function recover(scope) {
       const saved = restore(checkpoint, sim, renderer);
       if(saved&&saved.giftValuesVersion!==checkpoint.giftValuesVersion)await store.write(saved);
       if (saved) {
-        language = LANGUAGES.includes(saved.language) ? saved.language : language;
+        language = window.TikInteractLanguage?.get() || (LANGUAGES.includes(saved.language) ? saved.language : language);
         for (const c of cards) c.element.remove(); cards.length = 0;
         for (const label of saved.labels || []) {
           card(label.job, label.phase);
@@ -197,7 +207,7 @@ function hud(position) {
   $('pause').setAttribute('aria-pressed', String(state.paused));
   const pauseCopy = text(state.paused ? 'resume' : 'pause', language); $('pause-copy').textContent = pauseCopy; $('pause').setAttribute('aria-label', pauseCopy);
   const visualUnits = renderer.pendingVisualUnits || 0;
-  $('queue').hidden = !state.queued && !visualUnits; $('queue').textContent = text('queued', language) + ' · x' + quantity(state.queuedUnits + visualUnits);
+  $('queue').hidden = !state.queued && !visualUnits; $('queue').textContent = text('queued', language) + ' · x' + quantity(state.queuedUnits + visualUnits, language);
   $('biome').textContent = text(sim.settings.backgroundTheme === 'Auto' ? sim.world.biome(state.distance) : sim.settings.backgroundTheme, language).toUpperCase();
   $('notice').hidden = now > noticeUntil;
   for (const c of [...cards]) {
@@ -284,7 +294,7 @@ function panel(name) {
   target.hidden = false; $(name + '-toggle').setAttribute('aria-expanded', 'true');
 }
 $('test-toggle').onclick = () => panel('test'); $('setup-toggle').onclick = () => panel('setup');
-$('language').onchange = () => localize($('language').value);
+$('language').onchange = () => window.TikInteractLanguage.set($('language').value);
 for (const [id, key] of sliders) $(id).oninput = () => { $(id + '-value').value = $(id).value + '%'; sim.setSettings({ [key]: Number($(id).value) / 100 }); };
 for (const [id, key] of [['music-input', 'musicEnabled'], ['autoplay-input', 'autoplay'], ['contributors-input', 'showContributors']]) $(id).onchange = () => sim.setSettings({ [key]: $(id).checked });
 $('quality-input').onchange = () => sim.setSettings({ visualQuality: $('quality-input').value });
@@ -360,3 +370,5 @@ setInterval(() => { if (recovery && sim.ledger.accepted > 0 && !disposed) recove
 addEventListener('pagehide', e => { recovery?.mark(); recovery?.flush().catch(() => {}); disposed = true; cancelAnimationFrame(frameId); observer.disconnect(); releaseInput(); if (e.persisted) audio.update({ settings: sim.settings, paused: true }); else audio.dispose(); });
 addEventListener('pageshow', e => { if (e.persisted) { disposed = false; last = 0; accumulator = 0; observer.observe($('stage')); frameId = requestAnimationFrame(frame); audio.unlock(); } });
 boot();
+
+window.addEventListener('tikinteract:language',event=>{localize(event.detail.language);if(renderer&&loaded)draw();});

@@ -9,8 +9,10 @@
   const json=async name=>{const response=await fetch(base+name);if(!response.ok)throw Error(name);return response.json();};
   async function load(){
     if(loading)return loading;
-    loading=Promise.all([image('district.webp'),image('atlas.webp'),image('rival.webp'),image('board.webp'),image('interactions.webp'),image('physical-gifts.webp'),json('metadata.json'),json('rig.json'),json('interactions-metadata.json'),json('physical-gifts-metadata.json'),image('reactions.webp'),json('reactions-metadata.json'),import('../GAME/NOVA-VEX/src/wins.js')]).then(([background,atlas,rival,board,pairs,props,meta,rig,interactions,gifts,reactions,reactionData,shows])=>{
-      art={background,atlas,rival,board,pairs,props,reactions,meta:{...meta.sprites,...reactionData.sprites},rig,pair:interactions.sprites,gifts:gifts.sprites,showFrame:shows.showFrame,show:new shows.WinShow({shipBounds:rig.board,props:{board,rival},rivalPoses:rig.poses})};root.dataset.ready='true';draw();start();
+    loading=Promise.all([image('district.webp'),image('atlas.webp'),image('rival.webp'),image('board.webp'),image('interactions.webp'),image('physical-gifts.webp'),json('metadata.json'),json('rig.json'),json('interactions-metadata.json'),json('physical-gifts-metadata.json'),image('reactions.webp'),json('reactions-metadata.json'),import('../GAME/NOVA-VEX/src/wins.js'),image('vex-actions.webp'),json('vex-actions-metadata.json'),import('../GAME/NOVA-VEX/src/vex-negatives.js'),import('../GAME/NOVA-VEX/src/gift-motion.js')]).then(([background,atlas,rival,board,pairs,props,meta,rig,interactions,gifts,reactions,reactionData,shows,vexActions,vexData,negatives,motion])=>{
+      art={background,atlas,rival,board,pairs,props,reactions,meta:{...meta.sprites,...reactionData.sprites},rig,pair:interactions.sprites,gifts:gifts.sprites,showFrame:shows.showFrame,motion};
+      const adapter={shipBounds:rig.board,props:{board,rival,vexActions},rivalPoses:{...rig.poses,...vexData.poses},sprites:{...art.meta,...art.pair},sprite(name,x,y,w,h,rotation=0,alpha=1,context=ctx){const s=this.sprites[name];if(!s)return;context.save();context.translate(x,y);context.rotate(rotation);context.globalAlpha*=alpha;context.drawImage(s.sheet==='interaction'?pairs:s.sheet==='reaction'?reactions:atlas,s.x,s.y,s.w,s.h,-w/2,-h/2,w,h);context.restore();}};
+      art.show=adapter.winShow=new shows.WinShow(adapter);art.negative=new negatives.VexNegatives(adapter);root.dataset.ready='true';draw();start();
     }).catch(()=>{root.dataset.ready='false';button.disabled=true;});return loading;
   }
   function sprite(im,s,x,feet,h,angle=0){ctx.save();ctx.translate(x,feet-h/2);ctx.rotate(angle);ctx.drawImage(im,s.x,s.y,s.w,s.h,-h*s.w/s.h/2,-h/2,h*s.w/s.h,h);ctx.restore();}
@@ -18,10 +20,10 @@
   function pair(name,x,y){const s=art.pair[name],scale=140/(s.h*(s.vexFeet.v-s.vexHead));ctx.drawImage(art.pairs,s.x,s.y,s.w,s.h,x-s.vexFeet.u*s.w*scale,y-s.vexFeet.v*s.h*scale,s.w*scale,s.h*scale);}
   function draw(){
     if(!art)return;
-    const cycle=clock%19,step=cycle<14?Math.floor(cycle/3.5):4,p=step===4?(cycle-14)/5:cycle%3.5/3.5,t=clock;
+    const cycle=clock%22.25,bounds=[0,3.5,6.7,11.5,17.25,22.25],step=bounds.findIndex((v,i)=>i<5&&cycle>=v&&cycle<bounds[i+1]),p=(cycle-bounds[step])/(bounds[step+1]-bounds[step]),t=clock;
     if(scene!==step){scene=step;canvas.dataset.scene=String(step);}
     canvas.dataset.phase='';
-    const width=600,height=720,im=art.background,scale=width/im.width,bgHeight=im.height*scale;
+    const width=540,height=960,im=art.background,scale=width/im.width,bgHeight=im.height*scale;
     const shift=(Math.sin(t*.14)*.5+.5)*(bgHeight-height);ctx.drawImage(im,0,-shift,width,bgHeight);
     ctx.fillStyle='#07132a33';ctx.fillRect(0,0,width,height);
     const travel=step===2?-p*270:step===1?p*400:p*120;
@@ -34,16 +36,13 @@
       for(const u of [.255,.765]){const nx=px+(u-.5)*w,ny=py+(.945-.5)*h,len=40+Math.sin(t*35)*6;const g=ctx.createLinearGradient(0,ny,0,ny+len);g.addColorStop(0,'#fffbd0');g.addColorStop(.3,'#ffc45a');g.addColorStop(1,'#ff5c3600');ctx.fillStyle=g;ctx.beginPath();ctx.moveTo(nx-4,ny);ctx.quadraticCurveTo(nx-8,ny+len*.45,nx,ny+len);ctx.quadraticCurveTo(nx+8,ny+len*.45,nx+4,ny);ctx.fill();}
       sprite(art.atlas,art.meta.rise,x,y,140,Math.sin(t*4)*.04);
     }
-    if(step===2){
-      const vx=720-ease(p/.24)*385,feet=520+Math.sin(t*5)*3;
-      board(p<.24?vx:292,feet+7,p<.24?155:225);
-      if(p<.24){sprite(art.rival,art.rig.poses.idle,vx,feet,140);sprite(art.atlas,art.meta.idle,x,feet,140);}
-      else pair(p<.48?'rideCatch':'rideHold',335,feet);
-    }
-    if(step===3){
-      const vx=335+ease(p/.55)*460,feet=520-p*60;board(vx,feet+7,160);sprite(art.rival,art.rig.poses.idle,vx,feet,140);
-      x=250-Math.sin(p*Math.PI)*58;y=520-Math.sin(p*Math.PI)*95;
-      sprite(art.atlas,art.meta[p>.85?'idle':'fall'],x,y,140,-Math.sin(p*Math.PI)*.35);
+    if(step===2||step===3){
+      const kind=step===2?'meteor':'vortex',spec=art.motion.GIFT_TIMING[kind],active={kind,elapsed:p*spec.duration,duration:spec.duration,startX:220,startY:1000};
+      const f=art.motion.giftFrame(active),drop=art.motion.giftTravelProgress(kind,f.progress)*(step===2?150:300),sim={active,clock:t,player:{x:220,y:1000-drop},settings:{effectsIntensity:.85}},hero={x:220,y:330},reaction=art.negative.hero(sim);
+      canvas.dataset.phase=art.negative.frame(sim,hero.x,hero.y).phase;
+      ctx.save();ctx.translate(-50,0);ctx.scale(1.5,1.5);art.negative.behind(ctx,sim,hero.x,hero.y);
+      ctx.save();ctx.globalAlpha*=reaction.alpha;ctx.translate(hero.x+reaction.x,hero.y+reaction.y);ctx.scale(reaction.flip||1,1);const source=art.meta[reaction.pose]||art.meta.idle;sprite(source.sheet==='reaction'?art.reactions:art.atlas,source,0,0,90*reaction.sy,reaction.rotation);ctx.restore();
+      art.negative.front(ctx,sim,hero.x,hero.y);ctx.restore();
     }
     if(step===4){
       // Reuse the game's choreography so the hand, hair and reaction stay aligned.
@@ -57,11 +56,14 @@
       ctx.restore();
     }
     canvas.dataset.frame=String(++frames);
+    const meter=root.querySelector('[data-demo-meter]');if(meter)meter.textContent=new Intl.NumberFormat(window.TikInteractLanguage?.locale()||'ro-RO').format(Math.round([240+p*70,310+p*150,460-art.motion.giftTravelProgress('meteor',art.motion.giftFrame({kind:'meteor',duration:4.8,elapsed:p*4.8}).progress)*150,310-art.motion.giftTravelProgress('vortex',art.motion.giftFrame({kind:'vortex',duration:5.75,elapsed:p*5.75}).progress)*300,10][step]));
+    const receipt=root.querySelector('[data-demo-receipt]');if(receipt){const en=window.TikInteractLanguage?.get()==='en';receipt.hidden=step===0;receipt.querySelector('strong').textContent=[null,'Jetpack +150 m',en?'Vex’s push −150 m':'Împingerea lui Vex −150 m',en?'Vex’s ride −300 m':'Cursa lui Vex −300 m',en?'Vex’s heist −1 crown':'Jaful lui Vex −1 coroană'][step]||'';}
   }
   function tick(now){request=0;if(!visible||paused||document.hidden||reduced.matches)return;clock+=Math.min(.05,(now-(last||now))/1000);last=now;draw();request=requestAnimationFrame(tick);}
   function start(){if(art&&visible&&!paused&&!document.hidden&&!reduced.matches&&!request){last=0;request=requestAnimationFrame(tick);}}
   function stop(){cancelAnimationFrame(request);request=0;last=0;}
-  button.onclick=()=>{paused=!paused;button.setAttribute('aria-pressed',String(paused));button.textContent=paused?'Redă':'Pauză';button.setAttribute('aria-label',(paused?'Redă':'Pauză')+' animație NOVA & VEX');if(paused)stop();else start();};
+  function pauseCopy(){const en=window.TikInteractLanguage?.get()==='en';button.textContent=paused?(en?'Play':'Redă'):(en?'Pause':'Pauză');button.setAttribute('aria-label',button.textContent+' NOVA & VEX');}
+  button.onclick=()=>{paused=!paused;button.setAttribute('aria-pressed',String(paused));pauseCopy();if(paused)stop();else start();};window.addEventListener('tikinteract:language',()=>{pauseCopy();draw();});
   new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){load();start();}else stop();},{rootMargin:'120px'}).observe(root);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else start();});reduced.addEventListener('change',()=>{if(reduced.matches)stop();else start();});
 })();

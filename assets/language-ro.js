@@ -1,0 +1,28 @@
+// Original English interface labels normalized to Romanian. Brand names and chat commands are invariant.
+export const romanian={
+    'PRICING':'PREȚURI','STREAMS':'TRANSMISIUNI','GET APP':'APLICAȚIE','Download':'Descarcă','Download App':'Descarcă aplicația',
+    'Game Center':'Centru de jocuri','Audio Center':'Centru audio','LIVE STUDIO':'STUDIO LIVE','LIVE Studio':'Studio LIVE',
+    'Browser':'Browser','WORKSPACE':'SPAȚIU DE LUCRU','CONTROL JOC':'CONTROL JOC','Display Name':'Nume afișat',
+    'Email address':'Adresă de e-mail','Login method':'Metodă de autentificare','Created':'Data înregistrării','User ID':'ID utilizator','Status':'Stare',
+    'Cookie preferences':'Preferințe de stocare','Privacy Policy':'Confidențialitate','Terms of Use':'Termeni de utilizare',
+    'ACCESS KEY':'CHEIE DE ACCES','Access key':'Cheie de acces','Got an access key?':'Ai o cheie de acces?',
+    'If you received an access key, redeem it here and the access is added to your account right away.':'Dacă ai primit o cheie de acces, activeaz-o aici. Accesul se adaugă imediat în contul tău.',
+    'QUESTIONS':'ÎNTREBĂRI','Questions':'Întrebări','Before you upgrade':'Înainte să alegi un abonament',
+    'FREE':'GRATUIT','Free':'Gratuit','READY TO PLAY':'GATA DE JOACĂ','MAKE IT A LIVE':'DĂ VIAȚĂ TRANSMISIUNII','ALL IN. LIVE ON.':'TOTUL PENTRU LIVE.',
+    'Live feed':'Activitate LIVE','Audience flow':'Evoluția publicului','+24% today':'+24% astăzi','Gifts':'Cadouri',
+    'All':'Toate','Favorites':'Favorite','Music':'Muzică','Sound effects':'Efecte sonore','SFX':'EFECTE',
+    'GIFT SPOTLIGHT':'CADOURI ÎN PRIM-PLAN','NEXT':'URMĂTORUL','BACK':'ÎNAPOI','TEST MENU':'CONTROL JOC',
+    'by TikInteract':'de TikInteract','RUN':'RUNDĂ','TEAM RED':'ECHIPA RED','TEAM BLUE':'ECHIPA BLUE',
+    'DOWNLOAD APP':'DESCARCĂ APLICAȚIA','TikTok Gifts':'Cadouri TikTok','TIKTOK GIFTS':'CADOURI TIKTOK',
+    'Night Run':'Cursă de noapte','Day Ride':'Cursă de zi','Tower Ascent':'Urcare în turn','Bikes':'Motociclete','Classic':'Clasic',
+    'SOUND ON':'SUNET PORNIT','SOUND OFF':'SUNET OPRIT','SOUND: ON':'SUNET: PORNIT','SOUND: OFF':'SUNET: OPRIT',
+    'LIVE SIM: OFF':'SIMULARE LIVE: OPRITĂ','LIVE SIM: ON':'SIMULARE LIVE: PORNITĂ',
+    'REACH THE NEXT LEVEL':'URCĂ LA NIVELUL URMĂTOR','FINISH':'SOSIRE','PAUSED':'PAUZĂ','WINNER':'CÂȘTIGĂTOR',
+    'OFFLINE':'DECONECTAT','Offline':'Deconectat','ONLINE':'CONECTAT',
+    'Pitch a game':'Propune un joc','Report a problem':'Raportează o problemă','Report Problem':'Raportează o problemă',
+    'Suggest an improvement':'Sugerează o îmbunătățire','Ask us anything':'Întreabă-ne orice',
+    'Support':'Suport','Updates':'Noutăți','About Us':'Despre noi','Guide':'Ghid','Resources':'Resurse',
+    'Settings':'Setări','Language':'Limbă','Balanced':'Echilibrat','High':'Ridicată','Low':'Scăzută',
+    'TikInteract. All rights reserved.':'TikInteract. Toate drepturile rezervate.',
+    'All rights reserved.':'Toate drepturile rezervate.','TIKTOK LIVE DIRECTORY':'TRANSMISIUNI TIKTOK LIVE'
+};

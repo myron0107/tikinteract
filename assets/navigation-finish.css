@@ -1,0 +1,8 @@
+/* Neutral navigation icons; the app download and national flags keep their colors. */
+html body i[class*="fa-"],.site-template i[class*="fa-"],.public-info-header i[class*="fa-"],.admin-sidebar i[class*="fa-"],.admin-header i[class*="fa-"]{color:#fff!important}
+.site-template .get-app-trigger>.fa-download{color:var(--accent,#f13e50)!important}
+.site-template #btn-login-modal{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:8px 0;border:0;border-radius:0;background:transparent;box-shadow:none;color:#a8a8b4;font:600 12px var(--font-body);transition:color .18s}
+.site-template #btn-login-modal.hidden{display:none}
+.site-template #btn-login-modal:hover,.site-template #btn-login-modal:focus-visible{background:transparent;box-shadow:none;color:#fff}
+@media(max-width:540px){.site-template #btn-login-modal{width:34px;min-width:34px;padding:8px;min-height:38px;justify-content:center}.site-template .template-navigation>button>span{white-space:nowrap}.site-template .site-header-inner>.template-navigation{gap:8px}}
+@media(max-width:370px){.site-template .template-navigation>button,.site-template .resources-trigger{font-size:8px!important}.site-template .get-app-trigger{font-size:8px}}

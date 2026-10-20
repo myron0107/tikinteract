@@ -1,0 +1,7 @@
+import{ct,errorCopy}from'./creator-ui.js?v=1';
+export function mountSiteNotification(panel,user,rpc){
+ if(!panel)return;
+ const box=document.createElement('details');box.className='cp-panel';box.setAttribute('data-native-i18n','');box.style.marginTop='20px';
+ box.innerHTML=`<summary>${ct('notifyUser')}</summary><form style="display:grid;gap:12px;margin-top:18px">${[['titleRo','p_title_ro',120],['bodyRo','p_body_ro',4000],['titleEn','p_title_en',120],['bodyEn','p_body_en',4000]].map(([key,name,max])=>`<label>${ct(key)}${max>120?`<textarea class="cp-input" name="${name}" rows="3" maxlength="${max}" required></textarea>`:`<input class="cp-input" name="${name}" maxlength="${max}" required>`}</label>`).join('')}<button class="cp-btn cp-btn-primary" type="submit">${ct('send')}</button><p class="cp-muted" role="status"></p></form>`;
+ const form=box.querySelector('form');form.addEventListener('submit',async event=>{event.preventDefault();event.stopPropagation();if(form.dataset.sending)return;const button=form.querySelector('button'),status=form.querySelector('[role=status]');form.dataset.sending='1';button.disabled=true;status.textContent=ct('loading');try{const args=Object.fromEntries(new FormData(form));await rpc('send_site_notification',{p_user:user,...args});status.textContent=ct('notificationSent');form.reset();}catch(error){status.textContent=errorCopy(error);}finally{button.disabled=false;delete form.dataset.sending;}});panel.append(box);
+}

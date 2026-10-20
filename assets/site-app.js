@@ -125,7 +125,7 @@ function updateUI(session) {
                 ? 'Email și parolă'
                 : provider.charAt(0).toUpperCase() + provider.slice(1);
         const createdAt = user.created_at
-            ? new Date(user.created_at).toLocaleDateString('ro-RO', { year: 'numeric', month: 'long', day: 'numeric' })
+            ? new Date(user.created_at).toLocaleDateString((window.TikInteractLanguage?.locale() || 'ro-RO'), { year: 'numeric', month: 'long', day: 'numeric' })
             : 'Indisponibil';
         if (accountDisplayName) accountDisplayName.textContent = displayName;
         if (headerAccountName) headerAccountName.textContent = displayName;
@@ -352,6 +352,7 @@ async function saveDisplayName(event) {
         if (!data.user) throw new Error('Supabase nu a returnat profilul actualizat.');
 
         currentUser = data.user;
+        updateUI({user:data.user,access_token:window.tikInteractAccessToken});
         const heading = document.getElementById('account-display-name');
         const avatar = document.getElementById('account-avatar-display');
         if (heading) heading.textContent = displayName;
@@ -373,13 +374,13 @@ async function saveDisplayName(event) {
 
 // Autentificare Google OAuth
 async function loginWithGoogle() {
-    if (!supabaseClient) return alert("Supabase nu este încărcat.");
+    if (!supabaseClient) return alert((window.TikInteractLanguage?.translate ?? (value=>value))("Supabase nu este încărcat."));
     if (shouldOpenLiveFromUrl) {
         try {
             sessionStorage.setItem('tikinteract-live-return', requestedLiveGame || document.getElementById('live-game-select')?.value || 'studio');
         } catch (error) {
             console.error('Could not preserve the selected game through Google sign-in:', error);
-            return alert('Nu am putut păstra jocul selectat. Încearcă autentificarea prin e-mail.');
+            return alert((window.TikInteractLanguage?.translate ?? (value=>value))('Nu am putut păstra jocul selectat. Încearcă autentificarea prin e-mail.'));
         }
     }
     const { error } = await supabaseClient.auth.signInWithOAuth({
@@ -390,15 +391,15 @@ async function loginWithGoogle() {
     });
     if (error) {
         if (shouldOpenLiveFromUrl) sessionStorage.removeItem('tikinteract-live-return');
-        alert("Eroare logare Google: " + error.message);
+        alert((window.TikInteractLanguage?.translate ?? (value=>value))("Eroare logare Google: " + error.message));
     }
 }
 
 async function loginWithEmail() {
-    if (!supabaseClient) return alert("Supabase nu este încărcat.");
+    if (!supabaseClient) return alert((window.TikInteractLanguage?.translate ?? (value=>value))("Supabase nu este încărcat."));
     const email = document.getElementById('auth-email').value.trim();
     const password = document.getElementById('auth-password').value;
-    if(!email || !password) return alert("Completează emailul și parola!");
+    if(!email || !password) return alert((window.TikInteractLanguage?.translate ?? (value=>value))("Completează emailul și parola!"));
 
     const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
     if (error) {
@@ -519,10 +520,10 @@ function clearEmailAuthStatus() {
 }
 
 async function signUpWithEmail() {
-    if (!supabaseClient) return alert("Supabase nu este încărcat.");
+    if (!supabaseClient) return alert((window.TikInteractLanguage?.translate ?? (value=>value))("Supabase nu este încărcat."));
     const email = document.getElementById('auth-email').value.trim();
     const password = document.getElementById('auth-password').value;
-    if(!email || !password) return alert("Completează emailul și parola!");
+    if(!email || !password) return alert((window.TikInteractLanguage?.translate ?? (value=>value))("Completează emailul și parola!"));
 
     const { error } = await supabaseClient.auth.signUp({ email, password });
     if (error) showEmailAuthStatus(`Eroare la creare cont: ${error.message}`, true);
@@ -555,6 +556,7 @@ function switchView(view) {
     if (view === 'account' && !currentUser) { pendingAccountRoute = true; openAuthModal(); return; }
     views.forEach(name => document.getElementById('view-' + name)?.classList.toggle('hidden', name !== view));
     setActiveNavigation(view);
+    if (typeof CustomEvent !== 'undefined') window.dispatchEvent(new CustomEvent('tikinteract:view',{detail:{view}}));
     history.replaceState(null, '', 'index.html' + (view === 'home' ? '' : '?view=' + view));
     if (view === 'streams' && typeof loadLiveStreams === 'function') loadLiveStreams();
     if (view === 'leaderboard') loadLeaderboard();
@@ -658,7 +660,12 @@ function loadLiveGame(gameId, verified = false) {
         window.TikInteractLive?.loaded(gameFrame);
         complete();
     };
-    gameFrame.src = token ? `${gamePath}?tikinteractHost=${encodeURIComponent(token)}` : gamePath;
+    const gameUrl = new URL(gamePath, location.href);
+    if (token) gameUrl.searchParams.set('tikinteractHost', token);
+    gameUrl.searchParams.set('lang', window.TikInteractLanguage?.get() || 'ro');
+    gameUrl.searchParams.set('format', window.TikInteractStudioLayout?.getFormat?.() || 'portrait');
+    gameFrame.src = gameUrl.href;
+    window.updateCurrentLiveGame?.(gameId);
     return true;
 }
 
@@ -694,7 +701,7 @@ function syncTikTokAccount() {
 
     const username = input.value.trim();
     if (!username) {
-        alert('Introdu username-ul TikTok pentru sincronizare.');
+        alert((window.TikInteractLanguage?.translate ?? (value=>value))('Introdu username-ul TikTok pentru sincronizare.'));
         return;
     }
 

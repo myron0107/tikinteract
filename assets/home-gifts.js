@@ -2,7 +2,7 @@
     const root = document.querySelector('[data-home-gifts]');
     if (!root) return;
     const $ = selector => root.querySelector(selector);
-    const format = value => new Intl.NumberFormat('ro-RO').format(value);
+    const format = value => new Intl.NumberFormat((window.TikInteractLanguage?.locale() || 'ro-RO')).format(value);
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const showcase = $('.home-gifts-showcase');
     const featured = $('[data-gifts-featured]');
@@ -108,8 +108,8 @@
     function renderCatalog(reset = false) {
         if (reset) {
             limit = 48;
-            const query = search.value.trim().toLocaleLowerCase('ro-RO');
-            results = gifts.filter(gift => gift.name.toLocaleLowerCase('ro-RO').includes(query) || gift.id.includes(query));
+            const query = search.value.trim().toLocaleLowerCase((window.TikInteractLanguage?.locale() || 'ro-RO'));
+            results = gifts.filter(gift => gift.name.toLocaleLowerCase((window.TikInteractLanguage?.locale() || 'ro-RO')).includes(query) || gift.id.includes(query));
         }
         grid.replaceChildren(...results.slice(0, limit).map(gift => {
             const card = node('article', 'home-gift-catalog-card');

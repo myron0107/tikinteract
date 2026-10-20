@@ -1,3 +1,5 @@
+import {gameText,gameLocale,onGameLanguageChange} from './game-language.js?v=1';
+import {gameSize,gameFormat} from './game-format.js?v=1';
 import {NeonRace2,RACE_RULES} from './neon-race2-engine.js?v=3';
 import {createNightRenderer} from './neon-race2-renderer.js?v=8';
 import {createVictoryEffects} from './neon-race2-effects.js?v=4';
@@ -17,7 +19,7 @@ function drawFrame(){
     victoryEffects.draw(race,effectsClock,reduced.matches);
 }
 
-function notice(text) {$('raceNotice').textContent=text;noticeUntil=clock+4;}
+function notice(text) {$('raceNotice').textContent=gameText(text);noticeUntil=clock+4;}
 function accept(event) {
     const result=race.event(event);
     if(!result){updateHud();return;}
@@ -31,15 +33,15 @@ function renderTop(index) {
     if(list.dataset.signature===signature)return;
     list.dataset.signature=signature;
     list.replaceChildren();
-    if(!top.length) {const row=document.createElement('li');row.className='empty';row.textContent=`Scrie ${names[index]} în chat și intră în cursă.`;list.append(row);return;}
+    if(!top.length) {const row=document.createElement('li');row.className='empty';row.textContent=gameText(`Scrie ${names[index]} în chat și intră în cursă.`);list.append(row);return;}
     top.forEach((person,i)=>{
         const row=document.createElement('li'),rank=document.createElement('span'),name=document.createElement('b');
         rank.className='supporter-rank';rank.textContent=String(i+1).padStart(2,'0');name.textContent=person.name;name.title=person.name;
         row.append(rank,name);
         for(const [field,column,icon,label]of [['coins','gifts','🎁','monede din cadouri'],['likes','likes','♥','like-uri']]){
             const stat=document.createElement('small'),symbol=document.createElement('span'),value=document.createElement('strong');
-            stat.className=`supporter-${column}`;stat.setAttribute('aria-label',`${person[field].toLocaleString('ro-RO')} ${label}`);stat.title=stat.getAttribute('aria-label');
-            symbol.textContent=icon;symbol.setAttribute('aria-hidden','true');value.textContent=new Intl.NumberFormat('ro-RO',{notation:person[field]>=10000?'compact':'standard',maximumFractionDigits:1}).format(person[field]);stat.append(symbol,value);row.append(stat);
+            stat.className=`supporter-${column}`;stat.setAttribute('aria-label',`${person[field].toLocaleString(gameLocale())} ${label}`);stat.title=stat.getAttribute('aria-label');
+            symbol.textContent=icon;symbol.setAttribute('aria-hidden','true');value.textContent=new Intl.NumberFormat(gameLocale(),{notation:person[field]>=10000?'compact':'standard',maximumFractionDigits:1}).format(person[field]);stat.append(symbol,value);row.append(stat);
         }
         list.append(row);
     });
@@ -54,26 +56,26 @@ function updateOverlay() {
     $('pauseResume').hidden=!race.paused||race.finished;
     $('resultNextRace').hidden=!race.finished;
     if(!race.paused&&!race.finished)return;
-    $('overlayKicker').textContent=race.finished?`REZULTAT / RUN ${String(race.round).padStart(2,'0')}`:'CONTROL CURSĂ';
+    $('overlayKicker').textContent=gameText(race.finished?`REZULTAT / RUN ${String(race.round).padStart(2,'0')}`:'CONTROL CURSĂ');
     $('overlaySymbol').classList.toggle('is-pause',!race.finished);
-    $('overlaySymbol').textContent=race.finished?(race.winner===null?'=':'🏆'):'';
-    $('overlayTitle').textContent=race.finished?(race.winner===null?'Egalitate':`TEAM ${names[race.winner]} CÂȘTIGĂ`):'Cursă în pauză';
-    $('overlayDescription').textContent=!race.finished?'Mașinile și cronometrul sunt oprite. Reia cursa când ești pregătit.':race.resultReason==='time'?'Timp expirat. Rezultat: 70% distanță + 30% puncte.':race.resultReason==='finish-points'?'Sosire simultană. Câștigă echipa cu mai multe puncte.':race.winner===null?'Ambele echipe au trecut simultan linia de finiș.':'Prima echipă care a trecut linia de finiș.';
+    $('overlaySymbol').textContent=gameText(race.finished?(race.winner===null?'=':'🏆'):'');
+    $('overlayTitle').textContent=gameText(race.finished?(race.winner===null?'Egalitate':`TEAM ${names[race.winner]} CÂȘTIGĂ`):'Cursă în pauză');
+    $('overlayDescription').textContent=gameText(!race.finished?'Mașinile și cronometrul sunt oprite. Reia cursa când ești pregătit.':race.resultReason==='time'?'Timp expirat. Rezultat: 70% distanță + 30% puncte.':race.resultReason==='finish-points'?'Sosire simultană. Câștigă echipa cu mai multe puncte.':race.winner===null?'Ambele echipe au trecut simultan linia de finiș.':'Prima echipă care a trecut linia de finiș.');
     if(race.finished){
-        race.teams.forEach((team,i)=>{$((i?'blue':'red')+'Result').textContent=`${Math.floor(team.distance).toLocaleString('ro-RO')} m · ${team.score.toLocaleString('ro-RO')} puncte`;});
-        $('nextRaceSeconds').textContent=String(Math.ceil(race.nextIn));
+        race.teams.forEach((team,i)=>{$((i?'blue':'red')+'Result').textContent=`${Math.floor(team.distance).toLocaleString(gameLocale())} m · ${team.score.toLocaleString(gameLocale())} puncte`;});
+        $('nextRaceSeconds').textContent=gameText(String(Math.ceil(race.nextIn)));
     }
 }
 function updateHud() {
-    $('round').textContent=String(race.round).padStart(2,'0');
+    $('round').textContent=gameText(String(race.round).padStart(2,'0'));
     const remaining=Math.ceil(race.time);
-    $('timer').textContent=`${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`;
-    $('roundState').textContent=race.paused?'CURSĂ ÎN PAUZĂ':race.finished?(race.winner===null?'EGALITATE':`TEAM ${names[race.winner]} CÂȘTIGĂ`):simulation?'SIMULARE · EVENIMENTE DE TEST':'CURSA ESTE ÎN DESFĂȘURARE';
-    if(race.finished)$('raceNotice').textContent=$('autoNext').checked?`Următoarea cursă în ${Math.ceil(race.nextIn)} secunde.`:'Pornește o cursă nouă din TEST MENU.';
-    else if(clock>noticeUntil)$('raceNotice').textContent='Chat-ul dă ritmul.';
+    $('timer').textContent=gameText(`${String(Math.floor(remaining/60)).padStart(2,'0')}:${String(remaining%60).padStart(2,'0')}`);
+    $('roundState').textContent=gameText(race.paused?'CURSĂ ÎN PAUZĂ':race.finished?(race.winner===null?'EGALITATE':`TEAM ${names[race.winner]} CÂȘTIGĂ`):simulation?'SIMULARE · EVENIMENTE DE TEST':'CURSA ESTE ÎN DESFĂȘURARE');
+    if(race.finished)$('raceNotice').textContent=gameText($('autoNext').checked?`Următoarea cursă în ${Math.ceil(race.nextIn)} secunde.`:'Pornește o cursă nouă din TEST MENU.');
+    else if(clock>noticeUntil)$('raceNotice').textContent=gameText('Chat-ul dă ritmul.');
     race.teams.forEach((team,i)=>{
         const prefix=i?'blue':'red';
-        $(prefix+'Distance').textContent=`${Math.floor(team.distance).toLocaleString('ro-RO')} m`;
+        $(prefix+'Distance').textContent=`${Math.floor(team.distance).toLocaleString(gameLocale())} m`;
         $(prefix+'Progress').setAttribute('aria-valuenow',String(Math.floor(team.distance)));
         $(prefix+'Progress').firstElementChild.style.width=`${team.distance/RACE_RULES.finish*100}%`;
         $(prefix+'Speed').replaceChildren(document.createTextNode(String(Math.round(race.finished?0:race.speed(i)))+' '));
@@ -83,12 +85,13 @@ function updateHud() {
         $(prefix+'Nitro').setAttribute('aria-valuenow',String(Math.round(nitroPercent)));
         $(prefix+'Nitro').setAttribute('aria-valuetext',`${team.nitroSeconds.toFixed(1)} secunde nitro`);
         const pose=renderer.pose(race,i);
-        $(prefix+'Telemetry').style.left=`${(pose.x+pose.width*.5)/1200*540}px`;
-        $(prefix+'Telemetry').style.top=`${(pose.y-62)/900*405}px`;
+        const trackWidth=gameFormat()==='landscape'?720:540;
+        $(prefix+'Telemetry').style.left=`${(pose.x+pose.width*.5)/1200*trackWidth}px`;
+        $(prefix+'Telemetry').style.top=`${(pose.y-62)/900*trackWidth*.75}px`;
         renderTop(i);
     });
-    $('wins').textContent=`RED ${race.wins[0]} : ${race.wins[1]} BLUE`;
-    $('pause').textContent=race.paused?'▶ Reia cursa':'Pauză';
+    $('wins').textContent=gameText(`RED ${race.wins[0]} : ${race.wins[1]} BLUE`);
+    $('pause').textContent=gameText(race.paused?'▶ Reia cursa':'Pauză');
     $('pause').disabled=race.finished;
     updateOverlay();
     audioUpdate();
@@ -96,23 +99,25 @@ function updateHud() {
 function resize() {
     const embedded=parent!==window;
     document.body.classList.toggle('embedded',embedded);
-    const scale=Math.min(1,(innerWidth-(embedded?0:24))/540,embedded?innerHeight/960:1);
+    const {width,height}=gameSize(),trackWidth=gameFormat()==='landscape'?720:540;
+    const scale=Math.min(1,(innerWidth-(embedded?0:24))/width,embedded?innerHeight/height:1);
     $('shell').style.transform=`scale(${Math.max(.1,scale)})`;
-    $('game-fit').style.width=`${540*scale}px`;$('game-fit').style.height=`${960*scale}px`;
+    $('game-fit').style.width=`${width*scale}px`;$('game-fit').style.height=`${height*scale}px`;
     const pixelRatio=Math.min(devicePixelRatio||1,2);
-    $('raceCanvas').width=Math.round(540*scale*pixelRatio);$('raceCanvas').height=Math.round(405*scale*pixelRatio);
+    $('raceCanvas').width=Math.round(trackWidth*scale*pixelRatio);$('raceCanvas').height=Math.round(trackWidth*.75*scale*pixelRatio);
     drawFrame();
+    updateHud();
 }
 function audioUpdate() {
     raceAudio.setLevels({master:$('volumeMaster').value,engine:$('volumeEngine').value,effects:$('volumeEffects').value});
     raceAudio.sync(race,{hidden:document.hidden,autoNext:$('autoNext').checked});
 }
 function soundLabel() {
-    $('sound').textContent=raceAudio.enabled?'SOUND ON':'SOUND OFF';$('sound').setAttribute('aria-pressed',String(raceAudio.enabled));audioUpdate();
+    $('sound').textContent=gameText(raceAudio.enabled?'SOUND ON':'SOUND OFF');$('sound').setAttribute('aria-pressed',String(raceAudio.enabled));audioUpdate();
 }
 function soundUnavailable() {
     void raceAudio.setEnabled(false,race).catch(()=>{});
-    soundLabel();$('testFeedback').textContent='Sunetul nu este disponibil în acest browser.';
+    soundLabel();$('testFeedback').textContent=gameText('Sunetul nu este disponibil în acest browser.');
 }
 function setSound(enabled) {
     // Keep the toggle usable even when the browser leaves resume() pending.
@@ -143,18 +148,18 @@ $('pause').onclick=()=>{if(race.finished)return;race.paused=!race.paused;updateH
 $('pauseResume').onclick=()=>{$('pause').click();};
 $('resultNextRace').onclick=()=>{race.reset();updateHud();drawFrame();};
 $('reset').onclick=()=>{race.reset();notice('Cursă nouă. Comunitatea alege ritmul.');updateHud();};
-$('auto').onclick=()=>{simulation=!simulation;$('auto').textContent=`LIVE SIM: ${simulation?'ON':'OFF'}`;if(simulation)$('testFeedback').textContent='Simularea adaugă numai spectatori și contribuții de test.';updateHud();};
+$('auto').onclick=()=>{simulation=!simulation;$('auto').textContent=gameText(`LIVE SIM: ${simulation?'ON':'OFF'}`);if(simulation)$('testFeedback').textContent=gameText('Simularea adaugă numai spectatori și contribuții de test.');updateHud();};
 $('resetSupporters').onclick=()=>{race.clearSupporters();updateHud();};
 document.querySelectorAll('[data-team]').forEach(button=>button.onclick=()=>{
     const index=Number(button.dataset.team),gift=button.dataset.kind==='gift',value=gift?Number($('giftValue').value):button.dataset.kind==='like25'?25:1;
     const result=race.contribute(index,gift?'gift':'like',value,`test-${index}`,`Test ${names[index]}`);
     if(result)notice(`TEST / TEAM ${names[index]} · +${value} ${gift?'puncte cadou':'likes'}`);
-    else $('testFeedback').textContent='Reia cursa sau pornește o rundă nouă pentru a testa interacțiunile.';
+    else $('testFeedback').textContent=gameText('Reia cursa sau pornește o rundă nouă pentru a testa interacțiunile.');
     updateHud();
 });
 $('sendChat').onclick=()=>{
     const result=race.join($('chatUser').value,$('chatMessage').value);
-    $('testFeedback').textContent=result?`${result.name} a intrat în TEAM ${names[result.index]}.`:'Introdu un nume și comanda RED sau BLUE.';
+    $('testFeedback').textContent=gameText(result?`${result.name} a intrat în TEAM ${names[result.index]}.`:'Introdu un nume și comanda RED sau BLUE.');
 };
 $('chatMessage').onkeydown=event=>{if(event.key==='Enter')$('sendChat').click();};
 function menu(open){$('testPanel').hidden=!open;$('testToggle').setAttribute('aria-expanded',String(open));}
@@ -187,7 +192,7 @@ window.TikInteractGame?.register({
     onChat:accept,onLike:accept,onGift:accept,
     onStatus(state) {
         if(state.connected&&state.sessionId!==currentSession) {
-            simulation=false;$('auto').textContent='LIVE SIM: OFF';
+            simulation=false;$('auto').textContent=gameText('LIVE SIM: OFF');
             race.members.clear();race.clearSupporters();race.wins=[0,0];race.reset();
             currentSession=state.sessionId;
         }
@@ -195,3 +200,5 @@ window.TikInteractGame?.register({
     }
 });
 resize();updateHud();setSound(true);renderer.images.forEach(image=>image.addEventListener('load',drawFrame));requestAnimationFrame(tick);
+
+onGameLanguageChange(()=>{for(const id of ['topRed','topBlue'])$(id).dataset.signature='';updateHud();});
