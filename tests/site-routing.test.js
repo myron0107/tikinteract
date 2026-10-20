@@ -6,7 +6,7 @@ const source=readFileSync(new URL('../assets/site-app.js',import.meta.url),'utf8
 const routing=source.slice(source.indexOf('function switchView(view)'),source.indexOf('function openCookiePreferences()'));
 const urlHelper=source.slice(source.indexOf('function studioUrl('),source.indexOf('let shouldOpenLiveFromUrl'));
 function setup(studio=false){
-    const navigations=[],loaded=[],views=new Map(['home','catalog','leaderboard','play-pass','account'].map(name=>[name,{hidden:name!=='home'}]));
+    const navigations=[],loaded=[],views=new Map(['home','catalog','streams','leaderboard','play-pass','account'].map(name=>[name,{hidden:name!=='home'}]));
     const context={isStudioPage:studio,currentUser:null,shouldOpenLiveFromUrl:false,pendingAccountRoute:false,requestedLiveGame:'moto-interact',LIVE_GAME_PATHS:{'moto-interact':'game','neon-race-2':'game'},
         document:{body:{classList:{toggle(){}}},querySelectorAll(){return[];},getElementById(id){if(id==='live-game-select')return studio?{value:'moto-interact'}:null;const view=views.get(id.replace('view-',''));return view?{classList:{toggle(name,value){view.hidden=value;}}}:null;}},
         window:{location:{assign(url){navigations.push(url);}},scrollTo(){}},history:{replaceState(){}},
@@ -27,7 +27,7 @@ test('visitors must authenticate before opening Studio through any public route'
 });
 test('Studio entry points remain visible in the homepage markup for visitors',()=>{
     const home=readFileSync(new URL('../index.html',import.meta.url),'utf8');
-    assert.match(home,/<button data-nav-item="live" onclick="checkAccessAndGo\('live'\)">/);
+    assert.match(home,/<button\b[^>]*data-nav-item="live"[^>]*onclick="checkAccessAndGo\('live'\)"[^>]*>/);
     assert.match(home,/<button onclick="checkAccessAndGo\('live'\)" class="home-primary-button">/);
     assert.doesNotMatch(home,/<button[^>]*data-nav-item="live"[^>]*\bhidden\b/);
     assert.doesNotMatch(home,/<button[^>]*class="home-primary-button"[^>]*\bhidden\b/);
@@ -35,6 +35,8 @@ test('Studio entry points remain visible in the homepage markup for visitors',()
 test('public views work without Studio DOM and account still requires authentication',()=>{
     const {context,views,loaded}=setup();context.switchView('catalog');
     assert.equal(views.get('catalog').hidden,false);assert.equal(views.get('home').hidden,true);
+    context.switchView('streams');
+    assert.equal(views.get('streams').hidden,false);assert.equal(views.get('catalog').hidden,true);
     context.switchView('account');assert.deepEqual(loaded,['auth']);assert.equal(context.pendingAccountRoute,true);
     context.currentUser={id:'test'};context.switchView('account');assert.equal(views.get('account').hidden,false);
 });

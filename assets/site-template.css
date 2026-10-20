@@ -18,10 +18,16 @@
 .site-template .site-header-inner>.template-navigation>button[data-nav-item="play-pass"]>i{color:#ff263e}
 .site-template .header-account-actions{position:relative;gap:10px;flex:none}
 .site-template #account-status-indicator{order:0}
-.site-template #header-account-avatar{order:1}
-.site-template #account-menu-toggle{align-items:center;justify-content:center;width:36px;height:36px;flex:0 0 auto;border:1px solid #ffffff1f;border-radius:11px;background:#ffffff0f;color:#e4e4e7;cursor:pointer}
+.site-template #header-account-avatar{order:2;width:30px;height:30px}
+.site-template #account-menu-toggle{align-items:center;justify-content:center;gap:10px;width:auto;min-width:36px;height:42px;padding:8px 0;flex:0 0 auto;border:0;border-radius:0;background:transparent;box-shadow:none;color:#a8a8b4;cursor:pointer;font:600 12px var(--font-body);transition:color .18s,text-shadow .18s}
 .site-template #account-menu-toggle:not(.hidden){display:inline-flex;order:2}
-.site-template #account-menu-toggle:hover,.site-template #account-menu-toggle[aria-expanded="true"]{border-color:#e592a266;color:#dc687f}
+.site-template #account-menu-toggle:hover,.site-template #account-menu-toggle:focus-visible{background:transparent;box-shadow:none;color:#fff}
+.site-template #account-menu-toggle[aria-expanded="true"]{background:transparent;box-shadow:none;color:var(--accent);text-shadow:0 0 12px #f13e5050}
+.site-template .header-account-menu{position:relative;order:1;min-width:0}
+.site-template .header-account-name{max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:600;text-align:left}
+.site-template .account-menu-mobile-icon{display:none}
+.site-template .header-account-actions>.get-app-dropdown{order:4}
+.site-template #btn-login-modal{order:1}
 .site-template #user-profile-menu{position:absolute;top:calc(100% + 8px);right:0;z-index:60;display:none;min-width:144px;flex-direction:column;align-items:stretch;gap:6px;padding:7px;border:1px solid #ffffff1a;border-radius:12px;background:#18181b;box-shadow:0 12px 30px #0006}
 .site-template #user-profile-menu.is-open:not(.hidden){display:flex}
 .site-template #user-profile-menu .account-logout-label{display:inline}
@@ -31,6 +37,9 @@
 .site-template #btn-login-modal{min-height:40px;padding:10px 15px;border:1px solid #ffffff19;border-radius:9px;background:#1c1c22;box-shadow:none;font:600 11px var(--font-body);white-space:nowrap}
 .site-template #btn-login-modal:hover{background:#282830}
 .site-template .account-status-dot{width:6px;height:6px}
+.site-template .get-app-dropdown:not(.is-open) .get-app-menu{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(8px)}
+.site-template .get-app-dropdown.is-open .get-app-menu{opacity:1;visibility:visible;pointer-events:auto;transform:translateY(0)}
+.site-template .get-app-menu{max-width:calc(100vw - 24px)}
 .site-template .home-page{padding:0}
 .site-template .home-page>.home-hero{position:relative;isolation:isolate;width:100%;max-width:none;margin:0;border:0;border-radius:0;box-shadow:none;overflow:hidden;background:radial-gradient(ellipse at 88% 42%,#e63a5012,transparent 48%),#0b0b0e}
 .site-template .home-hero::before{display:none}
@@ -118,3 +127,9 @@
 .site-template :is(button,a).glow-red{box-shadow:var(--button-glow)}
 
 @media(max-width:540px){.site-template .site-header-inner>.template-navigation{gap:6px}.site-template .site-header-inner>.template-navigation>button{flex:1;justify-content:center;flex-direction:column;gap:5px;min-height:48px;padding:7px 0;font-size:9px;line-height:14px}.site-template .template-navigation>button>i{font-size:14px}}
+
+/* Header identity and app access share the same compact mobile layout. */
+@media(max-width:1100px){.site-template:not(.studio-app) .site-header-inner{flex-wrap:wrap;gap:12px;padding-block:12px}.site-template:not(.studio-app) .site-header-inner>.template-navigation{order:3;width:100%;margin:0;justify-content:center;gap:26px;border-top:1px solid #ffffff0b;padding-top:5px}.site-template:not(.studio-app) .header-account-actions{margin-left:auto}}
+@media(max-width:700px){.site-template #header-account-name{display:none}.site-template .account-menu-mobile-icon{display:inline-block;font-size:13px}.site-template #account-menu-toggle{padding:4px 5px;gap:8px}.site-template #header-account-avatar{width:28px;height:28px}.site-template .header-account-name{max-width:100px}}
+@media(max-width:540px){.site-template:not(.studio-app) .site-header-inner{width:calc(100% - 32px);gap:10px}.site-template:not(.studio-app) .site-header-inner>.template-navigation{gap:12px;justify-content:space-between}.site-template .header-login-label{display:none}.site-template #btn-login-modal{width:36px;min-width:36px;padding:8px;justify-content:center}.site-template .get-app-trigger{min-height:38px;padding:8px 9px;gap:6px;font-size:10px;letter-spacing:.02em}.site-template #user-profile-menu{min-width:174px}}
+@media(max-width:370px){.site-template:not(.studio-app) .site-header-inner{width:calc(100% - 24px);gap:8px}.site-template:not(.studio-app) .template-brand>span{font-size:14px}.site-template:not(.studio-app) .template-brand img{width:24px;height:24px}.site-template .get-app-trigger{padding:8px 7px;font-size:9px;gap:4px}.site-template .get-app-trigger>.fa-chevron-down{display:none}.site-template #header-account-avatar{width:25px;height:25px}.site-template #account-menu-toggle{gap:6px;min-height:36px;height:36px}}

@@ -33,6 +33,9 @@ create table if not exists public.streamer_live_sessions (
         check (ended_at is null or ended_at >= started_at)
 );
 
+alter table public.streamer_live_sessions
+    add column if not exists current_game text default 'neon-race-2';
+
 create unique index if not exists streamer_live_sessions_one_active_per_user_idx
     on public.streamer_live_sessions (user_id)
     where ended_at is null;
@@ -123,7 +126,10 @@ begin
 end;
 $$;
 
-create or replace function public.start_my_live_session(p_tiktok_username text)
+create or replace function public.start_my_live_session(
+    p_tiktok_username text,
+    p_current_game text
+)
 returns uuid
 language plpgsql
 security definer
@@ -133,6 +139,7 @@ declare
     v_user_id uuid := auth.uid();
     v_username text := regexp_replace(trim(coalesce(p_tiktok_username, '')), '^@', '');
     v_session_id uuid;
+    v_game text := coalesce(nullif(trim(p_current_game), ''), 'neon-race-2');
     v_now timestamptz := now();
 begin
  if to_regprocedure('public.require_verified_tiktok_profile(uuid,text)') is not null then
@@ -166,12 +173,76 @@ begin
         updated_at = v_now
     where p.user_id = v_user_id;
 
-    insert into public.streamer_live_sessions (user_id, tiktok_username, started_at)
-    values (v_user_id, v_username, v_now)
+    insert into public.streamer_live_sessions (user_id, tiktok_username, started_at, current_game)
+    values (v_user_id, v_username, v_now, v_game)
     returning id into v_session_id;
 
     return v_session_id;
 end;
+$$;
+
+create or replace function public.start_my_live_session(p_tiktok_username text)
+returns uuid
+language plpgsql
+security definer
+set search_path = ''
+as $$
+begin
+    return public.start_my_live_session(p_tiktok_username, 'neon-race-2');
+end;
+$$;
+
+create or replace function public.update_my_live_game(p_current_game text)
+returns void
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+    v_user_id uuid := auth.uid();
+    v_game text := coalesce(nullif(trim(p_current_game), ''), 'neon-race-2');
+begin
+ if to_regprocedure('public.require_site_account()') is not null then
+  perform public.require_site_account();
+ end if;
+    if v_user_id is null then
+        raise exception 'Authentication required';
+    end if;
+
+    update public.streamer_live_sessions
+    set current_game = v_game
+    where user_id = v_user_id and ended_at is null;
+end;
+$$;
+
+create or replace function public.get_active_live_streams()
+returns table (
+    tiktok_username text,
+    tiktok_display_name text,
+    avatar_url text,
+    current_game text,
+    started_at timestamptz,
+    total_coins bigint
+)
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+    select
+        p.tiktok_username,
+        p.tiktok_display_name,
+        p.avatar_url,
+        coalesce(s.current_game, 'neon-race-2') as current_game,
+        s.started_at,
+        coalesce(s.total_coins, 0) as total_coins
+    from public.streamer_live_sessions s
+    join public.streamer_profiles p on p.user_id = s.user_id
+    where s.ended_at is null
+      and s.started_at >= statement_timestamp() - interval '12 hours'
+      and p.is_public
+      and lower(p.tiktok_username) <> 'numele_tau'
+    order by s.started_at desc;
 $$;
 
 create or replace function public.finish_my_live_session()

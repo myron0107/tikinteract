@@ -60,7 +60,7 @@
     <script src="assets/site-motion.js?v=1" defer></script>
     <link rel="stylesheet" href="assets/home-showcase.css?v=5">
     <script src="assets/home-showcase.js?v=9" defer></script>
-    <link rel="stylesheet" href="assets/site-template.css?v=13">
+    <link rel="stylesheet" href="assets/site-template.css?v=16"><link rel="stylesheet" href="assets/language.css?v=2"><script type="module" src="assets/language.js?v=2"></script>
     <link rel="stylesheet" href="assets/leaderboard.css?v=2">
     <link rel="stylesheet" href="assets/home-gifts.css?v=1">
     <script src="assets/home-gifts.js?v=2" defer></script>
@@ -74,29 +74,32 @@
 
     <!-- NAVBAR -->
     <header class="template-header"><div class="site-header-inner">
-<a class="template-brand" href="index.html" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="38" height="38"><span>TIK<span>INTERACT</span></span></a>
+<a class="template-brand" href="index.html" onclick="if (typeof switchView === 'function') { switchView('home'); event.preventDefault(); }" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="38" height="38"><span>TIK<span>INTERACT</span></span></a>
 <nav class="template-navigation" aria-label="Navigare principală">
-<button data-nav-item="home" class="is-active" aria-current="page" onclick="switchView('home')"><i class="fa-solid fa-house" aria-hidden="true"></i><span>ACASĂ</span></button>
 <button data-nav-item="catalog" onclick="switchView('catalog')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span></button>
-<button data-nav-item="live" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span>LIVE STUDIO</span></button>
+<button data-nav-item="streams" onclick="switchView('streams')"><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i><span>STREAMS</span><span class="nav-live-dot" aria-hidden="true"></span></button>
 <button data-nav-item="leaderboard" onclick="switchView('leaderboard')"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span></button>
-<button data-nav-item="play-pass" onclick="goToPlayPass()"><i class="fa-solid fa-ticket" aria-hidden="true"></i><span>PLAY PASS</span></button>
+<button data-nav-item="play-pass" onclick="goToPlayPass()"><i class="fa-solid fa-tags" aria-hidden="true"></i><span>PRICING</span></button>
 </nav>
 <div class="header-account-actions flex items-center gap-4">
-                <span id="account-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
-                <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
+                <div class="language-picker">
+                    <button type="button" class="language-trigger" aria-label="Alege limba" aria-haspopup="menu" aria-controls="language-menu" aria-expanded="false">
+                        <img class="language-flag" data-language-flag src="assets/language-ro.svg" width="20" height="14" alt=""><span data-language-label translate="no">RO</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div id="language-menu" class="language-menu" role="menu" aria-label="Limba interfeței" hidden>
+                        <button type="button" role="menuitemradio" data-language="ro" aria-checked="true" translate="no"><img class="language-flag" src="assets/language-ro.svg" width="24" height="16" alt=""><span>Română</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                        <button type="button" role="menuitemradio" data-language="en" aria-checked="false" translate="no"><img class="language-flag" src="assets/language-en.svg" width="24" height="16" alt=""><span>English</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div id="header-account-menu" class="header-account-menu hidden">
+                    <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
+                        <i class="fa-solid fa-gear account-menu-mobile-icon" aria-hidden="true"></i>
+                        <span id="header-account-name" class="header-account-name"></span>
+                        <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
                     <span id="header-account-avatar-fallback">U</span>
                     <img id="header-account-avatar-image" class="hidden" alt="" referrerpolicy="no-referrer">
                 </span>
-                <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
-                    <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                </button>
-                <!-- BUTON AUTENTIFICARE -->
-                <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-user"></i> Autentificare / Cont
-                </button>
-
-                <!-- PROFIL UTILIZATOR -->
+                    </button>
                 <div id="user-profile-menu" class="hidden flex items-center">
                     <button data-account-home onclick="closeAccountMenu(); switchView('account')" class="account-menu-button text-xs px-3 py-2 rounded-xl transition cursor-pointer">
                         <i class="fa-solid fa-user" aria-hidden="true"></i><span>CONTUL MEU</span>
@@ -105,6 +108,50 @@
                         <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
                         <span class="account-logout-label">Deconectare</span>
                     </button>
+                </div>
+                </div>
+                <button id="btn-login-modal" aria-label="Autentificare / Cont" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i> <span class="header-login-label">Autentificare / Cont</span>
+                </button>
+                <!-- GET APP DROPDOWN (HOVER FLYOUT) -->
+                <div class="get-app-dropdown">
+                    <button class="get-app-trigger" type="button" aria-label="GET APP" aria-controls="get-app-menu" aria-haspopup="menu" aria-expanded="false">
+                        <i class="fa-solid fa-download text-red-500" aria-hidden="true"></i>
+                        <span>GET APP</span>
+                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-400" aria-hidden="true"></i>
+                    </button>
+                    <div id="get-app-menu" class="get-app-menu" role="menu" aria-label="Aplicații și acces">
+                        <div class="get-app-menu-header">
+                            <span class="eyebrow text-[10px]">APLICAȚII &amp; ACCES</span>
+                        </div>
+                        <a href="#download-app" class="get-app-item" role="menuitem">
+                            <div class="get-app-item-icon">
+                                <i class="fa-solid fa-download" aria-hidden="true"></i>
+                            </div>
+                            <div class="get-app-item-text">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-white text-xs">Download</span>
+                                    <span class="text-[9px] uppercase font-bold bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-700">Desktop</span>
+                                </div>
+                                <p class="text-[11px] text-zinc-400">Aplicația PC (În curând)</p>
+                            </div>
+                        </a>
+                        <div class="get-app-divider"></div>
+                        <button role="menuitem" data-nav-item="live" onclick="checkAccessAndGo('live')">
+                            <div class="get-app-item live-item">
+                                <div class="get-app-item-icon live-studio-icon">
+                                    <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i>
+                                </div>
+                                <div class="get-app-item-text text-left">
+                                    <div class="flex items-center gap-2">
+                                        <span class="font-bold text-white text-xs">LIVE STUDIO</span>
+                                        <span class="text-[9px] uppercase font-bold bg-red-600/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30">Web</span>
+                                    </div>
+                                    <p class="text-[11px] text-zinc-400">Deschide studioul în browser</p>
+                                </div>
+                            </div>
+                        </button>
+                    </div>
                 </div>
             </div>
 </div></header>
@@ -304,6 +351,75 @@
         </section>
 
     </main>
+
+    <!-- LIVE STREAMS VIEW -->
+    <section id="view-streams" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+            <div>
+                <span class="eyebrow flex items-center gap-2">
+                    <span class="nav-live-dot" aria-hidden="true"></span>
+                    TIKTOK LIVE DIRECTORY
+                </span>
+                <h1 class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-white flex items-center gap-3">
+                    STREAMS <span class="text-xs bg-red-600/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full font-bold uppercase tracking-wider">LIVE</span>
+                </h1>
+                <p class="mt-3 max-w-2xl text-sm leading-6 text-zinc-400">
+                    Streamerii care se conectează de pe site și fac LIVE pe TikTok. Află ce joc se joacă și intră direct pe transmisiunea lor!
+                </p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button type="button" onclick="loadLiveStreams(true)" class="streams-refresh-button" title="Reîmprospătează lista">
+                    <i class="fa-solid fa-arrows-rotate mr-2" aria-hidden="true"></i> Actualizează
+                </button>
+                <button type="button" onclick="checkAccessAndGo('live')" class="home-primary-button whitespace-nowrap">
+                    <i class="fa-solid fa-tower-broadcast mr-2" aria-hidden="true"></i> Fă LIVE și tu
+                </button>
+            </div>
+        </div>
+
+        <div class="streams-filter-bar mb-8">
+            <div class="streams-search-box">
+                <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input type="search" id="streams-search-input" placeholder="Caută creator sau @username TikTok..." oninput="handleStreamFilterChange()">
+            </div>
+            <div class="streams-game-filters" role="tablist" aria-label="Filtrează după joc">
+                <button class="streams-game-chip is-active" data-game-filter="all" onclick="setStreamsGameFilter('all')">Toate jocurile</button>
+                <button class="streams-game-chip" data-game-filter="neon-race-2" onclick="setStreamsGameFilter('neon-race-2')">Neon Interact</button>
+                <button class="streams-game-chip" data-game-filter="moto-interact" onclick="setStreamsGameFilter('moto-interact')">Moto Interact</button>
+                <button class="streams-game-chip" data-game-filter="nova-vex" onclick="setStreamsGameFilter('nova-vex')">NOVA &amp; VEX</button>
+                <button class="streams-game-chip" data-game-filter="country-derby" onclick="setStreamsGameFilter('country-derby')">Country Derby</button>
+                <button class="streams-game-chip" data-game-filter="neon-riders" onclick="setStreamsGameFilter('neon-riders')">Neon Riders</button>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs text-zinc-400 mb-6">
+            <div id="streams-status-text" class="flex items-center gap-2">
+                <span class="inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                <span>Se încarcă streamurile live...</span>
+            </div>
+            <span id="streams-count-label" class="font-semibold text-zinc-300">0 streameri activi</span>
+        </div>
+
+        <div id="streams-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" aria-live="polite"></div>
+
+        <div id="streams-empty-state" class="hidden streams-empty-card">
+            <div class="streams-empty-icon">
+                <i class="fa-solid fa-satellite-dish"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-2">Niciun streamer nu este LIVE în acest moment</h3>
+            <p class="text-sm text-zinc-400 max-w-md mx-auto mb-6">
+                Fii tu primul creator pe ecran! Deschide LIVE Studio, alege jocul preferat și conectează transmisiunea ta TikTok. Vei apărea automat aici.
+            </p>
+            <div class="flex flex-wrap items-center justify-center gap-3">
+                <button type="button" onclick="checkAccessAndGo('live')" class="home-primary-button">
+                    <i class="fa-solid fa-tower-broadcast mr-2"></i> Deschide LIVE Studio
+                </button>
+                <button type="button" onclick="switchView('catalog')" class="home-secondary-button">
+                    Explorează Jocurile
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- PLAY PASS VIEW -->
     <section id="view-play-pass" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
@@ -547,7 +663,8 @@
     <script src="assets/tiktok-profile.js?v=1"></script>
     <script src="game.js?v=16"></script>
 
+    <script type="module" src="assets/live-streams.js?v=1"></script>
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
-    <script src="assets/site-app.js?v=10"></script>
+    <script src="assets/site-app.js?v=12"></script>
 </body>
 </html>

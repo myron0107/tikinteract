@@ -1180,10 +1180,19 @@ function startPlatformLiveSession(username) {
 
     platformSessionPromise = (async () => {
         if(!await ensureLiveStreamerProfile(username))return;
-        const { error } = await supabase.rpc('start_my_live_session', {
-            p_tiktok_username: username
+        const currentGame = document.getElementById('live-game-select')?.value
+            || document.getElementById('live-game-frame')?.dataset?.gameId
+            || 'neon-race-2';
+        let startRes = await supabase.rpc('start_my_live_session', {
+            p_tiktok_username: username,
+            p_current_game: currentGame
         });
-        if (error) throw error;
+        if (startRes.error && startRes.error.message && startRes.error.message.includes('p_current_game')) {
+            startRes = await supabase.rpc('start_my_live_session', {
+                p_tiktok_username: username
+            });
+        }
+        if (startRes.error) throw startRes.error;
         platformSessionActive = true;
         platformSessionUsername = username;
         window.TikInteractGifts?.flush(username);
@@ -1203,6 +1212,12 @@ function startPlatformLiveSession(username) {
         platformSessionPromise = null;
     });
 }
+
+window.updateCurrentLiveGame = function(gameId) {
+    if (platformSessionActive && window.tikInteractSupabase) {
+        window.tikInteractSupabase.rpc('update_my_live_game', { p_current_game: gameId }).catch(() => {});
+    }
+};
 
 async function finishPlatformLiveSession() {
     if (platformFinishPromise) return platformFinishPromise;

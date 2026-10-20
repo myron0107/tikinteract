@@ -1,0 +1,17 @@
+.site-template .language-picker{position:relative;order:0;flex:none}
+.site-template .language-trigger{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:42px;padding:8px 0;border:0;border-radius:0;background:transparent;box-shadow:none;color:#a8a8b4;font:600 12px var(--font-body);cursor:pointer;transition:color .18s}
+.site-template .language-flag{display:block;width:20px;height:14px;object-fit:cover;flex:none;border-radius:2px;box-shadow:0 0 0 1px #ffffff14}
+.site-template .language-trigger>.fa-chevron-down{font-size:8px;color:#99929e}
+.site-template .language-trigger:hover,.site-template .language-trigger[aria-expanded="true"]{background:transparent;box-shadow:none;color:#fff}
+.site-template .language-trigger:focus-visible,.site-template .language-menu button:focus-visible{outline:2px solid #d48599;outline-offset:3px}
+.site-template .language-menu{position:absolute;right:0;top:calc(100% + 8px);z-index:65;display:grid;gap:4px;width:180px;padding:6px;border:1px solid #ffffff1a;border-radius:14px;background:#18181b;box-shadow:0 14px 40px #0006}
+.site-template .language-menu[hidden]{display:none}
+.site-template .language-menu button{display:flex;align-items:center;gap:10px;min-height:42px;padding:8px;border:0;border-radius:9px;background:transparent;color:#a9a3b0;text-align:left;font:600 12px var(--font-body);cursor:pointer}
+.site-template .language-menu button:hover,.site-template .language-menu button[aria-checked="true"]{background:#ffffff08;color:#fff}
+.site-template .language-menu .language-flag{width:24px;height:16px}
+.site-template .language-menu .fa-check{margin-left:auto;color:#d48ba0;font-size:10px;visibility:hidden}
+.site-template .language-menu button[aria-checked="true"] .fa-check{visibility:visible}
+@media(max-width:700px){.site-template .language-trigger{width:34px;padding:5px;height:38px;font-size:10px}.site-template .language-trigger>[data-language-label],.site-template .language-trigger>.fa-chevron-down{display:none}.site-template .language-menu{right:0;left:auto}}
+@media(max-width:540px){.site-template:not(.studio-app) .template-brand>span{font-size:16px}.site-template .header-account-actions{gap:6px}.site-template .get-app-trigger{padding-inline:8px;font-size:9px}}
+@media(max-width:370px){.site-template .language-trigger{width:28px;height:36px;font-size:9px}.site-template:not(.studio-app) .template-brand>span{font-size:14px}.site-template .header-account-actions{gap:5px}.site-template .language-menu{width:170px}}
+@media(prefers-reduced-motion:reduce){.site-template .language-trigger,.site-template #account-menu-toggle{transition:none}}

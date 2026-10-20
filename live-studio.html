@@ -57,21 +57,25 @@
     <link rel="stylesheet" href="assets/studio-layout.css?v=4">
     <link rel="stylesheet" href="assets/modern-ui.css?v=11">
     <link rel="stylesheet" href="assets/typography.css?v=1">
-<link rel="stylesheet" href="assets/site-template.css?v=13"><link rel="stylesheet" href="assets/studio-app.css?v=9"><link rel="stylesheet" href="assets/game-covers.css?v=2"><link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=4"></script><link rel="stylesheet" href="assets/resources.css?v=4"><script src="assets/resources.js?v=6" defer></script><link rel="stylesheet" href="assets/platform.css?v=3"><script type="module" src="assets/platform.js?v=3"></script><script type="module" src="assets/play-pass.js?v=1"></script><link rel="stylesheet" href="assets/account-access.css?v=1"><script type="module" src="assets/account-access.js?v=1"></script></head><body data-page="studio" class="studio-app studio-locked site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white"><header class="template-header app-topbar"><div class="site-header-inner"><a class="template-brand" href="index.html" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="38" height="38"><span>TIK<span>INTERACT</span></span></a><div class="app-topbar-title"><span>LIVE STUDIO</span><span class="app-browser-label"><i class="fa-solid fa-globe" aria-hidden="true"></i> Browser</span></div><div class="header-account-actions flex items-center gap-4">
-                <span id="account-status-indicator" class="account-status-dot is-inactive" role="status" aria-label="Cont inactiv" title="Cont inactiv"></span>
-                <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
+<link rel="stylesheet" href="assets/site-template.css?v=16"><link rel="stylesheet" href="assets/language.css?v=2"><script type="module" src="assets/language.js?v=2"></script><link rel="stylesheet" href="assets/studio-app.css?v=9"><link rel="stylesheet" href="assets/game-covers.css?v=2"><link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=4"></script><link rel="stylesheet" href="assets/resources.css?v=4"><script src="assets/resources.js?v=6" defer></script><link rel="stylesheet" href="assets/platform.css?v=3"><script type="module" src="assets/platform.js?v=3"></script><script type="module" src="assets/play-pass.js?v=1"></script><link rel="stylesheet" href="assets/account-access.css?v=1"><script type="module" src="assets/account-access.js?v=1"></script></head><body data-page="studio" class="studio-app studio-locked site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white"><header class="template-header app-topbar"><div class="site-header-inner"><a class="template-brand" href="index.html" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="38" height="38"><span>TIK<span>INTERACT</span></span></a><div class="app-topbar-title"><span>LIVE STUDIO</span><span class="app-browser-label"><i class="fa-solid fa-globe" aria-hidden="true"></i> Browser</span></div><div class="header-account-actions flex items-center gap-4">
+                <div class="language-picker">
+                    <button type="button" class="language-trigger" aria-label="Alege limba" aria-haspopup="menu" aria-controls="language-menu" aria-expanded="false">
+                        <img class="language-flag" data-language-flag src="assets/language-ro.svg" width="20" height="14" alt=""><span data-language-label translate="no">RO</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div id="language-menu" class="language-menu" role="menu" aria-label="Limba interfeței" hidden>
+                        <button type="button" role="menuitemradio" data-language="ro" aria-checked="true" translate="no"><img class="language-flag" src="assets/language-ro.svg" width="24" height="16" alt=""><span>Română</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                        <button type="button" role="menuitemradio" data-language="en" aria-checked="false" translate="no"><img class="language-flag" src="assets/language-en.svg" width="24" height="16" alt=""><span>English</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <div id="header-account-menu" class="header-account-menu hidden">
+                    <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
+                        <i class="fa-solid fa-gear account-menu-mobile-icon" aria-hidden="true"></i>
+                        <span id="header-account-name" class="header-account-name"></span>
+                        <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
                     <span id="header-account-avatar-fallback">U</span>
                     <img id="header-account-avatar-image" class="hidden" alt="" referrerpolicy="no-referrer">
                 </span>
-                <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
-                    <i class="fa-solid fa-gear" aria-hidden="true"></i>
-                </button>
-                <!-- BUTON AUTENTIFICARE -->
-                <button id="btn-login-modal" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-user"></i> Autentificare / Cont
-                </button>
-
-                <!-- PROFIL UTILIZATOR -->
+                    </button>
                 <div id="user-profile-menu" class="hidden flex items-center">
                     <button data-account-home onclick="closeAccountMenu(); switchView('account')" class="account-menu-button text-xs px-3 py-2 rounded-xl transition cursor-pointer">
                         <i class="fa-solid fa-user" aria-hidden="true"></i><span>CONTUL MEU</span>
@@ -81,6 +85,10 @@
                         <span class="account-logout-label">Deconectare</span>
                     </button>
                 </div>
+                </div>
+                <button id="btn-login-modal" aria-label="Autentificare / Cont" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i> <span class="header-login-label">Autentificare / Cont</span>
+                </button>
             </div></div></header><aside class="studio-app-rail" aria-label="Navigare aplicație"><div class="app-rail-heading">WORKSPACE</div><div class="live-studio-tabs studio-app-nav" role="tablist" aria-label="Instrumente LIVE Studio">
             <button id="live-studio-tab" data-studio-tab="studio" class="live-studio-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="live-studio-panel" onclick="setLiveStudioTab('studio')">
                 <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> LIVE Studio
@@ -447,4 +455,4 @@
 <script src="assets/studio-live-bridge.js?v=1"></script>
 <script src="assets/studio-game-input.js?v=1"></script>
 <script src="assets/studio-test-menu.js?v=8"></script>
-<script src="assets/game-access.js?v=4"></script><script src="assets/tiktok-profile.js?v=1"></script><script src="game.js?v=16"></script><script src="assets/site-app.js?v=10"></script></body></html>
+<script src="assets/game-access.js?v=4"></script><script src="assets/tiktok-profile.js?v=1"></script><script src="game.js?v=16"></script><script src="assets/site-app.js?v=12"></script></body></html>

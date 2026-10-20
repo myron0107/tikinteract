@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', async () => {
             shouldOpenLiveFromUrl = true;
         }
         restorePendingLiveRoute();
-        if (!isStudioPage && ['catalog','leaderboard','play-pass'].includes(initialRoute.get('view'))) switchView(initialRoute.get('view'));
+        if (!isStudioPage && ['catalog','streams','leaderboard','play-pass'].includes(initialRoute.get('view'))) switchView(initialRoute.get('view'));
         if (window.supabase) {
             const configResponse = await fetch('assets/supabase-config.json');
             if (!configResponse.ok) throw new Error('Configurația contului nu este disponibilă.');
@@ -83,6 +83,8 @@ function updateUI(session) {
     const btnLogin = document.getElementById('btn-login-modal');
     const profileMenu = document.getElementById('user-profile-menu');
     const accountMenuToggle = document.getElementById('account-menu-toggle');
+    const headerAccountMenu = document.getElementById('header-account-menu');
+    const headerAccountName = document.getElementById('header-account-name');
     const statusDot = document.getElementById('account-status-indicator');
     const accountCardStatusDot = document.getElementById('account-card-status-indicator');
     const accountStatus = document.getElementById('account-status-label');
@@ -126,6 +128,11 @@ function updateUI(session) {
             ? new Date(user.created_at).toLocaleDateString('ro-RO', { year: 'numeric', month: 'long', day: 'numeric' })
             : 'Indisponibil';
         if (accountDisplayName) accountDisplayName.textContent = displayName;
+        if (headerAccountName) headerAccountName.textContent = displayName;
+        if (accountMenuToggle) {
+            accountMenuToggle.setAttribute('aria-label', `Meniu cont: ${displayName}`);
+            accountMenuToggle.title = displayName;
+        }
         if (typeof setAccountAvatar === 'function') setAccountAvatar(displayName, user.user_metadata?.avatar_url || user.user_metadata?.picture || null, {preserve: previousUserId === user.id});
         if (accountDisplayNameInput && document.activeElement !== accountDisplayNameInput) {
             accountDisplayNameInput.value = user.user_metadata?.display_name || displayName;
@@ -160,6 +167,7 @@ function updateUI(session) {
         if(btnLogin) btnLogin.classList.add('hidden');
         if(profileMenu) profileMenu.classList.remove('hidden');
         if(accountMenuToggle) accountMenuToggle.classList.remove('hidden');
+        headerAccountMenu?.classList.remove('hidden');
         if (!isPasswordRecovery) closeAuthModal();
         if (pendingAccountRoute) {
             pendingAccountRoute = false;
@@ -180,6 +188,12 @@ function updateUI(session) {
         }
         closeAccountMenu();
         currentUser = null;
+        headerAccountMenu?.classList.add('hidden');
+        if (headerAccountName) headerAccountName.textContent = '';
+        if (accountMenuToggle) {
+            accountMenuToggle.setAttribute('aria-label', 'Meniu cont');
+            accountMenuToggle.title = 'Meniu cont';
+        }
         const accountDisplayName = document.getElementById('account-display-name');
         const accountDisplayNameInput = document.getElementById('account-display-name-input');
         const accountDisplayNameStatus = document.getElementById('account-display-name-status');
@@ -242,6 +256,7 @@ function toggleAccountMenu(event) {
     if (!menu || !toggle) return;
     const isOpen = menu.classList.toggle('is-open');
     toggle.setAttribute('aria-expanded', String(isOpen));
+    if (isOpen) { setGetAppMenu(false); window.TikInteractLanguage?.close(); }
 }
 
 function closeAccountMenu() {
@@ -252,13 +267,55 @@ function closeAccountMenu() {
 }
 
 document.addEventListener('click', (event) => {
-    if (event.target instanceof Element && !event.target.closest('.header-account-actions')) {
-        closeAccountMenu();
-    }
+    if (!(event.target instanceof Element)) return;
+    if (!event.target.closest('.header-account-menu')) closeAccountMenu();
+    if (!event.target.closest('.get-app-dropdown')) setGetAppMenu(false);
 });
 
 document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') closeAccountMenu();
+    if (event.key !== 'Escape') return;
+    const accountOpen = document.getElementById('user-profile-menu')?.classList.contains('is-open');
+    const appOpen = document.querySelector('.get-app-dropdown')?.classList.contains('is-open');
+    closeAccountMenu();setGetAppMenu(false);
+    if (accountOpen) document.getElementById('account-menu-toggle')?.focus();
+    else if (appOpen) document.querySelector('.get-app-trigger')?.focus();
+});
+
+function setGetAppMenu(open) {
+    const dropdown = document.querySelector('.get-app-dropdown');
+    if (!dropdown) return;
+    dropdown.classList.toggle('is-open', open);
+    dropdown.querySelector('.get-app-trigger')?.setAttribute('aria-expanded', String(open));
+    if (open) { closeAccountMenu(); window.TikInteractLanguage?.close(); }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const dropdown = document.querySelector('.get-app-dropdown');
+    const trigger = dropdown?.querySelector('.get-app-trigger');
+    if (!dropdown || !trigger) return;
+    trigger.addEventListener('click', () => setGetAppMenu(!dropdown.classList.contains('is-open')));
+    dropdown.addEventListener('mouseenter', () => {
+        if (matchMedia('(hover:hover)').matches) setGetAppMenu(true);
+    });
+    dropdown.addEventListener('mouseleave', () => {
+        if (!dropdown.contains(document.activeElement)) setGetAppMenu(false);
+    });
+    dropdown.addEventListener('focusout', () => {
+        queueMicrotask(() => {if (!dropdown.contains(document.activeElement)) setGetAppMenu(false);});
+    });
+    dropdown.addEventListener('keydown', event => {
+        if (!['ArrowDown','ArrowUp'].includes(event.key)) return;
+        event.preventDefault();setGetAppMenu(true);
+        const items = [...dropdown.querySelectorAll('.get-app-menu a[href],.get-app-menu button')];
+        const current = items.indexOf(document.activeElement);
+        const next = current < 0 ? (event.key === 'ArrowDown' ? 0 : items.length - 1) : (current + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+        items[next]?.focus();
+    });
+    dropdown.querySelector('a[href="#download-app"]')?.addEventListener('click', event => {
+        event.preventDefault();setGetAppMenu(false);switchView('home');
+        document.getElementById('download-app')?.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    dropdown.querySelector('[data-nav-item="live"]')?.addEventListener('click', () => setGetAppMenu(false));
 });
 
 async function saveDisplayName(event) {
@@ -484,7 +541,7 @@ async function logoutUser() {
 }
 
 function switchView(view) {
-    const views = ['home','catalog','leaderboard','play-pass','account'];
+    const views = ['home','catalog','streams','leaderboard','play-pass','account'];
     if (view === 'live') {
         if (!currentUser) { shouldOpenLiveFromUrl = true; openAuthModal(); return; }
         if (!isStudioPage) { window.location.assign(studioUrl(requestedLiveGame)); return; }
@@ -499,8 +556,12 @@ function switchView(view) {
     views.forEach(name => document.getElementById('view-' + name)?.classList.toggle('hidden', name !== view));
     setActiveNavigation(view);
     history.replaceState(null, '', 'index.html' + (view === 'home' ? '' : '?view=' + view));
+    if (view === 'streams' && typeof loadLiveStreams === 'function') loadLiveStreams();
     if (view === 'leaderboard') loadLeaderboard();
-    if (view === 'home') loadHomeLeaderboard();
+    if (view === 'home') {
+        loadHomeLeaderboard();
+        if (typeof loadHomeStreamsPreview === 'function') loadHomeStreamsPreview();
+    }
     window.scrollTo({top:0, behavior:'smooth'});
 }
 
