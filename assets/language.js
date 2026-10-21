@@ -1,4 +1,4 @@
-import {localizeText} from './language-copy.js?v=2';
+import {localizeText} from './language-copy.js?v=6';
 
 const preferenceKey='tikinteract_language';
 const texts=new WeakMap(),attributes=new WeakMap();

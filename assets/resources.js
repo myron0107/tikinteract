@@ -1,6 +1,6 @@
 (() => {
     const config = {discordUrl: '', supportEmail: 'mironsergiuflorin@gmail.com'};
-    const host = document.querySelector('.template-navigation, .public-info-site-header, .app-topbar-title');
+    const host = document.querySelector('[data-footer-resources]') || document.querySelector('.template-navigation, .public-info-site-header, .app-topbar-title');
     if (!host) return;
     const robot = `<svg class="resource-bot" viewBox="0 0 120 122" aria-hidden="true"><g class="resource-bot-float"><path d="M60 24V12" stroke="#db8498" stroke-width="3"/><circle class="resource-bot-light" cx="60" cy="9" r="5" fill="#ec526e"/><rect x="17" y="40" width="10" height="23" rx="5" fill="#742039"/><rect x="93" y="40" width="10" height="23" rx="5" fill="#742039"/><rect x="25" y="24" width="70" height="54" rx="20" fill="#29242e" stroke="#925064" stroke-width="1.5"/><rect x="31" y="31" width="58" height="37" rx="13" fill="#eeecf1"/><g class="resource-bot-eyes" fill="#6d2038"><rect x="43" y="41" width="7" height="12" rx="3.5"/><rect x="70" y="41" width="7" height="12" rx="3.5"/></g><path d="M54 58q6 5 12 0" fill="none" stroke="#8b3b52" stroke-width="2" stroke-linecap="round"/><rect x="39" y="82" width="42" height="26" rx="11" fill="#9f2945"/><path d="m61 86-7 10h7l-2 8 9-12h-7z" fill="#f8e4eb"/><path d="M39 89 28 100" stroke="#9f2945" stroke-width="10" stroke-linecap="round"/><g class="resource-bot-arm"><path d="m81 89 15-13 4-14" fill="none" stroke="#9f2945" stroke-width="10" stroke-linecap="round"/><circle cx="101" cy="59" r="7" fill="#dfd9e3"/></g><path d="M49 109v5m22-5v5" stroke="#dfd9e3" stroke-width="9" stroke-linecap="round"/></g></svg>`;
     const nav = document.createElement('div');
@@ -13,13 +13,17 @@
                 <a href="updates.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span><span><strong>NOUTĂȚI</strong><small>Ce am adăugat și îmbunătățit.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                 <a href="about.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-heart" aria-hidden="true"></i></span><span><strong>DESPRE NOI</strong><small>Jocuri construite pentru LIVE.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
                 <button type="button" data-open-support><span class="resource-icon"><i class="fa-solid fa-comment-dots" aria-hidden="true"></i></span><span><strong>SUPORT</strong><small>O idee, o problemă sau o întrebare.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+                <a href="privacy-policy.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span><span><strong>CONFIDENȚIALITATE</strong><small>Cum sunt folosite datele tale.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+                <a href="terms-of-use.html" aria-haspopup="dialog" aria-controls="resource-page-dialog"><span class="resource-icon"><i class="fa-solid fa-file-lines" aria-hidden="true"></i></span><span><strong>TERMENI DE UTILIZARE</strong><small>Regulile platformei.</small></span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
             </div>
             <div class="resources-community"><span class="resource-discord-mark"><i class="fa-brands fa-discord" aria-hidden="true"></i></span><span><strong>Ne vedem și pe Discord.</strong><small>Pregătim un loc pentru comunitate.</small></span><button type="button" data-resources-discord aria-disabled="true">În curând</button></div>
         </div>`;
     host.append(nav);
     const trigger = nav.querySelector('.resources-trigger'), menu = nav.querySelector('.resources-menu');
     function positionMenu() {
-        menu.style.setProperty('--resources-top', Math.round(host.closest('header').getBoundingClientRect().bottom + 8) + 'px');
+        const header=host.closest('header');
+        if(header)menu.style.setProperty('--resources-top', Math.round(header.getBoundingClientRect().bottom + 8) + 'px');
+        else menu.style.setProperty('--resources-bottom',Math.max(18,innerHeight-host.getBoundingClientRect().top+12)+'px');
     }
     function closeMenu(restore = false) {
         menu.hidden = true; trigger.setAttribute('aria-expanded', 'false');
@@ -136,9 +140,9 @@
     const dialog = document.createElement('dialog');
     dialog.id = 'site-support'; dialog.className = 'resource-support';
     dialog.setAttribute('aria-labelledby','resource-support-title');
-    dialog.innerHTML = `<div class="support-topbar"><a class="support-brand" href="index.html"><img src="assets/tikinteract-icon-v2.png" width="25" height="25" alt=""><span>TIK<span>INTERACT</span></span></a><button type="button" class="support-icon-button" data-support-close aria-label="Închide suportul" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="support-content"></div>`;
+    dialog.innerHTML = `<div class="support-topbar"><a class="support-brand" href="index.html"><span class="ti-wordmark ti-brand-lockup" translate="no"><span class="ti-symbol" aria-hidden="true"></span><span class="ti-brand-name">Tik<span>Interact.</span></span></span></a><button type="button" class="support-icon-button" data-support-close aria-label="Închide suportul" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="support-content"></div>`;
     document.body.append(dialog);
-    const styles=document.createElement('link');styles.rel='stylesheet';styles.href='assets/support-center.css?v=1';document.head.append(styles);
+    if(!document.querySelector('link[href*="assets/support-center.css"]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='assets/support-center.css?v=2';document.head.append(styles);}
     let support, previousFocus;
     const ready=import('./support-widget.js?v=1').then(({mountSupport})=>support=mountSupport({dialog,topics,robot,onOpen(){
         previousFocus=nav.contains(document.activeElement)?trigger:document.activeElement;closeMenu();
@@ -173,7 +177,7 @@
     window.addEventListener('tikinteract:support',refreshSupportBadge);
     setInterval(refreshSupportBadge,45000);
     const footer = document.querySelector('.footer-links, .public-info-footer');
-    if (footer) {
+    if (footer && !document.querySelector('[data-footer-resources]')) {
         const link = document.createElement('button'); link.type = 'button'; link.textContent = 'Suport'; link.dataset.openSupport = ''; footer.append(link);
     }
 })();

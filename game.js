@@ -595,9 +595,8 @@ const studioTourSteps = [
     {tab:'studio', target:'.live-studio-tabs', title:'Bine ai venit în LIVE Studio', text:'De aici alegi jocurile, sunetele și conexiunea LIVE.'},
     {tab:'studio', target:'.studio-connection', title:'Conectează streamerul', text:'Salvează username-ul și conectează LIVE-ul. Serverul local trebuie să ruleze pe acest calculator.'},
     {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Apasă o copertă ca să pornești jocul. Steluța adaugă sau elimină favorite.'},
-    {tab:'studio', target:'#studio-test-panel', title:'Testează jocul din Studio', text:'În stânga găsești comenzile de test și setările jocului ales.'},
+    {tab:'studio', target:'#studio-test-panel', title:'Testează jocul din Studio', text:'În dreapta găsești comenzile de test și setările jocului ales.'},
     {tab:'studio', target:'.studio-stats', title:'Urmărește sesiunea', text:'Aici vezi scorul, cadourile și evenimentele din sesiunea curentă.'},
-    {tab:'studio', target:'.studio-controls .feed-box', title:'Evenimentele din LIVE', text:'Aici apar comentariile, like-urile și cadourile primite. Jocul deschis le preia după regulile lui.'},
     {tab:'games', target:'.game-center-heading', title:'Game Center', text:'Caută un joc și apasă „Deschide în Studio”.'},
     {tab:'games', target:'.game-center-card > .game-favorite-star', title:'Steluța adaugă la favorite', text:'☆ adaugă jocul la favorite, ★ îl elimină. Lista se păstrează în acest browser.'},
     {tab:'audio', target:'.soundboard-library-controls', title:'Audio Center', text:'Caută sunete după nume sau categorie. Poți afișa doar favoritele.'},
@@ -925,6 +924,7 @@ function renderLeaderboard(rows, loading = false, unavailable = false) {
 
     rows.forEach((profile, index) => {
         const row = document.createElement('tr');
+        row.setAttribute('data-ranking-position', String(index + 1));
         const rankCell = document.createElement('td');
         rankCell.className = 'leaderboard-position';
         rankCell.textContent = `#${index + 1}`;

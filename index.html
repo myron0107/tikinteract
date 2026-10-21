@@ -6,7 +6,7 @@
     <title>TikInteract — Jocuri interactive pentru TikTok LIVE</title>
     <meta name="description" content="Transformă like-urile și cadourile TikTok LIVE în acțiuni de joc. Explorează jocurile TikInteract și urmărește clasamentul streamerilor.">
     <meta name="theme-color" content="#030305">
-    <link rel="icon" type="image/png" href="assets/tikinteract-icon-v2.png">
+    <link rel="icon" type="image/svg+xml" href="assets/tikinteract-app-icon.svg?v=2">
     <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="assets/fonts/font-faces.css?v=1">
@@ -58,30 +58,29 @@
     <link rel="stylesheet" href="assets/typography.css?v=1">
     <link rel="stylesheet" href="assets/home-layout.css?v=2">
     <script src="assets/site-motion.js?v=1" defer></script>
-    <link rel="stylesheet" href="assets/home-showcase.css?v=5">
-    <script src="assets/home-showcase.js?v=9" defer></script>
-    <link rel="stylesheet" href="assets/site-template.css?v=16"><link rel="stylesheet" href="assets/language.css?v=2"><script type="module" src="assets/language.js?v=4"></script>
+
+
+    <link rel="stylesheet" href="assets/site-template.css?v=16"><link rel="stylesheet" href="assets/language.css?v=2"><script type="module" src="assets/language.js?v=8"></script>
     <link rel="stylesheet" href="assets/leaderboard.css?v=2">
-    <link rel="stylesheet" href="assets/home-gifts.css?v=1">
-    <script src="assets/home-gifts.js?v=2" defer></script>
+
+
     <link rel="stylesheet" href="assets/game-covers.css?v=2">
-    <link rel="stylesheet" href="assets/home-nova.css?v=4">
-    <script src="assets/home-nova.js?v=4" defer></script>
-<link rel="stylesheet" href="assets/tiktok-gifts.css?v=6"><script type="module" src="assets/tiktok-gifts.js?v=4"></script>    <link rel="stylesheet" href="assets/resources.css?v=3">
-    <script src="assets/resources.js?v=7" defer></script>
-<link rel="stylesheet" href="assets/platform.css?v=3"><link rel="stylesheet" href="assets/play-pass.css?v=1"><script type="module" src="assets/play-pass.js?v=1"></script><link rel="stylesheet" href="assets/account-access.css?v=1"><script type="module" src="assets/account-access.js?v=1"></script><script type="module" src="assets/platform.js?v=3"></script><link rel="stylesheet" href="assets/navigation-finish.css?v=1"><link rel="stylesheet" href="assets/creator-platform.css?v=4"><script type="module" src="assets/creator-platform.js?v=1"></script></head>
-<body data-page="site" class="site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
+
+
+<link rel="stylesheet" href="assets/tiktok-gifts.css?v=8"><script type="module" src="assets/tiktok-gifts.js?v=4"></script>    <link rel="stylesheet" href="assets/resources.css?v=3">
+    <script src="assets/resources.js?v=26" defer></script>
+<link rel="stylesheet" href="assets/platform.css?v=3"><link rel="stylesheet" href="assets/play-pass.css?v=1"><script type="module" src="assets/play-pass.js?v=20"></script><link rel="stylesheet" href="assets/account-access.css?v=1"><script type="module" src="assets/account-access.js?v=1"></script><script type="module" src="assets/platform.js?v=5"></script><link rel="stylesheet" href="assets/navigation-finish.css?v=1"><link rel="stylesheet" href="assets/creator-platform.css?v=4"><script type="module" src="assets/creator-platform.js?v=37"></script><link rel="stylesheet" href="assets/appearance.css?v=7"><script src="assets/appearance.js?v=22"></script><link rel="stylesheet" href="assets/plan-tickets.css?v=2"><link rel="stylesheet" href="assets/home-nova.css?v=1"><script src="assets/home-nova.js?v=2" defer></script><link rel="stylesheet" href="assets/home-gifts.css?v=2"><script src="assets/home-gifts.js?v=5" defer></script><link rel="stylesheet" href="assets/public-refresh.css?v=23"><script type="module" src="assets/public-refresh.js?v=10"></script><link rel="stylesheet" href="assets/brand.css?v=12"><link rel="stylesheet" href="assets/overlay-theme.css?v=2"><link rel="stylesheet" href="assets/focus.css?v=2"></head>
+<body id="tikinteract-site" data-page="site" class="site-template public-approved min-h-screen flex flex-col selection:bg-red-600 selection:text-white">
 
     <!-- NAVBAR -->
     <header class="template-header"><div class="site-header-inner">
-<a class="template-brand" href="index.html" onclick="if (typeof switchView === 'function') { switchView('home'); event.preventDefault(); }" aria-label="TikInteract — Acasă"><img src="assets/tikinteract-icon-v2.png" alt="" width="38" height="38"><span>TIK<span>INTERACT</span></span></a>
+<a class="template-brand" href="index.html" onclick="if (typeof switchView === 'function') { switchView('home'); event.preventDefault(); }" aria-label="TikInteract — Acasă"><span class="ti-wordmark ti-brand-lockup ti-home-wordmark" translate="no"><span class="ti-brand-name">Tik<span>Interact</span></span><span class="ti-brand-tagline">LIVE GAMES. REAL AUDIENCE. REAL IMPACT.</span></span></a>
 <nav class="template-navigation" aria-label="Navigare principală">
-<button data-nav-item="catalog" onclick="switchView('catalog')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span></button>
-<button data-nav-item="streams" onclick="switchView('streams')"><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i><span>STREAMS</span><span class="nav-live-dot" aria-hidden="true"></span></button>
-<button data-nav-item="leaderboard" onclick="switchView('leaderboard')"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span></button>
-<button data-nav-item="play-pass" onclick="goToPlayPass()"><i class="fa-solid fa-tags" aria-hidden="true"></i><span>PRICING</span></button>
+<button type="button" data-nav-item="catalog" onclick="switchView('catalog')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span></button>
+<button type="button" data-nav-item="streams" onclick="switchView('streams')"><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i><span class="nav-stream-label"><span>TRANSMISIUNI</span><span class="nav-live-dot" aria-hidden="true"></span></span></button>
+<button type="button" data-nav-item="leaderboard" onclick="switchView('leaderboard')"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span></button>
 </nav>
-<div class="header-account-actions flex items-center gap-4">
+<div class="header-account-actions flex items-center gap-4"><button type="button" class="open-studio-button" data-nav-item="live" onclick="checkAccessAndGo('live')">Deschide Studio <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
                 <div class="language-picker">
                     <button type="button" class="language-trigger" aria-label="Alege limba" aria-haspopup="menu" aria-controls="language-menu" aria-expanded="false">
                         <img class="language-flag" data-language-flag src="assets/language-ro.svg" width="20" height="14" alt=""><span data-language-label translate="no">RO</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
@@ -91,68 +90,7 @@
                         <button type="button" role="menuitemradio" data-language="en" aria-checked="false" translate="no"><img class="language-flag" src="assets/language-en.svg" width="24" height="16" alt=""><span>English</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
                     </div>
                 </div>
-                <div id="header-account-menu" class="header-account-menu hidden">
-                    <button id="account-menu-toggle" class="account-menu-toggle hidden" type="button" onclick="toggleAccountMenu(event)" aria-label="Meniu cont" aria-controls="user-profile-menu" aria-expanded="false" title="Meniu cont">
-                        <i class="fa-solid fa-gear account-menu-mobile-icon" aria-hidden="true"></i>
-                        <span id="header-account-name" class="header-account-name"></span>
-                        <span id="header-account-avatar" class="header-account-avatar hidden" aria-label="Poza de profil TikTok">
-                    <span id="header-account-avatar-fallback">U</span>
-                    <img id="header-account-avatar-image" class="hidden" alt="" referrerpolicy="no-referrer">
-                </span>
-                    </button>
-                <div id="user-profile-menu" class="hidden flex items-center">
-                    <button data-account-home onclick="closeAccountMenu(); switchView('account')" class="account-menu-button text-xs px-3 py-2 rounded-xl transition cursor-pointer">
-                        <i class="fa-solid fa-user" aria-hidden="true"></i><span>CONTUL MEU</span>
-                    </button>
-                    <button onclick="logoutUser()" title="Deconectare" aria-label="Deconectare" class="text-zinc-500 hover:text-red-500 text-xs p-2 transition cursor-pointer">
-                        <i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i>
-                        <span class="account-logout-label">Deconectare</span>
-                    </button>
-                </div>
-                </div>
-                <button id="btn-login-modal" aria-label="Autentificare / Cont" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
-                    <i class="fa-solid fa-user" aria-hidden="true"></i> <span class="header-login-label">Autentificare / Cont</span>
-                </button>
-                <!-- GET APP DROPDOWN (HOVER FLYOUT) -->
-                <div class="get-app-dropdown">
-                    <button class="get-app-trigger" type="button" aria-label="GET APP" aria-controls="get-app-menu" aria-haspopup="menu" aria-expanded="false">
-                        <i class="fa-solid fa-download text-red-500" aria-hidden="true"></i>
-                        <span>GET APP</span>
-                        <i class="fa-solid fa-chevron-down text-[10px] text-zinc-400" aria-hidden="true"></i>
-                    </button>
-                    <div id="get-app-menu" class="get-app-menu" role="menu" aria-label="Aplicații și acces">
-                        <div class="get-app-menu-header">
-                            <span class="eyebrow text-[10px]">APLICAȚII &amp; ACCES</span>
-                        </div>
-                        <a href="#download-app" class="get-app-item" role="menuitem">
-                            <div class="get-app-item-icon">
-                                <i class="fa-solid fa-download" aria-hidden="true"></i>
-                            </div>
-                            <div class="get-app-item-text">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-bold text-white text-xs">Download</span>
-                                    <span class="text-[9px] uppercase font-bold bg-zinc-800 text-zinc-400 px-1.5 py-0.5 rounded border border-zinc-700">Desktop</span>
-                                </div>
-                                <p class="text-[11px] text-zinc-400">Aplicația PC (În curând)</p>
-                            </div>
-                        </a>
-                        <div class="get-app-divider"></div>
-                        <button role="menuitem" data-nav-item="live" onclick="checkAccessAndGo('live')">
-                            <div class="get-app-item live-item">
-                                <div class="get-app-item-icon live-studio-icon">
-                                    <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i>
-                                </div>
-                                <div class="get-app-item-text text-left">
-                                    <div class="flex items-center gap-2">
-                                        <span class="font-bold text-white text-xs">LIVE STUDIO</span>
-                                        <span class="text-[9px] uppercase font-bold bg-red-600/20 text-red-400 px-1.5 py-0.5 rounded border border-red-500/30">Web</span>
-                                    </div>
-                                    <p class="text-[11px] text-zinc-400">Deschide studioul în browser</p>
-                                </div>
-                            </div>
-                        </button>
-                    </div>
-                </div>
+
             </div>
 </div></header>
 
@@ -230,105 +168,57 @@
     </div>
 
     <!-- HOME PAGE -->
-    <main id="view-home" class="home-page flex-1 w-full">
-        <section class="home-hero">
-            <div class="home-hero-inner max-w-7xl mx-auto px-6">
-                <div class="home-hero-copy">
-                    <span class="home-kicker"><span class="home-kicker-dot"></span> JOCURI PENTRU COMUNITATEA TA</span>
-                    <h1>Fă din LIVE-ul tău<br><span>un joc de echipă.</span></h1>
-                    <p>Alege jocul, conectează LIVE-ul și lasă chatul să intre în acțiune.</p>
-                    <div class="home-hero-actions">
-                        <button onclick="checkAccessAndGo('live')" class="home-primary-button"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Deschide LIVE Studio</button>
-                        <button onclick="switchView('catalog')" class="home-secondary-button">Explorează jocurile <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
-                    </div>
-                    <a class="hero-app-link app-download-link" href="#download-app"><i class="fa-solid fa-download" aria-hidden="true"></i> Download App <span>În curând</span></a>
-                    <div class="home-hero-proof">
-                        <span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Jocuri interactive</span>
-                        <span><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Efecte audio</span>
-                        <span><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Control LIVE</span>
-                    </div>
-                </div>
-                <div class="home-hero-art">
-                    <div class="home-hero-art-glow"></div>
-                    <div class="home-preview-player home-showcase" data-home-showcase>
-                        <div class="home-preview-topbar"><span><span class="preview-status-dot"></span> TIKINTERACT</span><button type="button" class="home-showcase-toggle" data-showcase-toggle aria-pressed="false" aria-label="Pauză animație">Pauză</button></div>
-                        <div class="home-showcase-stage">
-                            <canvas width="1200" height="720" role="img" aria-label="Animație Neon Interact" data-showcase-canvas>Previzualizare animată Neon Interact.</canvas>
-                            <div class="home-showcase-copy"><span>GRATUIT</span></div>
-                        </div>
-                        <div class="home-showcase-caption"><strong data-showcase-name>Neon Interact</strong><span data-showcase-state>GRATUIT</span></div>
-                    </div>
-                    <span class="home-hero-orbit home-hero-orbit-one"></span>
-                    <span class="home-hero-orbit home-hero-orbit-two"></span>
-                </div>
-            </div>
-        </section>
-
-        <div class="home-content max-w-7xl mx-auto px-6 py-12">
-            <section class="home-nova" data-home-nova aria-labelledby="home-nova-title">
-                <a class="home-nova-cover" href="GAME/NOVA-VEX/index.html"><img src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="Coperta NOVA &amp; VEX, Nova și Vex în orașul neon" width="720" height="1280" loading="lazy"><span>JOC GRATUIT</span></a>
-                <div class="home-nova-copy"><span class="eyebrow">NOU ÎN CATALOG</span><h2 id="home-nova-title"><span>NOVA</span> &amp; <em>VEX</em></h2><h3>Nova urcă.<br>Vex schimbă planul.</h3><p>Tu o conduci. Cei din LIVE schimbă cursa.</p><ol class="home-nova-how" aria-label="Cum se joacă"><li><strong>Urcă pe platforme</strong><span>Folosește ← → sau A / D. Pe telefon, atinge stânga sau dreapta.</span></li><li><strong>Lasă publicul să intervină</strong><span>Alegi în Studio ce cadouri o ajută pe Nova și care îl cheamă pe Vex.</span></li><li><strong>Câștigă coroana</strong><span>Atinge înălțimea aleasă și rezistă până se termină numărătoarea.</span></li></ol><div class="home-nova-features"><span>8 peisaje neon</span><span>Cadouri configurabile</span><span>9:16 / 16:9</span></div><a class="home-primary-button" href="GAME/NOVA-VEX/index.html">Descoperă jocul <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
-                <div class="home-nova-demo"><div class="home-nova-topline"><span>O PRIVIRE ÎN JOC</span><button type="button" data-nova-pause aria-label="Pauză animație NOVA &amp; VEX" aria-pressed="false">Pauză</button></div><div class="cp-demo-hud" data-native-i18n><span>NOVA <em>&amp; VEX</em></span><strong><span data-demo-meter>240</span><small> m</small></strong><div class="cp-demo-progress"><i></i></div></div><canvas data-nova-canvas width="540" height="960" role="img" aria-label="Prezentare animată NOVA &amp; VEX: Nova urcă pe platforme și folosește jetpack-ul. Vex vine pe placă, o prinde de păr, Nova reacționează, iar el pleacă."></canvas><div class="cp-demo-receipt" data-demo-receipt data-native-i18n hidden><span>✦</span><div><small>@mira</small><strong>Jetpack +150 m</strong></div></div><span class="cp-demo-label" data-native-i18n>DEMO</span><img class="home-nova-fallback" src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="" loading="lazy"></div>
-            </section>
-            <section class="home-gifts" data-home-gifts aria-labelledby="home-gifts-title">
-                <div class="home-gifts-copy">
-                    <span class="eyebrow"><i class="fa-solid fa-gift" aria-hidden="true"></i> TIKTOK GIFTS</span>
-                    <h2 id="home-gifts-title">Cadourile din LIVE,<br><span>în colecția ta.</span></h2>
-                    <p>Explorează cadourile TikTok și vezi în profil ce ai primit la LIVE.</p>
-                    <div class="home-gifts-features"><span><i class="fa-regular fa-images" aria-hidden="true"></i> Imagini originale</span><span><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Colecția ta de cadouri</span></div>
-                    <button class="home-gifts-browse" type="button" data-gifts-browse disabled>Explorează catalogul <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
-                    <p class="home-gifts-note" data-gifts-note>Cadourile comunității, într-un singur loc.</p>
-                </div>
-                <div class="home-gifts-showcase" role="region" aria-label="Prezentare animată a cadourilor TikTok" aria-roledescription="carusel">
-                    <div class="home-gifts-topline"><span><i class="fa-solid fa-gift" aria-hidden="true"></i> GIFT SPOTLIGHT</span><button type="button" data-gifts-play aria-label="Pauză prezentare cadouri" aria-pressed="false" disabled><i class="fa-solid fa-pause" aria-hidden="true"></i></button></div>
-                    <div class="home-gifts-stage" data-gifts-stage>
-                        <div class="home-gifts-halo" aria-hidden="true"></div>
-                        <span class="home-gifts-spark home-gifts-spark-one" aria-hidden="true">✦</span><span class="home-gifts-spark home-gifts-spark-two" aria-hidden="true">✦</span><span class="home-gifts-spark home-gifts-spark-three" aria-hidden="true">+</span>
-                        <div class="home-gifts-featured" data-gifts-featured></div>
-                        <p class="home-gifts-loading" data-gifts-status role="status">Se pregătește prezentarea…</p>
-                        <button class="home-gifts-retry" type="button" data-gifts-retry hidden>Reîncearcă</button>
-                    </div>
-                    <div class="home-gifts-navigation"><button type="button" data-gifts-prev aria-label="Cadoul anterior" disabled><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button><span data-gifts-position>01 / 06</span><button type="button" data-gifts-next aria-label="Cadoul următor" disabled><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
-                    <div class="home-gifts-picks" data-gifts-picks aria-label="Alege un cadou din prezentare"></div>
-                    <div class="home-gifts-progress" aria-hidden="true"><span></span></div>
-                </div>
-            </section>
-
-            <section id="download-app" class="home-app-section" aria-labelledby="download-app-title">
-<div class="home-app-copy"><span class="eyebrow">DOWNLOAD APP</span><h2 id="download-app-title">Studioul tău,<br><span>în curând pe desktop.</span></h2><p>Jocuri, sunete și control LIVE într-o singură aplicație. Până atunci, folosește studioul în browser.</p><div class="app-capabilities"><span><i class="fa-solid fa-gamepad" aria-hidden="true"></i> Game Center</span><span><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center</span><span><i class="fa-solid fa-sliders" aria-hidden="true"></i> Control LIVE</span></div><div class="home-app-actions"><button id="download-app-button" class="app-download-button" type="button" disabled><i class="fa-solid fa-download" aria-hidden="true"></i> Download App <span>În curând</span></button></div><p class="app-release-note">O vei putea descărca de aici după lansare.</p></div>
-<div class="home-app-preview" role="img" aria-label="Previzualizare a interfeței LIVE Studio, cu jocul și comenzile alăturate"><div class="app-preview-titlebar"><span class="app-window-dots"><i></i><i></i><i></i></span><span>TikInteract / LIVE Studio</span><i class="fa-solid fa-window-maximize" aria-hidden="true"></i></div><div class="app-preview-body"><div class="app-preview-nav"><img src="assets/tikinteract-icon-v2.png" width="28" height="28" alt=""><i class="fa-solid fa-tower-broadcast is-active" aria-hidden="true"></i><i class="fa-solid fa-gamepad" aria-hidden="true"></i><i class="fa-solid fa-wave-square" aria-hidden="true"></i></div><div class="app-preview-controls"><span>ACCES RAPID</span><strong>Jocurile tale</strong><div class="app-mini-games"><img src="assets/game-gallery/neon-race-2-night-thumb.webp" alt="" loading="lazy"><img src="assets/game-gallery/moto-interact-day-thumb.webp" alt="" loading="lazy"></div><span>CONTROL JOC</span><strong>CONTROL JOC</strong><div class="app-mini-team"><b>RED</b><span>+ Like</span><span>Cadou</span></div><div class="app-mini-team blue"><b>BLUE</b><span>+ Like</span><span>Cadou</span></div><div class="app-mini-audio"><i class="fa-solid fa-volume-low" aria-hidden="true"></i><span></span></div></div><div class="app-preview-game"><img src="assets/game-gallery/neon-race-2-night.webp" alt="" loading="lazy"></div></div><div class="app-preview-footer"><span><i></i> Interfața Studio în browser</span><span>Creat pentru LIVE</span></div></div>
-</section>
-            <div class="home-community-grid">
-            <section class="home-leaderboard-section" aria-labelledby="home-leaderboard-title">
-                <div class="home-section-heading">
-                    <div>
-                        <span class="eyebrow">Creatorii comunității</span>
-                        <h2 id="home-leaderboard-title">Top 3 streameri</h2>
-                        <p>Cele mai multe monede din cadouri, de la primul LIVE.</p>
-                    </div>
-                    <button onclick="switchView('leaderboard')" class="home-text-link">Clasament complet <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
-                </div>
-                <div class="home-podium-wrap">
-                    <div id="home-leaderboard-list" class="ranking-podium" aria-label="Top 3 streameri" aria-busy="true"></div>
-                    <p id="home-leaderboard-status" class="home-leaderboard-status" role="status" aria-live="polite">Se încarcă topul comunității...</p>
-                </div>
-            </section>
-
-            <section class="home-how-it-works" aria-label="Cum funcționează TikInteract">
-                <div class="home-how-intro">
-                    <span class="eyebrow">Simplu de pornit</span>
-                    <h2>Tu faci LIVE.<br><span>Chatul intră în joc.</span></h2>
-                </div>
-                <div class="home-how-step"><span>01</span><i class="fa-solid fa-gamepad" aria-hidden="true"></i><h3>Alege jocul</h3><p>Găsește-ți preferatul în catalog.</p></div>
-                <div class="home-how-step"><span>02</span><i class="fa-solid fa-plug" aria-hidden="true"></i><h3>Conectează LIVE-ul</h3><p>Intră în Studio și conectează transmisiunea.</p></div>
-                <div class="home-how-step"><span>03</span><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i><h3>Lasă chatul să joace</h3><p>Like-urile și cadourile pun jocul în mișcare.</p></div>
-            </section>
-            </div>
+    <main id="view-home" class="home-page flex-1 w-full" data-native-i18n>
+      <section class="public-intro public-wrap" aria-labelledby="home-intro-title"><span class="public-intro-chip public-intro-chip-left"><i class="fa-solid fa-arrow-trend-up" aria-hidden="true"></i><span data-public-copy="introInteraction">Mai multă interacțiune</span></span><div><h2 id="home-intro-title"><span data-public-copy="introTitle">Crește-ți LIVE-urile pe TikTok</span><br><strong data-public-copy="introAccent">cu instrumente puternice</strong></h2><p data-public-copy="introCopy">TikInteract te ajută să creezi experiențe interactive, să îți crești comunitatea și să obții mai mult din fiecare LIVE.</p></div><span class="public-intro-chip public-intro-chip-right"><i class="fa-regular fa-heart" aria-hidden="true"></i><span data-public-copy="introCommunity">Comunitate mai puternică</span></span></section>
+      <section class="public-hero public-wrap">
+        <div class="home-hero-copy">
+          <h1>Un LIVE mai bun<br>începe cu <span>joaca.</span></h1>
+          <p>Alege un joc și lasă publicul să schimbe acțiunea.</p>
+          <div class="public-hero-actions"><button type="button" class="public-button public-primary" onclick="checkAccessAndGo('live')"><span data-public-copy="start">Începe gratuit</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button><button type="button" class="public-button" onclick="switchView('catalog')" data-public-copy="games">Vezi jocurile</button></div>
+          <div class="public-proof"><span><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i><span data-public-copy="proofLive">Interacțiuni LIVE</span></span><span><i class="fa-solid fa-users" aria-hidden="true"></i><span data-public-copy="proofFree">Acces gratuit</span></span></div>
         </div>
+        <div class="public-phone"><div class="public-reel" data-home-reel data-reel-format="portrait">
+          <div class="public-phone-notch" aria-hidden="true"></div><div class="public-phone-home" aria-hidden="true"></div>
+          <canvas width="540" height="960" role="img" aria-label="Prezentare animată NEON INTERACT, MOTO INTERACT și NOVA & VEX"></canvas>
+          <img data-reel-poster src="assets/home-reel/phone-poster.png" alt="NEON INTERACT" width="540" height="960" fetchpriority="high">
+          <span data-reel-name translate="no">NEON INTERACT</span><button type="button" data-reel-toggle disabled aria-label="Pauză animație"><i class="fa-solid fa-pause" aria-hidden="true"></i></button>
+        </div></div>
+      </section>
+      <section id="how-it-works" class="public-section" aria-labelledby="home-how-title"><div class="public-wrap"><h2 id="home-how-title" data-public-copy="how">Cum funcționează</h2><div class="public-steps">
+        <article><span>1.</span><i class="fa-solid fa-gamepad" aria-hidden="true"></i><div><h3 data-public-copy="step1">Alege jocul</h3><p data-public-copy="step1Copy">Găsește jocul potrivit pentru LIVE-ul tău.</p></div></article>
+        <article><span>2.</span><i class="fa-solid fa-link" aria-hidden="true"></i><div><h3 data-public-copy="step2">Conectează LIVE-ul</h3><p data-public-copy="step2Copy">Intră în Studio și conectează contul TikTok.</p></div></article>
+        <article><span>3.</span><i class="fa-solid fa-users" aria-hidden="true"></i><div><h3 data-public-copy="step3">Publicul intră în acțiune</h3><p data-public-copy="step3Copy">Cadourile, like-urile și comentariile schimbă jocul.</p></div></article>
+      </div></div></section>
+      <section class="public-section public-games-section" aria-labelledby="home-games-title"><div class="public-wrap"><div class="public-section-heading"><h2 id="home-games-title" data-public-copy="gameHeading">Alege-ți jocul</h2><button type="button" onclick="switchView('catalog')" class="public-text-link"><span data-public-copy="allGames">Toate jocurile</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div><div id="approved-home-games" class="public-game-grid"></div></div></section>
+      <section id="home-gifts" class="public-section public-gifts-section" data-home-gifts aria-labelledby="home-gifts-title"><div class="public-wrap"><div class="home-gifts home-gifts-restored">
+        <div class="home-gifts-copy">
+          <span class="eyebrow"><i class="fa-solid fa-gift" aria-hidden="true"></i><span data-public-copy="giftHeading">Cadouri TikTok</span></span>
+          <h2 id="home-gifts-title"><span data-public-copy="giftTitle">Cadourile din LIVE,</span><br><span class="home-gifts-accent" data-public-copy="giftTitleAccent">în colecția ta.</span></h2>
+          <p data-public-copy="giftIntro">Explorează cadourile TikTok și vezi în profil ce ai primit la LIVE.</p>
+          <div class="home-gifts-features"><span><i class="fa-solid fa-images" aria-hidden="true"></i><span data-public-copy="giftImages">Imagini originale</span></span><span><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span data-public-copy="giftCollection">Colecția ta de cadouri</span></span></div>
+          <button type="button" class="home-gifts-browse" data-gifts-browse disabled><span data-public-copy="giftCatalog">Explorează catalogul</span><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
+          <p class="home-gifts-note" data-gifts-note></p>
+        </div>
+        <div class="home-gifts-showcase" role="group" aria-labelledby="home-gifts-spotlight">
+          <div class="home-gifts-topline"><span><i class="fa-solid fa-gift" aria-hidden="true"></i><span id="home-gifts-spotlight" data-public-copy="giftSpotlight">Cadouri în prim-plan</span></span><button type="button" data-gifts-play disabled aria-label="Pauză prezentare cadouri" aria-pressed="false"><i class="fa-solid fa-pause" aria-hidden="true"></i></button></div>
+          <div class="home-gifts-stage"><div class="home-gifts-halo" aria-hidden="true"></div><span class="home-gifts-spark home-gifts-spark-one" aria-hidden="true">✦</span><span class="home-gifts-spark home-gifts-spark-two" aria-hidden="true">✦</span><span class="home-gifts-spark home-gifts-spark-three" aria-hidden="true">✦</span><div class="home-gifts-featured" data-gifts-featured></div><p class="home-gifts-loading" data-gifts-status role="status" aria-live="polite"></p><button type="button" class="home-gifts-retry" data-gifts-retry hidden data-public-copy="giftRetry">Încearcă din nou</button></div>
+          <div class="home-gifts-navigation"><button type="button" data-gifts-prev disabled aria-label="Cadoul anterior"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i></button><span data-gifts-position>01 / 06</span><button type="button" data-gifts-next disabled aria-label="Cadoul următor"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div>
+          <div class="home-gifts-picks" data-gifts-picks></div><div class="home-gifts-progress" aria-hidden="true"><span></span></div>
+        </div>
+      </div></div></section>
+      <section id="home-plans" class="public-section public-plans-section" aria-labelledby="home-plans-title"><div class="public-wrap"><h2 id="home-plans-title" data-public-copy="plans">Începe gratuit. Alege mai mult când ai nevoie.</h2><div id="approved-home-plans"></div><button type="button" class="public-text-link public-compare" onclick="openStudioSubscription()"><span data-public-copy="compare">Compară abonamentele</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button></div></section>
+      <section class="public-section public-faq" aria-labelledby="home-faq-title"><div class="public-wrap"><h2 id="home-faq-title" data-public-copy="questions">Mai ai întrebări?</h2><details><summary data-public-copy="faq1">De ce am nevoie pentru a începe?</summary><p data-public-copy="answer1">Un cont gratuit, un joc și o conexiune TikTok LIVE. În Studio găsești setările și pașii de conectare.</p></details><details><summary data-public-copy="faq2">Cum participă spectatorii?</summary><p data-public-copy="answer2">Prin comentarii, like-uri și cadouri. Alegi din Studio ce acțiuni activează în joc.</p></details></div></section>
     </main>
+
 
     <!-- GAME CATALOG -->
     <main id="view-catalog" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
+        <div class="home-nova catalog-featured" data-home-nova data-catalog-featured aria-labelledby="catalog-featured-name">
+          <a class="home-nova-cover" data-featured-link href="GAME/NOVA-VEX/index.html"><img data-featured-cover src="assets/game-gallery/nova-vex-cover.webp?v=2" width="720" height="1280" alt="NOVA &amp; VEX" loading="lazy"><span data-featured-plan>Joc gratuit</span></a>
+          <div class="home-nova-copy"><span class="public-eyebrow" data-featured-eyebrow>Nou în catalog</span><h2 id="catalog-featured-name" translate="no"><span>NOVA</span> &amp; <em>VEX</em></h2><h3 data-featured-heading>Nova urcă.<br>Vex schimbă planul.</h3><p data-featured-description>Ajut-o pe Nova să urce și ai grijă la Vex.</p><ol class="home-nova-how" data-featured-steps></ol><div class="home-nova-features" data-featured-tags></div><a class="public-button public-primary" data-featured-link href="GAME/NOVA-VEX/index.html"><span data-featured-cta>Descoperă jocul</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a></div>
+          <div class="home-nova-demo" data-featured-nova-preview><canvas width="540" height="960" role="img" aria-label="Prezentare animată NOVA &amp; VEX"></canvas><img class="home-nova-fallback" src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="NOVA &amp; VEX" loading="lazy"><div class="home-nova-topline"><button type="button" data-nova-pause aria-label="Pauză NOVA &amp; VEX" aria-pressed="false"><i class="fa-solid fa-pause" aria-hidden="true"></i></button></div></div>
+          <a class="catalog-featured-static" data-featured-static data-featured-link href="GAME/NOVA-VEX/index.html" hidden><img data-featured-static-image src="assets/game-gallery/nova-vex-cover.webp?v=2" alt="" loading="lazy"></a>
+        </div>
         <div class="mb-8">
             <span class="eyebrow">Catalog</span>
             <h1 class="mt-2 text-3xl md:text-4xl font-extrabold tracking-tight text-white">Jocuri disponibile</h1>
@@ -422,137 +312,16 @@
     </section>
 
     <!-- PLAY PASS VIEW -->
-    <section id="view-play-pass" class="hidden flex-1 max-w-7xl mx-auto px-6 py-12 w-full">
-        <div class="pp-heading">
-            <div>
-                <span class="eyebrow"><i class="fa-solid fa-ticket" aria-hidden="true"></i> PLAY PASS</span>
-                <h1>Un tichet. Mai multă joacă.</h1>
-                <p>Alege accesul potrivit pentru LIVE-ul tău. Începe gratuit sau activează un Play Pass cu o cheie de acces.</p>
-            </div>
-            <button onclick="switchView('catalog')" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 px-4 py-2 rounded-xl text-xs font-bold border border-zinc-800 transition cursor-pointer">
-                <i class="fa-solid fa-arrow-left mr-2"></i> Înapoi la jocuri
-            </button>
-        </div>
-        <div id="pricing" class="pricing-grid">
-            <div class="pricing-card pricing-card--free">
-                <div class="pp-ticket-head"><span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-ticket"></i></span>
-                <p class="eyebrow">TICHETUL TĂU DE START</p>
-                <h3>FREE</h3>
-                <div class="price">0<span> lei</span></div>
-                <span class="pp-plan-note">Fără cheie. Fără termen de expirare.</span><span class="pp-ticket-serial" aria-hidden="true">LIVE / 001</span></div>
-                <div class="pp-ticket-body"><ul>
-                    <li>Acces la funcțiile de bază</li>
-                    <li>Conectare TikTok LIVE locală</li>
-                    <li>Profil și clasament public</li>
-                </ul>
-                <button type="button" data-pp-plan="free">Deschide LIVE Studio</button><div class="pp-ticket-footer" aria-hidden="true"><span>READY TO PLAY</span><span class="pp-barcode"></span></div></div>
-            </div>
-            <div class="pricing-card featured pricing-card--pass">
-                <div class="pp-ticket-head"><span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-ticket"></i></span>
-                <p class="eyebrow">TICHETUL CREATORULUI</p>
-                <h3>Play Pass</h3>
-                <div class="price">29<span>/lună</span></div>
-                <span class="pp-plan-note">Acces pentru perioada activată.</span><span class="pp-ticket-serial" aria-hidden="true">LIVE / 002</span></div>
-                <div class="pp-ticket-body"><ul>
-                    <li>Jocurile marcate Play Pass</li>
-                    <li>Conectare TikTok LIVE</li>
-                    <li>Acces prin cheie, în cont</li>
-                </ul>
-                <button type="button" data-pp-plan="play_pass">Activează cu o cheie</button><div class="pp-ticket-footer" aria-hidden="true"><span>MAKE IT A LIVE</span><span class="pp-barcode"></span></div></div>
-            </div>
-            <div class="pricing-card pricing-card--pro">
-                <div class="pp-ticket-head"><span class="pricing-emblem" aria-hidden="true"><i class="fa-solid fa-ticket"></i></span>
-                <p class="eyebrow">TICHETUL PRO</p>
-                <h3>Play Pass PRO</h3>
-                <div class="price">79<span>/lună</span></div>
-                <span class="pp-plan-note">Include accesul Play Pass.</span><span class="pp-ticket-serial" aria-hidden="true">LIVE / 003</span></div>
-                <div class="pp-ticket-body"><ul>
-                    <li>Jocurile Play Pass și PRO</li>
-                    <li>Conectare TikTok LIVE</li>
-                    <li>Timpul Play Pass rămas se păstrează</li>
-                </ul>
-                <button type="button" data-pp-plan="play_pass_pro">Activează cu o cheie</button><div class="pp-ticket-footer" aria-hidden="true"><span>ALL IN. LIVE ON.</span><span class="pp-barcode"></span></div></div>
-            </div>
-        </div>
-        <p class="pp-checkout-note"><i class="fa-regular fa-credit-card" aria-hidden="true"></i> Plata cu cardul vine în curând. Momentan, accesul se activează prin cheie.</p>
-        <div id="pp-account-status" class="pp-access-status" aria-live="polite"><i class="fa-solid fa-ticket" aria-hidden="true"></i><div><strong>Accesul tău, în contul tău.</strong><p>Intră în cont pentru a vedea perioada de acces.</p><div id="pp-account-periods" class="pp-periods"></div></div><a href="live-studio.html">Deschide Studio →</a></div>
-        <section id="pp-access-key" class="pp-redeem-section" aria-labelledby="pp-key-title"><div><span class="pp-section-label"><i class="fa-solid fa-key" aria-hidden="true"></i> ACCESS KEY</span><h2 id="pp-key-title">Got an access key?</h2><p>If you received an access key, redeem it here and the access is added to your account right away.</p></div><form id="pp-redeem-form" class="pp-redeem-form"><label for="pp-code">Cheia ta de acces</label><div class="pp-key-input"><i class="fa-solid fa-ticket" aria-hidden="true"></i><input id="pp-code" name="code" required maxlength="80" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TI-XXXXXXXX-XXXXXXXX-…"><button type="submit">Activează cheia</button></div><p class="pp-redeem-help">Se activează în contul conectat. Cheia este de unică folosință; perioada începe la activare.</p><p id="pp-redeem-status" class="pp-redeem-status" role="status"></p></form></section>
-        <section class="pp-faq" aria-labelledby="pp-faq-title"><div class="pp-faq-heading"><span class="pp-section-label">QUESTIONS</span><h2 id="pp-faq-title">Before you upgrade</h2><p>Câteva răspunsuri înainte să alegi.</p><button type="button" data-open-support><i class="fa-regular fa-comments" aria-hidden="true"></i> Mai ai o întrebare?</button></div><div>
-            <details><summary>Pot folosi platforma gratuit?</summary><p>Da. Planul FREE îți oferă acces la jocurile marcate gratuite. Ai nevoie de cont pentru LIVE Studio.</p></details>
-            <details><summary>Care este diferența dintre Play Pass și PRO?</summary><p>Play Pass deblochează jocurile marcate cu acest plan. PRO include și jocurile Play Pass, plus cele marcate PRO. Poți verifica jocurile disponibile în catalog.</p></details>
-            <details><summary>Cum activez o cheie de acces?</summary><p>Intră în cont, introdu cheia în secțiunea Access key și apasă Activează cheia. Accesul este asociat contului tău și îl poți folosi în Studio.</p></details>
-            <details><summary>Când începe și cât durează accesul?</summary><p>O cheie oferă 1, 3, 6 sau 12 luni calendaristice. Perioada începe când o activezi, nu când a fost generată. Dacă ai deja același plan activ, noua perioadă se adaugă la final.</p></details>
-            <details><summary>Ce se întâmplă dacă activez PRO peste Play Pass?</summary><p>PRO se activează imediat. Timpul Play Pass rămas se păstrează și continuă după perioada PRO. Dacă activezi o cheie Play Pass când ai PRO, perioada Play Pass este programată după PRO.</p></details>
-            <details><summary>Pot folosi aceeași cheie pe două conturi?</summary><p>Nu. Fiecare cheie poate fi activată o singură dată, într-un singur cont. Unele chei pot fi rezervate unei anumite adrese de e-mail.</p></details>
-            <details><summary>Accesul se reînnoiește automat?</summary><p>Nu. Cheile oferă acces doar pentru perioada afișată. Nu salvăm date de card și nu există debitări automate în acest sistem.</p></details>
-            <details><summary>Ce se întâmplă când expiră?</summary><p>Contul revine la planul FREE dacă nu ai altă perioadă activă sau programată. Jocurile gratuite rămân disponibile, iar contul și preferințele tale se păstrează.</p></details>
-        </div></section>
-    </section>
-
     <!-- PUBLIC STREAMER LEADERBOARD -->
-    <section id="view-leaderboard" class="hidden flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
-        <div class="ranking-heading">
-            <div>
-                <span class="ranking-eyebrow">CLASAMENT</span>
-                <h1>Top streameri<span id="leaderboard-heading-period">în ultimele 7 zile.</span></h1>
-                <p>Cadourile din LIVE te urcă în clasament. Contează monedele primite prin Studio, fără cele din modul de test.</p>
-            </div>
-            <div class="ranking-filters">
-                <div class="leaderboard-periods" role="group" aria-label="Perioada clasamentului">
-                    <button type="button" data-leaderboard-period="24h" aria-pressed="false" onclick="setLeaderboardPeriod('24h')">24 de ore</button>
-                    <button type="button" data-leaderboard-period="7d" aria-pressed="true" class="is-active" onclick="setLeaderboardPeriod('7d')">7 zile</button>
-                    <button type="button" data-leaderboard-period="30d" aria-pressed="false" onclick="setLeaderboardPeriod('30d')">30 de zile</button>
-                    <button type="button" data-leaderboard-period="all" aria-pressed="false" onclick="setLeaderboardPeriod('all')">Tot timpul</button>
-                </div>
-                <div class="ranking-update"><span id="leaderboard-updated">Date din LIVE-urile conectate</span><button type="button" onclick="loadLeaderboard()" aria-label="Actualizează clasamentul" title="Actualizează clasamentul"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button></div>
-            </div>
-        </div>
-        <div id="leaderboard-podium" class="ranking-podium" aria-label="Primele trei locuri" aria-busy="true"></div>
-        <div class="ranking-body">
-          <div class="ranking-results">
-            <div id="leaderboard-status" class="ranking-status" role="status" aria-live="polite">Se încarcă clasamentul...</div>
-            <div id="leaderboard-table-wrap" class="ranking-table-wrap hidden">
-                <table class="leaderboard-table w-full text-left">
-                    <caption class="sr-only">Clasamentul complet al streamerilor</caption>
-                    <thead>
-                        <tr>
-                            <th scope="col">Loc</th>
-                            <th scope="col">Streamer</th>
-                            <th scope="col" class="text-right">Monede</th>
-                            <th scope="col" class="text-right">Timp LIVE</th>
-                        </tr>
-                    </thead>
-                    <tbody id="leaderboard-list"></tbody>
-                </table>
-            </div>
-            <div id="leaderboard-empty" class="ranking-panel ranking-empty hidden">
-                <h2>Primul loc te așteaptă.</h2>
-                <p>Nu există încă activitate în această perioadă. Conectează LIVE-ul în Studio și intră în clasament.</p>
-                <button type="button" class="ranking-primary" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> Intră în LIVE</button>
-            </div>
-          </div>
-          <aside class="ranking-sidebar" aria-label="Statistici și informații">
-            <section class="ranking-panel ranking-numbers">
-                <h2 id="leaderboard-period-label">Ultimele 7 zile în cifre</h2>
-                <dl>
-                    <div><dt>Streameri în top</dt><dd id="leaderboard-total-creators">—</dd></div>
-                    <div><dt>Monede primite</dt><dd id="leaderboard-total-coins" class="is-gold">—</dd></div>
-                    <div><dt>Timp LIVE</dt><dd id="leaderboard-total-time" class="is-pink">—</dd></div>
-                    <div><dt>Liderul clasamentului</dt><dd id="leaderboard-leader" class="is-cyan">—</dd></div>
-                </dl>
-                <p>Totaluri pentru profilurile afișate.</p>
-            </section>
-            <section class="ranking-panel ranking-how">
-                <h2>Cum funcționează?</h2>
-                <p>Cadourile reale primite prin Studio aduc monede în clasament. La egalitate, contează timpul LIVE. Filtrele arată ultimele 24 de ore, 7 sau 30 de zile.</p>
-                <p>Doar profilurile publice apar în top. Testele din Control joc nu se contorizează.</p>
-            </section>
-          </aside>
-        </div>
-        <section class="ranking-closing" aria-labelledby="ranking-closing-title">
-            <h2 id="ranking-closing-title">Următorul loc din top<br>poate fi al tău.</h2>
-            <button type="button" onclick="checkAccessAndGo('live')"><i class="fa-solid fa-play" aria-hidden="true"></i> Deschide Studio</button>
-        </section>
+    <section id="view-leaderboard" class="hidden public-page" aria-labelledby="ranking-title">
+      <div class="public-page-heading"><span class="public-eyebrow">COMUNITATE</span><h1 id="ranking-title" data-public-copy="rankingTitle">Clasamentul creatorilor</h1><p data-public-copy="rankingIntro">Creatorii care aduc publicul în joc.</p></div>
+      <div class="public-ranking-toolbar"><div class="leaderboard-periods" role="group" aria-label="Perioada clasamentului"><button type="button" data-leaderboard-period="24h" aria-pressed="false" onclick="setLeaderboardPeriod('24h')">24 de ore</button><button type="button" data-leaderboard-period="7d" class="is-active" aria-pressed="true" onclick="setLeaderboardPeriod('7d')">7 zile</button><button type="button" data-leaderboard-period="30d" aria-pressed="false" onclick="setLeaderboardPeriod('30d')">30 de zile</button><button type="button" data-leaderboard-period="all" aria-pressed="false" onclick="setLeaderboardPeriod('all')">Tot timpul</button></div><label class="public-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="leaderboard-search" type="search" aria-label="Caută un creator" placeholder="Caută un creator…" data-public-placeholder="searchCreator"></label></div>
+      <div class="ranking-update"><span id="leaderboard-updated" role="status">Date din LIVE-urile conectate</span><button type="button" onclick="loadLeaderboard()" aria-label="Actualizează clasamentul"><i class="fa-solid fa-rotate" aria-hidden="true"></i></button></div>
+      <div id="leaderboard-podium" class="ranking-podium" aria-label="Primele trei locuri" aria-busy="true"></div>
+      <div id="leaderboard-status" class="ranking-status" role="status" aria-live="polite">Se încarcă clasamentul...</div>
+      <div id="leaderboard-table-wrap" class="ranking-table-wrap hidden"><table class="leaderboard-table"><caption class="sr-only">Clasamentul complet al streamerilor</caption><thead><tr><th scope="col">Loc</th><th scope="col">Creator</th><th scope="col">Monede</th><th scope="col">Timp LIVE</th></tr></thead><tbody id="leaderboard-list"></tbody></table><p id="leaderboard-search-empty" class="public-empty" hidden></p></div>
+      <div id="leaderboard-empty" class="public-empty hidden"><i class="fa-solid fa-trophy" aria-hidden="true"></i><h2>Primul loc te așteaptă.</h2><p>Nu există încă activitate în această perioadă. Conectează LIVE-ul în Studio și intră în clasament.</p><button type="button" class="public-button public-primary" onclick="checkAccessAndGo('live')">Deschide Studio</button></div>
+      <p class="public-ranking-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span data-public-copy="rankingNote">Clasamentul folosește monedele primite în LIVE-urile conectate. Interacțiunile de test nu se contorizează.</span></p><details class="public-ranking-help"><summary data-public-copy="rankingHow">Cum se calculează clasamentul?</summary><p data-public-copy="rankingHowCopy">Contează cadourile reale primite prin Studio în perioada aleasă. La egalitate de monede, contează timpul LIVE. Doar profilurile publice apar în clasament.</p></details>
     </section>
 
     <!-- ACCOUNT VIEW -->
@@ -625,17 +394,13 @@
 
     <footer class="site-footer">
         <a class="footer-brand" href="index.html" aria-label="TikInteract — Acasă">
-            <img src="assets/tikinteract-icon-v2.png" alt="" width="36" height="36">
-            <span>TIK<span>INTERACT</span></span>
+            <span class="ti-wordmark ti-brand-lockup ti-home-wordmark" translate="no"><span class="ti-brand-name">Tik<span>Interact</span></span><span class="ti-brand-tagline">LIVE GAMES. REAL AUDIENCE. REAL IMPACT.</span></span>
         </a>
         <div class="footer-content">
             <nav class="footer-links" aria-label="Informații">
-                <a href="privacy-policy.html">Confidențialitate</a>
                 <button type="button" onclick="openCookiePreferences()">Cookie preferences</button>
-                <a href="terms-of-use.html">Termeni de utilizare</a>
-                <a href="guide.html">Ghiduri</a>
-                <a href="updates.html">Noutăți</a>
-                <a href="about.html">Despre noi</a>
+                <span data-footer-resources></span>
+
             </nav>
             <p class="footer-copyright">© <span id="footer-year">2026</span> TikInteract. All rights reserved.</p>
         </div>
@@ -661,10 +426,10 @@
 
     <script src="assets/game-access.js?v=4"></script>
     <script src="assets/tiktok-profile.js?v=1"></script>
-    <script src="game.js?v=18"></script>
+    <script src="game.js?v=22"></script>
 
-    <script type="module" src="assets/live-streams.js?v=2"></script>
+    <script type="module" src="assets/live-streams.js?v=3"></script>
     <!-- LOGICĂ SUPABASE & GOOGLE OAUTH -->
-    <script src="assets/site-app.js?v=14"></script>
+    <script src="assets/site-app.js?v=20"></script>
 </body>
 </html>

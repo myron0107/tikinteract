@@ -62,8 +62,8 @@
   function tick(now){request=0;if(!visible||paused||document.hidden||reduced.matches)return;clock+=Math.min(.05,(now-(last||now))/1000);last=now;draw();request=requestAnimationFrame(tick);}
   function start(){if(art&&visible&&!paused&&!document.hidden&&!reduced.matches&&!request){last=0;request=requestAnimationFrame(tick);}}
   function stop(){cancelAnimationFrame(request);request=0;last=0;}
-  function pauseCopy(){const en=window.TikInteractLanguage?.get()==='en';button.textContent=paused?(en?'Play':'Redă'):(en?'Pause':'Pauză');button.setAttribute('aria-label',button.textContent+' NOVA & VEX');}
+  function pauseCopy(){const en=window.TikInteractLanguage?.get()==='en';button.innerHTML='<i class="fa-solid fa-'+(paused?'play':'pause')+'" aria-hidden="true"></i>';button.setAttribute('aria-label',(paused?(en?'Play':'Redă'):(en?'Pause':'Pauză'))+' NOVA & VEX');}
   button.onclick=()=>{paused=!paused;button.setAttribute('aria-pressed',String(paused));pauseCopy();if(paused)stop();else start();};window.addEventListener('tikinteract:language',()=>{pauseCopy();draw();});
-  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){load();start();}else stop();},{rootMargin:'120px'}).observe(root);
+  new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible){load();start();}else stop();},{rootMargin:'120px'}).observe(root.querySelector('.home-nova-demo')||root);
   document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else start();});reduced.addEventListener('change',()=>{if(reduced.matches)stop();else start();});
 })();

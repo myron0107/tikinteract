@@ -20,9 +20,12 @@ test('live-streams card renders TikTok live link and game info', () => {
     assert.match(source, /get_active_live_streams/);
 });
 
-test('index.html contains the STREAMS navigation button next to JOCURI', () => {
+test('public navigation contains games, streams and leaderboard; plans remain on the homepage', () => {
     const html = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
-    assert.match(html, /<button data-nav-item="catalog"[^>]*>.*<span>JOCURI<\/span><\/button>\s*<button data-nav-item="streams" onclick="switchView\('streams'\)">/s);
+    const nav=html.slice(html.indexOf('<nav class="template-navigation"'),html.indexOf('</nav>',html.indexOf('<nav class="template-navigation"')));
+    assert.deepEqual([...nav.matchAll(/data-nav-item="([^"]+)"/g)].map(m=>m[1]),['catalog','streams','leaderboard']);
+    assert.match(html,/id="approved-home-plans"/);
+    assert.match(nav,/data-nav-item="streams" onclick="switchView\('streams'\)"/);
     assert.match(html, /id="view-streams"/);
     assert.match(html, /id="streams-grid"/);
     assert.match(html, /id="streams-empty-state"/);

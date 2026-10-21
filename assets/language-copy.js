@@ -3,7 +3,7 @@ import {romanian} from './language-ro.js?v=1';
 import {extraEnglish} from './language-extra.js?v=1';
 import {studioEnglish} from './language-studio.js?v=1';
 import {adminEnglish} from './language-admin.js?v=1';
-import {runtimeEnglish} from './language-runtime.js?v=1';
+import {runtimeEnglish} from './language-runtime.js?v=5';
 
 export const englishCopy={...Object.fromEntries(Object.entries(romanian).filter(([en,ro])=>en!==ro).map(([en,ro])=>[ro,en])),...english,...extraEnglish,...studioEnglish,...adminEnglish,...runtimeEnglish};
 const roPatterns=[

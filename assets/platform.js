@@ -4,7 +4,7 @@ const byId=id=>config.games.find(game=>game.id===id);
 const node=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
 let connection;
 const credentials=()=>connection ||= fetch(new URL('./supabase-config.json',import.meta.url)).then(r=>{if(!r.ok)throw Error('Config unavailable');return r.json();});
-const api=Object.freeze({getGame:byId,getConfig:()=>cloneConfig(config),getRevision:()=>revision,refresh});
+const api=Object.freeze({getGame:byId,getConfig:()=>cloneConfig(config),getRevision:()=>revision,openGame:id=>{const game=byId(id);if(game)showGame(game);},refresh});
 window.TikInteractPlatform=api;
 function catalog(){
  const root=document.getElementById('view-catalog');
@@ -32,7 +32,7 @@ function catalog(){
   window.initializeGameFavorites?.();window.filterStudioGames?.(document.getElementById('game-center-search')?.value||'');
   updateAccess();
  }
- const nova=document.querySelector('[data-home-nova]');if(nova)nova.hidden=byId('nova-vex')?.status!=='published';
+ const nova=document.querySelector('[data-home-nova]');if(nova&&!nova.hasAttribute('data-catalog-featured'))nova.hidden=byId('nova-vex')?.status!=='published';
 }
 function updateAccess(){
  for(const button of document.querySelectorAll('[data-plan-game]')){const game=byId(button.dataset.planGame);if(game)button.textContent=game.plan==='free'||window.TikInteractPass?.canAccess(game.plan)?'Deschide în Studio':config.plans.find(p=>p.id===game.plan).name;}
@@ -48,7 +48,7 @@ function apply(value){config=validateConfig(value);catalog();prices();home();stu
 async function refresh(){try{const c=await credentials();const response=await fetch(c.url+'/rest/v1/rpc/get_site_public_config',{method:'POST',headers:{apikey:c.anonKey,'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(5000)});if(!response.ok)return false;const data=await response.json();if(!data?.config)return false;if(data.revision===revision)return true;validateConfig(data.config);revision=data.revision;apply(data.config);return true;}catch{return false;}}
 function showGame(game){let dialog=document.getElementById('platform-game-dialog');if(!dialog){dialog=node('dialog','resource-page-dialog');dialog.id='platform-game-dialog';dialog.setAttribute('aria-label','Prezentare joc');dialog.innerHTML='<div class="resource-page-topbar"><strong>JOCURI</strong><button class="support-icon-button" type="button" aria-label="Închide prezentarea">×</button></div><div class="resource-reader"></div>';dialog.querySelector('button').onclick=()=>dialog.close();document.body.append(dialog);}const content=dialog.querySelector('.resource-reader'),image=node('img','platform-game-cover');image.src=game.cover;image.alt=game.name;const heading=node('h1','',game.name),description=node('p','',game.description),link=node('a','support-submit','Deschide în LIVE Studio');link.href='live-studio.html?game='+encodeURIComponent(game.id);content.replaceChildren(image,heading,description,link);dialog.showModal();}
 let roleRequest=0;
-async function updateAdminLink(){const request=++roleRequest;document.querySelectorAll('[data-platform-admin-link]').forEach(el=>el.remove());const client=window.tikInteractSupabase;if(!client||!window.tikInteractUser)return;try{const {data,error}=await client.rpc('site_admin_role');if(request!==roleRequest||error||!['owner','admin','editor'].includes(data))return;const menu=document.getElementById('user-profile-menu');if(menu){const a=node('a','account-menu-button'),icon=node('i','fa-solid fa-user-shield');icon.setAttribute('aria-hidden','true');a.append(icon,node('span','','ADMINISTRARE'));a.href='admin.html';a.dataset.platformAdminLink='';menu.append(a);}}catch{}}
+async function updateAdminLink(){const request=++roleRequest;document.querySelectorAll('[data-platform-admin-link]').forEach(el=>el.remove());const client=window.tikInteractSupabase;if(!client||!window.tikInteractUser)return;try{const {data,error}=await client.rpc('site_admin_role');if(request!==roleRequest||error||!['owner','admin','editor'].includes(data))return;const menu=document.getElementById('user-profile-menu');if(menu){const a=node('a','account-menu-button'),icon=node('i','fa-solid fa-user-shield');icon.setAttribute('aria-hidden','true');a.append(icon,node('span','','ADMINISTRARE'));a.href='admin.html';a.dataset.platformAdminLink='';menu.append(a);for(const host of document.querySelectorAll('[data-account-admin-host]'))host.append(a.cloneNode(true));}}catch{}}
 const previewToken=new URLSearchParams(location.search).get('adminPreview');
 const preview=!!previewToken&&window.parent!==window;
 if(preview){
@@ -60,3 +60,5 @@ window.addEventListener('tikinteract:auth',updateAdminLink);
 window.addEventListener('tikinteract:access',()=>{updateAccess();window.refreshGameFavorites?.();});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!preview)refresh();updateAdminLink();}});
 setInterval(()=>{if(!document.hidden&&!preview)refresh();},60000);
+
+window.addEventListener('tikinteract:account-mounted',updateAdminLink);

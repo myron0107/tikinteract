@@ -1,0 +1,123 @@
+/* Shared color roles for menus and dialogs, including lazily loaded support UI.
+   Layout, data and event handlers stay in their existing components. */
+:root{
+  --overlay-panel:#18181E;
+  --overlay-soft:#202027;
+  --overlay-hover:#292932;
+  --overlay-ink:#F4F4F7;
+  --overlay-muted:#B0B0BD;
+  --overlay-line:#FFFFFF22;
+  --overlay-accent:#EC879E;
+  --overlay-button:#A30F3D;
+  --overlay-selected:#A30F3D24;
+  --overlay-gold:#E4C58B;
+  --overlay-backdrop:#060609AD;
+}
+:root[data-mode=light]{
+  --overlay-panel:#FFF;
+  --overlay-soft:#F5F5F7;
+  --overlay-hover:#EDEDF1;
+  --overlay-ink:#202026;
+  --overlay-muted:#60606D;
+  --overlay-line:#DCDCE3;
+  --overlay-accent:#A30F3D;
+  --overlay-selected:#F1F1F5;
+  --overlay-gold:#795415;
+  --overlay-backdrop:#10101466;
+}
+body[data-page=studio][data-theme=blue]{--overlay-accent:#A0C4FF;--overlay-button:#235EB6;--overlay-selected:#235EB62B}
+html[data-mode=light] body[data-page=studio][data-theme=blue]{--overlay-accent:#235EB6;--overlay-selected:#EDF2FA}
+
+/* Top-level surfaces also inherit mode changes while already open. */
+html[data-mode] body :is(#site-support,#resources-menu,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog,#user-profile-menu,.language-menu){
+  color:var(--overlay-ink);background:var(--overlay-panel);border-color:var(--overlay-line);color-scheme:inherit;
+}
+html[data-mode] body :is(#site-support,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog)::backdrop{background:var(--overlay-backdrop)}
+html[data-mode] body :is(#site-support,#resources-menu,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog) :is(h1,h2,h3,h4,strong,label,summary){color:var(--overlay-ink)}
+html[data-mode] body :is(#site-support,#resources-menu,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog) :is(p,small,time,dt){color:var(--overlay-muted)}
+html[data-mode] body :is(#site-support,#resources-menu,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog) :is(input:not([type=checkbox]):not([type=range]),textarea,select){color:var(--overlay-ink);background:var(--overlay-soft);border-color:var(--overlay-line)}
+html[data-mode] body :is(#site-support,.resource-page-dialog,.gifts-dialog,.admin-dialog) :is(input,textarea)::placeholder{color:var(--overlay-muted);opacity:1}
+html[data-mode] body :is(#site-support,#resources-menu,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog) :is(button,a,input,textarea,select):focus-visible{outline:2px solid var(--overlay-accent);outline-offset:3px}
+
+/* Resources and the reader that opens from them. */
+html[data-mode] body #resources-menu .resource-icon{color:var(--overlay-accent);background:var(--overlay-soft)}
+html[data-mode] body #resources-menu .resources-links :is(a,button){color:var(--overlay-ink);background:transparent;border-color:transparent}
+html[data-mode] body #resources-menu .resources-links :is(a,button):hover{color:var(--overlay-ink);background:var(--overlay-soft);border-color:var(--overlay-line);box-shadow:none}
+html[data-mode] body #resources-menu .resources-links :is(strong,small){color:var(--overlay-ink)}
+html[data-mode] body #resources-menu .resources-links small{color:var(--overlay-muted)}
+html[data-mode] body #resources-menu :is(.resources-chevron,.resources-links>a>i:last-child,.resources-links>button>i:last-child,.resource-discord-mark){color:var(--overlay-muted)!important}
+html[data-mode] body #resources-menu .resources-community{border-color:var(--overlay-line)}
+html[data-mode] body #resources-menu .resources-community :is(a,button){background:var(--overlay-soft);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body .resource-page-dialog :is(.resource-reader,.resource-page-topbar,.public-info-header,.public-info-card,.info-game-rules,.info-game-rules>div){background:var(--overlay-panel);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body .resource-page-dialog :is(.info-reader-nav,.info-summary,.public-info-highlight){background:var(--overlay-soft);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body .resource-page-dialog :is(a,.eyebrow,.resource-page-label,.info-release-badge,.info-release-tags>span,.info-tags>span){color:var(--overlay-accent)}
+html[data-mode] body .resource-page-dialog :is(.info-reader-nav a,.info-game-rules li,.info-reader-list li,.info-change>span,.resource-loading){color:var(--overlay-muted)}
+
+/* Support: topic picker, compose form, account tabs and private conversations. */
+html[data-mode] body #site-support :is(.support-topbar,.support-account-bar){background:var(--overlay-panel);border-color:var(--overlay-line)}
+html[data-mode] body #site-support .support-brand{color:var(--overlay-ink)}
+html[data-mode] body #site-support :is(.support-topic,.support-account-bar button,.support-login-notice){background:var(--overlay-soft);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body #site-support .support-topic:hover{background:var(--overlay-hover);border-color:var(--overlay-accent)}
+html[data-mode] body #site-support :is(.support-account-bar button[aria-pressed=true],.support-topic-icon){background:var(--overlay-selected);color:var(--overlay-accent);border-color:var(--overlay-line)}
+html[data-mode] body #site-support :is(.support-topic-icon>i,.support-eyebrow,.support-back,.support-copy,.support-login-notice a,.support-form-status){color:var(--overlay-accent)!important}
+html[data-mode] body #site-support :is(.support-topic>i:last-child,.support-account-bar>span,.support-message-hint,.support-bottom,.support-bottom a){color:var(--overlay-muted)}
+html[data-mode] body #site-support .support-form :is(input,textarea,select):focus{border-color:var(--overlay-accent);box-shadow:none}
+html[data-mode] body #site-support .support-login-notice{color:var(--overlay-muted)}
+html[data-mode] body :is(#site-support,.support-inbox){--si-surface:var(--overlay-panel);--si-border:var(--overlay-line);--si-muted:var(--overlay-muted)}
+html[data-mode] body :is(#site-support,.support-inbox) :is(.si-workspace,.si-conversations,.si-detail,.si-thread-heading,.si-empty,.si-empty-detail,.si-compose){color:var(--overlay-ink);background:var(--overlay-panel);border-color:var(--overlay-line)}
+html[data-mode] body :is(#site-support,.support-inbox) :is(.si-search,.si-message,.si-pagination button,.si-ticket-controls select,.si-compose textarea){color:var(--overlay-ink);background:var(--overlay-soft);border-color:var(--overlay-line)}
+html[data-mode] body .support-inbox :is(button,.si-ticket){color:var(--overlay-ink);background:var(--overlay-panel);border-color:var(--overlay-line)}
+html[data-mode] body .support-inbox button:hover{background:var(--overlay-hover)}
+html[data-mode] body .support-inbox :is(.si-ticket.is-selected,.si-filters button[aria-pressed=true],.si-message.is-staff){background:var(--overlay-selected);color:var(--overlay-accent);border-color:var(--overlay-line)}
+html[data-mode] body .support-inbox .si-ticket.is-selected{box-shadow:inset 3px 0 var(--overlay-button)}
+html[data-mode] body .support-inbox :is(.si-ticket>strong,.si-thread-heading h3,.si-message>p,.si-message header>strong){color:var(--overlay-ink)}
+html[data-mode] body .support-inbox :is(.si-ticket-person,.si-ticket-preview,.si-ticket-top time,.si-sync,.si-message header,.si-message header time,.si-compose-label,.si-compose-bottom small,.si-conversation-start,.si-empty p,.si-empty-detail p){color:var(--overlay-muted)}
+html[data-mode] body .support-inbox .si-search input{color:var(--overlay-ink)}
+html[data-mode] body .support-inbox .si-thread-heading>div>span{color:var(--overlay-muted)}
+html[data-mode] body .support-inbox .si-message>header{background:transparent;border:0;box-shadow:none;backdrop-filter:none}
+html[data-mode] body .support-inbox :is(.si-priority,.si-error){color:var(--overlay-accent)}
+html[data-mode] body .support-inbox .si-error{border-color:var(--overlay-line);background:var(--overlay-selected)}
+html[data-mode] body .support-inbox .si-state{color:var(--overlay-ink);background:var(--overlay-soft);border-color:var(--overlay-line)}
+html[data-mode] body .support-inbox :is(.si-avatar,.si-empty-icon){color:var(--overlay-accent);background:var(--overlay-selected)}
+html[data-mode] body :is(#site-support,.support-inbox) :is(.support-submit,.si-compose-bottom button){background:var(--overlay-button);border-color:var(--overlay-button);color:#FFF}
+html[data-mode] body :is(#site-support,.support-inbox) :is(.support-submit,.si-compose-bottom button)>i{color:inherit!important}
+html[data-mode] body .support-inbox .si-unread{color:#FFF;background:var(--overlay-button)}
+
+/* Shared TikTok catalog and public streamer collection dialogs. Artwork stays original. */
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog,.home-gift-catalog) :is(.gift-card,.gift-card.is-valuable,.gifts-stat,.gift-recent-row,.gifts-empty,.home-gift-catalog-card){background:var(--overlay-panel);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gift-card:hover{background:var(--overlay-soft);border-color:var(--overlay-accent)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog,.home-gift-catalog) :is(h2,h3,.gifts-stat>strong,.gift-recent-info>strong){color:var(--overlay-ink)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog,.home-gift-catalog) :is(.gifts-catalog-note,.gifts-heading p,.gifts-dialog-status,.gifts-stat>span,.gifts-stat>small,.gifts-results-heading>span,.gifts-results-heading>p,.gift-card-detail,.gift-recent-info>span,.gift-recent-value time,.gifts-empty p,.gifts-collection-heading>span,.gifts-owned-filter){color:var(--overlay-muted)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) :is(.gifts-search,.gifts-outline-button,.gifts-sort select){background:var(--overlay-soft);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-search input{color:var(--overlay-ink);background:transparent}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-search input::placeholder{color:var(--overlay-muted);opacity:1}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) :is(.gifts-sort,.gifts-search>i){color:var(--overlay-muted)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-view-tabs{border-color:var(--overlay-line)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-view-tabs>button{color:var(--overlay-muted);background:transparent}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-view-tabs>button[aria-selected=true]{background:var(--overlay-selected);color:var(--overlay-accent)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-view-tabs>button[aria-selected=true]::after{background:var(--overlay-button)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) :is(.gift-value,.gift-value i,.gift-recent-value>strong){color:var(--overlay-gold)!important}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) :is(.gift-owned,.eyebrow,.gift-art>i){color:var(--overlay-accent);background:var(--overlay-selected);border-color:var(--overlay-line)}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) :is(.eyebrow,.gift-art>i){background:transparent}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-stat:last-child>strong{color:var(--overlay-accent)}
+html[data-mode] body #tiktok-gifts-panel #gift-catalog-form button{color:#FFF;background:var(--overlay-button);border-color:var(--overlay-button)}
+
+/* Close buttons, other small menus and native dialogs. */
+html[data-mode] body :is(#site-support,.resource-page-dialog,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.admin-dialog) :is(.support-icon-button,.gift-dialog-top>button,.game-gallery-dialog-top>button,.home-gift-catalog-close,header>button){color:var(--overlay-ink);background:var(--overlay-soft);border-color:var(--overlay-line)}
+html[data-mode] body :is(#site-support,.resource-page-dialog,.gifts-dialog) .support-icon-button:hover{background:var(--overlay-hover)}
+html[data-mode] body :is(.game-gallery-dialog-top,.game-gallery-dialog-footer){border-color:var(--overlay-line)}
+html[data-mode] body .game-gallery-dialog-footer>a{color:var(--overlay-accent)}
+html[data-mode] body .language-menu button{color:var(--overlay-ink);background:transparent}
+html[data-mode] body .language-menu button:is(:hover,[aria-checked=true]){background:var(--overlay-soft);color:var(--overlay-accent)}
+html[data-mode] body :is(#auth-modal>div,.cookie-preferences-dialog,#studio-tour-tooltip){background:var(--overlay-panel);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body :is(#auth-modal,.cookie-preferences-dialog,#studio-tour-tooltip) :is(h2,h3,label){color:var(--overlay-ink)}
+html[data-mode] body :is(.cookie-preferences-dialog,#studio-tour-tooltip) :is(p,small,.cookie-preferences-row span,#studio-tour-progress){color:var(--overlay-muted)}
+html[data-mode] body .cookie-preferences-dialog a{color:var(--overlay-accent)}
+html[data-mode] body #studio-tour-tooltip :is(.section-kicker,.studio-help-close){color:var(--overlay-accent)}
+html[data-mode] body #studio-tour-tooltip .studio-tour-navigation button{background:var(--overlay-soft);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body #studio-tour-tooltip #studio-tour-next{background:var(--overlay-button);color:#FFF;border-color:var(--overlay-button)}
+html[data-mode] body .admin-dialog .admin-primary{background:var(--overlay-button);color:#FFF;border-color:var(--overlay-button)}
+html[data-mode] body .admin-dialog :is(.ak-code-list,.ak-code-list code){background:var(--overlay-soft);color:var(--overlay-ink);border-color:var(--overlay-line)}
+html[data-mode] body :is(#site-support,#tiktok-gifts-panel,#resources-menu,.gifts-dialog,.resource-page-dialog,.support-inbox) :is(.gifts-view-tabs,.si-messages,.si-list,.si-filters){scrollbar-color:var(--overlay-line) transparent;scrollbar-width:thin}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-view-tabs::-webkit-scrollbar{height:4px}
+html[data-mode] body :is(#tiktok-gifts-panel,.gifts-dialog) .gifts-view-tabs::-webkit-scrollbar-thumb{border-radius:4px;background:var(--overlay-line)}

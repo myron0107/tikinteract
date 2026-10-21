@@ -1,5 +1,6 @@
 const PLAN_NAMES={free:'FREE',play_pass:'PLAY PASS',play_pass_pro:'PLAY PASS PRO'};
 let access=null,identity=null,request=0,serverOffset=0,checking=false,timer,redeeming=false;
+const localized=value=>window.TikInteractLanguage?.translate(value)||value;
 const ui=()=>document.getElementById('pp-account-status');
 const date=value=>new Date(value).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO'),{day:'2-digit',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
 export function accessError(error){
@@ -44,19 +45,19 @@ async function refresh(){
 }
 async function redeem(event){
  event.preventDefault();if(redeeming)return;const form=event.target,status=document.getElementById('pp-redeem-status'),input=form.elements.code;
- if(!window.tikInteractUser){status.textContent='Intră în cont, apoi activează cheia aici.';status.dataset.error='false';window.openAuthModal?.();return;}
+ if(!window.tikInteractUser){status.textContent=localized('Intră în cont, apoi activează cheia aici.');status.dataset.error='false';window.openAuthModal?.();return;}
  const code=input.value.trim();if(!code){input.focus();return;}const client=window.tikInteractSupabase,userId=window.tikInteractUser.id;
- redeeming=true;form.querySelector('button').disabled=true;status.textContent='Verificăm cheia…';status.dataset.error='false';
+ redeeming=true;form.querySelector('button').disabled=true;status.textContent=localized('Verificăm cheia…');status.dataset.error='false';
  try{
   if(!client)throw Error('Client unavailable');const {data,error}=await client.rpc('redeem_access_key',{p_code:code});
   if(userId!==window.tikInteractUser?.id)return;if(error)throw error;if(!data?.ok)throw Error(data?.code||'Unavailable');
-  input.value='';await refresh();status.textContent=data.alreadyRedeemed?'Ai activat deja această cheie în contul tău. Perioada nu a fost adăugată de două ori.':'Cheie activată. Accesul a fost adăugat în contul tău.';status.dataset.error='false';
- }catch(error){if(userId===window.tikInteractUser?.id){status.textContent=accessError(error);status.dataset.error='true';}}
+  input.value='';await refresh();status.textContent=localized(data.alreadyRedeemed?'Ai activat deja această cheie în contul tău. Perioada nu a fost adăugată de două ori.':'Cheie activată. Accesul a fost adăugat în contul tău.');status.dataset.error='false';
+ }catch(error){if(userId===window.tikInteractUser?.id){status.textContent=localized(accessError(error));status.dataset.error='true';}}
  finally{redeeming=false;form.querySelector('button').disabled=false;}
 }
 function initialize(){
- document.getElementById('pp-redeem-form')?.addEventListener('submit',redeem);
- document.querySelectorAll('[data-pp-plan]').forEach(button=>button.addEventListener('click',()=>{if(button.dataset.ppPlan==='free'){window.switchView?.('live');return;}const active=canAccess(button.dataset.ppPlan),section=document.getElementById(active?'pp-account-status':'pp-access-key');section.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});if(!active)document.getElementById('pp-code').focus({preventScroll:true});}));
+ document.addEventListener('submit',event=>{if(event.target.id==='pp-redeem-form')redeem(event);});
+ document.addEventListener('click',event=>{const button=event.target.closest('[data-pp-plan]');if(!button)return;if(button.dataset.ppPlan==='free'){window.switchView?.('live');return;}const active=canAccess(button.dataset.ppPlan),section=document.getElementById(active?'pp-account-status':'pp-access-key');section?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});if(!active)document.getElementById('pp-code')?.focus({preventScroll:true});});
  refresh();
 }
 window.TikInteractPass=Object.freeze({canAccess,getAccess:()=>access?JSON.parse(JSON.stringify(access)):null,refresh});

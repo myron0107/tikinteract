@@ -12,8 +12,14 @@ const LIVE_GAME_PATHS = Object.freeze({
 const isStudioPage = document.body.dataset.page === 'studio';
 const initialRoute = new URLSearchParams(window.location.search);
 let pendingAccountRoute = !isStudioPage && initialRoute.get('view') === 'account';
+let requestedStudioSection = isStudioPage ? initialRoute.get('section') : null;
+let requestedStudioPlan = ['free','play_pass','play_pass_pro'].includes(initialRoute.get('plan')) ? initialRoute.get('plan') : '';
 function studioUrl(gameId) {
-    return 'live-studio.html' + ((window.TikInteractPlatform?.getGame(gameId) || LIVE_GAME_PATHS[gameId]) ? '?game=' + encodeURIComponent(gameId) : '');
+    const params=[];
+    if(window.TikInteractPlatform?.getGame(gameId) || LIVE_GAME_PATHS[gameId])params.push('game='+encodeURIComponent(gameId));
+    if(typeof requestedStudioSection!=='undefined'&&requestedStudioSection==='subscription')params.push('section=subscription');
+    if(typeof requestedStudioPlan!=='undefined'&&['free','play_pass','play_pass_pro'].includes(requestedStudioPlan))params.push('plan='+encodeURIComponent(requestedStudioPlan));
+    return 'live-studio.html'+(params.length?'?'+params.join('&'):'');
 }
 let shouldOpenLiveFromUrl = isStudioPage || initialRoute.get('view') === 'live';
 let requestedLiveGame = initialRoute.get('game');
@@ -59,6 +65,14 @@ window.addEventListener('DOMContentLoaded', async () => {
 
 function restorePendingLiveRoute() {
     if (shouldOpenLiveFromUrl) return;
+    try {
+        const destination=JSON.parse(sessionStorage.getItem('tikinteract-studio-return')||'null');
+        sessionStorage.removeItem('tikinteract-studio-return');
+        if(destination?.section==='subscription'){
+            requestedStudioSection='subscription';requestedStudioPlan=['free','play_pass','play_pass_pro'].includes(destination.plan)?destination.plan:'';
+            shouldOpenLiveFromUrl=true;hasPendingLiveReturn=true;return;
+        }
+    } catch {}
     let gameId;
     try {
         gameId = sessionStorage.getItem('tikinteract-live-return');
@@ -378,6 +392,7 @@ async function loginWithGoogle() {
     if (shouldOpenLiveFromUrl) {
         try {
             sessionStorage.setItem('tikinteract-live-return', requestedLiveGame || document.getElementById('live-game-select')?.value || 'studio');
+            if(requestedStudioSection==='subscription')sessionStorage.setItem('tikinteract-studio-return',JSON.stringify({section:'subscription',plan:requestedStudioPlan}));
         } catch (error) {
             console.error('Could not preserve the selected game through Google sign-in:', error);
             return alert((window.TikInteractLanguage?.translate ?? (value=>value))('Nu am putut păstra jocul selectat. Încearcă autentificarea prin e-mail.'));
@@ -390,7 +405,7 @@ async function loginWithGoogle() {
         }
     });
     if (error) {
-        if (shouldOpenLiveFromUrl) sessionStorage.removeItem('tikinteract-live-return');
+        if (shouldOpenLiveFromUrl) {sessionStorage.removeItem('tikinteract-live-return');sessionStorage.removeItem('tikinteract-studio-return');}
         alert((window.TikInteractLanguage?.translate ?? (value=>value))("Eroare logare Google: " + error.message));
     }
 }
@@ -543,6 +558,7 @@ async function logoutUser() {
 
 function switchView(view) {
     const views = ['home','catalog','streams','leaderboard','play-pass','account'];
+    if(view==='play-pass'){openStudioSubscription();return;}
     if (view === 'live') {
         if (!currentUser) { shouldOpenLiveFromUrl = true; openAuthModal(); return; }
         if (!isStudioPage) { window.location.assign(studioUrl(requestedLiveGame)); return; }
@@ -682,7 +698,7 @@ function setActiveNavigation(activeItem) {
 }
 
 function checkAccessAndGo(view) {
-    if (view === 'live') { switchView('live'); return; }
+    if (view === 'live') { requestedStudioSection='';requestedStudioPlan='';switchView('live'); return; }
     if (!currentUser) {
         openAuthModal();
     } else {
@@ -691,7 +707,16 @@ function checkAccessAndGo(view) {
 }
 
 function goToPlayPass() {
-    switchView('play-pass');
+    openStudioSubscription();
+}
+
+function openStudioSubscription(plan='') {
+    const chosen=['free','play_pass','play_pass_pro'].includes(plan)?plan:'';
+    if(isStudioPage){window.TikInteractCreator?.openAccountSection('subscription',chosen);return;}
+    requestedStudioSection='subscription';requestedStudioPlan=chosen;requestedLiveGame=null;pendingAccountRoute=false;
+    shouldOpenLiveFromUrl=true;
+    if(!currentUser){openAuthModal();return;}
+    switchView('live');
 }
 
 function syncTikTokAccount() {

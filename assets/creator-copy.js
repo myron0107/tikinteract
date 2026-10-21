@@ -1,12 +1,12 @@
 const rows=`
 home|Acasă|Home
 play|JOACĂ|PLAY
-games|Jocuri|Games
-audio|Centru audio|Audio Center
+games|JOCURI|GAMES
+audio|PANOU DE SUNETE|SOUND PAD
 community|Comunitate|Community
 stream|TRANSMISIUNI|STREAM
-analytics|Analiză|Analytics
-studio|Studio LIVE|LIVE Studio
+analytics|STATISTICI|ANALYTICS
+studio|TRANSMISIE|STREAM
 gifts|Cadouri TikTok|TikTok Gifts
 help|Ajutor|Help
 back|Înapoi la site|Back to website

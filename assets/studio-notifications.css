@@ -1,0 +1,39 @@
+/* Anchored to the bell. The account page contains support conversations only. */
+.studio-notifications{position:relative;display:inline-flex;flex:none;align-items:center}
+body#tikinteract-studio.studio-modern .studio-notifications-panel{position:absolute;top:calc(100% + 12px);right:0;width:min(390px,calc(100vw - 16px));border:1px solid var(--studio-line);border-radius:13px;background:var(--studio-panel);color:var(--studio-ink);box-shadow:0 14px 46px #0003;overflow:hidden;z-index:80;text-align:left}
+body#tikinteract-studio.studio-modern .studio-notifications-panel[hidden]{display:none!important}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-inbox{padding:0;border:0;border-radius:0;background:transparent}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-inbox-heading{display:flex;align-items:center;gap:9px;margin:0;padding:16px 16px 12px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-inbox-heading>div{flex:1;min-width:0}
+body#tikinteract-studio.studio-modern .studio-notifications-panel h3{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;margin:0;color:var(--studio-ink)}
+body#tikinteract-studio.studio-modern .studio-notifications-panel :is(.cp-link,.notification-close){background:transparent;border:0;color:var(--studio-muted);font-size:10px;cursor:pointer;padding:5px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .notification-close{width:28px;height:28px;border-radius:6px;font-size:14px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel :is(.notification-close,.cp-link):hover{color:var(--studio-accent);background:var(--studio-soft)}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-inbox-list{max-height:min(420px,calc(100dvh - 220px));overflow:auto;overscroll-behavior:contain;scrollbar-width:thin;padding:6px 10px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice{border:0;border-bottom:1px solid var(--studio-line);border-radius:0;margin:0;background:transparent}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice:last-child{border-bottom:0}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice>button{display:flex;align-items:center;gap:11px;width:100%;min-height:64px;padding:11px 6px;background:transparent;border:0;color:var(--studio-muted);text-align:left;cursor:pointer}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice[data-unread=true]>button>i:first-child{color:var(--studio-accent)!important}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-head{flex:1;min-width:0}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-head strong{display:block;color:var(--studio-ink);font-size:12px;font-weight:550;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-head small{display:block;color:var(--studio-muted);font-size:10px;line-height:1.6;margin-top:3px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-body{color:var(--studio-muted);padding:0 8px 13px 31px;font-size:12px;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-body>.cp-btn{display:flex;width:max-content;margin-top:10px;min-height:32px;padding:7px 10px;font-size:11px;background:var(--studio-soft);color:var(--studio-accent);border-color:var(--studio-line)}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-empty{padding:30px 15px;background:transparent;border:0;min-height:140px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-empty h3{justify-content:center;font-size:13px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-empty p{color:var(--studio-muted);font-size:11px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-error{margin:0;padding:10px 16px;font-size:11px}
+.studio-notifications-panel [hidden]{display:none!important}
+.studio-notifications-panel :is(button,a):focus-visible{outline:2px solid var(--studio-accent);outline-offset:2px}
+@media(max-width:420px){body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-inbox-heading{display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:7px}body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-inbox-heading>div{grid-column:1;grid-row:1}body#tikinteract-studio.studio-modern .studio-notifications-panel .notification-close{grid-column:2;grid-row:1}}
+
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview{position:relative}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>[data-notice]{align-items:flex-start;padding:12px 38px 12px 6px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>[data-notice]>i{margin-top:4px;font-size:13px}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-excerpt{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:var(--studio-muted);font-size:11px;line-height:1.6;margin-top:3px;white-space:pre-line;overflow-wrap:anywhere}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>.cp-notice-dismiss{position:absolute;top:10px;right:0;display:inline-flex;justify-content:center;align-items:center;width:28px;height:28px;min-height:28px;padding:0;border:0;border-radius:7px;font-size:13px;background:transparent;color:var(--studio-muted)}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>.cp-notice-dismiss:is(:hover,:focus-visible){background:var(--studio-soft);color:var(--studio-accent)}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>.cp-notice-dismiss:disabled{opacity:.5;cursor:wait}
+
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>.cp-notice-dismiss::before{content:none}
+body#tikinteract-studio.studio-modern .studio-notifications-panel .cp-notice-preview>.cp-notice-dismiss>i{font-size:13px;color:inherit!important}

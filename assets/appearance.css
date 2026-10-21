@@ -1,0 +1,141 @@
+/* Dark mode keeps the restored site's colors. Light mode changes colors only. */
+:root{color-scheme:dark}
+/* Approved A / velvet black. Shared surfaces; brand accents stay independent. */
+:root[data-mode=dark]{--page-bg:#101014;--bg:#101014;--surface:#18181E;--panel-bg:#18181E;--card-bg:#18181E;--line:#FFFFFF17;--ink:#F4F4F7;--text:#F4F4F7;--text-primary:#F4F4F7;--text-secondary:#A7A7B3;--muted:#A7A7B3;--appearance-soft:#202027}
+html[data-mode=dark] body{background-color:#101014}
+html[data-mode=dark] :is(.public-info-site-header,.public-info-card,.public-info-header,.public-info-footer,.admin-sidebar,.admin-header,.admin-card,.admin-metric,.resource-page-dialog,.resource-reader,.support-panel,.support-dialog,.resource-support,.resources-menu,.support-topbar,.cookie-preferences-dialog,.language-menu,#user-profile-menu,#auth-modal>div){background-color:#18181E;border-color:#FFFFFF17}
+html[data-mode=dark] :is(.public-info-card,.resource-reader,.support-panel,.cookie-preferences-dialog) :is(h1,h2,h3,strong,label){color:#F4F4F7}
+html[data-mode=dark] :is(.resources-menu,.resource-page-dialog,.resource-support,.public-info-card) :is(input,textarea,select){background-color:#202027;border-color:#FFFFFF17;color:#F4F4F7}
+:root[data-mode=light]{color-scheme:light;--page-bg:#FFF;--surface:#FFF;--panel-bg:#FFF;--card-bg:#FFF;--line:#E1E1E5;--muted:#65656E;--ink:#202026;--text:#202026;--text-primary:#202026;--text-secondary:#65656E;--bg:#FFF;--button-red:#A30F3D;--button-red-soft:#F2F2F4}
+.appearance-toggle{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid #FFFFFF1A;border-radius:999px;min-height:34px;padding:7px 11px;background:transparent;color:#DDD;font:600 11px Inter,sans-serif;white-space:nowrap;cursor:pointer}
+.appearance-toggle i{font-size:11px}
+.site-template .template-navigation>button>i,.site-template .resources-trigger>i:first-child{display:inline-block}
+.site-template .template-navigation>button{font-size:12px;text-transform:uppercase}
+.site-template .template-navigation .nav-stream-label{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.site-template .template-navigation .nav-stream-label .nav-live-dot{flex:none;margin:0}
+.site-template .site-header-inner>.template-navigation>button>i,.site-template .resources-trigger>i:first-child{color:#F4F4F7!important}
+html[data-mode=light] .site-template .site-header-inner>.template-navigation>button>i,html[data-mode=light] .site-template .resources-trigger>i:first-child{color:#52525C!important}
+.site-template .open-studio-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:38px;padding:9px 14px;border:1px solid #A52D4655;border-radius:10px;background:#98263D;color:#FFF;white-space:nowrap;font:650 12px Inter,sans-serif;box-shadow:none}
+.site-template .open-studio-button:hover{background:#AF2E48}
+#how-it-works{scroll-margin-top:110px}
+html[data-mode=light] body{background:#FFF;color:#202026}
+html[data-mode=light] body.site-template{--page-bg:#FFF;--surface:#FFF;--line:#E1E1E5;--muted:#65656E;--accent:#A30F3D;--button-red:#A30F3D;--button-red-soft:#F2F2F4;background:#FFF;color:#202026}
+html[data-mode=light] :is(.template-header,.site-header-inner,.home-page,.home-hero,.home-hero-copy,.home-how-it-works,.home-leaderboard-section,.home-app-section,.home-nova-section,.home-gifts,.footer,.template-footer){background-color:#FFF;background-image:none;color:#202026;border-color:#E1E1E5;box-shadow:none}
+html[data-mode=light] :is(h1,h2,h3,h4,h5,.text-white,.template-brand,.template-brand>span,.account-card-title,.stream-creator-name,.ranking-person a,.ranking-person strong){color:#202026}
+html[data-mode=light] :is(p,.text-zinc-300,.text-zinc-400,.text-zinc-500,.text-gray-300,.text-gray-400,.home-hero-copy>p,.home-how-step p,.home-section-heading p,.home-app-copy>p){color:#65656E}
+html[data-mode=light] :is(.premium-card,.dashboard-panel,.mini-stat-box,.soundboard-shell,.soundboard-monitor,.game-center-shell,.stream-card,.cp-stream-card,.cp-panel,.cp-metric,.cp-chat,.cp-community-side,.cp-community-online,.cp-community-gate,.cp-analytics-chart,.cp-setting,.ranking-panel,.account-card,.public-info-card,.public-info-header,.public-info-site-header,.public-info-footer,.admin-sidebar,.admin-header,.admin-card,.admin-metric,.resource-page-dialog,.resource-reader,.support-panel,.support-dialog,.cookie-preferences-dialog,.language-menu,.get-app-menu,#user-profile-menu,#auth-modal>div){background:#FFF;color:#202026;border-color:#E1E1E5;box-shadow:0 4px 18px #18181C06}
+html[data-mode=light] :is(input,select,textarea,.cp-input,.bg-zinc-950,.bg-zinc-900,.audio-sound-card,.live-favorite-sound,.studio-quick-item,.home-how-step,.cp-chat-compose,.cp-inbox-list,.cp-conversation){background-color:#F7F7F8;color:#202026;border-color:#DEDEE3}
+html[data-mode=light] :is(input,textarea)::placeholder{color:#73737C}
+html[data-mode=light] :is(.template-navigation>button,.resources-trigger,.language-trigger,#btn-login-modal,#account-menu-toggle,.get-app-trigger,.cp-link,.streams-refresh-button){color:#52525C!important;background:transparent;border-color:#DDDDE2}
+html[data-mode=light] .template-navigation>button:is(:hover,.is-active),html[data-mode=light] .resources-trigger:hover{color:#A30F3D!important;text-shadow:none}
+html[data-mode=light] body i[class*="fa-"]{color:inherit!important}
+html[data-mode=light] :is(.appearance-toggle,.sound-filter-tab,.cp-btn,.cp-tabs button){color:#52525C;border-color:#DDDDE2;background:#FFF}
+html[data-mode=light] :is(.home-primary-button,.app-download-button,.open-studio-button,.cp-btn-primary,.support-submit,.pp-key-input button,.studio-game-empty button,#auth-modal button.bg-red-600,#btn-connect){background:#A30F3D;color:#FFF!important;border-color:#A30F3D;box-shadow:none}
+html[data-mode=light] :is(.home-primary-button,.open-studio-button,.cp-btn-primary,.support-submit) :is(span,i){color:#FFF!important}
+html[data-mode=light] .pp-redeem-section,html[data-mode=light] .pp-faq,html[data-mode=light] .pp-access-status{background:#FFF;border-color:#E1E1E5}
+html[data-mode=light] :is(.pp-redeem-section h2,.pp-faq-heading h2,.pp-faq summary,.pp-access-status strong){color:#202026}
+html[data-mode=light] :is(.pp-faq details,.pp-key-input){border-color:#DDDDE2}
+html[data-mode=light] .pp-key-input{background:#F7F7F8}
+html[data-mode=light] :is(.pp-faq p,.pp-access-status p,.pp-redeem-help,.pp-periods){color:#65656E}
+html[data-mode=light] .home-nova-promo,html[data-mode=light] .home-app-preview{border-color:#DDDDE2}
+html[data-mode=light] .home-gifts-stage{background:radial-gradient(ellipse,#F1F1F4,#FFF);border-color:#E1E1E5}
+html[data-mode=light] .home-hero:before,html[data-mode=light] .home-hero:after{opacity:0}
+html[data-mode=light] .site-template .template-navigation>button:before,html[data-mode=light] .site-template .resources-trigger:before{background:radial-gradient(ellipse,#A30F3D0D,transparent 72%)}
+@media(max-width:1100px){.site-template:not(.studio-app) .site-header-inner{gap:12px;padding:12px 18px;flex-wrap:wrap}.site-template:not(.studio-app) .template-navigation{order:3!important;width:100%;justify-content:center!important;overflow:visible!important;flex-wrap:wrap;gap:16px!important;margin:0!important}.site-template:not(.studio-app) .header-account-actions{margin-left:auto!important;gap:9px!important}.site-template .open-studio-button{min-height:34px;padding:7px 10px;font-size:11px}}
+@media(max-width:650px){.appearance-toggle{width:32px;height:32px;min-height:32px;padding:0}.appearance-toggle span{display:none}.site-template:not(.studio-app) .header-account-actions{gap:7px!important}.site-template .open-studio-button>i{display:none}.site-template:not(.studio-app) .get-app-dropdown{display:none}.site-template:not(.studio-app) .template-navigation{gap:13px!important}.site-template:not(.studio-app) .template-navigation>button,.site-template:not(.studio-app) .resources-trigger{font-size:11px!important}.site-template:not(.studio-app) .template-brand>span{font-size:18px}.site-template:not(.studio-app) .template-brand img{width:34px;height:34px}.site-template:not(.studio-app) .site-header-inner{padding:10px 14px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+/* White surfaces override the restored pages' hard-coded dark backgrounds. Layout stays native. */
+html[data-mode=light] body#tikinteract-site :is(#view-home,#view-catalog,#view-streams,#view-leaderboard,#view-play-pass,#view-account,.home-hero,.home-content,.home-hero-copy,.home-nova,.home-app-section,.home-gifts,.home-how-it-works,.home-how-step,.home-community-grid,.home-leaderboard-section,.cp-stream-hero,.ranking-hero,.ranking-body,.ranking-sidebar,.template-footer){background:#FFF!important;color:#202026;border-color:#E1E1E5;box-shadow:none}
+html[data-mode=light] body#tikinteract-site :is(.home-hero-art-glow,.home-gifts-halo){opacity:.06}
+html[data-mode=light] body#tikinteract-site :is(.home-hero-copy h1,.home-nova-copy h3,.home-how-intro h2,.home-how-step h3,.home-app-copy h2,.home-section-heading h2,.ranking-heading h1,.pp-heading h1,.cp-page-heading h2,.cp-panel h3,.cp-field dd,.account-card-title){color:#202026!important}
+html[data-mode=light] body#tikinteract-site :is(.home-nova-copy h2,.home-hero-copy h1>span,.home-how-intro h2>span,.home-app-copy h2>span){background:none;color:#A30F3D!important;-webkit-text-fill-color:#A30F3D}
+html[data-mode=light] body#tikinteract-site :is(.home-hero-copy>p,.home-nova-copy>p,.home-app-copy>p,.home-section-heading p,.home-how-step p,.cp-panel p,.cp-field dt,.cp-profile-top small){color:#65656E!important}
+html[data-mode=light] body#tikinteract-site :is(.home-hero-proof>span,.home-nova-features>span,.app-capabilities>span,.home-hero-download-link,.home-secondary-button,.home-gifts-browse,.ranking-block,.leaderboard-empty,.cp-empty,.cp-chat-header,.cp-community-side,.cp-community-online,.cp-setting){background:#F5F5F7;border-color:#E1E1E5;color:#52525C}
+html[data-mode=light] body#tikinteract-site :is(.cp-panel,.cp-inbox,.cp-chat,.ranking-panel,.streams-filter-bar,.streams-empty-state,.pp-access-status,.pp-redeem-section,.pp-faq){background:#FFF;color:#202026;border-color:#E1E1E5}
+html[data-mode=light] body#tikinteract-site .pricing-card :is(h3,li,.pp-plan-note){color:#EEE!important}
+html[data-mode=light] body#tikinteract-site :is(.home-gifts-copy h2,.pp-redeem-section h2,.pp-faq-heading h2,.pp-faq summary,.cp-profile-top h3){color:#202026}
+html[data-mode=light] body#tikinteract-site :is(.home-hero-actions .home-secondary-button,.home-hero-actions>a:not(.home-primary-button)){color:#52525C;background:#FFF;border:1px solid #DDDDE2;box-shadow:none}
+html[data-mode=light] body#tikinteract-site :is(.home-primary-button,.open-studio-button,.support-submit,.cp-btn-primary){color:#FFF!important;background:#A30F3D;border-color:#A30F3D}
+/* Quiet navigation: clear color feedback, no glow, haze or moving highlight. */
+body.site-template .template-header :is(.template-navigation>button,.resources-trigger,.language-trigger,.appearance-toggle,.cp-header-bell),body.site-template .template-header :is(.template-navigation>button,.resources-trigger,.language-trigger,.appearance-toggle,.cp-header-bell):is(:hover,:focus-visible,.is-active,[aria-expanded=true]){text-shadow:none!important;box-shadow:none!important;filter:none!important;transform:none;transition:color .15s,background-color .15s,border-color .15s}
+body.site-template .template-header .template-navigation>button:before,body.site-template .template-header .resources-trigger:before{display:none!important;content:none!important}
+body.site-template .template-header .template-navigation>button:after{height:2px;box-shadow:none;background:var(--button-red,#A30F3D)}
+.appearance-toggle{width:34px;height:34px;min-height:34px;padding:0;flex:none;border-radius:50%}
+.appearance-toggle i{font-size:13px}
+.appearance-toggle:hover{background:#FFFFFF08}
+html[data-mode=light] .appearance-toggle:hover{background:#F4F4F6}
+.studio-palettes{display:flex;align-items:center;gap:7px;padding:6px 7px;border:1px solid var(--studio-line,#FFFFFF1A);border-radius:999px;flex:none}
+.studio-palettes button{display:block;width:16px;height:16px;min-height:16px;padding:0;border:0;border-radius:50%;background:#A30F3D;box-shadow:none;cursor:pointer;outline-offset:3px}
+.studio-palettes [data-studio-theme=blue]{background:#2865B7}
+.studio-palettes [aria-pressed=true]{outline:1px solid var(--studio-muted,#B7B7C4);outline-offset:2px}
+@media(max-width:680px){.studio-palettes{gap:7px;padding:5px}.studio-palettes button{width:14px;height:14px;min-height:14px}}
+.home-nova-playback{position:absolute;right:12px;top:16px;z-index:3;display:grid;place-items:center;width:28px;height:28px;padding:0;border:1px solid #FFFFFF30;border-radius:50%;background:#10101BB0;color:#FFF;font-size:10px;cursor:pointer}
+html[data-mode=light]{background:#FFF;color:#202026}
+html[data-mode=light] .home-nova-playback{background:#FFFFFFE8;color:#202026;border-color:#FFFFFFA3}
+html[data-mode=light] body#tikinteract-site :is(.home-preview-player,.home-preview-topbar,.home-showcase-caption){background:#FFF;border-color:#DFDFE4;color:#32323C;box-shadow:0 5px 22px #16161D0D}
+html[data-mode=light] body#tikinteract-site .home-showcase-toggle{background:#F5F5F7;color:#4D4D58;border-color:#DFDFE4}
+html[data-mode=light] body#tikinteract-site :is(.home-showcase-caption strong,.home-preview-topbar>span){color:#32323C}
+html[data-mode=light] body#tikinteract-site .home-preview-player{box-shadow:0 8px 30px #16161D0F}
+html[data-mode=light] body#tikinteract-site :is(.eyebrow,.home-nova-copy>.eyebrow,.home-hero-copy .eyebrow){color:#8D203D}
+html[data-mode=light] body#tikinteract-site :is(.home-nova-features>span,.home-hero-proof>span,.app-capabilities>span){background:#F5F5F7;border-color:#DFDFE4;color:#55555E}
+html[data-mode=light] body#tikinteract-site :is(.home-nova-cover,.home-app-preview){box-shadow:0 5px 20px #16161D15}
+html[data-mode=light] :is(.public-info-page,.public-info-shell,.public-info-site-header,.public-info-header,.public-info-footer,.public-info-card,.public-info-nav,.resource-reader,.resource-page-topbar){background:#FFF;color:#202026;border-color:#DFDFE4;box-shadow:none}
+html[data-mode=light] :is(.public-info-page,.resource-reader) :is(h1,h2,h3,strong,summary){color:#202026}
+html[data-mode=light] :is(.public-info-page,.resource-reader) :is(p,li,small){color:#60606A}
+html[data-mode=light] :is(.public-info-page,.public-info-header,.public-info-site-header,.public-info-footer,.resource-reader) a{color:#A30F3D;text-shadow:none}
+html[data-mode=light] :is(.game-page-shell,.game-presentation,.game-page-nav,.game-detail-info,.game-page-info-card,.game-gallery-dialog,.game-gallery-caption,.game-detail-launch){background:#FFF;color:#202026;border-color:#DFDFE4;box-shadow:none}
+html[data-mode=light] :is(.game-page-shell,.game-gallery-dialog) :is(h1,h2,h3,strong){color:#202026}
+html[data-mode=light] :is(.game-page-shell,.game-gallery-dialog) :is(p,li,small){color:#60606A}
+html[data-mode=light] :is(.game-page-tag,.game-page-button,.game-gallery-dialog button){background:#F5F5F7;color:#55555E;border-color:#DFDFE4}
+html[data-mode=light] :is(.game-page-cta,.game-page-button.primary){background:#A30F3D;color:#FFF;border-color:#A30F3D;box-shadow:none}
+html[data-mode=light] :is(.admin-sidebar,.admin-header,.admin-brand,.admin-main,.admin-card,.admin-metric,.admin-dialog,.admin-preview-dialog,.admin-section-heading,.admin-draft-strip){color:#202026;border-color:#DFDFE4}
+html[data-mode=light] :is(.admin-brand,.admin-card h2,.admin-metric strong,.admin-header h1,.admin-dialog h2,.admin-section-heading h2){color:#202026}
+html[data-mode=light] :is(.admin-note,.admin-card p,.admin-eyebrow,.admin-metric>span,.admin-metric>small,.admin-sidebar-bottom,#admin-save-state){color:#62626C}
+html[data-mode=light] .admin-sidebar nav>button{color:#62626C}
+html[data-mode=light] .admin-sidebar nav>button.is-active{background:#F4F4F6;color:#A30F3D;border-color:#DFDFE4}
+html[data-mode=light] .admin-primary{background:#A30F3D;border-color:#A30F3D;color:#FFF;box-shadow:none}
+html[data-mode=light] :is(.support-icon-button,.language-menu button,.resource-page-topbar button,.cookie-preferences-close){background:#F5F5F7;color:#55555E;border-color:#DFDFE4}
+html[data-mode=light] body#tikinteract-site :is(.pp-section-label,.pp-redeem-form label,.pp-key-input>i,.pp-faq-heading p,.pp-redeem-help,.pp-redeem-status){color:#62626C!important}
+html[data-mode=light] body#tikinteract-site .pp-faq-heading button{background:#F5F5F7;color:#A30F3D;border-color:#DFDFE4}
+html[data-mode=light] body#tikinteract-site .home-nova-demo{box-shadow:0 8px 25px #16161D1A}
+html[data-mode=light] body#tikinteract-site :is(.glow-red,.home-primary-button,.app-download-button):is(:hover,:focus-visible),html[data-mode=light] body#tikinteract-site .glow-red{box-shadow:none!important;filter:none}
+body#tikinteract-site .game-catalog-card:hover{box-shadow:0 7px 24px #12121616;filter:none}
+/* Light-mode text roles: replace the pale labels inherited from the dark UI. */
+html[data-mode=light] body#tikinteract-site :is(.home-showcase-caption span,.home-gifts-copy h2>span,.home-nova-copy h2>span,.home-nova-copy h2>em,.pp-access-status>a){color:#A30F3D!important}
+html[data-mode=light] body#tikinteract-site .home-nova-cover>span{background:#17171C;color:#FFF}
+html[data-mode=light] body#tikinteract-site :is(.ranking-free-name,.ranking-free-invite,.ranking-eyebrow,.ranking-heading p,.ranking-panel p,.ranking-numbers dt,.ranking-period-heading p,.ranking-periods button,.leaderboard-periods button,#leaderboard-updated,#home-leaderboard-status){color:#60606A}
+html[data-mode=light] body#tikinteract-site :is(.ranking-position,.ranking-coins){color:#56606D}
+html[data-mode=light] body#tikinteract-site .ranking-spot-1 :is(.ranking-position,.ranking-coins){color:#846016}
+html[data-mode=light] body#tikinteract-site .ranking-spot-3 :is(.ranking-position,.ranking-coins){color:#8B531D}
+html[data-mode=light] body#tikinteract-site :is(#leaderboard-total-coins,#leaderboard-total-time,#leaderboard-leader){color:#202026}
+html[data-mode=light] body#tikinteract-site :is(.cp-stream-counters small,.cp-stream-filters button){color:#60606A}
+html[data-mode=light] body#tikinteract-site .cp-stream-counters strong{color:#A30F3D}
+html[data-mode=light] body#tikinteract-site .cp-stream-filters button.is-active{background:#A30F3D;color:#FFF;border-color:#A30F3D}
+html[data-mode=light] body#tikinteract-site footer{background:#FFF;color:#60606A;border-color:#DFDFE4}
+html[data-mode=light] body#tikinteract-site footer :is(span,p,a){color:#60606A}
+html[data-mode=light] body#tikinteract-site :is(.cp-notice-head strong,.cp-notice>button){color:#202026}
+html[data-mode=light] body#tikinteract-site :is(.cp-notice-head small,.cp-notice-body){color:#60606A}
+html[data-mode=light] body#tikinteract-site .cp-pass-card>strong{background:#F5F5F7;color:#A30F3D;border-color:#DFDFE4}
+html[data-mode=light] body#tikinteract-site .cp-inbox-count{color:#FFF}
+html[data-mode=light] #auth-modal button[onclick="requestPasswordReset()"]{color:#A30F3D}
+html[data-mode=light] :is(.public-info-brand>span>span,.public-info-page .eyebrow,.info-release-badge,.info-release-tags>span,.info-tags>span){color:#A30F3D}
+html[data-mode=light] :is(.game-page-back,.game-page-brand){color:#383842}
+html[data-mode=light] .game-gallery-caption>span{color:#60606A}
+html[data-mode=light] :is(#admin-identity,.admin-shortcuts strong){color:#383842}
+html[data-mode=light] :is(.admin-actions button:not(.admin-primary),.admin-card button:not(.admin-primary)){color:#55555E;border-color:#DFDFE4;background:#F5F5F7}
+html[data-mode=light] body#tikinteract-site footer button{color:#60606A;background:transparent;border-color:#DFDFE4}
+html[data-mode=light] body#tikinteract-site #view-leaderboard .leaderboard-periods button.is-active{color:#FFF;background:#A30F3D;border-color:#A30F3D}
+html[data-mode=light] body#tikinteract-site :is(.home-leaderboard-section,#view-leaderboard) .is-vacant .ranking-block{opacity:1}
+html[data-mode=light] .info-change>span{color:#60606A}
+html[data-mode=light] .admin-draft-strip{background:#F5F5F7;border-color:#DFDFE4}
+html[data-mode=light] .admin-draft-strip :is(strong,h3){color:#202026}
+html[data-mode=light] .admin-draft-strip :is(p,small){color:#60606A}
+html[data-mode=light] .admin-draft-strip button{background:#FFF;color:#A30F3D;border-color:#DFDFE4}
+html[data-mode=light] :is(.resources-menu,.resources-menu-header,.resource-support,.resource-discord,.resource-links,.si-inbox,.si-ticket,.si-thread,.si-thread-heading,.si-message,.si-empty,.si-reply,.au-dialog,.au-tools,.au-metric){--si-border:#DFDFE4;background:#FFF;color:#202026;border-color:#DFDFE4;box-shadow:none}
+html[data-mode=light] :is(.resources-menu,.support-panel,.au-dialog) :is(h2,h3,strong,summary,label){color:#202026}
+html[data-mode=light] :is(.resources-menu,.support-panel,.au-dialog) :is(p,small){color:#60606A}
+html[data-mode=light] :is(.resources-menu a,.resources-menu button,.si-ticket>strong,.si-ticket-preview,.si-thread-heading h3,.si-message>p,.si-message header>strong){color:#383842}
+html[data-mode=light] :is(.si-sync,.si-ticket small,.si-message small,.si-message time,.si-thread-heading p){color:#62626C}
+html[data-mode=light] :is(.resource-icon,.si-search,.si-filters button,.si-form-field input,.si-form-field textarea){background:#F5F5F7;color:#55555E;border-color:#DFDFE4}
+html[data-mode=light] .si-search input{color:#202026}
+html[data-mode=light] .resources-menu a:hover{background:#F5F5F7;color:#A30F3D;box-shadow:none}

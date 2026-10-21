@@ -30,6 +30,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 const STATIC_FILES = new Set([
     '/index.html',
+    '/404.html',
     '/live-studio.html',
     '/admin.html',
     '/style.css',
@@ -75,6 +76,17 @@ const MIME_TYPES = {
     '.woff2': 'font/woff2'
 };
 
+// Return the branded page for browser navigation, retaining plain asset errors.
+const notFoundPage = await readFile(path.join(ROOT, '404.html'));
+function sendNotFound(request, response) {
+    const html = request.headers.accept?.includes('text/html');
+    response.writeHead(404, {
+        'Content-Type': html ? 'text/html; charset=utf-8' : 'text/plain; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff',
+        'Cache-Control': 'no-store'
+    }).end(html ? notFoundPage : 'Not found');
+}
+
 const server = createServer(async (request, response) => {
     let pathname;
     try {
@@ -105,7 +117,7 @@ const server = createServer(async (request, response) => {
     if (!STATIC_FILES.has(requestedPath)
         && !filePath.startsWith(`${assetsPath}${path.sep}`)
         && !isSoundFile && !isSkyShiftFile && !isNovaVexFile && !isGameBundle) {
-        response.writeHead(404).end('Not found');
+        sendNotFound(request, response);
         return;
     }
 
@@ -114,7 +126,7 @@ const server = createServer(async (request, response) => {
         const etag = immutableMedia ? `"${path.basename(filePath)}"` : null;
         if (etag && request.headers['if-none-match'] === etag) {
             const file = await stat(filePath);
-            if (!file.isFile()) { response.writeHead(404).end('Not found'); return; }
+            if (!file.isFile()) { sendNotFound(request, response); return; }
             response.writeHead(304, {'ETag':etag, 'Cache-Control':'public, max-age=31536000, immutable'}).end();
             return;
         }
@@ -128,7 +140,7 @@ const server = createServer(async (request, response) => {
         response.end(content);
     } catch (error) {
         if (error.code === 'ENOENT' || error.code === 'EISDIR') {
-            response.writeHead(404).end('Not found');
+            sendNotFound(request, response);
             return;
         }
         console.error('Failed to serve request:', error);

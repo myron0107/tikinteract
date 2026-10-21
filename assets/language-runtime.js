@@ -1,4 +1,40 @@
 export const runtimeEnglish=Object.fromEntries(`
+Caută în conversațiile tale|Search your conversations
+Caută conversații|Search conversations
+Actualizează mesajele|Refresh messages
+Filtre mesaje|Message filters
+Lista conversațiilor|Conversation list
+Conversație|Conversation
+Alege o conversație|Choose a conversation
+Mesajele tale și răspunsurile echipei apar aici.|Your messages and the team's replies appear here.
+Nicio conversație aici|No conversations here
+Mesajele noi vor apărea în această listă.|New messages will appear in this list.
+Încearcă un alt cuvânt.|Try a different word.
+Se încarcă mesajele…|Loading messages…
+Conversație privată cu echipa|Private conversation with the team
+Mesajul tău|Your message
+Primești răspunsul aici, în Suport.|You will receive the reply here, in Support.
+Scrie un mesaj…|Write a message…
+Înapoi la conversații|Back to conversations
+Pagina precedentă|Previous page
+Pagina următoare|Next page
+De răspuns|Awaiting reply
+În așteptare|Pending
+Rezolvate|Resolved
+Rezolvat|Resolved
+Propunere de joc|Game suggestion
+Problemă tehnică|Technical issue
+Sugestie|Suggestion
+Întrebare|Question
+Mesajele nu sunt disponibile. Apasă Actualizează pentru a reîncerca.|Messages are unavailable. Select Refresh to try again.
+Cum sunt folosite datele tale.|How your data is used.
+Regulile platformei.|Platform rules.
+Primul loc te așteaptă.|First place is waiting for you.
+Nu există încă activitate în această perioadă. Conectează LIVE-ul în Studio și intră în clasament.|There is no activity for this period yet. Connect your LIVE in Studio to join the leaderboard.
+Date din LIVE-urile conectate|Data from connected LIVE sessions
+Nova urcă spre destinație.|Nova is heading for the top.
+Vex îi stă în cale.|Vex stands in her way.
+O aventură prin orașul neon, cu obstacole și surprize la fiecare pas. Ajut-o pe Nova să ajungă sus și ai grijă la Vex.|An adventure through a neon city, with obstacles and surprises along the way. Help Nova reach the top and watch out for Vex.
 Închide catalogul|Close catalog
 Caută un cadou…|Search for a gift…
 Caută un cadou după nume sau ID|Search a gift by name or ID
@@ -121,6 +157,7 @@ Jocurile tale, la un click|Your games, one click away
 Apasă o copertă ca să pornești jocul. Steluța adaugă sau elimină favorite.|Click a cover to start the game. The star adds or removes favourites.
 Testează jocul din Studio|Test your game from Studio
 În stânga găsești comenzile de test și setările jocului ales.|Find test controls and settings for the selected game on the left.
+În dreapta găsești comenzile de test și setările jocului ales.|Find test controls and settings for the selected game on the right.
 Urmărește sesiunea|Monitor your session
 Aici vezi scorul, cadourile și evenimentele din sesiunea curentă.|View scores, gifts and events from the current session here.
 Evenimentele din LIVE|LIVE events

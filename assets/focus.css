@@ -1,0 +1,13 @@
+/* Shared focus treatment for platform UI, including dialogs loaded later. */
+:root{--focus-neutral:#ADADB5;--focus-field:#82828C}
+:root[data-mode=light]{--focus-neutral:#686872;--focus-field:#85858F}
+
+/* Pointer interactions do not create a colored ring or glow. */
+html body :is(button,a,summary,input,textarea,select,video,[role=button],[tabindex],[contenteditable=true]):focus{outline:none!important;box-shadow:none!important;transition-property:background-color,color,opacity,transform!important}
+
+/* Keyboard navigation keeps a small neutral indicator on actionable controls. */
+html body :is(button,a,summary,video,[role=button],[tabindex],[contenteditable=true]):focus-visible{outline:1px solid var(--focus-neutral)!important;outline-offset:2px!important;box-shadow:none!important}
+
+/* Fields use their own border; inset search fields rely on the outer wrapper. */
+html body :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),textarea,select):focus:not([aria-invalid=true]){outline:none!important;box-shadow:none!important;border-color:var(--focus-field)!important}
+html body :is(label,.public-search,.streams-search-box,.audio-search,.game-center-search,.live-favorites-search,.gifts-search,.home-gift-catalog-search,.si-search,.studio-quick-search):focus-within{border-color:var(--focus-field)!important;box-shadow:none!important}

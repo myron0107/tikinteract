@@ -1,4 +1,4 @@
-import{ct}from'./creator-copy.js?v=1';
+import{ct}from'./creator-copy.js?v=4';
 export{ct};
 export const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const ic=name=>`<i class="fa-solid fa-${name}" aria-hidden="true"></i>`;
