@@ -12,6 +12,7 @@
     "sync:tiktok-gifts": "node scripts/sync-tiktok-gifts.mjs"
   },
   "dependencies": {
+    "@vercel/functions": "^3.10.2",
     "tiktok-live-connector": "2.5.0",
     "ws": "8.22.0"
   },

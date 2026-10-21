@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ro" class="dark">
+<head>
+ <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+ <meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
+ <meta name="theme-color" content="#101014"><title>Mentenanță — TikInteract</title>
+ <link rel="icon" href="/assets/tikinteract-app-icon.svg?v=2">
+ <link rel="stylesheet" href="/assets/fonts/font-faces.css?v=1">
+ <link rel="stylesheet" href="/assets/appearance.css?v=7"><script src="/assets/appearance.js?v=23"></script>
+ <link rel="stylesheet" href="/assets/brand.css?v=12"><link rel="stylesheet" href="/assets/error-page.css?v=1">
+ <link rel="stylesheet" href="/assets/maintenance.css?v=1"><link rel="stylesheet" href="/assets/focus.css?v=2">
+ <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+ <script type="module" src="/assets/maintenance.js?v=1"></script>
+</head>
+<body class="error-page maintenance-page" data-native-i18n>
+ <header class="error-header">
+  <span class="template-brand"><span class="ti-wordmark ti-brand-lockup" translate="no"><span class="ti-brand-name">Tik<span>Interact</span></span></span></span>
+  <div class="error-preferences">
+   <button class="error-mode" type="button" data-maintenance-mode aria-label="Schimbă tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.8 13.1A8.8 8.8 0 0 1 10.9 3.2a9 9 0 1 0 9.9 9.9Z"/></svg></button>
+   <button class="maintenance-language" type="button" data-locale="ro" title="Română" aria-label="Română" aria-pressed="true"><img src="/assets/language-ro.svg" alt="" width="20" height="14"></button>
+   <button class="maintenance-language" type="button" data-locale="en" title="English" aria-label="English" aria-pressed="false"><img src="/assets/language-en.svg" alt="" width="20" height="14"></button>
+  </div>
+ </header>
+ <main class="error-main maintenance-main">
+  <div class="maintenance-symbol" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M31 7a10 10 0 0 0-11 13L8 32a5.7 5.7 0 0 0 8 8l12-12A10 10 0 0 0 41 17l-7 7-7-7Z"/><circle cx="12" cy="36" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+  <p class="error-eyebrow" data-copy="eyebrow">REVENIM ÎN CURÂND</p>
+  <h1 data-copy="heading">Site în mentenanță</h1>
+  <p class="error-description" data-copy="intro">Lucrăm la câteva îmbunătățiri. Ai o invitație? Folosește codul pentru a previzualiza platforma și Studio.</p>
+  <form id="preview-form" class="maintenance-form">
+   <label for="preview-code" data-copy="codeLabel">Codul tău de invitație</label>
+   <input id="preview-code" name="code" required maxlength="100" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="TI-PREVIEW-…">
+   <button class="error-button error-primary" type="submit" data-copy="activate">Activează invitația</button>
+   <p class="maintenance-hint" data-copy="hint">Cod de unică folosință. Acces temporar, fără înregistrare.</p>
+  </form>
+  <p id="maintenance-status" class="maintenance-status" role="status" aria-live="polite"></p>
+  <a class="error-button error-primary" id="maintenance-continue" href="/index.html" hidden data-copy="continue">Continuă pe platformă</a>
+  <details class="maintenance-owner">
+   <summary data-copy="owner">Acces proprietar</summary>
+   <form id="owner-form" class="maintenance-form">
+    <label for="owner-email" data-copy="email">E-mail</label><input id="owner-email" name="email" type="email" autocomplete="username" required maxlength="254">
+    <label for="owner-password" data-copy="password">Parolă</label><input id="owner-password" name="password" type="password" autocomplete="current-password" required>
+    <button class="error-button" type="submit" data-copy="signIn">Intră în cont</button>
+   </form>
+   <button class="maintenance-google error-button" type="button" data-owner-google data-copy="google">Continuă cu Google</button>
+  </details>
+ </main>
+ <footer class="error-footer">© <span data-maintenance-year>2026</span> TikInteract.</footer>
+</body></html>

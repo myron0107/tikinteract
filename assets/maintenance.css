@@ -1,0 +1,28 @@
+.maintenance-main{width:min(470px,calc(100% - 40px));padding:48px 0}
+.maintenance-symbol{width:76px;height:76px;display:grid;place-items:center;margin-bottom:25px;border:1px solid var(--error-line);border-radius:20px;background:var(--error-panel);color:var(--error-accent)}
+.maintenance-symbol svg{width:40px;height:40px}
+.maintenance-form{display:grid;gap:10px;text-align:left;width:100%;margin-top:26px}
+.maintenance-form label{font-size:12px;font-weight:600;color:var(--error-ink)}
+.maintenance-form input{width:100%;min-height:46px;border:1px solid var(--error-line);border-radius:8px;padding:12px;color:var(--error-ink);background:var(--error-panel);font:400 13px Inter,system-ui,sans-serif}
+.maintenance-form .error-button{margin-top:2px;width:100%}
+.maintenance-hint{font-size:10px;line-height:1.6;color:var(--error-muted);text-align:center;margin:1px 0 0}
+.maintenance-status{font-size:12px;line-height:1.7;min-height:20px;margin:15px 0;color:var(--error-muted)}
+.maintenance-status[data-error=true]{color:var(--error-accent)}
+.maintenance-owner{border-top:1px solid var(--error-line);padding-top:18px;margin-top:20px;width:100%;font-size:11px;color:var(--error-muted)}
+.maintenance-owner summary{cursor:pointer;list-style:none;text-align:center}
+.maintenance-owner .maintenance-form{margin-top:18px}
+.maintenance-google{width:100%;margin-top:10px}
+.maintenance-page [hidden]{display:none!important}
+.maintenance-page .maintenance-language{width:34px;height:34px;display:grid;place-items:center;cursor:pointer;border:1px solid var(--error-line);border-radius:50%;background:transparent}
+.maintenance-language img{border-radius:2px;object-fit:cover}
+.maintenance-page .maintenance-language[aria-pressed=true]{background:var(--error-panel)}
+.maintenance-page button:disabled{opacity:.55;cursor:wait}
+/* Owner tools reuse the administrator's existing card, button and table styles. */
+.admin-maintenance-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.admin-maintenance-options label:first-child{grid-column:1/-1}
+.admin-maintenance-result{display:grid;gap:9px;min-width:0;margin:18px 0;padding:18px;border:1px solid var(--line,#333);border-radius:12px}
+.admin-maintenance-result input{width:100%;min-width:0;font:500 12px Inter,system-ui,sans-serif;padding:10px}
+.admin-maintenance-result[hidden]{display:none}
+.admin-maintenance-status{min-height:22px;margin:12px 0;font-size:12px;line-height:1.6}
+.admin-maintenance-result .admin-row-actions{flex-wrap:wrap}
+@media(max-width:600px){.admin-maintenance-options{grid-template-columns:1fr}.admin-maintenance-options label:first-child{grid-column:auto}.maintenance-main{padding:32px 0}.maintenance-symbol{width:64px;height:64px;margin-bottom:20px}.maintenance-symbol svg{width:34px;height:34px}}

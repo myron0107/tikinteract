@@ -171,3 +171,35 @@ body#tikinteract-site.public-approved .public-hero-line em{color:var(--public-ac
 @media(max-width:540px){body#tikinteract-site.public-approved .public-hero{padding-block:24px 30px;gap:24px}body#tikinteract-site.public-approved .public-hero h1{font-size:clamp(29px,8.3vw,34px);line-height:1.16;margin-bottom:13px}body#tikinteract-site.public-approved .public-hero .home-hero-copy>p{font-size:13px;max-width:320px}body#tikinteract-site.public-approved .public-hero .public-proof{gap:12px;row-gap:9px;margin-top:20px}}
 
 @media(max-width:540px){body#tikinteract-site.public-approved .catalog-featured .home-nova-copy :is(h3,.home-nova-how,.home-nova-features){display:none}body#tikinteract-site.public-approved .catalog-featured .home-nova-copy h2{margin-bottom:12px}}
+
+/* Phone-only: keep the brand and Studio entry together, with compact tickets. */
+@media(max-width:540px){
+ body#tikinteract-site.public-approved .site-header-inner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center}
+ body#tikinteract-site.public-approved .template-brand{min-width:0;justify-self:start}
+ body#tikinteract-site.public-approved .template-brand .ti-brand-tagline{display:none}
+ body#tikinteract-site.public-approved .header-account-actions{margin:0!important;justify-self:end;gap:7px}
+ body#tikinteract-site.public-approved .template-navigation{grid-column:1/-1;grid-row:2}
+ body#tikinteract-site.public-approved .open-studio-button{font-size:10px;padding-inline:9px}
+}
+@media(max-width:650px){
+ body#tikinteract-site.public-approved .public-intro{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 8px}
+ body#tikinteract-site.public-approved .public-intro>div{grid-column:1/-1;grid-row:1}
+ body#tikinteract-site.public-approved .public-intro-chip{display:inline-flex;grid-row:2;transform:none;min-width:0;padding:9px 5px;font-size:8px;gap:5px;border-radius:9px}
+ body#tikinteract-site.public-approved .public-intro-chip-left{grid-column:1}
+ body#tikinteract-site.public-approved .public-intro-chip-right{grid-column:2}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket{min-width:0;min-height:178px;padding:14px 8px 10px;border-radius:10px;margin:0;max-width:none}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-heading{gap:3px;min-height:32px;align-items:flex-start}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-heading h3{font-size:12px;line-height:1.3}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-heading>i{font-size:12px;flex:none;margin-top:2px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-price{gap:3px;margin:14px 0 18px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-price strong{font-size:26px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-price>span{font-size:8px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket ul{display:none}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket button{margin-top:auto;font-size:9px;padding:8px 3px;gap:3px;min-height:35px;border-radius:6px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket button>i{display:none}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-barcode{width:34px;height:6px;margin-top:10px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:before,body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:after{width:12px;height:12px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:before{left:-7px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:after{right:-7px}
+}
