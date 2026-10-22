@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 154 78" role="img" aria-labelledby="title">
+  <title id="title">TIK</title>
+  <defs><linearGradient id="red" x1="110" y1="0" x2="85" y2="78" gradientUnits="userSpaceOnUse"><stop stop-color="#E92E5B"/><stop offset="1" stop-color="#A30F3D"/></linearGradient></defs>
+  <path d="M16 1H69L52 19H38V64L20 77V19H0Z" fill="#101014"/>
+  <g fill="url(#red)">
+    <path d="M62 20L79 1V77H62Z"/>
+    <path d="M85 1H102V77H85Z"/>
+    <path d="M102 29L128 1H153L116 41L102 28Z"/>
+    <path d="M104 48L117 35L154 77H128Z"/>
+  </g>
+</svg>

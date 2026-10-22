@@ -1,7 +1,7 @@
 import{ct,esc,ic,avatar}from'./creator-ui.js?v=4';
 import './creator-metrics.js?v=1';
 import {mountNotificationDropdown} from './studio-notifications.js?v=4';
-import {initializeStudioWindows,openStudioWindow} from './studio-user-windows.js?v=2';
+import {initializeStudioWindows,openStudioWindow} from './studio-user-windows.js?v=3';
 const $=id=>document.getElementById(id),studio=document.body.dataset.page==='studio';
 const label=key=>`<span data-cp="${key}">${ct(key)}</span>`;
 function translateUI(){document.querySelectorAll('[data-cp]').forEach(el=>{el.textContent=ct(el.dataset.cp);});document.querySelectorAll('[data-cp-placeholder]').forEach(el=>{el.placeholder=ct(el.dataset.cpPlaceholder);});document.querySelectorAll('[data-cp-title]').forEach(el=>{el.title=ct(el.dataset.cpTitle);el.setAttribute('aria-label',ct(el.dataset.cpTitle));});}

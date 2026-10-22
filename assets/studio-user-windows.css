@@ -14,7 +14,12 @@ body.sw-modal-open{overflow:hidden}
 #tikinteract-studio.studio-modern .sw-menu-identity>div{display:flex;align-items:center;justify-content:space-between;gap:8px}
 #tikinteract-studio.studio-modern .sw-menu-identity strong{min-width:0;font-size:12px;line-height:1.5;font-weight:650;overflow-wrap:anywhere}
 #tikinteract-studio.studio-modern .sw-menu-identity small{display:block;font-size:11px;line-height:1.6;color:var(--studio-muted);overflow-wrap:anywhere;margin-top:3px}
-#tikinteract-studio.studio-modern .sw-menu-plan{flex:none;font-size:9px;font-weight:600;border-radius:5px;padding:3px 6px;background:var(--studio-soft);color:var(--studio-muted)}
+#tikinteract-studio.studio-modern .sw-menu-plan{display:inline-flex;align-items:center;justify-content:center;gap:5px;flex:none;min-height:28px;padding:6px 9px;border-radius:4px;font:650 9px/1.2 Inter,system-ui,sans-serif;white-space:nowrap;background:var(--studio-soft);color:var(--studio-muted)}
+#tikinteract-studio.studio-modern .sw-menu-plan:not([data-plan=unknown]){mask-image:radial-gradient(circle at left center,transparent 3px,#000 3.5px);mask-image:radial-gradient(circle at left center,transparent 3px,#000 3.5px),radial-gradient(circle at right center,transparent 3px,#000 3.5px);mask-composite:intersect;box-shadow:inset 0 1px 0 #fff3}
+#tikinteract-studio.studio-modern .sw-menu-plan>i{font-size:10px;color:inherit}
+#tikinteract-studio.studio-modern .sw-menu-plan[data-plan=free]{background:linear-gradient(125deg,#bfc2c9,#f0f1f4 33%,#d0d2d9 62%,#b4b7bf);color:#22252c}
+#tikinteract-studio.studio-modern .sw-menu-plan[data-plan=play_pass]{background:linear-gradient(125deg,#ba8c2d,#f6df96 33%,#dfbc62 62%,#c69a3d);color:#392809}
+#tikinteract-studio.studio-modern .sw-menu-plan[data-plan=play_pass_pro]{background:linear-gradient(125deg,#6f1630,#b92c50 36%,#8b1f3f 68%,#64112d);color:#fff}
 #tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a){display:flex;align-items:center;gap:11px;width:100%;min-height:42px;border:0;border-radius:7px;background:transparent;box-shadow:none;text-align:left;text-decoration:none;color:var(--studio-muted);padding:10px;font:500 12px/1.4 Inter,system-ui,sans-serif;cursor:pointer}
 #tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a)>i:first-child{width:17px;font-size:15px;text-align:center;flex:none;color:inherit}
 #tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a)>i:last-child:not(:first-child){font-size:9px;margin-left:auto;opacity:.5}

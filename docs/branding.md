@@ -17,3 +17,7 @@ Earlier proposed assets remain unused references. The local Inter font license i
 
 
 Homepage follow-up: the public index header/footer now uses a text-only TikInteract signature without the final dot, followed by LIVE GAMES. REAL AUDIENCE. REAL IMPACT. The colors and Inter font remain native; no raster wordmark is used. This local variant does not replace the Studio monogram or the other existing brand contexts.
+
+Studio logo update: the sidebar alone now uses assets/studio-pulse-play.svg (approved concept 01: play, touch point and two LIVE arcs). It is a scalable SVG with a transparent touch cutout. It keeps the existing 60px desktop / 46px mobile footprint and button behavior. Public homepage branding and all other logo assets remain unchanged.
+
+Studio abbreviation follow-up: approved concept 02 replaces Pulse Play in the sidebar with the TIK abbreviation (studio-tik-dark.svg / studio-tik-light.svg) and native STUDIO text underneath. A subtle divider sits below the logo. Existing sidebar dimensions and homepage branding stay unchanged.
