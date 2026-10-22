@@ -1,10 +1,10 @@
 import {esc,ic} from './creator-ui.js?v=4';
 
 const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
-const accountModule=()=>import('./creator-account.js?v=7');
+const accountModule=()=>import('./creator-account.js?v=8');
 const titles={account:['Contul meu','My account'],subscription:['Abonamentul meu','My subscription'],analytics:['Statistici','Analytics'],support:['Suport','Support'],help:['Ghid Studio','Studio guide'],community:['Comunitate','Community']};
 const icons={account:'user',subscription:'ticket',analytics:'chart-line',support:'comments',help:'circle-question',community:'users'};
-let dialog,menu,wrap,trigger,content,accountRoot,view=null,pane='profile',request=0,opener,restoreFocus=true,adminUser=null,identity=null;
+let dialog,menu,wrap,trigger,content,accountRoot,view=null,pane='profile',request=0,opener,restoreFocus=true,adminUser=null,identity=null,selectingAccount=false;
 const panels=new Map();
 
 function closeMenu({focus=false}={}){
@@ -70,9 +70,9 @@ export async function openStudioWindow(target,{section='profile',plan=''}={}){
   let root;
   if(['account','subscription','support'].includes(target)){
    const account=await accountModule();if(current!==request||own!==window.tikInteractUser?.id)return;
-   root=document.getElementById('creator-account-panel');accountRoot=root;content.append(root);panels.set('account',root);root.hidden=false;root.classList.remove('hidden');account.mountAccount(root);
+   root=document.getElementById('creator-account-panel');accountRoot=root;content.append(root);panels.set('account',root);root.hidden=false;root.classList.remove('hidden');
    const key=target==='subscription'?'subscription':target==='support'?'messages':pane==='security'?'security':'profile';
-   account.openAccountSection(key,plan);root.dataset.settingsPane=pane;
+   selectingAccount=true;try{account.mountAccount(root);account.openAccountSection(key,plan);}finally{selectingAccount=false;}root.dataset.settingsPane=pane;
   }else{
    root=document.getElementById(target==='analytics'?'creator-analytics-panel':target==='community'?'creator-community-panel':'studio-help-panel');
    if(!root)throw Error('PANEL_UNAVAILABLE');content.append(root);panels.set(target,root);root.hidden=false;root.classList.remove('hidden');
@@ -123,7 +123,7 @@ export function initializeStudioWindows(){
  window.addEventListener('tikinteract:language',()=>{renderMenu();syncWindow();simplifyNavigation();});
  window.addEventListener('tikinteract:account-mounted',()=>{if(dialog.open){accountRoot=document.getElementById('creator-account-panel');syncWindow();}});
  window.addEventListener('tikinteract:account-section',event=>{
-  if(!dialog.open)return;const key=event.detail.section,target=key==='subscription'?'subscription':key==='messages'?'support':'account';
+  if(!dialog.open||selectingAccount)return;const key=event.detail.section,target=key==='subscription'?'subscription':key==='messages'?'support':'account';
   if(view!==target)openStudioWindow(target,{section:key});
  });
  identity=window.tikInteractUser?.id||null;syncAdmin();renderMenu();

@@ -11,6 +11,7 @@ import {createStudioAuthenticator} from './lib/studio-auth.js';
 import {fetchTikTokGiftCatalog} from './lib/tiktok-gift-source.js';
 import {maintenanceService} from './lib/maintenance-service.js';
 import {nodeMaintenanceHandler,isMaintenancePublic,PRIVATE_HEADERS} from './lib/maintenance-http.js';
+import {nodeBillingHandler} from './lib/billing-http.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const importedGiftCatalog = JSON.parse(await readFile(path.join(ROOT, 'assets/tiktok-gifts-catalog.json'), 'utf8'));
@@ -104,6 +105,9 @@ const server = createServer(async (request, response) => {
         await nodeMaintenanceHandler(request, response);
         return;
     }
+    if (pathname === '/api/billing/webhook') {
+        await nodeBillingHandler(request,response);return;
+    }
     let gate;
     if (!isMaintenancePublic(pathname)) {
         try {
@@ -118,6 +122,9 @@ const server = createServer(async (request, response) => {
         }
     }
 
+    if (pathname === '/api/billing' || pathname === '/api/billing/') {
+        await nodeBillingHandler(request,response);return;
+    }
     if(pathname.startsWith('/GAME/NEON-ASCENT/')){
         const destination=new URL(request.url,`http://${HOST}:${PORT}`);
         destination.pathname=pathname.replace('/GAME/NEON-ASCENT/','/GAME/NOVA-VEX/');
