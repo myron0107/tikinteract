@@ -575,6 +575,7 @@ function setAudioLibraryScope(scope) {
 }
 
 function setLiveStudioTab(tab, options = {}) {
+    if (window.TikInteractStudioVisibility?.isVisible(tab) === false) return;
     const tabs = [...document.querySelectorAll('.live-studio-tabs [data-studio-tab]')];
     if (!tabs.some(button => button.dataset.studioTab === tab)) return;
     document.getElementById('view-live')?.classList.toggle('is-studio-mode', tab === 'studio');
@@ -592,7 +593,7 @@ function setLiveStudioTab(tab, options = {}) {
     window.dispatchEvent(new CustomEvent('tikinteract:studio-tab',{detail:{tab}}));
 }
 
-const studioTourSteps = [
+const studioTourAllSteps = [
     {tab:'studio', target:'.live-studio-tabs', title:'Bine ai venit în LIVE Studio', text:'De aici alegi jocurile, sunetele și conexiunea LIVE.'},
     {tab:'studio', target:'.studio-connection', title:'Conectează streamerul', text:'Salvează username-ul și conectează LIVE-ul. Serverul local trebuie să ruleze pe acest calculator.'},
     {tab:'studio', target:'.studio-game-picker', title:'Jocurile tale, la un click', text:'Apasă o copertă ca să pornești jocul. Steluța adaugă sau elimină favorite.'},
@@ -604,11 +605,15 @@ const studioTourSteps = [
     {tab:'audio', target:'.soundboard-monitor', title:'Control audio la îndemână', text:'Reglează volumul sau oprește sunetele. Bara rămâne la îndemână când derulezi.'},
     {tab:'studio', target:'.studio-audio', title:'Sunete rapide în timpul LIVE-ului', text:'Apasă un sunet favorit pentru redare. Include sunetul browserului în aplicația de streaming ca să-l audă și publicul.'}
 ];
+let studioTourSteps = studioTourAllSteps;
 let studioTourIndex = -1;
 let studioTourTarget = null;
 let studioTourOrigin = null;
 
 function openStudioHelp() {
+    if (window.TikInteractStudioVisibility?.isVisible('guide') === false) return;
+    studioTourSteps = studioTourAllSteps.filter(step => window.TikInteractStudioVisibility?.isVisible(step.tab) !== false);
+    if (!studioTourSteps.length) return;
     const dialog = document.getElementById('studio-help-dialog');
     if (!dialog || dialog.open) return;
     studioTourOrigin = {tab: document.querySelector('[data-studio-tab].is-active')?.dataset.studioTab || 'studio', scroll: window.scrollY, gameSearch: document.getElementById('game-center-search')?.value || ''};

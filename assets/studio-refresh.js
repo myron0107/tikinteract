@@ -2,7 +2,7 @@
 import{ct,esc,ic}from'./creator-ui.js?v=4';
 const $=s=>document.querySelector(s),en=()=>window.TikInteractLanguage?.get()==='en',t=(ro,english)=>en()?english:ro;
 let currentTab='studio',suggestedFor,accountObserver;
-const names={studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],animations:['ANIMAȚII','ANIMATIONS'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
+const names={studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],animations:['ANIMAȚII','ANIMATIONS'],unavailable:['STUDIO','STUDIO'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
 function label(tab){return t(...(names[tab]||names.studio));}
 function arrange(){window.TikInteractStudioLayout?.fitGame();}
 function suggestions(){
@@ -59,6 +59,7 @@ function accountTicket(){
 function active(tab){currentTab=tab;header();if(tab==='account'){accountObserver?.disconnect();const root=$('#creator-account-panel');if(root){accountTicket();accountObserver=new MutationObserver(accountTicket);accountObserver.observe(root,{childList:true,subtree:true});}}}
 function init(){
  document.body.classList.add('studio-modern');
+ currentTab=document.querySelector('.studio-app-nav [aria-selected=true]')?.dataset.studioTab||(document.getElementById('studio-navigation-empty')?.hidden===false?'unavailable':'studio');
  const connection=$('.studio-connection');if(connection)simplifyConnection(connection);
  const feed=$('.studio-controls .feed-header');if(feed&&!$('#studio-clear-feed')){const button=document.createElement('button');button.type='button';button.id='studio-clear-feed';button.className='studio-profile-more';button.textContent=t('Curăță','Clear');button.onclick=()=>$('#feed-list')?.replaceChildren();feed.append(button);}
  const quick=$('.studio-game-options');if(quick)new MutationObserver(covers).observe(quick,{childList:true,subtree:true});

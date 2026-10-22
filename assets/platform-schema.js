@@ -18,6 +18,8 @@ export const DEFAULT_CONFIG = {
 };
 
 export const PANEL_NAMES={games:'Favorite jocuri',controls:'CONTROL JOC',streamer:'Setări Streamer',audio:'Favorite audio',stats:'Statistici',feed:'Activitate LIVE'};
+export const STUDIO_SECTIONS={studio:['Transmisie','Stream'],games:['Jocuri','Games'],audio:['Panou de sunete','Sound Pad'],animations:['Animații','Animations'],guide:['Ghid Studio','Studio guide'],website:['Înapoi la site','Back to website']};
+export function studioVisibility(config){return Object.fromEntries(Object.keys(STUDIO_SECTIONS).map(key=>[key,config?.studio?.visibility?.[key]!==false]));}
 export const cloneConfig=value=>JSON.parse(JSON.stringify(value));
 const text=(value,max)=>typeof value==='string'&&value.trim().length>0&&value.length<=max;
 export function safeCover(value){return typeof value==='string'&&value.length<=2048&&(/^(?:assets\/)[A-Za-z0-9_./-]+\.(?:webp|png|jpe?g)(?:\?v=\d+)?$/.test(value)||/^https:\/\/[^\s<>"']+$/.test(value))&&!value.includes('..');}
@@ -34,5 +36,6 @@ export function validateConfig(input){
     if(!input.home||!text(input.home.heading,100)||!text(input.home.accent,100)||!text(input.home.intro,300))fail('Completează textele pentru ACASĂ.');
     const s=input.studio,all=s&&Array.isArray(s.left)&&Array.isArray(s.right)?[...s.left,...s.right]:[];
     if(all.length!==6||new Set(all).size!==6||all.some(x=>!Object.hasOwn(PANEL_NAMES,x))||!['normal','compact'].includes(s.density)||!['standard','reversed'].includes(s.side))fail('Fiecare panou Studio trebuie să apară exact o dată.');
-    return cloneConfig(input);
+    if(s.visibility!==undefined&&(!s.visibility||Array.isArray(s.visibility)||typeof s.visibility!=='object'||Object.entries(s.visibility).some(([key,value])=>!Object.hasOwn(STUDIO_SECTIONS,key)||typeof value!=='boolean')))fail('Vizibilitatea secțiunilor Studio trebuie să conțină doar opțiuni valide.');
+    const output=cloneConfig(input);output.studio.visibility=studioVisibility(input);return output;
 }

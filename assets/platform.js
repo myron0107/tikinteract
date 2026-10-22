@@ -1,5 +1,6 @@
-import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES} from './platform-schema.js';
+import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES} from './platform-schema.js?v=2';
 import {arrangeStudioPanels} from './studio-structure.js?v=1';
+import {applyStudioVisibility} from './studio-visibility.js?v=1';
 let config=cloneConfig(DEFAULT_CONFIG),revision=-1;
 const byId=id=>config.games.find(game=>game.id===id);
 const node=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
@@ -45,7 +46,7 @@ function updateAccess(){
 function prices(){for(const [i,p]of config.plans.entries()){const card=document.querySelectorAll('#pricing>.pricing-card')[i];if(!card)continue;card.hidden=!p.enabled;card.querySelector('h3').textContent=p.name;const price=card.querySelector('.price');price.replaceChildren(document.createTextNode(new Intl.NumberFormat((window.TikInteractLanguage?.locale() || 'ro-RO'),{maximumFractionDigits:2}).format(p.priceCents/100)));price.append(node('span','',p.currency+(p.id==='free'?'':' / lună')));card.querySelector('ul').replaceChildren(...p.features.map(f=>node('li','',f)));}}
 function home(){const copy=document.querySelector('.home-hero-copy');if(!copy)return;const title=copy.querySelector('h1');title.replaceChildren(document.createTextNode(config.home.heading),document.createElement('br'),node('span','',config.home.accent));copy.querySelector(':scope>p').textContent=config.home.intro;}
 function studio(){const workspace=document.querySelector('.studio-workspace'),left=document.querySelector('.studio-game-sidebar'),right=document.querySelector('.studio-controls');if(!workspace||!left||!right)return;const selectors={games:'.studio-game-picker',controls:'#studio-test-panel',streamer:'.studio-connection',audio:'.studio-audio',stats:'.studio-stats',feed:'.studio-controls>.live-grid,.studio-game-sidebar>.live-grid'};const panels=Object.fromEntries(Object.entries(selectors).map(([id,selector])=>[id,workspace.querySelector(selector)]));for(const[id,panel]of Object.entries(panels))if(panel)panel.dataset.configPanel=id;arrangeStudioPanels(config.studio,{left,right},panels);workspace.dataset.configDensity=config.studio.density;workspace.dataset.configSide=config.studio.side;window.TikInteractStudioLayout?.fitGame();}
-function apply(value){config=validateConfig(value);catalog();prices();home();studio();window.dispatchEvent(new CustomEvent('tikinteract:config',{detail:{revision}}));}
+function apply(value){config=validateConfig(value);catalog();prices();home();studio();applyStudioVisibility(config);window.dispatchEvent(new CustomEvent('tikinteract:config',{detail:{revision}}));}
 async function refresh(){try{const c=await credentials();const response=await fetch(c.url+'/rest/v1/rpc/get_site_public_config',{method:'POST',headers:{apikey:c.anonKey,'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(5000)});if(!response.ok)return false;const data=await response.json();if(!data?.config)return false;if(data.revision===revision)return true;validateConfig(data.config);revision=data.revision;apply(data.config);return true;}catch{return false;}}
 function showGame(game){let dialog=document.getElementById('platform-game-dialog');if(!dialog){dialog=node('dialog','resource-page-dialog');dialog.id='platform-game-dialog';dialog.setAttribute('aria-label','Prezentare joc');dialog.innerHTML='<div class="resource-page-topbar"><strong>JOCURI</strong><button class="support-icon-button" type="button" aria-label="Închide prezentarea">×</button></div><div class="resource-reader"></div>';dialog.querySelector('button').onclick=()=>dialog.close();document.body.append(dialog);}const content=dialog.querySelector('.resource-reader'),image=node('img','platform-game-cover');image.src=game.cover;image.alt=game.name;const heading=node('h1','',game.name),description=node('p','',game.description),link=node('a','support-submit','Deschide în LIVE Studio');link.href='live-studio.html?game='+encodeURIComponent(game.id);content.replaceChildren(image,heading,description,link);dialog.showModal();}
 let roleRequest=0;
@@ -55,7 +56,7 @@ const preview=!!previewToken&&window.parent!==window;
 if(preview){
  window.addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==window.parent||event.data?.channel!=='tikinteract-admin-preview'||event.data.token!==previewToken)return;try{apply(event.data.config);}catch{}});
 }
-function initialize(){apply(config);if(preview)window.parent.postMessage({channel:'tikinteract-preview-ready',token:previewToken},location.origin);else refresh();}
+async function initialize(){apply(config);if(preview)window.parent.postMessage({channel:'tikinteract-preview-ready',token:previewToken},location.origin);else await refresh();window.TikInteractStartup?.ready('navigation');}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();
 window.addEventListener('tikinteract:auth',updateAdminLink);
 window.addEventListener('tikinteract:access',()=>{updateAccess();window.refreshGameFavorites?.();});

@@ -60,6 +60,7 @@ export function closeStudioWindow({focus=true}={}){
 }
 export async function openStudioWindow(target,{section='profile',plan=''}={}){
  if(!Object.hasOwn(titles,target))return;
+ if(target==='help'&&window.TikInteractStudioVisibility?.isVisible('guide')===false)return;
  if(!window.tikInteractUser){window.openAuthModal?.();return;}
  ensureDialog();const own=window.tikInteractUser.id,current=++request;
  closeMenu();document.querySelector('[data-notifications-close]')?.click();window.TikInteractLanguage?.close();
@@ -113,7 +114,7 @@ export function initializeStudioWindows(){
  document.addEventListener('click',event=>{if(!wrap.contains(event.target))closeMenu();});window.addEventListener('resize',positionMenu);
  localizeRailFooter();
  const nativeTab=window.setLiveStudioTab;
- window.setLiveStudioTab=(tab,options)=>{if(['account','analytics','community','help'].includes(tab))return openStudioWindow(tab);closeStudioWindow({focus:false});return nativeTab?.(tab,options);};
+ window.setLiveStudioTab=(tab,options)=>{if(window.TikInteractStudioVisibility?.isVisible(tab)===false)return;if(['account','analytics','community','help'].includes(tab))return openStudioWindow(tab);if(!options?.preserveWindow)closeStudioWindow({focus:false});return nativeTab?.(tab,options);};
  window.addEventListener('tikinteract:auth',()=>{
   const next=window.tikInteractUser?.id||null;if(next!==identity){identity=next;adminUser=null;closeStudioWindow({focus:false});closeMenu();}renderMenu();
  });

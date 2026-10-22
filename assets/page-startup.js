@@ -27,7 +27,7 @@
     }
     function check() {
         if (revealed || preparing || !finished.has('language') || !finished.has('layout')) return;
-        if (studio && (!finished.has('auth') || (window.tikInteractUser && !window.TikInteractAccount?.getStatus()))) return;
+        if (studio && (!finished.has('auth') || !finished.has('navigation') || (window.tikInteractUser && !window.TikInteractAccount?.getStatus()))) return;
         preparing = true;
         // Font loading changes word widths; settle those before showing menus.
         Promise.race([document.fonts?.ready, new Promise(resolve => setTimeout(resolve, 1000))])

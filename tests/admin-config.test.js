@@ -2,7 +2,15 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {PGlite} from '@electric-sql/pglite';
-import {DEFAULT_CONFIG,cloneConfig,validateConfig} from '../assets/platform-schema.js';
+import {DEFAULT_CONFIG,cloneConfig,validateConfig,studioVisibility,STUDIO_SECTIONS} from '../assets/platform-schema.js';
+
+test('Studio visibility accepts legacy configs and validates independent reversible switches',()=>{
+ const legacy=validateConfig(DEFAULT_CONFIG);assert.deepEqual(legacy.studio.visibility,Object.fromEntries(Object.keys(STUDIO_SECTIONS).map(k=>[k,true])));
+ const hidden=cloneConfig(DEFAULT_CONFIG);hidden.studio.visibility={animations:false,games:false};
+ assert.deepEqual(studioVisibility(validateConfig(hidden)),{studio:true,games:false,audio:true,animations:false,guide:true,website:true});
+ for(const visibility of [null,[],{animations:'false'},{unknown:false}]){const invalid=cloneConfig(DEFAULT_CONFIG);invalid.studio.visibility=visibility;assert.throws(()=>validateConfig(invalid));}
+ hidden.studio.visibility=Object.fromEntries(Object.keys(STUDIO_SECTIONS).map(k=>[k,false]));assert.doesNotThrow(()=>validateConfig(hidden));
+});
 
 test('configuration rejects invalid money, duplicate panels and unsafe game URLs',()=>{
  assert.doesNotThrow(()=>validateConfig(DEFAULT_CONFIG));
@@ -70,5 +78,16 @@ test('real PostgreSQL enforces staff roles, private drafts, publication and owne
   await assert.rejects(call('admin',"select public.manage_site_admin('admin@example.invalid','editor')"),/Ultimul proprietar/);
   await db.exec(migration);
   assert.equal((await state('owner')).role,'editor','Rerunning setup must not undo a deliberate ownership handover');
+  // Existing JSON configuration persists the switches with no SQL migration.
+  const visibilityState=await state('admin'),hidden=cloneConfig(visibilityState.draft);hidden.studio.visibility={animations:false,audio:false};
+  await call('admin','select public.save_site_config($1::jsonb,$2,false)',[JSON.stringify(hidden),visibilityState.revision]);
+  let visibilityPublic=(await as('anon',null,'select public.get_site_public_config() as data')).rows[0].data;
+  assert.notEqual(visibilityPublic.config.studio.visibility?.animations,false,'Draft visibility must not affect users');
+  await call('admin','select public.save_site_config($1::jsonb,$2,true)',[JSON.stringify(hidden),visibilityState.revision+1]);
+  visibilityPublic=(await as('anon',null,'select public.get_site_public_config() as data')).rows[0].data;
+  assert.equal(visibilityPublic.config.studio.visibility.animations,false);
+  hidden.studio.visibility.animations=true;
+  await call('admin','select public.save_site_config($1::jsonb,$2,true)',[JSON.stringify(hidden),visibilityState.revision+2]);
+  assert.equal((await as('anon',null,'select public.get_site_public_config() as data')).rows[0].data.config.studio.visibility.animations,true);
  }finally{await db.close();}
 });

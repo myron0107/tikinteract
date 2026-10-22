@@ -1,7 +1,7 @@
 import{ct,esc,ic,avatar}from'./creator-ui.js?v=4';
 import './creator-metrics.js?v=1';
 import {mountNotificationDropdown} from './studio-notifications.js?v=7';
-import {initializeStudioWindows,openStudioWindow} from './studio-user-windows.js?v=7';
+import {initializeStudioWindows,openStudioWindow} from './studio-user-windows.js?v=8';
 import {initializeStudioDestination} from './studio-destination.js?v=1';
 const $=id=>document.getElementById(id),studio=document.body.dataset.page==='studio';
 const label=key=>`<span data-cp="${key}">${ct(key)}</span>`;
