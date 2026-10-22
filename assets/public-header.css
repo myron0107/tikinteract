@@ -1,0 +1,48 @@
+/* One public masthead, shared by the homepage, game presentations and info pages. */
+html{scrollbar-gutter:stable}
+html[data-mode] body .ti-site-header{position:sticky;top:0;z-index:50;width:100%;margin:0;padding:0;background:transparent!important;border:0;border-bottom:1px solid transparent!important;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;font-family:Inter,system-ui,sans-serif;transition:background-color .18s,border-color .18s,box-shadow .18s}
+html[data-mode] body .ti-site-header.is-scrolled{background:color-mix(in srgb,var(--cm-panel) 94%,transparent)!important;border-bottom-color:var(--cm-line)!important;box-shadow:0 4px 16px #0000000A;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important}
+html[data-mode] body .ti-site-header .site-header-inner{box-sizing:border-box;display:grid!important;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:24px!important;width:calc(100% - 64px)!important;max-width:1200px!important;min-height:74px;margin:0 auto!important;padding:0!important;background:none!important}
+html[data-mode] body .ti-site-header .template-brand{justify-self:start;min-width:0;white-space:nowrap;margin:0;padding:0;text-decoration:none}
+html[data-mode] body .ti-site-header .template-brand .ti-home-wordmark{--brand-size:30px!important;flex-direction:column;align-items:flex-start;gap:5px!important}
+html[data-mode] body .ti-site-header .ti-brand-tagline{font:600 6.4px/1.2 Inter,system-ui,sans-serif!important;letter-spacing:1px!important;color:var(--cm-muted)!important;text-transform:uppercase;white-space:nowrap}
+html[data-mode] body .ti-site-header .site-header-inner>.template-navigation{display:flex!important;align-items:center;justify-content:center;justify-self:center;gap:26px!important;order:0!important;width:auto!important;margin:0!important;padding:0!important;border:0!important;overflow:visible;flex-wrap:nowrap!important}
+html[data-mode] body .ti-site-header .template-navigation>button{box-sizing:border-box;display:inline-flex;flex-direction:row;align-items:center;justify-content:center;gap:8px;margin:0;padding:12px 0;height:40px;min-height:40px;border:0!important;border-radius:8px;background:transparent!important;box-shadow:none!important;font:650 12px/1.2 Inter,system-ui,sans-serif;letter-spacing:0;color:var(--cm-muted);cursor:pointer;white-space:nowrap;text-shadow:none!important;transition:color .15s}
+html[data-mode] body .ti-site-header .template-navigation>button:is(:hover,.is-active){color:var(--cm-ink)!important}
+html[data-mode] body .ti-site-header .template-navigation>button::before,html[data-mode] body .ti-site-header .template-navigation>button::after{display:none!important;content:none!important}
+html[data-mode] body .ti-site-header .site-header-inner>.template-navigation>button>i{font-size:13px;color:var(--cm-ink)!important}
+html[data-mode] body .ti-site-header .nav-stream-label{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+html[data-mode] body .ti-site-header .nav-live-dot{display:inline-block;flex:none;width:6px;height:6px;margin:0;border-radius:50%;background:#E92E5B}
+html[data-mode] body .ti-site-header .header-account-actions{display:flex;align-items:center;justify-self:end;gap:14px!important;margin:0!important}
+html[data-mode] body .ti-site-header .open-studio-button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:38px!important;margin:0;padding:10px 13px!important;border:1px solid #FFFFFF1A;border-radius:9px!important;background:var(--cm-primary)!important;color:#FFF!important;font:650 11px/1.2 Inter,system-ui,sans-serif!important;white-space:nowrap;box-shadow:inset 0 1px #FFFFFF25;cursor:pointer;text-decoration:none}
+html[data-mode] body .ti-site-header .open-studio-button:hover{filter:brightness(1.08)}
+html[data-mode] body .ti-site-header :is(.appearance-toggle,.language-trigger){box-sizing:border-box;display:inline-flex;align-items:center;justify-content:center;flex:none;gap:6px;min-height:34px;height:34px;padding:0;background:transparent;border:1px solid var(--cm-line);border-radius:50%;color:var(--cm-muted)!important;font:600 11px Inter,system-ui,sans-serif;cursor:pointer;box-shadow:none!important}
+html[data-mode] body .ti-site-header .appearance-toggle{width:34px!important}
+html[data-mode] body .ti-site-header .language-picker{position:relative}
+html[data-mode] body .ti-site-header .language-trigger{width:auto;padding:0 5px;border-color:transparent;border-radius:8px}
+html[data-mode] body .ti-site-header .language-flag{display:block;flex:none;object-fit:cover;border-radius:1px}
+html[data-mode] body .ti-site-header .language-menu{position:absolute;top:calc(100% + 10px);right:0;z-index:70;width:164px;padding:5px;border:1px solid var(--cm-line);border-radius:10px;background:var(--cm-panel);box-shadow:0 10px 30px #0002}
+html[data-mode] body .ti-site-header .language-menu[hidden]{display:none!important}
+html[data-mode] body .ti-site-header .language-menu>button{display:flex;align-items:center;gap:9px;width:100%;min-height:36px;padding:7px 9px;border:0;border-radius:6px;background:transparent;color:var(--cm-ink);font:500 12px Inter,system-ui,sans-serif;cursor:pointer;text-align:left}
+html[data-mode] body .ti-site-header .language-menu>button:hover{background:var(--cm-soft)}
+html[data-mode] body .ti-site-header .language-menu .fa-check{margin-left:auto;visibility:hidden}
+html[data-mode] body .ti-site-header .language-menu [aria-checked=true] .fa-check{visibility:visible}
+body.has-public-header{background-image:none;min-width:0}
+@media(max-width:1000px){
+ html[data-mode] body .ti-site-header .site-header-inner{grid-template-columns:minmax(0,1fr) auto;gap:8px!important;width:calc(100% - 36px)!important;padding:10px 0!important}
+ html[data-mode] body .ti-site-header .site-header-inner>.template-navigation{grid-column:1/-1;grid-row:2;gap:24px!important;width:100%!important}
+ html[data-mode] body .ti-site-header .template-navigation>button{height:34px!important;min-height:34px!important;padding:3px 0!important}
+}
+@media(max-width:540px){
+ html[data-mode] body .ti-site-header .site-header-inner{width:calc(100% - 32px)!important}
+ html[data-mode] body .ti-site-header .template-brand .ti-home-wordmark{--brand-size:22px!important}
+ html[data-mode] body .ti-site-header .ti-brand-tagline{display:none}
+ html[data-mode] body .ti-site-header .header-account-actions{gap:7px!important}
+ html[data-mode] body .ti-site-header .language-trigger{width:34px;padding:0;border-color:var(--cm-line);border-radius:50%}
+ html[data-mode] body .ti-site-header .language-trigger :is([data-language-label],.fa-chevron-down){display:none}
+ html[data-mode] body .ti-site-header .open-studio-button{min-height:34px!important;padding:8px 9px!important;font-size:10px!important}
+ html[data-mode] body .ti-site-header .open-studio-button>i{display:none}
+ html[data-mode] body .ti-site-header .template-navigation>button{font-size:10px!important;gap:6px}
+}
+@media(max-width:370px){html[data-mode] body .ti-site-header .site-header-inner>.template-navigation{gap:17px!important}html[data-mode] body .ti-site-header .template-brand .ti-home-wordmark{--brand-size:18px!important}html[data-mode] body .ti-site-header .header-account-actions{gap:5px!important}html[data-mode] body .ti-site-header :is(.appearance-toggle,.language-trigger){width:30px!important;height:30px;min-height:30px}html[data-mode] body .ti-site-header .open-studio-button{padding:7px 8px!important;font-size:9px!important}html[data-mode] body .ti-site-header .template-navigation>button{font-size:9px!important}}
+@media(prefers-reduced-motion:reduce){html[data-mode] body .ti-site-header{transition:none}}

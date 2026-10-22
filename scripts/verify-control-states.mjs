@@ -58,7 +58,7 @@ try{
     await run(`switchView(${JSON.stringify(view)})`);await settle();
     assert(await run('Array.from(document.querySelectorAll(".template-navigation>button"),e=>getComputedStyle(e,"::after").display).every(v=>v==="none")'),'Public navigation underline removed');
    }
-   assert(await run('document.querySelector("link[href*=focus]")?.href.includes("focus.css?v=3")'),'Shared interaction styles loaded');
+   assert(await run('document.querySelector("link[href*=focus]")?.href.includes("focus.css?v=4")'),'Shared interaction styles loaded');
   }
  }
  assert.deepEqual(b.errors,[]);

@@ -140,7 +140,7 @@
     const dialog = document.createElement('dialog');
     dialog.id = 'site-support'; dialog.className = 'resource-support';
     dialog.setAttribute('aria-labelledby','resource-support-title');
-    dialog.innerHTML = `<div class="support-topbar"><a class="support-brand" href="index.html"><span class="ti-wordmark ti-brand-lockup" translate="no"><span class="ti-symbol" aria-hidden="true"></span><span class="ti-brand-name">Tik<span>Interact.</span></span></span></a><button type="button" class="support-icon-button" data-support-close aria-label="Închide suportul" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="support-content"></div>`;
+    dialog.innerHTML = `<div class="support-topbar"><a class="support-brand" href="index.html"><span class="ti-wordmark ti-brand-lockup ti-home-wordmark" translate="no"><span class="ti-brand-name">Tik<span>Interact</span></span><span class="ti-brand-tagline">LIVE GAMES. REAL AUDIENCE. REAL IMPACT.</span></span></a><button type="button" class="support-icon-button" data-support-close aria-label="Închide suportul" autofocus><i class="fa-solid fa-xmark" aria-hidden="true"></i></button></div><div class="support-content"></div>`;
     document.body.append(dialog);
     if(!document.querySelector('link[href*="assets/support-center.css"]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='assets/support-center.css?v=2';document.head.append(styles);}
     let support, previousFocus;

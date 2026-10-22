@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="assets/page-startup.css?v=1">
+    <script src="assets/page-startup.js?v=1"></script>
     <title>LIVE Studio — TikInteract</title>
     <meta name="description" content="Jocuri, sunete și comenzi pentru TikTok LIVE.">
     <meta name="theme-color" content="#030305">
@@ -10,10 +12,10 @@
     <link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="assets/fonts/oxanium-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="assets/fonts/font-faces.css?v=1">
-    
+
     <!-- Supabase JS SDK -->
     <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+
     <!-- Prebuilt utilities: no browser-side CSS compilation. -->
     <link rel="stylesheet" href="assets/utility.css?v=1">
     <!-- FontAwesome -->
@@ -25,7 +27,7 @@
     <link rel="stylesheet" href="assets/studio-layout.css?v=4">
     <link rel="stylesheet" href="assets/modern-ui.css?v=11">
     <link rel="stylesheet" href="assets/typography.css?v=1">
-<link rel="stylesheet" href="assets/site-template.css?v=16"><link rel="stylesheet" href="assets/language.css?v=2"><script type="module" src="assets/language.js?v=8"></script><link rel="stylesheet" href="assets/studio-app.css?v=9"><link rel="stylesheet" href="assets/game-covers.css?v=2"><link rel="stylesheet" href="assets/tiktok-gifts.css?v=8"><script type="module" src="assets/tiktok-gifts.js?v=4"></script><link rel="stylesheet" href="assets/resources.css?v=4"><script src="assets/resources.js?v=27" defer></script><link rel="stylesheet" href="assets/platform.css?v=3"><script type="module" src="assets/platform.js?v=4"></script><script type="module" src="assets/play-pass.js?v=21"></script><link rel="stylesheet" href="assets/account-access.css?v=1"><script type="module" src="assets/account-access.js?v=1"></script><link rel="stylesheet" href="assets/navigation-finish.css?v=1"><link rel="stylesheet" href="assets/creator-platform.css?v=4"><script type="module" src="assets/creator-platform.js?v=44"></script><link rel="stylesheet" href="assets/appearance.css?v=7"><script src="assets/appearance.js?v=23"></script><link rel="stylesheet" href="assets/studio-refresh.css?v=24"><script type="module" src="assets/studio-refresh.js?v=29"></script><link rel="stylesheet" href="assets/plan-tickets.css?v=5"><link rel="stylesheet" href="assets/studio-account.css?v=10"><link rel="stylesheet" href="assets/account-layout.css?v=2"><link rel="stylesheet" href="assets/studio-user-windows.css?v=4"><link rel="stylesheet" href="assets/brand.css?v=15"><link rel="stylesheet" href="assets/support-center.css?v=2"><link rel="stylesheet" href="assets/overlay-theme.css?v=2"><link rel="stylesheet" href="assets/studio-notifications.css?v=3"><link rel="stylesheet" href="assets/focus.css?v=3"><script type="module" src="/assets/preview-session.js?v=2"></script><link rel="stylesheet" href="assets/billing.css?v=1"><link rel="stylesheet" href="assets/carbon-metal.css?v=3"></head><body id="tikinteract-studio" data-page="studio" class="studio-app studio-locked site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white"><header class="template-header app-topbar"><div class="site-header-inner"><div class="app-topbar-title"><span>LIVE STUDIO</span><span class="app-browser-label"><i class="fa-solid fa-globe" aria-hidden="true"></i> Browser</span></div><div class="header-account-actions flex items-center gap-4">
+<link rel="stylesheet" href="assets/site-template.css?v=16"><link rel="stylesheet" href="assets/language.css?v=2"><script type="module" src="assets/language.js?v=9"></script><link rel="stylesheet" href="assets/studio-app.css?v=9"><link rel="stylesheet" href="assets/game-covers.css?v=2"><link rel="stylesheet" href="assets/tiktok-gifts.css?v=8"><script type="module" src="assets/tiktok-gifts.js?v=4"></script><link rel="stylesheet" href="assets/resources.css?v=4"><script src="assets/resources.js?v=28" defer></script><link rel="stylesheet" href="assets/platform.css?v=3"><script type="module" src="assets/platform.js?v=6"></script><script type="module" src="assets/play-pass.js?v=21"></script><link rel="stylesheet" href="assets/account-access.css?v=1"><script type="module" src="assets/account-access.js?v=1"></script><link rel="stylesheet" href="assets/navigation-finish.css?v=1"><link rel="stylesheet" href="assets/creator-platform.css?v=4"><script type="module" src="assets/creator-platform.js?v=45"></script><link rel="stylesheet" href="assets/appearance.css?v=7"><script src="assets/appearance.js?v=25"></script><link rel="stylesheet" href="assets/studio-refresh.css?v=24"><script type="module" src="assets/studio-refresh.js?v=30"></script><link rel="stylesheet" href="assets/plan-tickets.css?v=5"><link rel="stylesheet" href="assets/studio-account.css?v=10"><link rel="stylesheet" href="assets/account-layout.css?v=2"><link rel="stylesheet" href="assets/studio-user-windows.css?v=4"><link rel="stylesheet" href="assets/brand.css?v=17"><link rel="stylesheet" href="assets/support-center.css?v=2"><link rel="stylesheet" href="assets/overlay-theme.css?v=2"><link rel="stylesheet" href="assets/studio-notifications.css?v=3"><link rel="stylesheet" href="assets/focus.css?v=4"><script type="module" src="/assets/preview-session.js?v=2"></script><link rel="stylesheet" href="assets/billing.css?v=1"><link rel="stylesheet" href="assets/carbon-metal.css?v=5"><link rel="stylesheet" href="assets/ui-controls.css?v=3"></head><body id="tikinteract-studio" data-page="studio" class="studio-app studio-locked studio-modern site-template min-h-screen flex flex-col selection:bg-red-600 selection:text-white"><header class="template-header app-topbar"><div class="site-header-inner"><div class="app-topbar-title" data-native-i18n=""><strong id="studio-current-section">TRANSMISIE</strong></div><div class="header-account-actions flex items-center gap-4"><div class="studio-palettes" role="group" aria-label="Burgundy / Racing Blue"><button type="button" data-studio-theme="burgundy" aria-label="Burgundy" title="Burgundy"></button><button type="button" data-studio-theme="blue" aria-label="Racing Blue" title="Racing Blue"></button></div><button type="button" class="appearance-toggle" data-mode-toggle translate="no" aria-label="Tema"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
                 <div class="language-picker">
                     <button type="button" class="language-trigger" aria-label="Alege limba" aria-haspopup="menu" aria-controls="language-menu" aria-expanded="false">
                         <img class="language-flag" data-language-flag src="assets/language-ro.svg" width="20" height="14" alt=""><span data-language-label translate="no">RO</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
@@ -57,23 +59,9 @@
                 <button id="btn-login-modal" aria-label="Autentificare / Cont" onclick="openAuthModal()" class="bg-red-600 hover:bg-red-500 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition glow-red shadow-lg flex items-center gap-2 cursor-pointer">
                     <i class="fa-solid fa-user" aria-hidden="true"></i> <span class="header-login-label">Autentificare / Cont</span>
                 </button>
-            </div></div></header><aside class="studio-app-rail" aria-label="Navigare aplicație"><div class="app-rail-heading">WORKSPACE</div><div class="live-studio-tabs studio-app-nav" role="tablist" aria-label="Instrumente LIVE Studio">
-            <button id="live-studio-tab" data-studio-tab="studio" class="live-studio-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="live-studio-panel" onclick="setLiveStudioTab('studio')">
-                <i class="fa-solid fa-tower-broadcast" aria-hidden="true"></i> LIVE Studio
-            </button>
-            <button id="game-center-tab" data-studio-tab="games" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="game-center-panel" onclick="setLiveStudioTab('games')">
-                <i class="fa-solid fa-gamepad" aria-hidden="true"></i> Game Center
-            </button>
-            <button id="audio-center-tab" data-studio-tab="audio" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="audio-center-panel" onclick="setLiveStudioTab('audio')">
-                <i class="fa-solid fa-wave-square" aria-hidden="true"></i> Audio Center
-            </button>
-            <button id="tiktok-gifts-tab" data-studio-tab="gifts" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="tiktok-gifts-panel" onclick="setLiveStudioTab('gifts')">
-                <i class="fa-solid fa-gift" aria-hidden="true"></i> TikTok Gifts
-            </button>
-            <button id="studio-help-button" class="live-studio-tab studio-help-button" type="button" aria-haspopup="dialog" aria-controls="studio-help-dialog" onclick="openStudioHelp()">
-                <i class="fa-solid fa-circle-question" aria-hidden="true"></i> Ajutor
-            </button>
-        </div><div class="app-rail-bottom"><span class="app-rail-note"><span></span> TikInteract Studio</span><a href="index.html"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Înapoi la site</a></div></aside><div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+            </div>
+</div></header><aside class="studio-app-rail" aria-label="Navigare aplicație" data-native-i18n=""><button class="template-brand cp-rail-brand" type="button" onclick="setLiveStudioTab('studio')" aria-label="TikInteract / TRANSMISIE" title="Deschide transmisia"><span class="ti-symbol" role="img" aria-label="TikInteract" translate="no"></span></button><div class="live-studio-tabs studio-app-nav" role="tablist" aria-label="Studio"><button id="live-studio-tab" data-studio-tab="studio" class="live-studio-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="live-studio-panel" onclick="setLiveStudioTab('studio')" title="TRANSMISIE" aria-label="TRANSMISIE"><svg class="studio-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4.9 4.9a10 10 0 0 0 0 14.2M19.1 4.9a10 10 0 0 1 0 14.2M7.7 7.7a6 6 0 0 0 0 8.6M16.3 7.7a6 6 0 0 1 0 8.6"></path><path d="m10 8.5 5 3.5-5 3.5z" fill="currentColor" stroke-width="1.2"></path></svg><span data-cp="studio">TRANSMISIE</span></button><button id="game-center-tab" data-studio-tab="games" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="game-center-panel" onclick="setLiveStudioTab('games')" title="JOCURI" aria-label="JOCURI"><svg class="studio-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7.2 6h9.6c2 0 3.4 1.3 3.8 3.3l1.1 7c.4 2.4-2.3 3.8-3.9 2l-2.3-2.5h-7l-2.3 2.5c-1.6 1.8-4.3.4-3.9-2l1.1-7C3.8 7.3 5.2 6 7.2 6Z" fill="currentColor" fill-opacity=".12"></path><path d="M6.5 10.5h4m-2-2v4"></path><circle cx="16" cy="10" r="1" fill="currentColor" stroke="none"></circle><circle cx="18.5" cy="12.5" r="1" fill="currentColor" stroke="none"></circle></svg><span data-cp="games">JOCURI</span></button><button id="audio-center-tab" data-studio-tab="audio" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="audio-center-panel" onclick="setLiveStudioTab('audio')" title="PANOU DE SUNETE" aria-label="PANOU DE SUNETE"><svg class="studio-nav-icon studio-pad-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="1.5" y="1.5" width="21" height="21" rx="2" stroke-width="1.5"></rect><g fill="currentColor" fill-opacity=".3" stroke-width="1.2"><rect x="4" y="4" width="4" height="4" rx=".45"></rect><rect x="10" y="4" width="4" height="4" rx=".45"></rect><rect x="16" y="4" width="4" height="4" rx=".45"></rect><rect x="4" y="10" width="4" height="4" rx=".45"></rect><rect x="10" y="10" width="4" height="4" rx=".45"></rect><rect x="16" y="10" width="4" height="4" rx=".45"></rect><rect x="4" y="16" width="4" height="4" rx=".45"></rect><rect x="10" y="16" width="4" height="4" rx=".45"></rect><rect x="16" y="16" width="4" height="4" rx=".45"></rect></g></svg><span data-cp="audio">PANOU DE SUNETE</span></button></div><div class="sw-rail-footer" data-native-i18n=""><button type="button" data-sw-rail-help="" aria-haspopup="dialog" aria-controls="studio-user-dialog" title="Ghid Studio" aria-label="Ghid Studio"><i class="fa-solid fa-circle-question" aria-hidden="true"></i><span>Ghid Studio</span></button><a href="index.html" title="Înapoi la site" aria-label="Înapoi la site"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i><span>Înapoi la site</span></a></div></aside>
+<div id="studio-utility-routes" class="live-studio-tabs" hidden=""><button id="creator-community-tab" data-studio-tab="community" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="creator-community-panel" onclick="setLiveStudioTab('community')"><i class="fa-solid fa-comments" aria-hidden="true"></i><span data-cp="community">Comunitate</span><small class="cp-ticket">PRO</small></button><button id="creator-analytics-tab" data-studio-tab="analytics" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="creator-analytics-panel" onclick="setLiveStudioTab('analytics')"><svg class="studio-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="2.5" y="3.5" width="19" height="17" rx="2.5" fill="currentColor" fill-opacity=".08"></rect><path d="M6.5 16.5v-3m5.5 3v-5m5.5 5V9M6 10l5-3 3 1.5 4-3"></path></svg><span data-cp="analytics">STATISTICI</span></button><button id="creator-account-tab" data-studio-tab="account" class="live-studio-tab" type="button" role="tab" aria-selected="false" aria-controls="creator-account-panel" onclick="setLiveStudioTab('account')"><i class="fa-solid fa-user" aria-hidden="true"></i><span data-cp="account">Contul meu</span></button><button id="studio-help-button" class="live-studio-tab studio-help-button" type="button" aria-haspopup="dialog" aria-controls="studio-help-panel" onclick="openStudioHelp()" data-studio-tab="help" role="tab" aria-selected="false"><i class="fa-solid fa-circle-question" aria-hidden="true"></i><span data-cp="help">Ajutor</span></button></div><div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-cardbg border border-zinc-800 w-full max-w-md rounded-3xl p-8 relative glow-red">
             <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-zinc-500 hover:text-white cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -107,11 +95,11 @@
                     </div>
                     <input type="password" id="auth-password" autocomplete="current-password" placeholder="••••••••" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-3 text-xs focus:outline-none focus:border-red-600">
                 </div>
-                
+
                 <button onclick="loginWithEmail()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3.5 rounded-xl text-xs transition glow-red cursor-pointer">
                     Intră în cont
                 </button>
-                
+
                 <button onclick="signUpWithEmail()" class="w-full bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold py-3.5 rounded-xl text-xs border border-zinc-800 transition cursor-pointer">
                     Creează un cont
                 </button>
@@ -144,15 +132,14 @@
             </div>
         </div>
     </div><section id="studio-access-gate" class="studio-access-gate" aria-labelledby="studio-access-title"><div><span class="studio-access-icon"><i class="fa-solid fa-lock" aria-hidden="true"></i></span><span class="eyebrow">LIVE STUDIO</span><h1 id="studio-access-title">Verificăm contul tău…</h1><p>Intră în cont pentru a folosi studioul.</p><button id="studio-access-login" class="home-primary-button" type="button" onclick="openAuthModal()" hidden>Autentificare / Creează cont</button><a href="index.html">Mergi la pagina principală</a></div></section><main class="app-main"><div id="view-live" class="is-studio-mode flex-1 max-w-7xl mx-auto px-6 py-10 w-full">
-        <div class="app-workspace-heading"><div><span class="eyebrow">Spațiul tău de creație</span><h1>LIVE Studio<span class="app-heading-dot" aria-hidden="true"></span></h1></div><a href="index.html#download-app" class="app-future-link"><i class="fa-solid fa-desktop" aria-hidden="true"></i> Aplicația desktop <span>În curând</span></a></div>
+        <div class="app-workspace-heading"><div><h1><span data-cp="studio">TRANSMISIE</span><span class="app-heading-dot"></span></h1></div><a href="index.html#download-app" class="app-future-link"><i class="fa-solid fa-desktop" aria-hidden="true"></i> Aplicația desktop <span>În curând</span></a></div>
 
-        
+
 
 
         <section id="live-studio-panel" role="tabpanel" aria-labelledby="live-studio-tab">
         <div class="studio-workspace"><div class="studio-game-sidebar">
-                        
-                    <section class="studio-game-picker live-favorites-panel" aria-labelledby="studio-game-favorites-title">
+<section class="studio-game-picker live-favorites-panel" aria-labelledby="studio-game-favorites-title">
                         <div class="live-favorites-heading">
                             <div><p class="section-kicker">Acces rapid</p><h4 id="studio-game-favorites-title">Favorite jocuri</h4></div>
                             <span id="studio-game-favorites-count" class="live-favorites-count">0</span>
@@ -162,82 +149,7 @@
                         <label class="studio-quick-search live-favorites-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span class="sr-only">Caută jocuri pentru acces rapid</span><input id="studio-quick-search" type="search" placeholder="Caută un joc și adaugă-l rapid…" oninput="renderQuickGames()" autocomplete="off"></label>
                         <button class="studio-all-games" type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Deschide Game Center</button>
                     </section>
-<section id="studio-test-panel" class="studio-test-panel" aria-labelledby="studio-test-title" aria-busy="false">
-                            <div class="studio-test-header">
-                                <div class="studio-test-identity"><span class="studio-test-symbol"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span><div><p class="studio-test-eyebrow">COMENZI LIVE</p><h5 id="studio-test-title">CONTROL JOC</h5></div></div>
-                                <span class="studio-test-status" hidden title="Comenzile controlează jocul selectat"><span></span> DIRECT</span>
-                            </div>
-                            <p id="studio-test-game-name">Alege un joc pentru a vedea comenzile.</p>
-                            <div id="studio-test-tabs" class="studio-test-tabs" role="tablist" aria-label="Comenzi de test"></div>
-                            <div id="studio-test-controls" role="tabpanel"></div>
-                            <p id="studio-test-feedback" class="studio-test-note" role="status" aria-live="polite"></p>
-                        </section>
-</div><div class="studio-stage dashboard-panel rounded-2xl p-6 min-h-[300px]">
-                <div class="studio-stage-heading flex items-center justify-between mb-6">
-                    <div>
-                        <p class="section-kicker">Joc LIVE</p>
-                        <h4 class="text-xl font-bold text-white"><i class="fa-solid fa-gamepad studio-stage-game-icon" aria-hidden="true"></i> Arena LIVE</h4>
-                    </div>
-                    <div class="studio-stage-actions">
-                        <span id="live-overview-status" class="badge-live"><i class="fa-solid fa-circle"></i> Offline</span>
-                    </div>
-                </div>
-
-                <div class="studio-game-browser">
-                    
-                    <select id="live-game-select" hidden aria-label="Joc selectat">
-                        <option value="" selected disabled>Alege un joc</option>
-                        <option value="neon-race-2">Neon Interact</option>
-                        <option value="moto-interact">Moto Interact</option>
-                        <option value="nova-vex">NOVA &amp; VEX</option>
-                    </select>
-                <div class="live-game-frame-wrap is-empty mb-6 overflow-hidden rounded-xl border border-zinc-800">
-                    <div id="studio-game-empty" class="studio-game-empty">
-                        <span class="studio-game-empty-icon"><i class="fa-solid fa-gamepad" aria-hidden="true"></i></span>
-                        <h2>Arena ta este pregătită.</h2>
-                        <p>Alege un joc din favorite sau Game Center.</p>
-                        <button type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Alege un joc</button>
-                    </div>
-                    <iframe id="live-game-frame" class="live-game-frame" hidden title="Joc TikTok LIVE" loading="eager" allow="autoplay" allowfullscreen></iframe>
-                </div>
-                </div>
-                <p id="live-game-status" class="mb-6 text-xs text-zinc-500" role="status" aria-live="polite">Niciun joc pornit.</p>
-
-                
-
-                
-            </div><aside class="studio-controls" aria-label="Configurare LIVE și sunete rapide">
-            <div class="studio-connection studio-streamer-settings dashboard-card p-6 rounded-2xl">
-                <h3 class="studio-panel-title text-sm font-bold text-white mb-4"><i class="fa-solid fa-sliders" aria-hidden="true"></i> Setări Streamer</h3>
-                <div id="tiktok-profile" class="hidden flex mb-4 items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-3">
-                    <div class="tiktok-profile-avatar">
-                        <span id="tiktok-profile-fallback">T</span>
-                        <img id="tiktok-profile-image" class="hidden" alt="Poza de profil TikTok" referrerpolicy="no-referrer">
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-[10px] uppercase tracking-wider text-zinc-500">Profil TikTok</p>
-                        <p id="tiktok-profile-name" class="truncate text-xs font-bold text-white"></p>
-                    </div>
-                </div>
-                <label for="tiktok-user" class="block text-xs text-zinc-400 mb-1">Profil TikTok</label>
-                <input type="text" id="tiktok-user" placeholder="@username TikTok" autocomplete="off" maxlength="25" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-3 focus:outline-none focus:border-red-600 font-mono">
-                <div class="streamer-profile-actions flex gap-2 mb-4">
-                    <button type="button" onclick="syncTikTokAccount()" aria-label="Verifică și salvează profilul TikTok" title="Verifică și salvează profilul TikTok" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2.5 rounded-xl text-[10px] border border-zinc-800 transition cursor-pointer">
-                        <i class="fa-solid fa-check" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" onclick="clearTikTokAccount()" aria-label="Resetează profilul TikTok" class="w-10 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl border border-zinc-800 transition cursor-pointer" title="Resetare">
-                        <i class="fa-solid fa-rotate-left"></i>
-                    </button>
-                </div>
-                <div id="tiktok-sync-status" class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500">Stare: neconectat</div>
-                <p class="mb-4 text-[10px] leading-relaxed text-zinc-400">
-                    Salvarea username-ului publică automat profilul și statisticile în clasament.
-                </p>
-                <button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">
-                    Pornește Conexiunea Live
-                </button>
-            </div>
-                <section class="live-favorites-panel studio-audio" aria-labelledby="live-favorites-title">
+<section class="live-favorites-panel studio-audio" aria-labelledby="live-favorites-title">
                     <div class="live-favorites-heading">
                         <div>
                             <p class="section-kicker">Acces rapid</p>
@@ -267,7 +179,69 @@
                     <div id="live-favorites-search-results" class="live-favorites-search-results hidden" role="list" aria-label="Rezultate sunete"></div>
                     <button class="studio-all-games" type="button" onclick="setLiveStudioTab('audio')"><i class="fa-solid fa-wave-square" aria-hidden="true"></i> Deschide Audio Center</button>
                 </section>
-            <div class="studio-stats dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+</div><div class="studio-stage dashboard-panel rounded-2xl p-6 min-h-[300px]">
+                <div class="studio-stage-heading flex items-center justify-between mb-6">
+
+
+                <span id="live-overview-status" class="badge-live" role="status" aria-live="polite"><i class="fa-solid fa-circle"></i> Deconectat</span><div id="creator-orientation" class="cp-orientation" data-native-i18n=""><button type="button" data-format="portrait" data-cp-title="vertical" title="Vertical 9:16" aria-label="Vertical 9:16" aria-pressed="true"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i></button><button type="button" data-format="landscape" data-cp-title="horizontal" title="Orizontal 16:9" aria-label="Orizontal 16:9" aria-pressed="false"><i class="fa-solid fa-desktop" aria-hidden="true"></i></button><button class="cp-fullscreen" type="button" data-cp-title="fullscreen" aria-label="Ecran complet" title="Ecran complet"><i class="fa-solid fa-expand" aria-hidden="true"></i></button></div></div>
+
+                <div class="studio-game-browser">
+
+                    <select id="live-game-select" hidden aria-label="Joc selectat">
+                        <option value="" selected disabled>Alege un joc</option>
+                        <option value="neon-race-2">Neon Interact</option>
+                        <option value="moto-interact">Moto Interact</option>
+                        <option value="nova-vex">NOVA &amp; VEX</option>
+                    </select>
+                <div class="live-game-frame-wrap is-empty mb-6 overflow-hidden rounded-xl border border-zinc-800">
+                    <div id="studio-game-empty" class="studio-game-empty">
+                        <span class="studio-game-empty-icon"><i class="fa-solid fa-gamepad" aria-hidden="true"></i></span>
+                        <h2>Arena ta este pregătită.</h2>
+                        <p>Alege un joc din favorite sau Game Center.</p>
+                        <button type="button" onclick="setLiveStudioTab('games')"><i class="fa-solid fa-grip" aria-hidden="true"></i> Alege un joc</button>
+                    </div>
+                    <iframe id="live-game-frame" class="live-game-frame" hidden title="Joc TikTok LIVE" loading="eager" allow="autoplay" allowfullscreen></iframe>
+                </div>
+                </div>
+                <p id="live-game-status" class="mb-6 text-xs text-zinc-500" role="status" aria-live="polite">Niciun joc pornit.</p>
+                <p id="creator-format-note" class="cp-format-note" data-native-i18n></p>
+                <div id="studio-suggestions" data-native-i18n></div>
+            </div><aside class="studio-controls" aria-label="Configurare LIVE și sunete rapide">
+<section id="studio-test-panel" class="studio-test-panel" aria-labelledby="studio-test-title" aria-busy="false">
+                            <div class="studio-test-header">
+                                <div class="studio-test-identity"><span class="studio-test-symbol"><i class="fa-solid fa-sliders" aria-hidden="true"></i></span><div><p class="studio-test-eyebrow">COMENZI LIVE</p><h5 id="studio-test-title">CONTROL JOC</h5></div></div>
+                                <span class="studio-test-status" hidden title="Comenzile controlează jocul selectat"><span></span> DIRECT</span>
+                            </div>
+                            <p id="studio-test-game-name">Alege un joc pentru a vedea comenzile.</p>
+                            <div id="studio-test-tabs" class="studio-test-tabs" role="tablist" aria-label="Comenzi de test"></div>
+                            <div id="studio-test-controls" role="tabpanel"></div>
+                            <p id="studio-test-feedback" class="studio-test-note" role="status" aria-live="polite"></p>
+                        </section>
+<div class="studio-connection studio-streamer-settings dashboard-card p-6 rounded-2xl" data-config-panel="streamer" aria-labelledby="studio-connect-title">
+                <div class="studio-connect-heading" data-native-i18n=""><h3 class="studio-panel-title text-sm font-bold text-white mb-4" id="studio-connect-title">TikTok LIVE</h3><button type="button" id="studio-profile-more" class="studio-profile-more studio-connect-options" aria-controls="studio-profile-details" aria-expanded="false" title="Opțiuni profil TikTok" aria-label="Opțiuni profil TikTok"><i class="fa-solid fa-ellipsis" aria-hidden="true"></i></button></div>
+
+                <label for="tiktok-user" class="block text-xs text-zinc-400 mb-1 sr-only">Profil TikTok</label>
+                <div class="compact-connect-row"><input type="text" id="tiktok-user" placeholder="@username" autocomplete="off" maxlength="25" class="w-full bg-zinc-950 border border-zinc-800 text-white rounded-xl px-4 py-2.5 text-xs mb-3 focus:outline-none focus:border-red-600 font-mono" aria-label="Username TikTok"><button id="btn-connect" onclick="toggleTikTokConnection()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl text-xs glow-red transition cursor-pointer">Conectează</button></div>
+
+                <div id="tiktok-sync-status" class="mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-500" role="status" aria-live="polite" hidden="">Stare: neconectat</div>
+
+
+            <div id="studio-profile-details" class="studio-profile-details" hidden=""><div id="tiktok-profile" class="hidden flex mb-4 items-center gap-3 rounded-xl border border-zinc-800 bg-zinc-950 p-3">
+                    <div class="tiktok-profile-avatar">
+                        <span id="tiktok-profile-fallback">T</span>
+                        <img id="tiktok-profile-image" class="hidden" alt="Poza de profil TikTok" referrerpolicy="no-referrer">
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-[10px] uppercase tracking-wider text-zinc-500">Profil TikTok</p>
+                        <p id="tiktok-profile-name" class="truncate text-xs font-bold text-white"></p>
+                    </div>
+                </div><div class="streamer-profile-actions flex gap-2 mb-4" data-native-i18n="">
+                    <button type="button" onclick="syncTikTokAccount()" aria-label="Salvează profilul" title="Salvează profilul" class="flex-1 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2.5 rounded-xl text-[10px] border border-zinc-800 transition cursor-pointer"><i class="fa-solid fa-check" aria-hidden="true"></i><span>Salvează profilul</span></button>
+                    <button type="button" onclick="clearTikTokAccount()" aria-label="Resetează" class="w-10 bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-xl border border-zinc-800 transition cursor-pointer" title="Resetează"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i><span>Resetează</span></button>
+                </div><p class="mb-4 text-[10px] leading-relaxed text-zinc-400">
+                    Salvarea username-ului publică automat profilul și statisticile în clasament.
+                </p></div></div>
+<div class="studio-stats dashboard-stats grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="mini-stat-box">
                         <span>Scor</span>
                         <strong id="score-display">0</strong>
@@ -280,7 +254,8 @@
                         <span>Evenimente</span>
                         <strong id="event-count">0</strong>
                     </div>
-                </div><div class="live-grid">
+                </div>
+<div class="live-grid">
                     <div class="feed-box">
                         <div class="feed-header">
                             <span>Live feed</span>
@@ -306,7 +281,8 @@
                             <span style="height: 96%"></span>
                         </div>
                     </div>
-                </div></aside></div>
+                </div>
+</aside></div>
         </section>
 
         <section id="game-center-panel" class="hidden" role="tabpanel" aria-labelledby="game-center-tab">
@@ -335,16 +311,7 @@
                 <p id="game-center-empty" class="game-center-empty" hidden>Nu am găsit jocuri. Încearcă altă căutare.</p>
             </div>
         </section>
-        <section id="tiktok-gifts-panel" class="hidden" role="tabpanel" aria-labelledby="tiktok-gifts-tab">
-            <div class="gifts-heading"><div><span class="eyebrow">Recompensele comunității</span><h2>TikTok Gifts</h2><p>Descoperă cadourile și colecția ta din LIVE.</p></div><button id="gifts-refresh" class="gifts-outline-button" type="button"><i class="fa-solid fa-arrows-rotate" aria-hidden="true"></i> Actualizează</button></div>
-            <div class="gifts-collection-heading"><h3 id="gifts-owner">Toate cadourile TikTok</h3><span id="gifts-owner-note">Imagini originale de la TikTok</span></div>
-            <div id="gifts-summary" class="gifts-summary"></div>
-            <div class="gifts-view-tabs" role="tablist" aria-label="Afișare cadouri"><button type="button" data-gifts-view="catalog" role="tab" aria-controls="gifts-content" aria-selected="true">Toate cadourile</button><button type="button" data-gifts-view="collection" role="tab" aria-controls="gifts-content" aria-selected="false">Colecție</button><button type="button" data-gifts-view="recent" role="tab" aria-controls="gifts-content" aria-selected="false">Recente</button><button type="button" data-gifts-view="highlights" role="tab" aria-controls="gifts-content" aria-selected="false">Cele mai valoroase</button></div>
-            <div id="gift-catalog-controls"><span class="gifts-catalog-note">Catalog disponibil și fără un LIVE pornit.</span><label class="gifts-owned-filter"><input id="gifts-owned-only" type="checkbox"> Doar cele din colecție</label></div>
-            <div id="gifts-tools" class="gifts-tools"><label class="gifts-search"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><input id="gifts-search" type="search" placeholder="Caută un cadou după nume sau ID…" aria-label="Caută un cadou"></label><label class="gifts-sort"><span>Ordonează</span><select id="gifts-sort"><option value="price">Valoare crescătoare</option><option value="value">Valoare descrescătoare</option><option value="count">Cantitate</option><option value="recent">Cel mai recent</option><option value="name">Nume A–Z</option></select></label></div>
-            <div class="gifts-results-heading"><span id="gifts-result-count"></span><p id="gifts-status" role="status" aria-live="polite"></p></div>
-            <div id="gifts-content" class="gifts-grid" role="tabpanel"></div><button id="gifts-more" class="gifts-outline-button gifts-more" type="button" hidden>Arată mai multe</button>
-        </section>
+
         <section id="audio-center-panel" class="hidden" role="tabpanel" aria-labelledby="audio-center-tab">
                     <div class="soundboard-shell">
                         <div class="soundboard-sticky-controls">
@@ -394,6 +361,10 @@
                         <p class="soundboard-footnote">Include sunetul browserului în aplicația de streaming ca să-l audă și publicul.</p>
                     </div>
                 </section>
+<section id="creator-community-panel" class="cp-page hidden" role="tabpanel" aria-labelledby="creator-community-tab" data-native-i18n></section>
+<section id="creator-analytics-panel" class="cp-page hidden" role="tabpanel" aria-labelledby="creator-analytics-tab" data-native-i18n></section>
+<section id="creator-account-panel" class="cp-page hidden" role="tabpanel" aria-labelledby="creator-account-tab" data-native-i18n></section>
+<section id="studio-help-panel" class="cp-page hidden" role="tabpanel" aria-labelledby="studio-help-button" data-native-i18n></section>
 </div></main><dialog id="studio-help-dialog" class="studio-tour-dialog" aria-labelledby="studio-tour-title" aria-describedby="studio-tour-description">
         <div id="studio-tour-shade-top" class="studio-tour-shade" data-tour-advance aria-hidden="true"></div>
         <div id="studio-tour-shade-left" class="studio-tour-shade" data-tour-advance aria-hidden="true"></div>
@@ -423,4 +394,4 @@
 <script src="assets/studio-live-bridge.js?v=1"></script>
 <script src="assets/studio-game-input.js?v=1"></script>
 <script src="assets/studio-test-menu.js?v=12"></script>
-<script src="assets/game-access.js?v=4"></script><script src="assets/tiktok-profile.js?v=1"></script><script src="game.js?v=24"></script><script src="assets/site-app.js?v=20"></script></body></html>
+<script src="assets/game-access.js?v=4"></script><script src="assets/tiktok-profile.js?v=1"></script><script src="game.js?v=24"></script><script src="assets/site-app.js?v=21"></script></body></html>

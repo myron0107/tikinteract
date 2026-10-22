@@ -1,19 +1,10 @@
-/* Rearranges native Studio elements. No demonstration engine or replacement services. */
+/* Current Studio shell: native controls, labels and live data. */
 import{ct,esc,ic}from'./creator-ui.js?v=4';
 const $=s=>document.querySelector(s),en=()=>window.TikInteractLanguage?.get()==='en',t=(ro,english)=>en()?english:ro;
 let currentTab='studio',suggestedFor,accountObserver;
 const names={studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
 function label(tab){return t(...(names[tab]||names.studio));}
-function arrange(){
- const left=$('.studio-game-sidebar'),right=$('.studio-controls');if(!left||!right)return;
- const config=window.TikInteractPlatform?.getConfig()?.studio;
- const signature=config?config.left.join(',')+'|'+config.right.join(','):'';
- const defaultLayout=!config||['games,controls|streamer,audio,stats,feed','games,audio,streamer|controls,stats,feed'].includes(signature);
- if(defaultLayout){for(const selector of ['.studio-game-picker','.studio-audio']){const el=$(selector);if(el&&el.parentElement!==left)left.append(el);}for(const selector of ['#studio-test-panel','.studio-connection','.live-grid','.studio-stats']){const el=$(selector);if(el&&el.parentElement!==right)right.append(el);}}
- // The previous shell created an empty connection host above the workspace.
- const host=$('#creator-connection-host');if(host&&!host.children.length)host.hidden=true;
- requestAnimationFrame(()=>window.TikInteractStudioLayout?.fitGame());
-}
+function arrange(){window.TikInteractStudioLayout?.fitGame();}
 function suggestions(){
  const root=$('#studio-suggestions');if(!root)return;const selected=$('#live-game-select')?.value||'';
  const games=window.TikInteractPlatform?.getConfig()?.games?.filter(g=>g.status==='published'&&g.id!==selected)||[];
@@ -42,18 +33,13 @@ function connectionLabels(){
  }
 }
 function simplifyConnection(connection){
- const input=connection.querySelector('#tiktok-user'),connect=$('#btn-connect'),heading=connection.querySelector('.studio-panel-title'),status=$('#tiktok-sync-status');
- if(input&&connect){const row=document.createElement('div');row.className='compact-connect-row';input.before(row);row.append(input,connect);connection.querySelector('label[for="tiktok-user"]')?.classList.add('sr-only');}
- const copy=[...connection.querySelectorAll('p')].find(p=>p.textContent.includes('Salvarea username'));
- if(heading){const top=document.createElement('div');top.className='studio-connect-heading';heading.before(top);top.append(heading);heading.id='studio-connect-title';connection.setAttribute('aria-labelledby',heading.id);top.setAttribute('data-native-i18n','');
-  const details=document.createElement('div');details.id='studio-profile-details';details.className='studio-profile-details';details.hidden=true;
-  for(const item of [connection.querySelector('#tiktok-profile'),connection.querySelector('.streamer-profile-actions'),copy].filter(Boolean))details.append(item);
-  connection.append(details);
-  const toggle=document.createElement('button');toggle.type='button';toggle.id='studio-profile-more';toggle.className='studio-profile-more studio-connect-options';toggle.innerHTML=ic('ellipsis');toggle.setAttribute('aria-controls',details.id);toggle.setAttribute('aria-expanded','false');toggle.onclick=()=>{details.hidden=!details.hidden;toggle.setAttribute('aria-expanded',String(!details.hidden));};top.append(toggle);
+ const connect=$('#btn-connect'),status=$('#tiktok-sync-status'),details=$('#studio-profile-details'),toggle=$('#studio-profile-more');
+ if(toggle&&details){
+  toggle.onclick=()=>{details.hidden=!details.hidden;toggle.setAttribute('aria-expanded',String(!details.hidden));};
   details.addEventListener('keydown',event=>{if(event.key==='Escape'){details.hidden=true;toggle.setAttribute('aria-expanded','false');toggle.focus();}});
  }
  if(connect)new MutationObserver(shortConnectLabel).observe(connect,{childList:true,characterData:true,subtree:true});
- if(status){status.setAttribute('role','status');status.setAttribute('aria-live','polite');const sync=()=>{status.hidden=!status.textContent.trim()||/^(Stare:|Status:)/i.test(status.textContent.trim());};new MutationObserver(sync).observe(status,{childList:true,characterData:true,subtree:true});sync();}
+ if(status){const sync=()=>{status.hidden=!status.textContent.trim()||/^(Stare:|Status:)/i.test(status.textContent.trim());};new MutationObserver(sync).observe(status,{childList:true,characterData:true,subtree:true});sync();}
  connectionLabels();
 }
 function accountTicket(){
@@ -73,27 +59,13 @@ function accountTicket(){
 function active(tab){currentTab=tab;header();if(tab==='account'){accountObserver?.disconnect();const root=$('#creator-account-panel');if(root){accountTicket();accountObserver=new MutationObserver(accountTicket);accountObserver.observe(root,{childList:true,subtree:true});}}}
 function init(){
  document.body.classList.add('studio-modern');
- const top=$('.app-topbar-title');if(top){top.innerHTML='<strong id="studio-current-section">'+label(currentTab)+'</strong>';top.setAttribute('data-native-i18n','');}
- $('.app-workspace-heading .eyebrow')?.remove();
- const rail=$('.studio-app-rail'),nav=$('.studio-app-nav');if(rail&&nav){
-  nav.querySelectorAll('a,.cp-nav-label').forEach(el=>el.remove());
-  const help=$('#studio-help-button');if(help){help.dataset.studioTab='help';help.setAttribute('aria-controls','studio-help-panel');help.setAttribute('role','tab');help.setAttribute('aria-selected','false');help.onclick=()=>window.setLiveStudioTab('help');}
-  // Retain the native gift recording/trigger services, removing only this catalog UI.
-  nav.querySelector('[data-studio-tab="gifts"]')?.remove();$('#tiktok-gifts-panel')?.remove();
-  for(const tab of ['studio','games','audio']){const button=nav.querySelector('[data-studio-tab="'+tab+'"]');if(button)nav.append(button);}
-  const bottom=rail.querySelector('.app-rail-bottom');if(bottom){bottom.classList.add('live-studio-tabs','studio-secondary-nav');bottom.setAttribute('role','tablist');bottom.setAttribute('aria-label',t('Cont și suport','Account and support'));bottom.querySelector('.cp-rail-account')?.remove();for(const tab of ['community','account','help']){const button=nav.querySelector('[data-studio-tab="'+tab+'"]');if(button)bottom.append(button);}const back=bottom.querySelector('a[href="index.html"]');if(back)bottom.append(back);}
-  let helpPanel=$('#studio-help-panel');if(!helpPanel){helpPanel=document.createElement('section');helpPanel.id='studio-help-panel';helpPanel.className='cp-page hidden';helpPanel.setAttribute('role','tabpanel');helpPanel.setAttribute('aria-labelledby','studio-help-button');$('#view-live').append(helpPanel);}
-  rail.querySelector('.cp-rail-brand').title=t('Deschide transmisia','Open STREAM');
- }
- const stage=$('.studio-stage');if(stage){stage.querySelector('.studio-stage-heading>div:first-child')?.remove();const status=$('#live-overview-status'),orientation=$('#creator-orientation');if(status){status.setAttribute('role','status');status.setAttribute('aria-live','polite');}if(status&&orientation)orientation.before(status);const oldActions=stage.querySelector('.studio-stage-actions');if(oldActions&&!oldActions.children.length)oldActions.remove();
-  if(!$('#studio-suggestions')){const box=document.createElement('div');box.id='studio-suggestions';box.setAttribute('data-native-i18n','');stage.append(box);}
- }
  const connection=$('.studio-connection');if(connection)simplifyConnection(connection);
  const feed=$('.studio-controls .feed-header');if(feed&&!$('#studio-clear-feed')){const button=document.createElement('button');button.type='button';button.id='studio-clear-feed';button.className='studio-profile-more';button.textContent=t('Curăță','Clear');button.onclick=()=>$('#feed-list')?.replaceChildren();feed.append(button);}
  const quick=$('.studio-game-options');if(quick)new MutationObserver(covers).observe(quick,{childList:true,subtree:true});
  $('#live-game-frame')?.addEventListener('load',()=>{suggestedFor=undefined;suggestions();});
  document.addEventListener('click',event=>{const button=event.target.closest('[data-suggested-game]');if(button)window.launchStudioGame(button.dataset.suggestedGame);});
  arrange();covers();suggestions();header();help();requestAnimationFrame(arrange);
+ window.TikInteractStartup?.ready('layout');
 }
 function help(){const root=$('#studio-help-panel');if(!root)return;root.setAttribute('data-native-i18n','');root.innerHTML='<div class="cp-page-heading"><h2>'+label('help')+'</h2><p>'+t('Tot ce ai nevoie pentru următorul LIVE.','Everything you need for your next LIVE.')+'</p></div><div class="studio-help-cards">'+[
  ['gamepad',t('Alege jocul','Choose your game'),t('Pornește un joc din favorite sau din catalog. Schimbă formatul între 9:16 și 16:9 fără să repornești jocul.','Launch a game from your favorites or the catalog. Switch between 9:16 and 16:9 without restarting it.')],

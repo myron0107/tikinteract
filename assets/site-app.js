@@ -247,6 +247,7 @@ function updateUI(session) {
             switchView('home');
         }
     }
+    window.TikInteractStartup?.ready('auth');
 }
 
 function openAuthModal() {

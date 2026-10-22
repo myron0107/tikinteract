@@ -1,10 +1,15 @@
-/* TI / LIVE symbol remains vector; TikInteract. is native, selectable text. */
+/* Shared native-text wordmark. The separate TIK / STUDIO symbol stays in Studio. */
 body :is(.template-brand,.footer-brand,.game-page-brand,.admin-brand,.support-brand,.public-info-brand){--brand-size:24px;--brand-symbol:40px;display:inline-flex;align-items:center;gap:0;text-decoration:none}
 body .template-brand{--brand-size:26px;--brand-symbol:44px}
 body .footer-brand{--brand-size:18px;--brand-symbol:30px}
 body .support-brand{--brand-size:22px;--brand-symbol:36px}
 body .admin-brand{--brand-size:24px;--brand-symbol:38px}
 body .ti-brand-lockup{display:inline-flex!important;align-items:center;gap:8px;width:auto!important;height:auto!important;flex:none;line-height:1;background:none;filter:none}
+body .ti-home-wordmark{flex-direction:column;align-items:flex-start;gap:5px!important}
+body .ti-brand-tagline{display:block;font:600 calc(var(--brand-size,24px)*.213333)/1.2 Inter,system-ui,sans-serif;letter-spacing:calc(var(--brand-size,24px)*.033333);white-space:nowrap;color:var(--cm-muted,var(--muted,#B0B1B8))!important;text-transform:uppercase}
+body :is(.game-page-brand,.public-info-brand){--brand-size:30px}
+body .footer-brand .ti-home-wordmark{--brand-size:23px}
+body .footer-brand .ti-brand-tagline{font-size:6px;letter-spacing:.65px}
 body .ti-brand-lockup>.ti-symbol{width:var(--brand-symbol);height:var(--brand-symbol)}
 body .ti-brand-name{display:inline-block;white-space:nowrap;font:700 var(--brand-size)/1.1 Inter,system-ui,sans-serif!important;letter-spacing:-.04em!important;text-transform:none!important;color:#F4F4F7!important;text-shadow:none}
 body .ti-brand-name>span{font:inherit!important;letter-spacing:inherit!important;color:#C63D5A!important;text-transform:none!important}
@@ -21,6 +26,9 @@ body#tikinteract-studio.studio-app.studio-modern .cp-rail-brand{display:flex!imp
 @media(max-width:820px){body .template-brand{--brand-size:23px;--brand-symbol:38px}}
 @media(max-width:540px){body .template-brand{--brand-size:18px;--brand-symbol:30px}body .ti-brand-lockup{gap:5px}}
 @media(max-width:680px){body .game-page-brand{--brand-size:20px;--brand-symbol:32px}}
+@media(max-width:540px){body .public-info-brand{--brand-size:22px}}
+/* Presentation headers share the page surface instead of a detached metal strip. */
+html[data-mode] body .game-page-nav{background-color:transparent!important;background-image:none!important;box-shadow:none;align-items:center}
 @media(max-width:600px){body#tikinteract-studio.studio-app.studio-modern .cp-rail-brand{min-height:46px;margin-bottom:14px}body#tikinteract-studio.studio-app.studio-modern .cp-rail-brand .ti-symbol{width:46px;height:46px}}
 /* Match the sidebar logo band to the adjacent 60px Studio header. */
 body#tikinteract-studio.studio-app.studio-modern .studio-app-rail{padding-top:0}

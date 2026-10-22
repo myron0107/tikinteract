@@ -1,0 +1,12 @@
+/* This is only the initial loading state, never a transition between pages. */
+html[data-ui-pending]{background:#101014}
+html[data-ui-pending][data-mode=light]{background:#FFF}
+html[data-ui-pending] body{visibility:hidden;opacity:0!important;pointer-events:none}
+html[data-ui-pending]::after{content:'';position:fixed;left:calc(50% - 12px);top:calc(50% - 12px);width:24px;height:24px;box-sizing:border-box;border:2px solid #77778035;border-top-color:#A32144;border-radius:50%;animation:ti-startup-spin .7s linear infinite;pointer-events:none}
+html[data-ui-pending][data-theme=blue]::after{border-top-color:#285DA1}
+@keyframes ti-startup-spin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){html[data-ui-pending]::after{animation:none}}
+/* Header controls keep their final order as modules attach their handlers. */
+body#tikinteract-site.public-approved .header-account-actions>.language-picker{order:0}
+body#tikinteract-site.public-approved .header-account-actions>[data-mode-toggle]{order:1}
+body#tikinteract-site.public-approved .header-account-actions>.open-studio-button{order:2}

@@ -1,0 +1,21 @@
+<header class="template-header ti-site-header"><div class="site-header-inner">
+<a class="template-brand" href="{{ROOT}}index.html" onclick="if (typeof switchView === 'function') { switchView('home'); event.preventDefault(); }" aria-label="TikInteract — Acasă"><span class="ti-wordmark ti-brand-lockup ti-home-wordmark" translate="no"><span class="ti-brand-name">Tik<span>Interact</span></span><span class="ti-brand-tagline">LIVE GAMES. REAL AUDIENCE. REAL IMPACT.</span></span></a>
+<nav class="template-navigation" aria-label="Navigare principală">
+<button type="button" data-nav-item="catalog" onclick="switchView('catalog')"><i class="fa-solid fa-gamepad" aria-hidden="true"></i><span>JOCURI</span></button>
+<button type="button" data-nav-item="streams" onclick="switchView('streams')"><i class="fa-solid fa-satellite-dish" aria-hidden="true"></i><span class="nav-stream-label"><span>TRANSMISIUNI</span><span class="nav-live-dot" aria-hidden="true"></span></span></button>
+<button type="button" data-nav-item="leaderboard" onclick="switchView('leaderboard')"><i class="fa-solid fa-trophy" aria-hidden="true"></i><span>CLASAMENT</span></button>
+</nav>
+<div class="header-account-actions flex items-center gap-4">
+                <div class="language-picker">
+                    <button type="button" class="language-trigger" aria-label="Alege limba" aria-haspopup="menu" aria-controls="language-menu" aria-expanded="false">
+                        <img class="language-flag" data-language-flag src="{{ROOT}}assets/language-ro.svg" width="20" height="14" alt=""><span data-language-label translate="no">RO</span><i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                    </button>
+                    <div id="language-menu" class="language-menu" role="menu" aria-label="Limba interfeței" hidden>
+                        <button type="button" role="menuitemradio" data-language="ro" aria-checked="true" translate="no"><img class="language-flag" src="{{ROOT}}assets/language-ro.svg" width="24" height="16" alt=""><span>Română</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                        <button type="button" role="menuitemradio" data-language="en" aria-checked="false" translate="no"><img class="language-flag" src="{{ROOT}}assets/language-en.svg" width="24" height="16" alt=""><span>English</span><i class="fa-solid fa-check" aria-hidden="true"></i></button>
+                    </div>
+                </div>
+                <button type="button" class="appearance-toggle" data-mode-toggle translate="no" aria-label="Activează modul luminos"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+                <button type="button" class="open-studio-button" data-nav-item="live" onclick="checkAccessAndGo('live')">Deschide Studio <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></button>
+            </div>
+</div></header>

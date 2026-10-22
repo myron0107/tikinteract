@@ -104,6 +104,7 @@ function initialize(){
             roots.filter(element=>!roots.some(parent=>parent!==element && parent.contains(element))).forEach(element=>apply(element));
         });
     }).observe(document.body,{subtree:true,childList:true,characterData:true,attributes:true,attributeFilter:attributeNames});
+    window.TikInteractStartup?.ready('language');
 }
 
 window.addEventListener('message',event=>{if(parent!==window && event.source===parent && event.origin===location.origin && event.data?.type==='tikinteract:language' && ['ro','en'].includes(event.data.language))choose(event.data.language,{persist:false});});

@@ -50,6 +50,7 @@ function initialize(){
  render();document.addEventListener('click',event=>{const link=event.target.closest('#approved-home-games a[href^="#game-"],[data-catalog-featured] a[href^="#game-"]');if(link){event.preventDefault();window.TikInteractPlatform?.openGame(link.getAttribute('href').slice(6));}const ticket=event.target.closest('#approved-home-plans [data-ticket-action]');if(ticket){if(ticket.dataset.ticketAction==='free')window.checkAccessAndGo?.('live');else window.openStudioSubscription?.(ticket.dataset.ticketAction);}});
  document.getElementById('leaderboard-search')?.addEventListener('input',filterRanking);const list=document.getElementById('leaderboard-list');if(list)new MutationObserver(filterRanking).observe(list,{childList:true});
  const root=document.querySelector('[data-home-reel]');if(root){const observer=new IntersectionObserver(entries=>{if(!entries.some(entry=>entry.isIntersecting))return;observer.disconnect();import('./home-reel/reel.js?v=2').then(module=>module.mountHomeReel(root)).then(reel=>{window.TikInteractHomeReel=reel;}).catch(()=>{root.dataset.ready='false';});},{rootMargin:'100px'});observer.observe(root);}
+ window.TikInteractStartup?.ready('layout');
 }
 window.addEventListener('tikinteract:config',render);window.addEventListener('tikinteract:language',render);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();

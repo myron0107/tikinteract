@@ -22,7 +22,7 @@
   const actions=document.querySelector('.header-account-actions');
   if(actions&&!actions.querySelector('[data-mode-toggle]')){const button=document.createElement('button');button.type='button';button.className='appearance-toggle';button.dataset.modeToggle='';button.setAttribute('translate','no');actions.prepend(button);}
   const toggle=actions?.querySelector('[data-mode-toggle]'),language=actions?.querySelector('.language-picker');
-  if(toggle&&language){actions.prepend(language);language.after(toggle);}
+  if(!studio()&&toggle&&language&&language.nextElementSibling!==toggle){actions.prepend(language);language.after(toggle);}
   if(studio()&&actions&&!actions.querySelector('.studio-palettes')){const group=document.createElement('div');group.className='studio-palettes';group.setAttribute('role','group');group.setAttribute('aria-label','Burgundy / Racing Blue');group.innerHTML='<button type="button" data-studio-theme="burgundy" aria-label="Burgundy" title="Burgundy"></button><button type="button" data-studio-theme="blue" aria-label="Racing Blue" title="Racing Blue"></button>';actions.prepend(group);}
   const palettes=actions?.querySelector('.studio-palettes');if(studio()&&language)actions.append(language);
   const bell=actions?.querySelector('#creator-inbox-bell');if(toggle&&bell)toggle.after(bell.closest('.studio-notifications')||bell);

@@ -24,3 +24,6 @@ supabase/
 GAME/NOVA-VEX/art/source/
 GAME/SKYSHIFT-INTERACT/art/source/
 assets/utility.source.css
+
+# Static-header source is compiled into the HTML pages above.
+partials/

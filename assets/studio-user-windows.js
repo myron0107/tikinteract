@@ -85,15 +85,13 @@ export async function openStudioWindow(target,{section='profile',plan=''}={}){
   if(current===request){loading.hidden=false;loading.textContent=t('Panoul nu s-a putut încărca. Închide și încearcă din nou.','The panel could not load. Close it and try again.');}
  }finally{if(current===request){content.removeAttribute('aria-busy');if(loading.textContent===t('Se încarcă…','Loading…'))loading.hidden=true;}}
 }
-function simplifyNavigation(){
- const rail=document.querySelector('.studio-app-rail'),nav=rail?.querySelector('.studio-app-nav');if(!rail||!nav)return;
- let routes=document.getElementById('studio-utility-routes');if(!routes){routes=document.createElement('div');routes.id='studio-utility-routes';routes.className='live-studio-tabs';routes.hidden=true;document.body.append(routes);}
- for(const button of rail.querySelectorAll('[data-studio-tab]'))if(!['studio','games','audio'].includes(button.dataset.studioTab))routes.append(button);
- const help=rail.querySelector('#studio-help-button');if(help)routes.append(help);
- rail.querySelector('.app-rail-bottom')?.remove();
- let footer=rail.querySelector('.sw-rail-footer');if(!footer){footer=document.createElement('div');footer.className='sw-rail-footer';footer.setAttribute('data-native-i18n','');rail.append(footer);footer.addEventListener('click',event=>{if(event.target.closest('[data-sw-rail-help]'))openStudioWindow('help');});}
- footer.innerHTML=`<button type="button" data-sw-rail-help aria-haspopup="dialog" aria-controls="studio-user-dialog" title="${t('Ghid Studio','Studio guide')}" aria-label="${t('Ghid Studio','Studio guide')}">${ic('circle-question')}<span>${t('Ghid Studio','Studio guide')}</span></button><a href="index.html" title="${t('Înapoi la site','Back to website')}" aria-label="${t('Înapoi la site','Back to website')}">${ic('arrow-up-right-from-square')}<span>${t('Înapoi la site','Back to website')}</span></a>`;
- for(const id of ['studio','games','audio']){const button=nav.querySelector(`[data-studio-tab="${id}"]`);if(button)nav.append(button);}
+function localizeRailFooter(){
+ const footer=document.querySelector('.sw-rail-footer');if(!footer)return;
+ const help=footer.querySelector('[data-sw-rail-help]'),back=footer.querySelector('a');
+ for(const [item,name]of [[help,t('Ghid Studio','Studio guide')],[back,t('Înapoi la site','Back to website')]]){
+  if(item){item.title=name;item.setAttribute('aria-label',name);item.querySelector('span').textContent=name;}
+ }
+ if(help)help.onclick=()=>openStudioWindow('help');
 }
 export function initializeStudioWindows(){
  if(document.body.dataset.page!=='studio'||wrap)return;
@@ -113,14 +111,14 @@ export function initializeStudioWindows(){
   if(event.key==='Tab')requestAnimationFrame(()=>{if(!wrap.contains(document.activeElement))closeMenu();});
  });
  document.addEventListener('click',event=>{if(!wrap.contains(event.target))closeMenu();});window.addEventListener('resize',positionMenu);
- simplifyNavigation();queueMicrotask(simplifyNavigation);
+ localizeRailFooter();
  const nativeTab=window.setLiveStudioTab;
  window.setLiveStudioTab=(tab,options)=>{if(['account','analytics','community','help'].includes(tab))return openStudioWindow(tab);closeStudioWindow({focus:false});return nativeTab?.(tab,options);};
  window.addEventListener('tikinteract:auth',()=>{
   const next=window.tikInteractUser?.id||null;if(next!==identity){identity=next;adminUser=null;closeStudioWindow({focus:false});closeMenu();}renderMenu();
  });
  window.addEventListener('tikinteract:access',renderMenu);
- window.addEventListener('tikinteract:language',()=>{renderMenu();syncWindow();simplifyNavigation();});
+ window.addEventListener('tikinteract:language',()=>{renderMenu();syncWindow();localizeRailFooter();});
  window.addEventListener('tikinteract:account-mounted',()=>{if(dialog.open){accountRoot=document.getElementById('creator-account-panel');syncWindow();}});
  window.addEventListener('tikinteract:account-section',event=>{
   if(!dialog.open||selectingAccount)return;const key=event.detail.section,target=key==='subscription'?'subscription':key==='messages'?'support':'account';
