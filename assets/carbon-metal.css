@@ -44,7 +44,10 @@ html[data-mode] body :is(.cp-panel,.cp-metric,.cp-chat,.cp-community-side,.cp-co
 html[data-mode] body :is(.sw-window-header,.resource-page-topbar,.game-gallery-dialog-top,.gift-dialog-top,.home-gift-catalog-top,.support-topbar,.studio-notifications-header,.cp-chat-header){background-color:var(--cm-panel)!important;background-image:var(--cm-chrome)!important;border-color:var(--cm-line)}
 html[data-mode] body :is(.audio-sound-card,.live-favorite-sound,.studio-quick-item,.studio-game-option,.cp-notice,.cp-conversation,.gift-card,.home-gift-catalog-card,.gifts-stat,.gift-recent-row,.gifts-empty,.studio-help-card,.cp-analytics-session){background-color:var(--cm-soft)!important;background-image:var(--cm-finish)!important;border-color:var(--cm-line)!important;color:var(--cm-ink);box-shadow:var(--cm-top-edge)}
 html[data-mode] body :is(.audio-sound-card,.live-favorite-sound,.studio-game-option,.gift-card,.home-gift-catalog-card):hover{background-color:var(--cm-raised)!important;border-color:var(--cm-line)!important}
-html[data-mode] body :is(.studio-game-option.is-selected,.studio-game-option[aria-selected=true],.sw-settings-nav button[aria-current=page]){background-color:var(--cm-active)!important;color:var(--cm-accent);border-color:var(--cm-accent)!important}
+html[data-mode] body .sw-settings-nav button[aria-current=page]{background-color:var(--cm-active)!important;color:var(--cm-accent);border-color:var(--cm-accent)!important}
+/* Selection follows the real game state, without an exterior colored frame. */
+html[data-mode] body .studio-game-option[aria-pressed=true]{background-color:var(--cm-active)!important;border-color:var(--cm-line)!important}
+html[data-mode] body#tikinteract-studio .studio-game-option[aria-pressed=true]>span{color:var(--cm-accent)}
 html[data-mode] body :is(.sw-settings-nav,.sw-support-links,.cp-chat-compose,.cp-inbox-list,.cp-analytics-filters,.subscription-scheduled){background-color:var(--cm-soft);border-color:var(--cm-line);color:var(--cm-ink)}
 
 /* Neutral metal controls. Status colors and colored sound icons keep their meaning. */

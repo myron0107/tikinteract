@@ -138,13 +138,16 @@ body#tikinteract-studio #studio-test-tabs:empty { display: none; }
 body#tikinteract-studio #studio-test-tabs > button {
     flex-direction: column; gap: 5px; min-width: 0; min-height: 43px; padding: 6px 2px;
     border: 0; border-radius: 5px; font-size: 10px; line-height: 1.2; overflow-wrap: anywhere;
-    background: transparent; color: var(--studio-muted); box-shadow: none;
+    position: relative; background: transparent; color: var(--studio-muted); box-shadow: none;
 }
+body#tikinteract-studio #studio-test-panel :is(.studio-test-group,#studio-test-tabs > button) { --test-accent: var(--studio-accent); }
 body#tikinteract-studio #studio-test-tabs > button::before { font-size: 12px; }
 body#tikinteract-studio #studio-test-tab-appearance::before { content: '\f1fc'; }
-body#tikinteract-studio #studio-test-tabs > button:hover { background: var(--studio-panel); color: var(--studio-ink); }
+@media (hover: hover) {
+    body#tikinteract-studio #studio-test-tabs > button[aria-selected=false]:hover { background: var(--studio-panel); color: var(--studio-ink); }
+}
 body#tikinteract-studio #studio-test-tabs > button[aria-selected=true] {
-    background: var(--studio-panel); color: var(--studio-accent); box-shadow: inset 0 -2px var(--studio-accent);
+    background: var(--studio-panel); color: var(--studio-accent); box-shadow: none;
 }
 body#tikinteract-studio #studio-test-panel .studio-test-group-body { min-width: 0; gap: 8px; }
 body#tikinteract-studio #studio-test-panel .studio-test-action {
@@ -174,5 +177,6 @@ body#tikinteract-studio #studio-test-panel .studio-native-colors button {
     background: var(--color); color: #101420; border-color: #0002; font-size: 10px;
 }
 body#tikinteract-studio #studio-test-panel .studio-native-colors button[aria-checked=true] {
-    outline: 2px solid var(--studio-accent); outline-offset: 2px;
+    outline: none;
 }
+body#tikinteract-studio #studio-test-panel .studio-native-colors button[aria-checked=true]::after { content: '✓'; margin-left: 4px; }

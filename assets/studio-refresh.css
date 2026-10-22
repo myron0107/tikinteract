@@ -51,7 +51,7 @@ body#tikinteract-studio.studio-app.studio-modern .studio-game-option{width:100%;
 body#tikinteract-studio.studio-app.studio-modern .studio-game-option img{width:100%;height:82px;object-fit:contain;object-position:center;border-radius:5px;background:var(--studio-soft)}
 body#tikinteract-studio.studio-app.studio-modern .studio-game-option>span{font:600 10px/1.3 Inter,sans-serif;white-space:normal;text-align:center;padding:2px}
 body#tikinteract-studio.studio-app.studio-modern .studio-quick-item .game-favorite-star{position:absolute;right:6px;top:6px;bottom:auto;width:23px;height:23px;min-height:0;min-width:0;padding:0;border:1px solid var(--studio-line);border-radius:6px;background:var(--studio-panel);color:var(--studio-accent);font-size:13px;z-index:2}
-body#tikinteract-studio.studio-app.studio-modern .studio-game-option.is-active{outline:1px solid var(--studio-accent);outline-offset:3px;border-radius:5px}
+body#tikinteract-studio.studio-app.studio-modern .studio-game-option.is-active{border-radius:5px}
 body#tikinteract-studio.studio-app.studio-modern :is(.studio-quick-empty,.live-favorites-empty){font-size:12px;color:var(--studio-muted);line-height:1.6}
 body#tikinteract-studio.studio-app.studio-modern .live-favorites-search{min-height:36px;padding:6px 9px;gap:7px;border:1px solid var(--studio-line);border-radius:8px;background:var(--studio-soft);margin:0;color:var(--studio-muted);flex:none}
 body#tikinteract-studio.studio-app.studio-modern .live-favorites-search input{font:400 12px/1.5 Inter,sans-serif;min-width:0;color:var(--studio-ink);background:transparent;border:0;padding:0}

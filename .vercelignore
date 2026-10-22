@@ -1,0 +1,26 @@
+# Local tooling, browser profiles, reports and dependencies.
+.git/
+.tools/
+node_modules/
+data/
+.env
+.env.*
+npm-debug.log*
+
+# Design references and review artifacts are not part of the running platform.
+design-preview/
+design-reference/
+tikinteract-brand-v5/
+tikinteract-v11-home-streams-only/
+v10/
+v11/
+tests/
+scripts/
+docs/
+supabase/
+
+# Original generation sources. Games use the processed artwork beside these
+# folders; keep the originals in Git for editing, not in deployment output.
+GAME/NOVA-VEX/art/source/
+GAME/SKYSHIFT-INTERACT/art/source/
+assets/utility.source.css

@@ -1768,7 +1768,10 @@ window.stopTikInteractStudio = () => {
     if (name) name.textContent = 'Alege un joc din Favorite sau Game Center.';
     const status = document.querySelector('.studio-test-status');
     if (status) status.hidden = true;
-    document.querySelectorAll('.studio-game-option.is-active').forEach(button => button.classList.remove('is-active'));
+    document.querySelectorAll('.studio-game-option').forEach(button => {
+        button.classList.remove('is-active');
+        button.setAttribute('aria-pressed', 'false');
+    });
 };
 
 window.refreshTikInteractConnectionState = () => {

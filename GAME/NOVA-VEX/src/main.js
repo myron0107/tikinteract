@@ -187,57 +187,73 @@ sdk?.on('language', localize);
 sdk?.on('event', () => {});
 if (embedded && sdk?.getState()) init(sdk.getState());
 
+let hudTypography = '';
+function hudText(id, value) {
+  const element = $(id), next = String(value);
+  if (element.textContent !== next) element.textContent = next;
+}
+function hudAttribute(element, name, value) {
+  const next = String(value);
+  if (element.getAttribute(name) !== next) element.setAttribute(name, next);
+}
+function hudStyle(element, name, value) {
+  if (element.style[name] !== value) element.style[name] = value;
+}
 function hud(position) {
   const state = sim.stats(), now = performance.now();
   const portrait = document.documentElement.dataset.gameFormat !== 'landscape';
   const value = distance(state.meter, language);
-  if ($('distance').textContent !== value) $('distance').textContent = value;
+  hudText('distance', value);
   $('distance').parentElement.classList.toggle('negative', state.meter < 0);
   const shownWins = renderer.presentedWins ?? state.wins;
   const winText = distance(shownWins, language);
-  $('wins').textContent = winText;
-  $('wins').style.fontSize = Math.max(16, 28 - Math.max(0, winText.length - 3) * 1.7) + 'px';
+  hudText('wins', winText);
+  hudStyle($('wins'), 'fontSize', Math.max(16, 28 - Math.max(0, winText.length - 3) * 1.7) + 'px');
   $('wins').parentElement.classList.toggle('negative-score', shownWins < 0);
   const signedProgress = clamp(state.distance / sim.settings.finishDistance, -1, 1);
   const progressWidth = Math.abs(signedProgress) * 50;
-  $('progress-fill').style.width = progressWidth + '%';
-  $('progress-fill').style.left = (signedProgress < 0 ? 50 - progressWidth : 50) + '%';
+  hudStyle($('progress-fill'), 'width', progressWidth + '%');
+  hudStyle($('progress-fill'), 'left', (signedProgress < 0 ? 50 - progressWidth : 50) + '%');
   $('progress-fill').classList.toggle('is-negative', signedProgress < 0);
   const progress = $('distance-progress');
-  progress.setAttribute('aria-valuemin', -sim.settings.finishDistance);
-  progress.setAttribute('aria-valuemax', sim.settings.finishDistance);
-  progress.setAttribute('aria-valuenow', clamp(state.meter, -sim.settings.finishDistance, sim.settings.finishDistance));
-  progress.setAttribute('aria-valuetext', value + ' m');
-  $('remaining').textContent = portrait
+  hudAttribute(progress, 'aria-valuemin', -sim.settings.finishDistance);
+  hudAttribute(progress, 'aria-valuemax', sim.settings.finishDistance);
+  hudAttribute(progress, 'aria-valuenow', clamp(state.meter, -sim.settings.finishDistance, sim.settings.finishDistance));
+  hudAttribute(progress, 'aria-valuetext', value + ' m');
+  hudText('remaining', portrait
     ? text('finishLabel', language) + ' · ' + distance(sim.settings.finishDistance, language) + ' m'
-    : distance(Math.max(0, sim.settings.finishDistance - state.meter), language) + ' m ' + text('remaining', language);
+    : distance(Math.max(0, sim.settings.finishDistance - state.meter), language) + ' m ' + text('remaining', language));
   $('hud').classList.toggle('is-holding', state.phase === 'holding');
   $('finish-card').hidden = state.phase !== 'holding' || state.paused;
-  $('countdown').textContent = Math.ceil(state.countdown || 0);
+  hudText('countdown', Math.ceil(state.countdown || 0));
   $('victory').hidden = state.phase !== 'celebrating';
   $('status').hidden = !state.paused && !state.ended;
-  $('status').textContent = text(state.ended ? 'ended' : 'paused', language);
-  $('pause').setAttribute('aria-pressed', String(state.paused));
-  const pauseCopy = text(state.paused ? 'resume' : 'pause', language); $('pause-copy').textContent = pauseCopy; $('pause').setAttribute('aria-label', pauseCopy);
+  hudText('status', text(state.ended ? 'ended' : 'paused', language));
+  hudAttribute($('pause'), 'aria-pressed', state.paused);
+  const pauseCopy = text(state.paused ? 'resume' : 'pause', language); hudText('pause-copy', pauseCopy); hudAttribute($('pause'), 'aria-label', pauseCopy);
   const visualUnits = renderer.pendingVisualUnits || 0;
-  $('queue').hidden = !state.queued && !visualUnits; $('queue').textContent = text('queued', language) + ' · x' + quantity(state.queuedUnits + visualUnits, language);
-  $('biome').textContent = text(sim.settings.backgroundTheme === 'Auto' ? sim.world.biome(state.distance) : sim.settings.backgroundTheme, language).toUpperCase();
+  $('queue').hidden = !state.queued && !visualUnits; hudText('queue', text('queued', language) + ' · x' + quantity(state.queuedUnits + visualUnits, language));
+  hudText('biome', text(sim.settings.backgroundTheme === 'Auto' ? sim.world.biome(state.distance) : sim.settings.backgroundTheme, language).toUpperCase());
   $('notice').hidden = now > noticeUntil;
   for (const c of [...cards]) {
     if (!sim.settings.showContributors || sim.clock >= c.until) { c.element.remove(); cards.splice(cards.indexOf(c), 1); }
     else if (sim.clock > c.until - .15) c.element.classList.add('leaving');
   }
-  if (position) {
+  if (position && cards.length) {
     const stage = $('stage'), width = $('feed').offsetWidth;
     $('feed').style.left = clamp(position.x - width / 2, 10, stage.clientWidth - width - 10) + 'px';
     $('feed').style.top = clamp(position.y + (state.phase === 'holding' ? 76 : 17), 170, stage.clientHeight - $('feed').offsetHeight - 32) + 'px';
   }
   if (embedded && now - reportAt > 250) { reportAt = now; sdk?.report({ wins: state.wins, countdown: state.countdown || 0 }); }
-  const maxSize = portrait ? 79 : Math.min(46, $('stage').clientHeight * .085);
-  const size = Math.max(portrait ? 36 : 22, Math.min(maxSize, $('stage').clientWidth * 0.165) - Math.max(0, value.length - 5) * 5);
-  $('distance').style.fontSize = size + 'px';
-  const room = (portrait ? document.querySelector('.distance-number').clientWidth : document.querySelector('.metrics').clientWidth) - $('distance').nextElementSibling.offsetWidth - 12;
-  if ($('distance').offsetWidth > room) $('distance').style.fontSize = Math.max(18, size * room / $('distance').offsetWidth) + 'px';
+  const typography = [value, winText, language, portrait, renderer.cssWidth, renderer.cssHeight].join('|');
+  if (typography !== hudTypography) {
+    hudTypography = typography;
+    const maxSize = portrait ? 79 : Math.min(46, renderer.cssHeight * .085);
+    const size = Math.max(portrait ? 36 : 22, Math.min(maxSize, renderer.cssWidth * 0.165) - Math.max(0, value.length - 5) * 5);
+    hudStyle($('distance'), 'fontSize', size + 'px');
+    const room = (portrait ? document.querySelector('.distance-number').clientWidth : document.querySelector('.metrics').clientWidth) - $('distance').nextElementSibling.offsetWidth - 12;
+    if ($('distance').offsetWidth > room) hudStyle($('distance'), 'fontSize', Math.max(18, size * room / $('distance').offsetWidth) + 'px');
+  }
 }
 function draw(dt = 0, alpha = 1) { if (renderer && loaded) hud(renderer.render(sim, alpha, dt)); audio.update(sim); dirty = false; }
 function frame(now) {

@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node server.js",
     "test": "node --test",
+    "build:css": "tailwindcss -c tailwind.config.cjs -i assets/utility.source.css -o assets/utility.css --minify",
     "sync:tiktok-gifts": "node scripts/sync-tiktok-gifts.mjs"
   },
   "dependencies": {
@@ -17,6 +18,7 @@
     "ws": "8.22.0"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.10"
+    "@electric-sql/pglite": "^0.5.10",
+    "tailwindcss": "3.4.17"
   }
 }
