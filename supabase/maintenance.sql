@@ -9,7 +9,7 @@ end $$;
 
 create table if not exists public.site_maintenance_settings(
  singleton boolean primary key default true check(singleton),
- enabled boolean not null default true,
+ enabled boolean not null default false,
  updated_at timestamptz not null default now(),
  updated_by uuid references auth.users(id) on delete set null
 );
@@ -51,7 +51,9 @@ revoke all on public.site_maintenance_settings,public.site_preview_invites,publi
 create or replace function public.is_site_preview_active(p_user uuid) returns boolean
 language sql stable security definer set search_path='' as $$
  select exists(select 1 from auth.users u where u.id=p_user and (
-  coalesce(u.raw_app_meta_data->>'site_preview','false')<>'true'
+  (coalesce(u.raw_app_meta_data->>'site_preview','false')<>'true'
+   and(not coalesce((select enabled from public.site_maintenance_settings where singleton),true)
+    or exists(select 1 from public.site_admins a where a.user_id=u.id and a.role='owner')))
   or exists(select 1 from public.site_preview_guests g join public.site_preview_invites i on i.id=g.invite_id
    where g.user_id=u.id and g.expires_at>now() and i.used_at is not null and i.revoked_at is null)))
 $$;
@@ -191,7 +193,7 @@ begin
  if found and s.revoked_at is null and s.expires_at>now() and public.is_site_account_allowed(s.user_id) then
   valid:=case when s.kind='owner' then exists(select 1 from public.site_admins where user_id=s.user_id and role='owner') else exists(select 1 from public.site_preview_guests where user_id=s.user_id) end;
  end if;
- return jsonb_build_object('enabled',enabled,'valid',valid,'allowed',not enabled or valid,'kind',s.kind,'expiresAt',s.expires_at);
+ return jsonb_build_object('enabled',enabled,'valid',valid,'allowed',not enabled or valid,'kind',s.kind,'expiresAt',s.expires_at,'userId',s.user_id);
 end $$;
 create or replace function public.close_site_preview_session(p_token_hash text) returns void
 language plpgsql security definer set search_path='' as $$

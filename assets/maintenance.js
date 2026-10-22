@@ -53,10 +53,13 @@ try{
  for(let n=0;n<80&&!window.supabase;n++)await new Promise(r=>setTimeout(r,100));
  if(!window.supabase)throw Error('SERVICE_UNAVAILABLE');
  const config=await(await fetch('/assets/supabase-config.json')).json();client=window.supabase.createClient(config.url,config.anonKey);
- const status=await(await fetch('/api/maintenance?action=status',{cache:'no-store'})).json();
+ const statusResponse=await fetch('/api/maintenance?action=status',{cache:'no-store'});
+ const status=await statusResponse.json();if(!statusResponse.ok)throw Error(status.error||'SERVICE_UNAVAILABLE');
  const {data:{session}}=await client.auth.getSession();
- if(status.valid){
-  if(session||status.kind==='owner'){const link=document.getElementById('maintenance-continue');link.href=destination();link.hidden=false;say('ready');}
+ if(session?.user?.app_metadata?.site_preview&&!status.valid)await client.auth.signOut({scope:'local'});
+ if(status.valid||(!status.enabled&&status.ready)){
+  if(status.valid&&status.kind==='guest'&&!session){const restored=await api('resume');const result=await client.auth.setSession(restored.session);if(result.error)throw Error('SERVICE_UNAVAILABLE');}
+  const link=document.getElementById('maintenance-continue');link.href=destination();link.hidden=false;say('ready');
  }else if(session&&!session.user?.app_metadata?.site_preview){try{await ownerAccess(session);}catch{/* Ordinary registered users still require an invitation. */}}
  if(status.ready===false)say('SETUP_REQUIRED');
 }catch{say('SERVICE_UNAVAILABLE',true);}

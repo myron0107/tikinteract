@@ -5,6 +5,14 @@ import {createStudioAuthenticator} from '../lib/studio-auth.js';
 const token=(exp,sub='user')=>'header.'+Buffer.from(JSON.stringify({exp,sub})).toString('base64url')+'.signature';
 const now=()=>1000000;
 
+test('a temporary Studio session ends at the invitation deadline even before its JWT expires',async()=>{
+    let time=1000000;
+    const auth=createStudioAuthenticator({url:'https://auth.example.invalid',anonKey:'public',now:()=>time,fetchImpl:async url=>({ok:true,json:async()=>url.endsWith('/rest/v1/rpc/get_my_account_status')?{allowed:true,previewUntil:new Date(1005000).toISOString()}:{id:'temporary-guest'}})});
+    const socket={};assert.equal(await auth.authorize(socket,token(2000)),true);
+    time=1005000;assert.equal(auth.isAuthorized(socket),false);
+    assert.equal(await auth.authorize(socket,token(2000)),false);
+});
+
 test('Studio rejects missing, malformed, expired, forged and anonymous credentials',async()=>{
     let calls=0;
     const auth=createStudioAuthenticator({url:'https://auth.example.invalid',anonKey:'public',now,fetchImpl:async()=>{calls++;return{ok:false};}});

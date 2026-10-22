@@ -9,6 +9,8 @@ import { createLiveEventNormalizer, liveViewerCount } from './lib/live-events.js
 import {createGiftCatalog} from './lib/gift-catalog.js';
 import {createStudioAuthenticator} from './lib/studio-auth.js';
 import {fetchTikTokGiftCatalog} from './lib/tiktok-gift-source.js';
+import {maintenanceService} from './lib/maintenance-service.js';
+import {nodeMaintenanceHandler,isMaintenancePublic,PRIVATE_HEADERS} from './lib/maintenance-http.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const importedGiftCatalog = JSON.parse(await readFile(path.join(ROOT, 'assets/tiktok-gifts-catalog.json'), 'utf8'));
@@ -31,6 +33,7 @@ const ALLOWED_ORIGINS = new Set([
 const STATIC_FILES = new Set([
     '/index.html',
     '/404.html',
+    '/maintenance.html',
     '/live-studio.html',
     '/admin.html',
     '/style.css',
@@ -78,6 +81,7 @@ const MIME_TYPES = {
 
 // Return the branded page for browser navigation, retaining plain asset errors.
 const notFoundPage = await readFile(path.join(ROOT, '404.html'));
+const maintenancePage = await readFile(path.join(ROOT, 'maintenance.html'));
 function sendNotFound(request, response) {
     const html = request.headers.accept?.includes('text/html');
     response.writeHead(404, {
@@ -94,6 +98,24 @@ const server = createServer(async (request, response) => {
     } catch {
         response.writeHead(400).end('Invalid URL');
         return;
+    }
+
+    if (pathname === '/api/maintenance' || pathname === '/api/maintenance/') {
+        await nodeMaintenanceHandler(request, response);
+        return;
+    }
+    let gate;
+    if (!isMaintenancePublic(pathname)) {
+        try {
+            const webRequest = new Request(new URL(request.url, `http://${HOST}:${PORT}`), {headers: {cookie: request.headers.cookie || ''}});
+            gate = await maintenanceService.gate(webRequest);
+        } catch { gate = {allowed:false}; }
+        if (!gate.allowed) {
+            const html = request.headers.accept?.includes('text/html');
+            response.writeHead(503, {...PRIVATE_HEADERS, 'Content-Type':html?'text/html; charset=utf-8':'application/json', 'Retry-After':'3600'});
+            response.end(html?maintenancePage:JSON.stringify({error:'MAINTENANCE'}));
+            return;
+        }
     }
 
     if(pathname.startsWith('/GAME/NEON-ASCENT/')){
@@ -135,7 +157,8 @@ const server = createServer(async (request, response) => {
             'Content-Type': MIME_TYPES[path.extname(filePath)] || 'application/octet-stream',
             'X-Content-Type-Options': 'nosniff',
             'Cache-Control': immutableMedia ? 'public, max-age=31536000, immutable' : 'no-store',
-            ...(etag ? {'ETag':etag} : {})
+            ...(etag ? {'ETag':etag} : {}),
+            ...(gate?.enabled || isMaintenancePublic(pathname) ? PRIVATE_HEADERS : {})
         });
         response.end(content);
     } catch (error) {

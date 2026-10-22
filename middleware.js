@@ -4,11 +4,11 @@ import {isMaintenancePublic,PRIVATE_HEADERS,safePreviewDestination} from './lib/
 
 // No exclusions for games, Studio, static HTML or media: direct URLs are gated.
 export const config={runtime:'nodejs',matcher:'/:path*'};
-export default async function middleware(request){
+export async function routeMaintenance(request,service=maintenanceService){
  const url=new URL(request.url);
  if(isMaintenancePublic(url.pathname))return next({headers:PRIVATE_HEADERS});
  try{
-  const gate=await maintenanceService.gate(request);
+  const gate=await service.gate(request);
   if(gate.allowed)return next({headers:gate.enabled?PRIVATE_HEADERS:{}});
  }catch{/* An unavailable access check must never expose the protected site. */}
  if(request.method==='GET'||request.method==='HEAD'){
@@ -20,3 +20,4 @@ export default async function middleware(request){
  }
  return new Response(JSON.stringify({error:'MAINTENANCE'}),{status:503,headers:{...PRIVATE_HEADERS,'Content-Type':'application/json','Retry-After':'3600'}});
 }
+export default function middleware(request){return routeMaintenance(request);}

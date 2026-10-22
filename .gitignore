@@ -2,6 +2,9 @@ node_modules/
 npm-debug.log*
 .tools/
 data/
+.env
+.env.*
+!.env.example
 tikinteract-brand-v5
 v10
 v11

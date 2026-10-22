@@ -1,4 +1,8 @@
 .maintenance-main{width:min(470px,calc(100% - 40px));padding:48px 0}
+.maintenance-page .error-header .template-brand{--brand-size:30px}
+.maintenance-page .ti-home-wordmark{flex-direction:column;align-items:flex-start;gap:5px!important}
+.maintenance-page .ti-brand-tagline{display:block;font:600 6.4px/1.2 Inter,system-ui,sans-serif;letter-spacing:1px;white-space:nowrap;color:var(--error-muted)}
+@media(max-width:540px){.maintenance-page .error-header .template-brand{--brand-size:22px}.maintenance-page .ti-brand-tagline{display:none}}
 .maintenance-symbol{width:76px;height:76px;display:grid;place-items:center;margin-bottom:25px;border:1px solid var(--error-line);border-radius:20px;background:var(--error-panel);color:var(--error-accent)}
 .maintenance-symbol svg{width:40px;height:40px}
 .maintenance-form{display:grid;gap:10px;text-align:left;width:100%;margin-top:26px}

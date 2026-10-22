@@ -1,20 +1,27 @@
+import {mountAdminMaintenance} from './admin-maintenance.js?v=1';
 import {withPublicationDate} from './catalog-featured-data.js?v=1';
 import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES} from './platform-schema.js';
 import {SupportInbox,supportError} from './support-center.js';
 import {mountAdminAccessKeys} from './admin-access-keys.js';
 import {mountAdminUsers} from './admin-users.js';
 const $=id=>document.getElementById(id),escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const labels={overview:'Tablou de bord',messages:'Mesaje și suport',keys:'Chei de acces',games:'Jocuri',plans:'Abonamente',studio:'LIVE Studio',content:'Conținut',team:'Echipă și grade',history:'Istoric'};
+const labels={overview:'Tablou de bord',messages:'Mesaje și suport',keys:'Chei de acces',games:'Jocuri',plans:'Abonamente',studio:'LIVE Studio',content:'Conținut',team:'Echipă și grade',history:'Istoric',maintenance:'Mentenan\u021b\u0103 \u0219i invita\u021bii'};
 const roles={owner:'Proprietar',admin:'Administrator',editor:'Editor'};
 let client,state,draft,tab='overview',dirty=false,busy=false,authRequest=0,editingGame=null,previewToken,previewTarget='index.html';
-let messageInbox,messageDrafts=new Map(),messageRequests=new Map(),supportStats,keyManager,userManager,adminUserId;
+let messageInbox,messageDrafts=new Map(),messageRequests=new Map(),supportStats,keyManager,userManager,maintenanceManager,adminUserId;
+function updateMaintenanceLabel(){
+ const value=window.TikInteractLanguage?.get()==='en'?'Maintenance and invitations':'Mentenan\u021b\u0103 \u0219i invita\u021bii';
+ const nav=document.querySelector('[data-maintenance-nav-label]');if(nav)nav.textContent=value;
+ const title=$('admin-section-title');if(title){if(tab==='maintenance'){title.dataset.nativeI18n='';title.textContent=value;}else delete title.dataset.nativeI18n;}
+}
+window.addEventListener('tikinteract:language',updateMaintenanceLabel);updateMaintenanceLabel();
 function closeInbox(clear=false){if(messageInbox){messageDrafts=messageInbox.drafts;messageRequests=messageInbox.requests;messageInbox.destroy({clear});messageInbox=null;}if(clear){messageDrafts.clear();messageRequests.clear();supportStats=null;}}
 function updateSupportStats(stats){supportStats=stats;document.querySelectorAll('[data-admin-unread]').forEach(b=>{b.textContent=stats.unread;b.hidden=!stats.unread;});}
 const status=(message,error=false)=>{$('admin-status').textContent=message;$('admin-status').hidden=!message;$('admin-status').dataset.error=String(error);};
 function errorText(error){if(error?.message?.includes('CONFIG_CONFLICT'))return 'Alt membru a salvat modificări între timp. Copiază textele nesalvate și reîncarcă panoul pentru ultima versiune.';if(error?.message?.includes('ADMIN_REQUIRED')||error?.message?.includes('OWNER_REQUIRED'))return 'Nu ai drepturile necesare pentru această acțiune.';return error?.message||'Acțiunea nu a reușit. Încearcă din nou.';}
 function markDirty(){dirty=true;$('admin-save-state').textContent='Modificări nesalvate · versiunea de bază '+state.revision;}
 function setBusy(value){busy=value;for(const id of ['admin-save','admin-publish','admin-preview'])$(id).disabled=value;}
-function showGate(title,message,login=false){closeInbox(true);keyManager?.destroy();keyManager=null;userManager?.destroy();userManager=null;adminUserId=null;authRequest++;state=null;draft=null;dirty=false;editingGame=null;$('admin-game-form').reset();$('admin-app').hidden=true;$('admin-content').replaceChildren();$('admin-gate').hidden=false;$('admin-gate-title').textContent=title;$('admin-gate-message').textContent=message;$('admin-login').hidden=!login;document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());$('admin-preview-dialog').querySelector('iframe').removeAttribute('src');}
+function showGate(title,message,login=false){closeInbox(true);maintenanceManager?.destroy();maintenanceManager=null;keyManager?.destroy();keyManager=null;userManager?.destroy();userManager=null;adminUserId=null;authRequest++;state=null;draft=null;dirty=false;editingGame=null;$('admin-game-form').reset();$('admin-app').hidden=true;$('admin-content').replaceChildren();$('admin-gate').hidden=false;$('admin-gate-title').textContent=title;$('admin-gate-message').textContent=message;$('admin-login').hidden=!login;document.querySelectorAll('dialog[open]').forEach(dialog=>dialog.close());$('admin-preview-dialog').querySelector('iframe').removeAttribute('src');}
 async function rpc(name,args={}){const {data,error}=await client.rpc(name,args);if(error)throw error;return data;}
 async function load(){
  const request=++authRequest;
@@ -24,7 +31,7 @@ async function load(){
   const next=await rpc('get_site_admin_state');if(request!==authRequest)return;
   if(!next?.draft||!roles[next.role])throw Error('Administrarea nu este încă activată. Rulează supabase/admin.sql în SQL Editor, apoi reîncarcă pagina.');
   adminUserId=data.user.id;state=next;draft=validateConfig(next.draft);dirty=false;$('admin-gate').hidden=true;$('admin-app').hidden=false;$('admin-identity').textContent=data.user.email;$('admin-role').textContent=roles[next.role];
-  $('admin-publish').hidden=next.role==='editor';document.querySelectorAll('[data-owner-only]').forEach(el=>el.hidden=next.role!=='owner');document.querySelectorAll('[data-support-staff-only]').forEach(el=>el.hidden=next.role==='editor');if((tab==='team'&&next.role!=='owner')||(['messages','keys'].includes(tab)&&next.role==='editor'))tab='overview';
+  $('admin-publish').hidden=next.role==='editor';document.querySelectorAll('[data-owner-only]').forEach(el=>el.hidden=next.role!=='owner');document.querySelectorAll('[data-support-staff-only]').forEach(el=>el.hidden=next.role==='editor');if((['team','maintenance'].includes(tab)&&next.role!=='owner')||(['messages','keys'].includes(tab)&&next.role==='editor'))tab='overview';
   $('admin-save-state').textContent='Ciornă v'+state.revision+' · publicat v'+state.publishedRevision;status('');render();
  }catch(error){if(request!==authRequest)return;const missing=/PGRST202|schema cache|function.*does not exist/i.test(error.code+' '+error.message);showGate(missing?'Administrarea trebuie activată':'Acces restricționat',missing?'Rulează fișierul supabase/admin.sql în Supabase → SQL Editor. Contul proprietarului trebuie să fie înregistrat și confirmat.':error.message?.includes('ADMIN_REQUIRED')?'Contul tău nu are un grad de administrare.':errorText(error));}
 }
@@ -39,8 +46,8 @@ function renderOverview(root){
  }).catch(e=>{if(request===authRequest&&tab==='overview')$('admin-recent-messages').innerHTML='<p class="admin-note">'+escape(supportError(e))+'</p>';});}
 }
 function render(){
- closeInbox();keyManager?.destroy();keyManager=null;userManager?.destroy();userManager=null;document.querySelector('.admin-actions').hidden=['messages','keys','team'].includes(tab);$('admin-save-state').hidden=['messages','keys','team'].includes(tab);
- $('admin-section-title').textContent=labels[tab];document.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('is-active',b.dataset.adminTab===tab));
+ closeInbox();maintenanceManager?.destroy();maintenanceManager=null;keyManager?.destroy();keyManager=null;userManager?.destroy();userManager=null;document.querySelector('.admin-actions').hidden=['messages','keys','team','maintenance'].includes(tab);$('admin-save-state').hidden=['messages','keys','team','maintenance'].includes(tab);
+ $('admin-section-title').textContent=labels[tab];updateMaintenanceLabel();document.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('is-active',b.dataset.adminTab===tab));
  const root=$('admin-content');
  if(tab==='overview'){
   renderOverview(root);
@@ -59,6 +66,8 @@ function render(){
   root.innerHTML=heading('Așezarea din LIVE Studio','Muți panourile între coloane și le schimbi ordinea. Jocul rămâne în centru. Comenzile păstrează funcțiile existente.')+`<div class="admin-studio-preview">${column('left')}<div class="arena"><span>ARENA LIVE</span></div>${column('right')}</div><article class="admin-card admin-studio-settings"><label>Densitate<select data-studio="density"><option value="normal" ${draft.studio.density==='normal'?'selected':''}>Normală</option><option value="compact" ${draft.studio.density==='compact'?'selected':''}>Compactă</option></select></label><label>Poziția coloanelor pe desktop<select data-studio="side"><option value="standard" ${draft.studio.side==='standard'?'selected':''}>Standard</option><option value="reversed" ${draft.studio.side==='reversed'?'selected':''}>Inversează coloanele</option></select></label><button data-reset-studio type="button">Revino la așezarea inițială</button></article><p class="admin-note">Pe telefon, panourile se așază pe o singură coloană pentru lizibilitate. Folosește Previzualizare → Studio pentru verificarea completă.</p>`;
  }else if(tab==='history'){
   root.innerHTML=heading('Istoricul modificărilor','Restabilirea pregătește o ciornă din versiunea aleasă. Publicarea rămâne o acțiune separată.')+`<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Versiune</th><th>Acțiune</th><th>Data</th><th></th></tr></thead><tbody>${state.history.map(h=>`<tr><td>v${h.revision}</td><td>${{publish:'Publicare',draft:'Ciornă',initial:'Inițială'}[h.action]||escape(h.action)}</td><td>${escape(new Date(h.created_at).toLocaleString((window.TikInteractLanguage?.locale() || 'ro-RO')))}</td><td><button data-restore="${h.id}">Restabilește ca ciornă</button></td></tr>`).join('')}</tbody></table></div>`;
+ }else if(tab==='maintenance'){
+  maintenanceManager=mountAdminMaintenance({root,client});
  }else if(tab==='team'){
   userManager=mountAdminUsers({root,rpc,userId:adminUserId,onIdentityChange:load});
  }
@@ -80,7 +89,7 @@ document.addEventListener('input',event=>{
 });
 document.addEventListener('click',async event=>{
  const b=event.target.closest('button');if(!b)return;
- if(b.dataset.adminTab){tab=b.dataset.adminTab;if((tab==='team'&&state?.role!=='owner')||(['messages','keys'].includes(tab)&&state?.role==='editor')){tab='overview';return;}status('');render();}
+ if(b.dataset.adminTab){tab=b.dataset.adminTab;if((['team','maintenance'].includes(tab)&&state?.role!=='owner')||(['messages','keys'].includes(tab)&&state?.role==='editor')){tab='overview';return;}status('');render();}
  if(b.dataset.overviewTicket){const id=b.dataset.overviewTicket;tab='messages';render();messageInbox.open(id);}
  if(b.hasAttribute('data-new-game'))editGame(null);
  if(b.dataset.editGame!==undefined)editGame(Number(b.dataset.editGame));
@@ -105,5 +114,5 @@ $('admin-preview-dialog').addEventListener('close',()=>{if(!$('admin-preview-dia
 window.addEventListener('message',event=>{const frame=$('admin-preview-dialog').querySelector('iframe');if(event.origin===location.origin&&event.source===frame.contentWindow&&event.data?.channel==='tikinteract-preview-ready'&&event.data.token===previewToken)frame.contentWindow.postMessage({channel:'tikinteract-admin-preview',token:previewToken,config:cloneConfig(draft)},location.origin);});
 window.addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
 $('admin-login').addEventListener('submit',async event=>{event.preventDefault();const button=event.target.querySelector('button');button.disabled=true;try{const {error}=await client.auth.signInWithPassword({email:$('admin-email').value.trim(),password:$('admin-password').value});if(error)throw error;$('admin-password').value='';await load();}catch(e){$('admin-gate-message').textContent=errorText(e);}finally{button.disabled=false;}});
-document.querySelectorAll('[data-admin-logout]').forEach(button=>button.onclick=async()=>{await client.auth.signOut();showGate('Ai ieșit din cont','Intră din nou pentru a continua.',true);});
+document.querySelectorAll('[data-admin-logout]').forEach(button=>button.onclick=async()=>{try{await fetch('/api/maintenance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'logout'})});}catch{}await client.auth.signOut();showGate('Ai ieșit din cont','Intră din nou pentru a continua.',true);});
 try{if(!window.supabase)throw Error('Autentificarea nu s-a încărcat. Reîncarcă pagina.');const response=await fetch('assets/supabase-config.json');if(!response.ok)throw Error('Configurația contului nu este disponibilă.');const c=await response.json();client=window.supabase.createClient(c.url,c.anonKey);client.auth.onAuthStateChange((event)=>{if(event==='SIGNED_OUT'){showGate('Ai ieșit din cont','Intră din nou pentru a continua.',true);return;}if(event!=='TOKEN_REFRESHED'&&!dirty)setTimeout(load,0);});await load();}catch(e){showGate('Panoul nu s-a putut încărca',errorText(e));}
