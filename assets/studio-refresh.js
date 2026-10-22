@@ -2,7 +2,7 @@
 import{ct,esc,ic}from'./creator-ui.js?v=4';
 const $=s=>document.querySelector(s),en=()=>window.TikInteractLanguage?.get()==='en',t=(ro,english)=>en()?english:ro;
 let currentTab='studio',suggestedFor,accountObserver;
-const names={studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
+const names={studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],animations:['ANIMAȚII','ANIMATIONS'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
 function label(tab){return t(...(names[tab]||names.studio));}
 function arrange(){window.TikInteractStudioLayout?.fitGame();}
 function suggestions(){
@@ -16,7 +16,7 @@ function header(){
  const logo=$('.cp-rail-brand');if(logo){logo.title=t('Deschide transmisia','Open STREAM');logo.setAttribute('aria-label','TikInteract / '+label('studio'));}
  const crumb=$('#studio-current-section');const section=$('#creator-account-panel')?.dataset.accountSection;const sections={profile:['Profil','Profile'],subscription:['Abonamentul meu','My subscription'],messages:['Mesajele mele','My messages'],security:['Securitate','Security']};if(crumb)crumb.textContent=label(currentTab)+(currentTab==='account'&&sections[section]?' / '+t(...sections[section]):'');
  const title=$('.app-workspace-heading h1 [data-cp="studio"]');if(title)title.textContent=label('studio');
- document.querySelectorAll('.studio-app-rail [data-studio-tab]').forEach(button=>{const tab=button.dataset.studioTab;if(!names[tab])return;const span=button.querySelector('[data-cp]');if(span)span.textContent=label(tab);button.title=label(tab);button.setAttribute('aria-label',label(tab));});
+ document.querySelectorAll('.studio-app-rail [data-studio-tab]').forEach(button=>{const tab=button.dataset.studioTab;if(!names[tab])return;const span=button.querySelector('[data-cp],[data-an-nav-label]');if(span)span.textContent=label(tab);button.title=label(tab);button.setAttribute('aria-label',label(tab));});
  connectionLabels();
 
  const heading=$('.studio-connection .studio-panel-title');if(heading&&heading.textContent!=='TikTok LIVE')heading.textContent='TikTok LIVE';

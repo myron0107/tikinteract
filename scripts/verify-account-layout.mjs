@@ -16,7 +16,7 @@ try{
  await mkdir(dir,{recursive:true});await b.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true);('+hook.toString()+')();'});
  await b.page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
  await b.page('Page.navigate',{url:'http://127.0.0.1:3010/live-studio.html'});await b.waitFor('window.TikInteractAccount?.isAllowed()&&window.TikInteractStudioWindows');
- assert.deepEqual(await run('Array.from(document.querySelectorAll(".studio-app-rail [data-studio-tab]")).map(b=>b.dataset.studioTab)'),['studio','games','audio']);
+ assert.deepEqual(await run('Array.from(document.querySelectorAll(".studio-app-rail [data-studio-tab]")).map(b=>b.dataset.studioTab)'),['studio','games','audio','animations']);
  await run('document.getElementById("studio-account-avatar").click()');assert.equal(await run('document.getElementById("studio-profile-dropdown").hidden'),false);
  assert.deepEqual(await run('Array.from(document.querySelectorAll("#studio-profile-dropdown [data-studio-user-view]")).map(b=>b.dataset.studioUserView)'),['account','subscription','analytics','support']);
  assert.equal(await run('document.querySelector("#studio-profile-dropdown a[href*=index]")?.getAttribute("href")'),undefined);
