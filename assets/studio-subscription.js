@@ -1,4 +1,4 @@
-import {mountBilling,selectBillingPlan} from './billing.js?v=1';
+import {mountBilling,selectBillingPlan} from './billing.js?v=2';
 import {esc,ic} from './creator-ui.js?v=2';
 import {planTickets,planLabel,passText as t} from './plan-tickets.js?v=1';
 let root,selected='',signature='';
@@ -20,6 +20,6 @@ export function mountSubscription(element){
  if(root!==element){root=element;signature='';root.setAttribute('data-native-i18n','');root.addEventListener('click',event=>{if(event.target.closest('[data-subscription-refresh]'))window.TikInteractPass?.refresh();const button=event.target.closest('[data-ticket-action]');if(!button)return;selected=button.dataset.ticketAction;signature='';render();if(selectBillingPlan(selected))return;root.querySelector('#pp-access-key')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});});}
  render();
 }
-export function selectSubscriptionPlan(plan){selected=['free','play_pass','play_pass_pro'].includes(plan)?plan:'';signature='';render();}
+export function selectSubscriptionPlan(plan){selected=['free','play_pass','play_pass_pro'].includes(plan)?plan:'';signature='';render();if(['play_pass','play_pass_pro'].includes(selected))selectBillingPlan(selected,{scroll:false});}
 for(const event of ['tikinteract:access','tikinteract:config','tikinteract:language'])window.addEventListener(event,render);
 window.addEventListener('tikinteract:auth',()=>{if(root){root.querySelector('#pp-code')?.replaceChildren();const input=root.querySelector('#pp-code');if(input)input.value='';}signature='';render();});

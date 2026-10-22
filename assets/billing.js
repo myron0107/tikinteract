@@ -62,7 +62,7 @@ async function handleReturn(){
  await window.TikInteractStudioWindows.open('subscription');
  if(returned==='success'&&sessionId)await checkReturn();else{message=['Plata a fost anulată. Nu s-a activat acces suplimentar.','Checkout was cancelled. No additional access was activated.'];error=false;draw();}
 }
-export function selectBillingPlan(plan){if(pending)return;chosen=plan;requestId=null;draw();const host=root?.querySelector('[data-billing-host]');if(config.available){host?.scrollIntoView({behavior:'smooth',block:'center'});return true;}return false;}
+export function selectBillingPlan(plan,{scroll=true}={}){if(pending)return;chosen=plan;requestId=null;draw();const host=root?.querySelector('[data-billing-host]');if(config.available){if(scroll)host?.scrollIntoView({behavior:'smooth',block:'center'});return true;}return false;}
 export function mountBilling(element){
  if(root!==element){root=element;root.addEventListener('change',e=>{if(e.target.matches('[data-billing-plan]')){chosen=e.target.value;requestId=null;}});root.addEventListener('click',e=>{if(e.target.closest('[data-billing-buy]'))buy();if(e.target.closest('[data-billing-check]'))sessionId?checkReturn():load();});}
  draw();if(identity!==window.tikInteractUser?.id||!loaded){identity=window.tikInteractUser?.id;load();}
