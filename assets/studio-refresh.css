@@ -331,7 +331,10 @@ body#tikinteract-studio.studio-modern .studio-pad-icon{display:block;width:22px;
 
 body#tikinteract-studio.studio-modern #view-live .studio-game-picker .studio-quick-item{padding:3px}
 body#tikinteract-studio.studio-modern #view-live .studio-game-picker .studio-game-option>span{font-size:10px;line-height:1.2;padding:1px;overflow-wrap:anywhere}
-body#tikinteract-studio.studio-modern #view-live .studio-game-picker .game-favorite-star{top:4px;right:4px;width:19px;height:19px;font-size:10px;border-radius:5px}
+body#tikinteract-studio.studio-modern #view-live .studio-game-picker .game-favorite-star{top:3px;right:3px;bottom:auto;width:24px;height:24px;font-size:13px;border-radius:7px;backdrop-filter:none}
+
+/* Match the Sound Pad's top-right favorite action on game covers as well. */
+body#tikinteract-studio.studio-app.studio-modern .game-center-card>.game-favorite-star{top:4px;right:6px;bottom:auto;backdrop-filter:none}
 
 /* Shared vector navigation icons stay crisp in both themes and palettes. */
 body#tikinteract-studio.studio-modern .studio-nav-icon{display:block;width:22px;height:22px;flex:none;color:inherit}

@@ -763,7 +763,7 @@ function refreshGameFavorites() {
     document.querySelectorAll('[data-game-favorite]').forEach(button => {
         const selected = favoriteGameIds.has(button.dataset.gameFavorite);
         const game = studioGameCatalog.find(item => item.id === button.dataset.gameFavorite);
-        button.textContent = selected ? '★' : '☆';
+        button.innerHTML = `<i class="fa-${selected ? 'solid' : 'regular'} fa-star" aria-hidden="true"></i>`;
         button.classList.toggle('is-favorite', selected);
         button.setAttribute('aria-pressed', String(selected));
         button.setAttribute('aria-label', `${selected ? 'Elimină din favorite' : 'Adaugă la favorite'}: ${game?.name || ''}`);
@@ -798,7 +798,7 @@ function renderQuickGames() {
         open.append(image, label);
         const star = createGameFavoriteButton(game);
         const favorite = favoriteGameIds.has(game.id);
-        star.textContent = favorite ? '★' : '☆';
+        star.innerHTML = `<i class="fa-${favorite ? 'solid' : 'regular'} fa-star" aria-hidden="true"></i>`;
         star.classList.toggle('is-favorite', favorite);
         star.setAttribute('aria-pressed', String(favorite));
         star.setAttribute('aria-label', `${favorite ? 'Elimină din favorite' : 'Adaugă la favorite'}: ${game.name}`);
