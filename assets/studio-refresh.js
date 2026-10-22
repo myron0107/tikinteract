@@ -25,7 +25,7 @@ function header(){
  const logo=$('.cp-rail-brand');if(logo){logo.title=t('Deschide transmisia','Open STREAM');logo.setAttribute('aria-label','TikInteract / '+label('studio'));}
  const crumb=$('#studio-current-section');const section=$('#creator-account-panel')?.dataset.accountSection;const sections={profile:['Profil','Profile'],subscription:['Abonamentul meu','My subscription'],messages:['Mesajele mele','My messages'],security:['Securitate','Security']};if(crumb)crumb.textContent=label(currentTab)+(currentTab==='account'&&sections[section]?' / '+t(...sections[section]):'');
  const title=$('.app-workspace-heading h1 [data-cp="studio"]');if(title)title.textContent=label('studio');
- document.querySelectorAll('.studio-app-rail [data-studio-tab]').forEach(button=>{const tab=button.dataset.studioTab;if(!names[tab])return;const span=button.querySelector('[data-cp]');if(span)span.textContent=label(tab);button.title=label(tab);});
+ document.querySelectorAll('.studio-app-rail [data-studio-tab]').forEach(button=>{const tab=button.dataset.studioTab;if(!names[tab])return;const span=button.querySelector('[data-cp]');if(span)span.textContent=label(tab);button.title=label(tab);button.setAttribute('aria-label',label(tab));});
  connectionLabels();
 
  const heading=$('.studio-connection .studio-panel-title');if(heading&&heading.textContent!=='TikTok LIVE')heading.textContent='TikTok LIVE';
@@ -80,7 +80,7 @@ function init(){
   const help=$('#studio-help-button');if(help){help.dataset.studioTab='help';help.setAttribute('aria-controls','studio-help-panel');help.setAttribute('role','tab');help.setAttribute('aria-selected','false');help.onclick=()=>window.setLiveStudioTab('help');}
   // Retain the native gift recording/trigger services, removing only this catalog UI.
   nav.querySelector('[data-studio-tab="gifts"]')?.remove();$('#tiktok-gifts-panel')?.remove();
-  for(const tab of ['studio','games','audio','analytics']){const button=nav.querySelector('[data-studio-tab="'+tab+'"]');if(button)nav.append(button);}
+  for(const tab of ['studio','games','audio']){const button=nav.querySelector('[data-studio-tab="'+tab+'"]');if(button)nav.append(button);}
   const bottom=rail.querySelector('.app-rail-bottom');if(bottom){bottom.classList.add('live-studio-tabs','studio-secondary-nav');bottom.setAttribute('role','tablist');bottom.setAttribute('aria-label',t('Cont și suport','Account and support'));bottom.querySelector('.cp-rail-account')?.remove();for(const tab of ['community','account','help']){const button=nav.querySelector('[data-studio-tab="'+tab+'"]');if(button)bottom.append(button);}const back=bottom.querySelector('a[href="index.html"]');if(back)bottom.append(back);}
   let helpPanel=$('#studio-help-panel');if(!helpPanel){helpPanel=document.createElement('section');helpPanel.id='studio-help-panel';helpPanel.className='cp-page hidden';helpPanel.setAttribute('role','tabpanel');helpPanel.setAttribute('aria-labelledby','studio-help-button');$('#view-live').append(helpPanel);}
   rail.querySelector('.cp-rail-brand').title=t('Deschide transmisia','Open STREAM');

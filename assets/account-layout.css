@@ -1,0 +1,115 @@
+/* Account layout only. Authentication, support and ticket components stay native. */
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized{max-width:1280px;width:100%;margin-inline:auto}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-page-heading{margin-bottom:18px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-page-heading h2{font-size:27px;letter-spacing:-.035em;margin-bottom:5px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-page-heading p{font-size:12px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:20px 22px;border:1px solid var(--studio-line);border-radius:14px;background:var(--studio-panel);margin-bottom:18px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-details{min-width:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-label{display:block;font:600 9px/1.4 Inter,sans-serif;letter-spacing:.13em;color:var(--studio-muted);margin-bottom:11px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-profile-top{margin:0;gap:13px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-profile-top>div:last-child{min-width:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-profile-top h3{font-size:21px;line-height:1.3;letter-spacing:-.025em;margin:0 0 3px;overflow-wrap:anywhere}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-profile-top small{font-size:12px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access{display:flex;align-items:center;gap:12px;min-width:190px;min-height:62px;text-align:left;border:1px solid var(--studio-line);border-radius:10px;padding:12px 15px;background:var(--studio-soft);color:var(--studio-ink);cursor:pointer}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access>i:first-child{font-size:23px;color:var(--studio-accent)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access>i:last-child{font-size:11px;margin-left:auto;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access small{display:block;font-size:10px;color:var(--studio-muted);margin-bottom:4px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access strong{display:block;font-size:14px;font-weight:650}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access:hover{background:var(--studio-active)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs{display:flex;align-items:center;gap:6px;position:sticky;top:var(--app-header-height,62px);z-index:12;overflow:visible;border:0;border-bottom:1px solid var(--studio-line);margin:0 0 18px;padding:7px 0;background:var(--studio-bg)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs button{display:inline-flex;align-items:center;justify-content:center;min-height:38px;min-width:0;padding:8px 16px;border:0;border-bottom:2px solid transparent;border-radius:6px 6px 0 0;background:transparent;color:var(--studio-muted);font:500 12px/1.4 Inter,sans-serif;text-align:center;white-space:nowrap;transition:background .16s,color .16s}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs button:is(:hover,[aria-current=location]){background:var(--studio-soft);color:var(--studio-accent)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs button[aria-current=location]{border-bottom-color:var(--studio-accent);color:var(--studio-accent);background:transparent}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-layout{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:18px;align-items:start;max-width:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-panel{padding:21px;border-radius:12px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-panel h3{font-size:16px;line-height:1.4;margin-bottom:14px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-panel h3>i{font-size:15px;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-aside{display:grid;gap:18px;min-width:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-form-intro{margin:0 0 22px;color:var(--studio-muted);font-size:12px;line-height:1.7}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form{margin:0;gap:12px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form>.cp-field{display:grid;grid-template-columns:1fr;gap:8px;color:var(--studio-ink)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form input{min-height:42px;padding:10px 12px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form dl{display:grid;gap:0;margin:5px 0 0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form dl>div{display:grid;grid-template-columns:110px minmax(0,1fr);gap:15px;padding:15px 0;border-bottom:1px solid var(--studio-line)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form dd{padding:0;border:0;background:none;min-width:0;font-size:12px;line-height:1.6;overflow-wrap:anywhere;color:var(--studio-ink)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form dt{font-size:12px;line-height:1.6;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-display-name-save{justify-self:start;margin:10px 0 0;padding:10px 18px;min-height:39px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-display-name-status:empty{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .restored-account-ticket{padding:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .restored-ticket-top{padding:17px 20px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .restored-ticket-top h3{font-size:10px;margin-bottom:10px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .restored-ticket-top [data-account-pass]{margin-top:0;font-size:19px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .restored-ticket-body{padding:15px 20px;gap:11px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preferences>p{font-size:12px;line-height:1.7;margin:-5px 0 8px;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row{display:grid;gap:8px;padding-top:14px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row>span{font-size:11px;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row>div{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row button{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;min-height:35px;padding:8px;border:1px solid var(--studio-line);border-radius:7px;background:var(--studio-soft);color:var(--studio-ink);font:500 11px/1.4 Inter,sans-serif;cursor:pointer}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row button[aria-pressed=true]{background:var(--studio-active);color:var(--studio-accent);border-color:color-mix(in srgb,var(--studio-accent) 40%,var(--studio-line))}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-swatch{width:10px;height:10px;border-radius:50%;flex:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-swatch-burgundy{background:#A30F3D}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-swatch-blue{background:#2563BE}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-security{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);gap:18px;align-items:start}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-security>.cp-panel{max-width:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-security>.cp-panel>p{font-size:12px;line-height:1.8;color:var(--studio-muted);margin:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row{display:flex;align-items:center;gap:12px;padding:20px 0;border-top:1px solid var(--studio-line)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row:first-child{margin-top:20px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row>i{font-size:17px;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row>div{flex:1;min-width:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row strong{font-size:12px;font-weight:600}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row p{font-size:11px;color:var(--studio-muted);line-height:1.7;margin:4px 0 0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row button{flex:none;font-size:11px;min-height:36px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-info dl{display:grid;gap:18px;margin:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-info dt{font-size:11px;color:var(--studio-muted);margin-bottom:5px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-info dd{margin:0;font-size:12px;line-height:1.6;color:var(--studio-ink);overflow-wrap:anywhere}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized [data-account-admin-host]{grid-column:1/-1}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized [data-account-admin-host]:empty{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-status{padding:14px 18px;gap:15px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-status>strong{font-size:14px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-title{font-size:18px;margin:21px 0 16px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-key{gap:22px;padding:20px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-key h3{font-size:16px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized [data-account-support-inbox] .si-workspace{height:430px;min-height:360px}
+@media(max-width:1000px){
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-layout,#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-security{grid-template-columns:1fr}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-aside{grid-template-columns:1fr 1fr;align-items:start}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs button{padding:8px 12px}
+}
+@media(max-width:680px){
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-page-heading h2{font-size:23px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary{align-items:stretch;flex-direction:column;gap:15px;padding:17px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-access{min-width:0;min-height:53px;padding:9px 12px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary-label{font-size:8px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-profile-top h3{font-size:19px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:2px;margin-bottom:14px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-tabs button{min-height:38px;padding:7px 2px;font-size:10px;white-space:normal;overflow-wrap:anywhere}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-aside{grid-template-columns:1fr}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-panel{padding:17px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .restored-account-ticket{padding:0}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form dl>div{grid-template-columns:1fr;gap:5px;padding:12px 0}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .cp-account-form input{font-size:16px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row{display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row button{grid-column:2;justify-self:start}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-status>small{flex-basis:100%}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-key{padding:17px;gap:17px}
+}
+
+/* A single continuous page; the navigation only scrolls to these sections. */
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-block{margin-bottom:18px;padding:20px;border:1px solid var(--studio-line);border-radius:14px;background:var(--studio-panel);scroll-margin-top:132px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading{position:static;background:transparent;box-shadow:none;backdrop-filter:none;border:0;padding:0;color:var(--studio-ink);display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:5px 16px;grid-column:1/-1;margin-bottom:2px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading h3{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:650;letter-spacing:-.02em;color:var(--studio-ink);margin:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading h3>i{font-size:17px;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading p{grid-column:1;font-size:12px;line-height:1.7;color:var(--studio-muted);margin:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading>.cp-btn{grid-column:2;grid-row:1/3}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-legacy-pass{display:none!important}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-aside{display:block}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-subscription>.account-section-heading{margin-bottom:18px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-subscription>.subscription-title{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-message-center>.account-section-heading{margin-bottom:16px}
+@media(max-width:680px){
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-block{padding:14px;margin-bottom:14px;scroll-margin-top:130px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading h3{font-size:15px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading{gap:8px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading>.cp-btn{font-size:10px;padding:8px;min-height:34px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-summary{padding:15px}
+}

@@ -1,0 +1,99 @@
+/* Avatar menu and independent Studio utility windows. */
+#studio-utility-routes[hidden]{display:none!important}
+body.sw-modal-open{overflow:hidden}
+#tikinteract-studio.studio-modern .sw-rail-footer{display:flex;flex:none;flex-direction:column;gap:4px;margin-top:auto;padding-top:18px;width:100%}
+#tikinteract-studio.studio-modern .sw-rail-footer :is(button,a){display:flex;flex:none;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;min-height:48px;padding:8px 3px;border:0;border-radius:8px;background:transparent;color:var(--studio-muted);font:400 10px/1.35 Inter,system-ui,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
+#tikinteract-studio.studio-modern .sw-rail-footer :is(button,a)>i{font-size:15px;color:inherit!important}
+#tikinteract-studio.studio-modern .sw-rail-footer :is(button,a):is(:hover,:focus-visible){background:var(--studio-soft);color:var(--studio-ink)}
+#tikinteract-studio.studio-modern .sw-rail-footer>a{border-top:1px solid var(--studio-line);border-radius:0;margin-top:5px;padding-top:13px}
+#tikinteract-studio.studio-modern .sw-menu-wrap{position:relative;display:inline-flex;align-items:center;flex:none;order:7}
+#tikinteract-studio.studio-modern .sw-menu-wrap[hidden],#tikinteract-studio .sw-profile-dropdown [hidden]{display:none!important}
+#tikinteract-studio.studio-modern .sw-profile-dropdown{position:absolute;right:0;top:calc(100% + 13px);z-index:90;width:278px;max-width:calc(100vw - 16px);max-height:calc(100dvh - 85px);overflow-y:auto;overscroll-behavior:contain;padding:8px;background:var(--studio-panel);color:var(--studio-ink);border:1px solid var(--studio-line);border-radius:13px;box-shadow:0 14px 42px #0003;text-align:left}
+#tikinteract-studio.studio-modern .sw-profile-dropdown[hidden]{display:none!important}
+#tikinteract-studio.studio-modern .sw-menu-identity{padding:10px 9px 15px;border-bottom:1px solid var(--studio-line);margin-bottom:6px}
+#tikinteract-studio.studio-modern .sw-menu-identity>div{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#tikinteract-studio.studio-modern .sw-menu-identity strong{min-width:0;font-size:12px;line-height:1.5;font-weight:650;overflow-wrap:anywhere}
+#tikinteract-studio.studio-modern .sw-menu-identity small{display:block;font-size:11px;line-height:1.6;color:var(--studio-muted);overflow-wrap:anywhere;margin-top:3px}
+#tikinteract-studio.studio-modern .sw-menu-plan{flex:none;font-size:9px;font-weight:600;border-radius:5px;padding:3px 6px;background:var(--studio-soft);color:var(--studio-muted)}
+#tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a){display:flex;align-items:center;gap:11px;width:100%;min-height:42px;border:0;border-radius:7px;background:transparent;box-shadow:none;text-align:left;text-decoration:none;color:var(--studio-muted);padding:10px;font:500 12px/1.4 Inter,system-ui,sans-serif;cursor:pointer}
+#tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a)>i:first-child{width:17px;font-size:15px;text-align:center;flex:none;color:inherit}
+#tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a)>i:last-child:not(:first-child){font-size:9px;margin-left:auto;opacity:.5}
+#tikinteract-studio.studio-modern .sw-profile-dropdown :is(button,a):is(:hover,:focus-visible){background:var(--studio-soft);color:var(--studio-ink)}
+#tikinteract-studio.studio-modern .sw-menu-footer{margin-top:6px;padding-top:6px;border-top:1px solid var(--studio-line)}
+#tikinteract-studio.studio-modern .sw-menu-footer [data-sw-signout]{color:var(--studio-accent)}
+#tikinteract-studio.studio-modern .sw-dialog{width:min(1180px,calc(100vw - 48px));max-width:none;height:min(820px,calc(100dvh - 64px));max-height:calc(100dvh - 32px);padding:0;margin:auto;border:1px solid var(--studio-line);border-radius:15px;background:var(--studio-panel);color:var(--studio-ink);box-shadow:0 24px 90px #0005;overflow:hidden;overscroll-behavior:contain}
+#tikinteract-studio.studio-modern .sw-dialog::backdrop{background:#0009;backdrop-filter:blur(3px)}
+#tikinteract-studio.studio-modern .sw-frame{height:100%;display:flex;flex-direction:column;min-height:0}
+#tikinteract-studio.studio-modern .sw-window-header{position:static;display:flex;align-items:center;gap:10px;min-height:65px;padding:15px 24px;border:0;border-bottom:1px solid var(--studio-line);background:var(--studio-panel);color:var(--studio-ink);box-shadow:none;backdrop-filter:none;flex:none}
+#tikinteract-studio.studio-modern .sw-window-header h2{font:650 18px/1.4 Inter,system-ui,sans-serif;letter-spacing:-.025em;margin:0;color:var(--studio-ink)}
+#tikinteract-studio.studio-modern .sw-window-header [data-sw-icon]{display:flex;align-items:center;justify-content:center;color:var(--studio-muted);font-size:18px}
+#tikinteract-studio.studio-modern .sw-window-header button{display:grid;place-items:center;width:34px;height:34px;flex:none;border:0;border-radius:8px;background:transparent;color:var(--studio-muted);cursor:pointer;font-size:17px}
+#tikinteract-studio.studio-modern .sw-window-header button:hover{color:var(--studio-ink);background:var(--studio-soft)}
+#tikinteract-studio.studio-modern .sw-window-header [data-sw-close]{margin-left:auto}
+#tikinteract-studio.studio-modern .sw-dialog [hidden]{display:none!important}
+#tikinteract-studio.studio-modern .sw-window-body{display:grid;grid-template-columns:minmax(0,1fr);flex:1;min-height:0;overflow:hidden}
+#tikinteract-studio.studio-modern .sw-dialog[data-view=account] .sw-window-body{grid-template-columns:185px minmax(0,1fr)}
+#tikinteract-studio.studio-modern .sw-settings-nav{padding:21px 10px;background:var(--studio-soft);border-right:1px solid var(--studio-line);overflow:auto}
+#tikinteract-studio.studio-modern .sw-settings-nav>small{display:block;padding:0 10px 15px;font-size:9px;letter-spacing:.1em;color:var(--studio-muted)}
+#tikinteract-studio.studio-modern .sw-settings-nav>button{display:flex;align-items:center;gap:10px;width:100%;min-height:42px;padding:11px 10px;margin:2px 0;border:0;border-radius:7px;background:transparent;color:var(--studio-muted);font:500 12px/1.4 Inter,system-ui,sans-serif;text-align:left;cursor:pointer}
+#tikinteract-studio.studio-modern .sw-settings-nav>button>i{font-size:14px;width:17px;text-align:center}
+#tikinteract-studio.studio-modern .sw-settings-nav>button:is(:hover,[aria-current=page]){color:var(--studio-accent);background:var(--studio-active)}
+#tikinteract-studio.studio-modern .sw-window-content{padding:24px;overflow:auto;min-width:0;min-height:0;scrollbar-width:thin;scrollbar-gutter:stable;overscroll-behavior:contain}
+#tikinteract-studio.studio-modern .sw-window-content>.cp-page{margin:0;width:100%;max-width:none}
+#tikinteract-studio.studio-modern .sw-loading{padding:35px 15px;text-align:center;color:var(--studio-muted);font-size:13px}
+#tikinteract-studio.studio-modern .sw-support-links{display:flex;align-items:center;gap:10px;padding:10px 24px;border-bottom:1px solid var(--studio-line);flex:none}
+#tikinteract-studio.studio-modern .sw-support-links button{display:inline-flex;align-items:center;gap:7px;padding:7px 10px;min-height:32px;border:1px solid var(--studio-line);border-radius:7px;background:var(--studio-soft);color:var(--studio-muted);font:500 11px Inter,sans-serif;cursor:pointer}
+#tikinteract-studio.studio-modern .sw-support-links button small{font-size:8px;color:var(--studio-accent)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized>.cp-page-heading,
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized>.account-summary,
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized>.account-tabs{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-subpage[hidden]{display:none!important}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-block{margin:0;padding:0;border:0;border-radius:0;background:transparent;scroll-margin-top:0}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-profile-layout{grid-template-columns:minmax(0,1fr)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized[data-settings-pane=profile] .account-profile-aside{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized[data-settings-pane=preferences] #account-section-profile>.cp-panel{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-section-heading{margin-bottom:18px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-profile>.cp-panel,
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preferences{max-width:650px;padding:0;background:transparent;border:0;box-shadow:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-profile>.cp-panel>h3{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row{padding:15px 0;border-bottom:1px solid var(--studio-line);grid-template-columns:130px minmax(0,1fr);align-items:center;gap:18px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preferences>h3{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preferences>p{margin:0 0 6px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-security{grid-template-columns:minmax(0,1fr)}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-info dl{grid-template-columns:1fr 1fr;gap:18px 24px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-row button{border:1px solid var(--studio-line);border-radius:7px;background:var(--studio-soft);color:var(--studio-ink);padding:9px 12px;text-decoration:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized [data-account-admin-host]{display:none}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-status{margin-bottom:20px}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized #account-section-messages>.account-section-heading{grid-template-columns:1fr auto}
+#tikinteract-studio.studio-modern #creator-account-panel.account-organized [data-account-support-inbox] .si-workspace{height:440px;min-height:320px}
+#tikinteract-studio.studio-modern .sw-dialog :is(.cp-metrics,.cp-analytics-middle,.cp-stat-grid){min-width:0}
+#tikinteract-studio.studio-modern .sw-dialog .cp-page-heading h1{font-size:24px}
+#tikinteract-studio.studio-modern .sw-dialog .cp-page-heading{gap:16px;flex-wrap:wrap}
+@media(max-width:680px){
+ #tikinteract-studio.studio-modern .sw-rail-footer :is(button,a)>span{display:none}
+ #tikinteract-studio.studio-modern .sw-rail-footer :is(button,a){min-height:43px}
+ #tikinteract-studio.studio-modern .studio-app-nav .live-studio-tab>span{display:none!important}
+ #tikinteract-studio.studio-modern .studio-app-nav .live-studio-tab{min-height:50px;gap:0;padding:12px 4px}
+ #tikinteract-studio.studio-modern .studio-app-nav .studio-nav-icon{width:23px;height:23px}
+ #tikinteract-studio.studio-modern .sw-dialog{width:100vw;max-width:100vw;height:100dvh;max-height:100dvh;margin:0;border:0;border-radius:0}
+ #tikinteract-studio.studio-modern .sw-window-header{min-height:58px;padding:12px 16px}
+ #tikinteract-studio.studio-modern .sw-window-header h2{font-size:17px}
+ #tikinteract-studio.studio-modern .sw-dialog[data-view=account] .sw-window-body{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+ #tikinteract-studio.studio-modern .sw-settings-nav{display:flex;align-items:center;gap:5px;padding:8px 12px;border:0;border-bottom:1px solid var(--studio-line);overflow:auto}
+ #tikinteract-studio.studio-modern .sw-settings-nav>small{display:none}
+ #tikinteract-studio.studio-modern .sw-settings-nav>button{width:auto;min-height:38px;padding:8px 10px;margin:0;flex:1;justify-content:center;gap:7px;font-size:11px;white-space:nowrap}
+ #tikinteract-studio.studio-modern .sw-settings-nav>button>i{width:auto;font-size:13px}
+ #tikinteract-studio.studio-modern .sw-window-content{padding:18px 15px;scrollbar-gutter:auto}
+ #tikinteract-studio.studio-modern .sw-support-links{padding:8px 15px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-preference-row{grid-template-columns:1fr;gap:8px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .account-security-info dl{grid-template-columns:1fr}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized .subscription-key{padding:15px}
+ #tikinteract-studio.studio-modern #creator-account-panel.account-organized [data-account-support-inbox] .si-workspace{height:max(380px,calc(100dvh - 330px));min-height:320px}
+ #tikinteract-studio.studio-modern .sw-dialog .cp-metrics{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:no-preference){
+ #tikinteract-studio.studio-modern .sw-profile-dropdown{animation:sw-menu-in .14s ease-out}
+ #tikinteract-studio.studio-modern .sw-dialog[open]{animation:sw-window-in .16s ease-out}
+ @keyframes sw-menu-in{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
+ @keyframes sw-window-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+}

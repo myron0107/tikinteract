@@ -29,7 +29,7 @@ function start(state){
 }
 export function selectAccountMessages(root){
  const state=ensure(root);state.view='support';delete root.dataset.messageCenterView;
- const visible=root.dataset.accountSection==='messages'&&!root.classList.contains('hidden');
+ const visible=(root.classList.contains('account-single-page')||root.dataset.accountSection==='messages')&&!root.hidden&&!root.classList.contains('hidden');
  state.host.hidden=!visible;
  if(visible)start(state);
 }
@@ -42,6 +42,7 @@ export function mountAccountMessages(root,panel){
  selectAccountMessages(root,state.view);localize(state.host);
 }
 window.addEventListener('tikinteract:studio-tab',()=>{for(const [root,state]of states)selectAccountMessages(root,state.view);});
+window.addEventListener('tikinteract:studio-window',()=>{for(const [root,state]of states)selectAccountMessages(root,state.view);});
 window.addEventListener('tikinteract:support',()=>{for(const state of states.values())if(state.service&&!state.host.hidden)state.service.refresh();});
 window.addEventListener('tikinteract:auth',()=>{for(const [root,state]of states){if(state.owner!==window.tikInteractUser?.id){state.service?.destroy();state.service=null;state.owner=null;state.host.replaceChildren();}selectAccountMessages(root,state.view);}});
 window.addEventListener('tikinteract:language',()=>{for(const state of states.values())localize(state.host);});

@@ -199,7 +199,7 @@ body#tikinteract-site.public-approved .public-hero-line em{color:var(--public-ac
  body#tikinteract-site.public-approved #approved-home-plans .ti-ticket button{margin-top:auto;font-size:9px;padding:8px 3px;gap:3px;min-height:35px;border-radius:6px}
  body#tikinteract-site.public-approved #approved-home-plans .ti-ticket button>i{display:none}
  body#tikinteract-site.public-approved #approved-home-plans .ti-ticket-barcode{width:34px;height:6px;margin-top:10px}
- body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:before,body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:after{width:12px;height:12px}
- body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:before{left:-7px}
- body#tikinteract-site.public-approved #approved-home-plans .ti-ticket:after{right:-7px}
+ body#tikinteract-site.public-approved #approved-home-plans .ti-ticket{--ticket-notch-radius:6px}
+
+
 }
