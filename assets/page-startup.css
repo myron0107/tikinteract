@@ -1,11 +1,47 @@
 /* This is only the initial loading state, never a transition between pages. */
-html[data-ui-pending]{background:#101014}
+html[data-ui-pending]{background:#111214}
 html[data-ui-pending][data-mode=light]{background:#FFF}
-html[data-ui-pending] body{visibility:hidden;opacity:0!important;pointer-events:none}
+html[data-ui-pending] body{visibility:hidden;pointer-events:none}
+html[data-ui-pending] body>:not(#page-startup-screen){opacity:0!important}
 html[data-ui-pending]::after{content:'';position:fixed;left:calc(50% - 12px);top:calc(50% - 12px);width:24px;height:24px;box-sizing:border-box;border:2px solid #77778035;border-top-color:#A32144;border-radius:50%;animation:ti-startup-spin .7s linear infinite;pointer-events:none}
 html[data-ui-pending][data-theme=blue]::after{border-top-color:#285DA1}
 @keyframes ti-startup-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){html[data-ui-pending]::after{animation:none}}
+
+/* A statically rendered loading screen uses the existing boot readiness signal.
+   No fake progress percentage, fixed delay or page/Studio tab transition. */
+#page-startup-screen{display:none}
+html[data-ui-pending][data-loading-brand]::after{display:none}
+html[data-ui-pending] #page-startup-screen{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;visibility:visible;opacity:1;background:#111214;color:#F3F3F5;pointer-events:auto;font:400 13px/1.5 Inter,system-ui,-apple-system,'Segoe UI',sans-serif}
+html[data-ui-pending][data-mode=light] #page-startup-screen{background:#FFF;color:#202125}
+.ti-startup-content{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;text-align:center;padding:28px;width:100%;max-width:400px;transform:translateY(-12px)}
+.ti-startup-site{margin-bottom:29px;font:700 34px/1.1 Inter,system-ui,-apple-system,'Segoe UI',sans-serif;letter-spacing:-.04em}
+.ti-startup-site>span>span{color:#C63D5A}
+html[data-mode=light] .ti-startup-site>span>span{color:#8B1F3F}
+.ti-startup-studio{display:none;flex-direction:column;align-items:center;margin-bottom:27px;animation:ti-startup-breathe 1.8s ease-in-out infinite}
+.ti-startup-studio img{display:block;width:112px;height:57px;object-fit:contain}
+.ti-startup-studio strong{font:750 11px/1.2 Inter,system-ui,sans-serif;letter-spacing:5px;text-indent:5px;margin-top:9px;color:inherit}
+.ti-startup-studio .ti-startup-logo-light{display:none}
+html[data-mode=light] .ti-startup-logo-dark{display:none}
+html[data-mode=light] .ti-startup-studio .ti-startup-logo-light{display:block}
+.ti-startup-studio-copy{display:none}
+html[data-loading-brand=studio] .ti-startup-site{display:none}
+html[data-loading-brand=studio] .ti-startup-studio{display:flex}
+html[data-loading-brand=studio] .ti-startup-studio-copy{display:inline}
+.ti-startup-track{width:104px;height:3px;border-radius:999px;background:#FFFFFF20;overflow:hidden}
+html[data-mode=light] .ti-startup-track{background:#20212518}
+.ti-startup-track>span{display:block;width:45%;height:100%;border-radius:inherit;background:#C63D5A;animation:ti-startup-travel 1.15s ease-in-out infinite}
+html[data-theme=blue] .ti-startup-track>span{background:#6097E4}
+html[data-theme=blue][data-mode=light] .ti-startup-track>span{background:#255AA4}
+.ti-startup-content>p{margin:14px 0 0;font:400 12px/1.5 Inter,system-ui,sans-serif;color:#B0B1B8}
+html[data-mode=light] .ti-startup-content>p{color:#5D6068}
+.ti-startup-content [lang=en]{display:none}
+html[lang=en] .ti-startup-content [lang=ro]{display:none}
+html[lang=en] .ti-startup-content [lang=en]{display:inline}
+@keyframes ti-startup-breathe{0%,100%{opacity:1}50%{opacity:.7}}
+@keyframes ti-startup-travel{0%{transform:translateX(-105%)}100%{transform:translateX(330%)}}
+@media(max-width:540px){.ti-startup-site{font-size:30px}.ti-startup-studio img{width:96px;height:49px}.ti-startup-studio strong{font-size:10px;letter-spacing:4px;text-indent:4px}}
+@media(prefers-reduced-motion:reduce){.ti-startup-studio,.ti-startup-track>span{animation:none}.ti-startup-track>span{width:100%;opacity:.6}}
 /* Header controls keep their final order as modules attach their handlers. */
 body#tikinteract-site.public-approved .header-account-actions>.language-picker{order:0}
 body#tikinteract-site.public-approved .header-account-actions>[data-mode-toggle]{order:1}

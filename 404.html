@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ro" class="dark">
+<html lang="ro" class="dark" data-loading-brand="site">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="assets/page-startup.css?v=1"><script src="assets/page-startup.js?v=1"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="assets/page-startup.css?v=2"><script src="assets/page-startup.js?v=1"></script>
   <meta name="robots" content="noindex, follow">
   <meta name="theme-color" content="#101014">
   <title>Pagina nu a fost găsită — TikInteract</title>
@@ -17,6 +17,19 @@
   <script type="module" src="/assets/error-page.js?v=2"></script>
 <link rel="stylesheet" href="/assets/carbon-metal.css?v=5"><link rel="stylesheet" href="assets/public-header.css?v=3"><link rel="stylesheet" href="assets/ui-controls.css?v=3"><script defer src="assets/public-header.js?v=1"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></head>
 <body class="site-template error-page has-public-header" data-native-i18n>
+<div id="page-startup-screen" role="status" aria-live="polite" aria-atomic="true" data-native-i18n>
+  <div class="ti-startup-content">
+    <div class="ti-startup-site" aria-label="TikInteract" translate="no"><span>Tik<span>Interact</span></span></div>
+    <div class="ti-startup-studio" aria-label="TIK Studio" translate="no">
+      <img class="ti-startup-logo-dark" src="assets/studio-tik-dark.svg?v=1" width="112" height="57" alt="" decoding="async">
+      <img class="ti-startup-logo-light" src="assets/studio-tik-light.svg?v=1" width="112" height="57" alt="" decoding="async">
+      <strong>STUDIO</strong>
+    </div>
+    <div class="ti-startup-track" aria-hidden="true"><span></span></div>
+    <p><span lang="ro">Se încarcă<span class="ti-startup-studio-copy"> Studio</span>…</span><span lang="en">Loading<span class="ti-startup-studio-copy"> Studio</span>…</span></p>
+  </div>
+</div>
+<!-- /page-startup-screen -->
   <header class="template-header ti-site-header"><div class="site-header-inner">
 <a class="template-brand" href="index.html" onclick="if (typeof switchView === 'function') { switchView('home'); event.preventDefault(); }" aria-label="TikInteract — Acasă"><span class="ti-wordmark ti-brand-lockup ti-home-wordmark" translate="no"><span class="ti-brand-name">Tik<span>Interact</span></span><span class="ti-brand-tagline">LIVE GAMES. REAL AUDIENCE. REAL IMPACT.</span></span></a>
 <nav class="template-navigation" aria-label="Navigare principală">

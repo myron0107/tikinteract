@@ -28,6 +28,15 @@ initial language and shell. Studio additionally waits for the existing account
 decision. It does not wait for game artwork or audio. Its bounded fallback
 restores visibility if initialization fails, without changing access guards.
 
+The initial pending state now displays a native branded loading screen, with
+the existing Studio SVG mark or public TikInteract wordmark. It follows saved
+language, mode and Studio palette before paint, respects reduced motion and
+disappears as soon as boot readiness is signaled. It adds no minimum delay and
+does not run on Studio tab changes. Edit `partials/page-startup.html`, then run
+`node scripts/sync-page-startup.mjs` to sync the 14 pages that use the existing
+startup lifecycle. `node scripts/verify-loading-screen.mjs` checks real reloads
+and both loading/ready states with isolated local readiness fixtures.
+
 Checks: `node --test`, `node scripts/verify-initial-render.mjs`,
 `node scripts/verify-shared-interface.mjs`. Browser checks use isolated accounts
 and local servers. No live accounts, payments or LIVE streams are created.
