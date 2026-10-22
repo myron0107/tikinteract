@@ -1,8 +1,9 @@
 import { WIDTH, ACTIONS, CHARACTER_COLORS, BACKGROUNDS, clamp, lerp } from './config.js';
-import { NeonGiftFX as GiftFX } from './neon-gifts.js';
+import { NeonGiftFX as GiftFX } from './neon-gifts.js?v=2';
 import { text } from './copy.js';
-import { WinShow, SHOWS, showFrame, cueShow } from './wins.js';
+import { WinShow, SHOWS, showFrame, cueShow } from './wins.js?v=2';
 import {giftFrame,ease} from './gift-motion.js';
+import {sceneViewport} from './viewport.js';
 
 function loadImage(url) {
   return new Promise((resolve, reject) => {
@@ -44,7 +45,9 @@ export class Renderer {
     this.ratio = Math.min(window.devicePixelRatio || 1, 2);
     this.canvas.width = Math.round(this.cssWidth * this.ratio); this.canvas.height = Math.round(this.cssHeight * this.ratio);
     if (this.fxCanvas) { this.fxCanvas.width = this.canvas.width; this.fxCanvas.height = this.canvas.height; }
-    this.height = this.cssHeight / this.cssWidth * WIDTH; this.scale = this.canvas.width / WIDTH;
+    const view = sceneViewport(this.cssWidth, this.cssHeight);
+    this.height = view.height; this.viewWidth = view.viewWidth; this.offsetX = view.offsetX;
+    this.scale = this.canvas.width / this.viewWidth;
   }
   sprite(name, x, y, w, h, rotation = 0, alpha = 1, context = this.ctx) {
     const source = this.actionSprites?.[name] || this.sprites?.[name]; if (!source) return;
@@ -173,8 +176,9 @@ export class Renderer {
     if (this.backgroundKey !== key) { this.backgroundPrevious = sim.paused ? key : this.backgroundKey || key; this.backgroundKey = key; this.backgroundChanged = sim.clock; }
     const draw = (biome, alpha = 1) => {
       const image = this.backgrounds[biome];
-      const fit = Math.max(WIDTH / image.width, h / image.height) * 1.035, w = image.width * fit, ih = image.height * fit;
-      ctx.save(); ctx.globalAlpha = alpha; ctx.drawImage(image, (WIDTH - w) / 2 + Math.sin(this.camera * .0003) * 4, (h - ih) / 2 + Math.sin(this.camera * .00017) * 9, w, ih);
+      const fit = Math.max(this.viewWidth / image.width, h / image.height) * 1.035, w = image.width * fit, ih = image.height * fit;
+      ctx.save(); ctx.globalAlpha = alpha;
+      ctx.drawImage(image, (WIDTH - w) / 2 + Math.sin(this.camera * .0003) * 4, (h - ih) / 2 + Math.sin(this.camera * .00017) * 9, w, ih);
       ctx.restore();
     };
     const mix = clamp((sim.clock - this.backgroundChanged) / .55, 0, 1);
@@ -184,10 +188,44 @@ export class Renderer {
     ctx.save();
     for (let i = 0; i < count; i++) {
       const p = (sim.clock * (ambient === 'embers' ? .085 : .02) + i * .137) % 1;
-      const x = (i * 131.73 + Math.sin(sim.clock * .3 + i) * 15) % WIDTH, y = (1 - p) * h;
+      const x = (i * 131.73 + Math.sin(sim.clock * .3 + i) * 15) % this.viewWidth - this.offsetX, y = (1 - p) * h;
       ctx.globalAlpha = (.12 + Math.sin(p * Math.PI) * .35) * sim.settings.effectsIntensity;
       ctx.fillStyle = ambient === 'embers' ? '#ffba63' : ambient === 'fireflies' ? '#e9b1bf' : '#f4fcff';
       ctx.beginPath(); ctx.arc(x, y, ambient === 'mist' ? 2.1 : 1 + i % 3 * .45, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  courseEdges(sim) {
+    if (this.offsetX < 1) return;
+    const ctx = this.ctx, top = 0, bottom = this.height;
+    const pixel = this.viewWidth / this.cssWidth;
+    ctx.save();
+    for (const [x, color] of [[0, '82,221,255'], [WIDTH, '184,134,255']]) {
+      const fade = ctx.createLinearGradient(0, top, 0, bottom);
+      fade.addColorStop(0, `rgba(${color},.45)`);
+      fade.addColorStop(.1, `rgba(${color},1)`);
+      fade.addColorStop(.93, `rgba(${color},1)`);
+      fade.addColorStop(1, `rgba(${color},.5)`);
+      ctx.lineWidth = 3.5 * pixel;
+      ctx.strokeStyle = fade; ctx.shadowColor = `rgb(${color})`;
+      ctx.shadowBlur = sim.settings.visualQuality === 'Low' ? 0 : 16;
+      ctx.beginPath(); ctx.moveTo(x, top); ctx.lineTo(x, bottom); ctx.stroke();
+      const core = ctx.createLinearGradient(0, top, 0, bottom);
+      core.addColorStop(0, '#eafbff55'); core.addColorStop(.1, '#eafbffdd');
+      core.addColorStop(.93, '#eafbffdd'); core.addColorStop(1, '#eafbff66');
+      ctx.lineWidth = pixel; ctx.shadowBlur = 0; ctx.strokeStyle = core; ctx.stroke();
+    }
+    ctx.restore();
+  }
+  playerSprites(sim, x, y) {
+    const ctx = this.ctx;
+    // Portrait's wrap copies used to be hidden by the canvas edges. In a wide
+    // viewport they would appear as a second full Nova outside the course.
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, WIDTH, this.height); ctx.clip();
+    this.character(sim, x, y);
+    if (this.offsetX < 1) {
+      if (x < 40) this.character(sim, x + WIDTH, y);
+      if (x > WIDTH - 40) this.character(sim, x - WIDTH, y);
     }
     ctx.restore();
   }
@@ -307,13 +345,14 @@ export class Renderer {
     if (!this.scoreMoment && !this.scoreJobs.length) this.presentedWins = sim.wins;
   }
   scoreTarget() {
-    const stage = this.canvas.getBoundingClientRect(), badge = this.hudTrophy.getBoundingClientRect(), factor = WIDTH / this.cssWidth;
-    return { x: (badge.left - stage.left + badge.width / 2) * factor, y: (badge.top - stage.top + badge.height / 2) * factor };
+    const stage = this.canvas.getBoundingClientRect(), badge = this.hudTrophy.getBoundingClientRect(), factor = this.viewWidth / this.cssWidth;
+    return { x: (badge.left - stage.left + badge.width / 2) * factor - this.offsetX, y: (badge.top - stage.top + badge.height / 2) * factor };
   }
   scoreFX(sim, hero, target) {
     const ctx = this.fx;
     if (!ctx || !this.hudTrophy || !this.scoreBadge) return;
-    ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0); ctx.clearRect(0, 0, WIDTH, this.height);
+    ctx.setTransform(this.scale, 0, 0, this.scale, this.offsetX * this.scale, 0);
+    ctx.clearRect(-this.offsetX, 0, this.viewWidth, this.height);
     const job = this.scoreMoment;
     const t = job ? showFrame(job, sim.clock).t : 0;
     this.hudTrophy.style.visibility = job?.kind === 'theft' && t >= SHOWS.theft.settle ? 'hidden' : 'visible';
@@ -337,7 +376,7 @@ export class Renderer {
       this.camera = clamp(this.camera, y - this.height * .25, y + this.height * .17);
     }
     this.giftTracked = Boolean(sim.active);
-    const ctx = this.ctx; ctx.setTransform(this.scale, 0, 0, this.scale, 0, 0);
+    const ctx = this.ctx; ctx.setTransform(this.scale, 0, 0, this.scale, this.offsetX * this.scale, 0);
     this.color(sim.settings.characterColor);
     this.advanceScore(sim);
     if(sim.active){
@@ -350,14 +389,12 @@ export class Renderer {
       x = lerp(x, clamp(x, 67, WIDTH - 67), frame * frame * (3 - 2 * frame));
     }
     ctx.save(); const shake = this.giftFX.shake(sim); ctx.translate(shake, shake * .55);
-    this.background(sim); this.platforms(sim); ctx.restore();
+    this.background(sim); this.courseEdges(sim); this.platforms(sim); ctx.restore();
     const sy = this.screenY(y);
     const hero = { x, y: sy }, target = this.scoreTarget();
     this.winShow.behind(ctx, sim, this.scoreMoment, hero, target);
     this.giftFX.behind(ctx, sim, x, sy);
-    this.effects(sim, x, sy); this.character(sim, x, sy);
-    if (x < 40) this.character(sim, x + WIDTH, sy);
-    if (x > WIDTH - 40) this.character(sim, x - WIDTH, sy);
+    this.effects(sim, x, sy); this.playerSprites(sim, x, sy);
     this.particles = this.particles.filter(p => sim.clock - p.clock <= p.life);
     if (sim.settings.visualQuality !== 'Low') for (const p of this.particles) {
       const age = sim.clock - p.clock;
@@ -368,6 +405,6 @@ export class Renderer {
     }
     this.giftFX.front(ctx, sim, x, sy);
     this.scoreFX(sim, hero, target);
-    return { x: x / WIDTH * this.cssWidth, y: sy / WIDTH * this.cssWidth };
+    return { x: (x + this.offsetX) / this.viewWidth * this.cssWidth, y: sy / this.viewWidth * this.cssWidth };
   }
 }

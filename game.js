@@ -586,8 +586,9 @@ function setLiveStudioTab(tab, options = {}) {
         button.setAttribute('aria-selected', String(selected));
     });
     if (tab === 'gifts') window.TikInteractGifts?.open();
-    if (options.focus !== false && tab === 'audio') document.getElementById('audio-sound-search')?.focus();
-    if (options.focus !== false && tab === 'games') document.getElementById('game-center-search')?.focus();
+    if (options.focus !== false && ['audio', 'games'].includes(tab)) {
+        tabs.find(button => button.dataset.studioTab === tab)?.focus({preventScroll: true});
+    }
     window.dispatchEvent(new CustomEvent('tikinteract:studio-tab',{detail:{tab}}));
 }
 

@@ -3,7 +3,7 @@ import '../../../assets/game-format.js?v=1';
 import {GIFT_DESCRIPTIONS_EN} from './gift-definitions.js';
 import { STEP, ACTIONS, CHARACTER_COLORS, clamp } from './config.js';
 import { Simulation } from './simulation.js';
-import { Renderer } from './render.js?v=2';
+import { Renderer } from './render.js?v=5';
 import { GameAudio } from './audio.js';
 import { LANGUAGES, text, distance, quantity, winLabel } from './copy.js';
 import { capture, restore, openRecovery, Checkpoints } from './recovery.js';
@@ -52,7 +52,8 @@ function refreshCard(c) {
   const count = quantity(c.job.gift?.repeatCount || c.job.amount, language);
   c.multiplier.textContent = 'x' + count;
   const length = c.caption.textContent.length + Math.max(0, count.length - 2);
-  c.caption.style.fontSize = Math.max(16, Math.min(29, $('stage').clientWidth * .075) - Math.max(0, length - 9)) + 'px';
+  const maxSize = renderer?.offsetX > 0 ? Math.min(23, $('stage').clientHeight * .045) : 29;
+  c.caption.style.fontSize = Math.max(12, Math.min(maxSize, $('stage').clientWidth * .075) - Math.max(0, length - 9)) + 'px';
   c.element.setAttribute('aria-label', '@' + c.job.actor.username + ' · ' + text(key, language) + ' · ' + c.caption.textContent + ' · ' + c.multiplier.textContent);
 }
 function card(job, phase = 'receipt') {
@@ -188,16 +189,28 @@ if (embedded && sdk?.getState()) init(sdk.getState());
 
 function hud(position) {
   const state = sim.stats(), now = performance.now();
+  const portrait = document.documentElement.dataset.gameFormat !== 'landscape';
   const value = distance(state.meter, language);
   if ($('distance').textContent !== value) $('distance').textContent = value;
   $('distance').parentElement.classList.toggle('negative', state.meter < 0);
   const shownWins = renderer.presentedWins ?? state.wins;
   const winText = distance(shownWins, language);
   $('wins').textContent = winText;
-  $('wins').style.fontSize = Math.max(12, 23 - Math.max(0, winText.length - 3) * 1.7) + 'px';
+  $('wins').style.fontSize = Math.max(16, 28 - Math.max(0, winText.length - 3) * 1.7) + 'px';
   $('wins').parentElement.classList.toggle('negative-score', shownWins < 0);
-  $('progress-fill').style.width = clamp(state.distance / sim.settings.finishDistance, 0, 1) * 100 + '%';
-  $('remaining').textContent = distance(Math.max(0, sim.settings.finishDistance - state.meter), language) + ' m ' + text('remaining', language);
+  const signedProgress = clamp(state.distance / sim.settings.finishDistance, -1, 1);
+  const progressWidth = Math.abs(signedProgress) * 50;
+  $('progress-fill').style.width = progressWidth + '%';
+  $('progress-fill').style.left = (signedProgress < 0 ? 50 - progressWidth : 50) + '%';
+  $('progress-fill').classList.toggle('is-negative', signedProgress < 0);
+  const progress = $('distance-progress');
+  progress.setAttribute('aria-valuemin', -sim.settings.finishDistance);
+  progress.setAttribute('aria-valuemax', sim.settings.finishDistance);
+  progress.setAttribute('aria-valuenow', clamp(state.meter, -sim.settings.finishDistance, sim.settings.finishDistance));
+  progress.setAttribute('aria-valuetext', value + ' m');
+  $('remaining').textContent = portrait
+    ? text('finishLabel', language) + ' · ' + distance(sim.settings.finishDistance, language) + ' m'
+    : distance(Math.max(0, sim.settings.finishDistance - state.meter), language) + ' m ' + text('remaining', language);
   $('hud').classList.toggle('is-holding', state.phase === 'holding');
   $('finish-card').hidden = state.phase !== 'holding' || state.paused;
   $('countdown').textContent = Math.ceil(state.countdown || 0);
@@ -220,9 +233,10 @@ function hud(position) {
     $('feed').style.top = clamp(position.y + (state.phase === 'holding' ? 76 : 17), 170, stage.clientHeight - $('feed').offsetHeight - 32) + 'px';
   }
   if (embedded && now - reportAt > 250) { reportAt = now; sdk?.report({ wins: state.wins, countdown: state.countdown || 0 }); }
-  const size = Math.max(27, Math.min(79, $('stage').clientWidth * 0.165) - Math.max(0, value.length - 5) * 5);
+  const maxSize = portrait ? 79 : Math.min(46, $('stage').clientHeight * .085);
+  const size = Math.max(portrait ? 36 : 22, Math.min(maxSize, $('stage').clientWidth * 0.165) - Math.max(0, value.length - 5) * 5);
   $('distance').style.fontSize = size + 'px';
-  const room = $('hud').clientWidth - $('wins').parentElement.offsetWidth - $('distance').nextElementSibling.offsetWidth - 28;
+  const room = (portrait ? document.querySelector('.distance-number').clientWidth : document.querySelector('.metrics').clientWidth) - $('distance').nextElementSibling.offsetWidth - 12;
   if ($('distance').offsetWidth > room) $('distance').style.fontSize = Math.max(18, size * room / $('distance').offsetWidth) + 'px';
 }
 function draw(dt = 0, alpha = 1) { if (renderer && loaded) hud(renderer.render(sim, alpha, dt)); audio.update(sim); dirty = false; }
@@ -365,7 +379,7 @@ async function boot() {
     console.error(error); $('loading-copy').textContent = text('failed', language); $('loading').classList.add('failed');
   }
 }
-const observer = new ResizeObserver(() => { renderer?.resize(); if (loaded) draw(); }); observer.observe($('stage'));
+const observer = new ResizeObserver(() => { renderer?.resize(); for (const c of cards) refreshCard(c); if (loaded) draw(); }); observer.observe($('stage'));
 setInterval(() => { if (recovery && sim.ledger.accepted > 0 && !disposed) recovery.mark(); }, 250);
 addEventListener('pagehide', e => { recovery?.mark(); recovery?.flush().catch(() => {}); disposed = true; cancelAnimationFrame(frameId); observer.disconnect(); releaseInput(); if (e.persisted) audio.update({ settings: sim.settings, paused: true }); else audio.dispose(); });
 addEventListener('pageshow', e => { if (e.persisted) { disposed = false; last = 0; accumulator = 0; observer.observe($('stage')); frameId = requestAnimationFrame(frame); audio.unlock(); } });

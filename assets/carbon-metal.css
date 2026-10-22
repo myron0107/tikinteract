@@ -1,0 +1,72 @@
+/* Carbon / satin-metal finish. Appearance only: no geometry, typography or motion changes. */
+:root{
+ --cm-bg:#111214;--cm-panel:#1B1C20;--cm-soft:#242529;--cm-raised:#2C2D32;
+ --cm-ink:#F3F3F5;--cm-muted:#B0B1B8;--cm-line:#FFFFFF21;
+ --cm-accent:#E3708C;--cm-button:#A32144;--cm-active:#AC294523;
+ --cm-finish:linear-gradient(145deg,#FFFFFF09 0%,#FFFFFF02 36%,#00000012 100%);
+ --cm-chrome:linear-gradient(115deg,#FFFFFF0A,transparent 42%,#00000018),repeating-linear-gradient(45deg,#FFFFFF03 0 1px,transparent 1px 5px),repeating-linear-gradient(-45deg,#FFFFFF02 0 1px,transparent 1px 5px);
+ --cm-primary:linear-gradient(160deg,#BE3155 0%,#9D203F 48%,#781831 100%);
+ --cm-shadow:inset 0 1px 0 #FFFFFF0C,0 4px 14px #00000018;
+ --cm-top-edge:inset 0 1px 0 #FFFFFF0C;
+}
+:root[data-mode=light]{
+ --cm-bg:#FFFFFF;--cm-panel:#FCFCFD;--cm-soft:#F0F1F3;--cm-raised:#E7E9EC;
+ --cm-ink:#202125;--cm-muted:#5D6068;--cm-line:#D5D7DC;
+ --cm-accent:#9D1C3E;--cm-button:#A32144;--cm-active:#E9EAED;
+ --cm-finish:linear-gradient(145deg,#FFFFFF 0%,#FFFFFF66 40%,#DCE0E633 100%);
+ --cm-chrome:linear-gradient(115deg,#FFFFFF 0%,#F4F5F7 48%,#E9EBEF 100%);
+ --cm-primary:linear-gradient(160deg,#BD2B50 0%,#9E1D40 50%,#80162F 100%);
+ --cm-shadow:inset 0 1px 0 #FFFFFF,0 4px 14px #17191F08;
+ --cm-top-edge:inset 0 1px 0 #FFFFFF;
+}
+html[data-mode] body[data-page=studio][data-theme=blue]{--cm-accent:#9ABFF3;--cm-button:#285DA1;--cm-active:#356AB329;--cm-primary:linear-gradient(160deg,#2E6DB6,#285DA1 50%,#1D4379)}
+html[data-mode=light] body[data-page=studio][data-theme=blue]{--cm-accent:#24589B;--cm-active:#E6ECF4}
+
+/* Bridge the existing component tokens to one neutral material palette. */
+html[data-mode],html[data-mode] body,html[data-mode] body:is(#tikinteract-site.public-approved,#tikinteract-studio.studio-app.studio-modern){
+ --page-bg:var(--cm-bg);--bg:var(--cm-bg);--surface:var(--cm-panel);--panel-bg:var(--cm-panel);--card-bg:var(--cm-panel);
+ --ink:var(--cm-ink);--text:var(--cm-ink);--text-primary:var(--cm-ink);--text-secondary:var(--cm-muted);--muted:var(--cm-muted);--line:var(--cm-line);--appearance-soft:var(--cm-soft);
+ --public-bg:var(--cm-bg);--public-panel:var(--cm-panel);--public-soft:var(--cm-soft);--public-ink:var(--cm-ink);--public-muted:var(--cm-muted);--public-line:var(--cm-line);--public-accent:var(--cm-accent);
+ --studio-bg:var(--cm-bg);--studio-panel:var(--cm-panel);--studio-soft:var(--cm-soft);--studio-line:var(--cm-line);--studio-ink:var(--cm-ink);--studio-muted:var(--cm-muted);--studio-accent:var(--cm-accent);--studio-button:var(--cm-button);--studio-active:var(--cm-active);
+ --overlay-panel:var(--cm-panel);--overlay-soft:var(--cm-soft);--overlay-hover:var(--cm-raised);--overlay-ink:var(--cm-ink);--overlay-muted:var(--cm-muted);--overlay-line:var(--cm-line);--overlay-accent:var(--cm-accent);--overlay-button:var(--cm-button);--overlay-selected:var(--cm-active);
+ --error-bg:var(--cm-bg);--error-panel:var(--cm-panel);--error-ink:var(--cm-ink);--error-muted:var(--cm-muted);--error-line:var(--cm-line);--error-accent:var(--cm-accent);
+ --button-red:var(--cm-button);--button-red-soft:var(--cm-active);--ticket-surround:var(--cm-bg);
+ background-color:var(--cm-bg);color:var(--cm-ink);
+}
+html[data-mode] body :is(.template-header,.app-topbar,.studio-app-rail,.admin-sidebar,.admin-header,.error-header,.public-info-site-header,.game-page-nav){background-color:var(--cm-panel)!important;background-image:var(--cm-chrome)!important;border-color:var(--cm-line)!important;box-shadow:var(--cm-top-edge)}
+html[data-mode] body .site-header-inner{background-color:transparent;background-image:none}
+html[data-mode] body#tikinteract-site.public-approved :is(#view-home,#view-catalog,#view-streams,#view-leaderboard,#view-play-pass,#view-account,.home-hero,.home-hero-copy,.home-how-it-works,.home-app-section,.home-gifts,.home-leaderboard-section,.cp-stream-hero,.ranking-hero,.ranking-body,.site-footer,.template-footer){background-color:var(--cm-bg)!important;border-color:var(--cm-line)}
+
+/* Large panels get a subtle satin reflection; artwork, videos and games are untouched. */
+html[data-mode] body :is(.cp-panel,.cp-metric,.cp-chat,.cp-community-side,.cp-community-online,.cp-community-gate,.cp-analytics-chart,.cp-setting,.cp-empty,.cp-stream-card,.cp-stream-footer,.cp-recent-stream,.ranking-panel,.ranking-block,.account-card,.public-info-card,.admin-card,.admin-metric,.admin-dialog,.admin-draft-strip,.soundboard-shell,.soundboard-monitor,.game-center-shell,.studio-game-picker,.studio-audio,.studio-stage,.studio-connection,.studio-stats,#studio-test-panel,.sw-dialog,.sw-profile-dropdown,.studio-notifications-panel,.resource-page-dialog,.resource-reader,.resources-menu,#site-support,.support-topbar,.cookie-preferences-dialog,.language-menu,.gifts-dialog,.home-gift-catalog,.game-gallery-dialog,.account-access-notice,.home-gifts-showcase,.home-gifts-slider,.catalog-featured,.public-faq details,.public-ranking-help,.subscription-status,.subscription-key,.subscription-bottom>div,.subscription-bottom>details,.billing-panel,.billing-history){
+ background-color:var(--cm-panel)!important;background-image:var(--cm-finish)!important;border-color:var(--cm-line)!important;color:var(--cm-ink);box-shadow:var(--cm-shadow);
+}
+html[data-mode] body :is(.sw-window-header,.resource-page-topbar,.game-gallery-dialog-top,.gift-dialog-top,.home-gift-catalog-top,.support-topbar,.studio-notifications-header,.cp-chat-header){background-color:var(--cm-panel)!important;background-image:var(--cm-chrome)!important;border-color:var(--cm-line)}
+html[data-mode] body :is(.audio-sound-card,.live-favorite-sound,.studio-quick-item,.studio-game-option,.cp-notice,.cp-conversation,.gift-card,.home-gift-catalog-card,.gifts-stat,.gift-recent-row,.gifts-empty,.studio-help-card,.cp-analytics-session){background-color:var(--cm-soft)!important;background-image:var(--cm-finish)!important;border-color:var(--cm-line)!important;color:var(--cm-ink);box-shadow:var(--cm-top-edge)}
+html[data-mode] body :is(.audio-sound-card,.live-favorite-sound,.studio-game-option,.gift-card,.home-gift-catalog-card):hover{background-color:var(--cm-raised)!important;border-color:var(--cm-line)!important}
+html[data-mode] body :is(.studio-game-option.is-selected,.studio-game-option[aria-selected=true],.sw-settings-nav button[aria-current=page]){background-color:var(--cm-active)!important;color:var(--cm-accent);border-color:var(--cm-accent)!important}
+html[data-mode] body :is(.sw-settings-nav,.sw-support-links,.cp-chat-compose,.cp-inbox-list,.cp-analytics-filters,.subscription-scheduled){background-color:var(--cm-soft);border-color:var(--cm-line);color:var(--cm-ink)}
+
+/* Neutral metal controls. Status colors and colored sound icons keep their meaning. */
+html[data-mode] body :is(.cp-input,.cp-search input,.public-search input,.admin-card input:not([type=checkbox]):not([type=range]),.admin-card select,.admin-card textarea,.admin-dialog input,.admin-dialog select,.admin-dialog textarea,.maintenance-form input,.cp-account-form input,.subscription-key input,.billing-controls select,.game-center-search input,.audio-center-search input,.gifts-dialog input,.home-gift-catalog input){background-color:var(--cm-soft)!important;background-image:linear-gradient(#00000004,#FFFFFF02);color:var(--cm-ink)!important;border-color:var(--cm-line)!important;box-shadow:inset 0 1px 2px #00000008}
+html[data-mode] body :is(input,textarea)::placeholder{color:var(--cm-muted)}
+html[data-mode] body :is(.open-studio-button,.public-button-primary,.public-button.primary,.home-primary-button,.cp-btn-primary,.admin-primary,.support-submit,.pp-key-input button,.subscription-key form button,.billing-controls button,.error-primary,.studio-game-empty button,#btn-connect){background-color:var(--cm-button)!important;background-image:var(--cm-primary)!important;color:#FFF!important;border-color:#FFFFFF1A;box-shadow:inset 0 1px 0 #FFFFFF25,0 2px 6px #00000015}
+html[data-mode] body :is(.open-studio-button,.public-button-primary,.public-button.primary,.home-primary-button,.cp-btn-primary,.admin-primary,.support-submit,.billing-controls button,.error-primary,#btn-connect):hover{background-image:linear-gradient(#FFFFFF08,#FFFFFF08),var(--cm-primary)!important}
+html[data-mode] body :is(.public-button-secondary,.cp-orientation button,.sw-support-links button,.sound-filter-tab,.cp-tabs button,.cp-setting button){background-color:var(--cm-soft);background-image:var(--cm-finish);border-color:var(--cm-line);color:var(--cm-ink);box-shadow:var(--cm-top-edge)}
+/* Existing support inbox shares the same material roles without repainting message text. */
+html[data-mode] body .support-inbox{--si-surface:var(--cm-panel);--si-border:var(--cm-line);--si-ink:var(--cm-ink);--si-muted:var(--cm-muted);--si-soft:var(--cm-soft)}
+html[data-mode] body :is(.si-workspace,.si-thread,.si-conversations){background-color:var(--cm-panel);border-color:var(--cm-line)}
+html[data-mode] body :is(.si-search input,.si-compose textarea){background-color:var(--cm-soft);border-color:var(--cm-line);color:var(--cm-ink)}
+
+/* Keep all original ticket geometry, masks, hover motion and silver/gold/PRO identities. */
+html[data-mode] body .ti-ticket{--ticket-ink:#F3F4F6;background:repeating-linear-gradient(150deg,#FFFFFF07 0 1px,transparent 1px 5px),linear-gradient(125deg,#61646E,#303238 58%,#474A52);--ticket-edge:#FFFFFF45}
+html[data-mode] body .ti-ticket[data-ticket-plan=play_pass]{--ticket-ink:#2B230F;background:repeating-linear-gradient(150deg,#FFFFFF26 0 1px,transparent 1px 5px),linear-gradient(125deg,#F0D992,#BD964C 58%,#E0C378)}
+html[data-mode] body .ti-ticket[data-ticket-plan=play_pass_pro]{background:repeating-linear-gradient(150deg,#FFFFFF07 0 1px,transparent 1px 5px),linear-gradient(125deg,#B72A50,#64162F 58%,#91223F)}
+html[data-mode=light] body .ti-ticket{--ticket-ink:#24262C;--ticket-edge:#777D8752;background:repeating-linear-gradient(150deg,#FFFFFF66 0 1px,transparent 1px 5px),linear-gradient(125deg,#FCFCFD,#CED2D9 58%,#F1F2F5)}
+html[data-mode=light] body .ti-ticket[data-ticket-plan=play_pass]{--ticket-ink:#30250E;background:repeating-linear-gradient(150deg,#FFFFFF36 0 1px,transparent 1px 5px),linear-gradient(125deg,#FFF3CA,#D7B45F 58%,#F5E1A6)}
+html[data-mode=light] body .ti-ticket[data-ticket-plan=play_pass_pro]{--ticket-ink:#FFF;--ticket-edge:#FFFFFF45;background:repeating-linear-gradient(150deg,#FFFFFF08 0 1px,transparent 1px 5px),linear-gradient(125deg,#BA2C52,#741831 58%,#9C2141)}
+html[data-mode] body .ti-ticket[data-ticket-plan=play_pass] .ti-ticket-active{background-color:#463511;color:#FFF;border-color:#FFFFFF30}
+
+/* Neutral text in older information/admin templates, without changing font metrics. */
+html[data-mode] body :is(.admin-note,.admin-card p,.admin-metric>span,.admin-metric>small,.admin-sidebar-bottom,.admin-eyebrow,.au-pagination,.au-footnote,.public-info-card p,.public-info-card li,.game-page-shell p,.game-page-shell li){color:var(--cm-muted)}
+html[data-mode] body :is(.admin-header h1,.admin-card h2,.admin-metric strong,.public-info-card h1,.public-info-card h2,.public-info-card h3,.game-page-shell h1,.game-page-shell h2,.game-page-shell h3){color:var(--cm-ink)}

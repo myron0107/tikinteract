@@ -133,7 +133,8 @@ export class WinShow {
     const label = (job.delta < 0 ? '−' : '+') + distance(Math.abs(job.delta), language) + ' ' + winLabel(Math.abs(job.delta), language).toUpperCase();
     const fontSize = Math.max(16, 28 - Math.max(0, label.length - 8)); ctx.font = '700 ' + fontSize + 'px Fredoka'; ctx.textAlign = 'center'; ctx.lineJoin = 'round'; ctx.lineWidth = 5; ctx.strokeStyle = '#172339';
     const margin = Math.min(WIDTH / 2, ctx.measureText(label).width / 2 + 14);
-    const x = clamp(target.x, margin, WIDTH - margin), y = target.y + 62 - age * 24;
+    const left = -(this.r.offsetX || 0), right = WIDTH + (this.r.offsetX || 0);
+    const x = clamp(target.x, left + margin, right - margin), y = target.y + 62 - age * 24;
     ctx.strokeText(label, x, y); ctx.fillStyle = job.kind === 'gain' ? '#ffe681' : '#ffa4b8'; ctx.fillText(label, x, y); ctx.restore();
   }
   behind(ctx, sim, job, hero, target) {
@@ -141,7 +142,7 @@ export class WinShow {
     const { t } = showFrame(job, sim.clock), intensity = sim.settings.effectsIntensity;
     const envelope = Math.min(1, t / .12, (1 - t) / .14);
     ctx.save(); ctx.globalAlpha = envelope;
-    ctx.fillStyle = job.kind === 'theft' ? '#0a172a12' : '#21142833'; ctx.fillRect(0, 0, WIDTH, this.r.height);
+    ctx.fillStyle = job.kind === 'theft' ? '#0a172a12' : '#21142833'; ctx.fillRect(-(this.r.offsetX || 0), 0, this.r.viewWidth || WIDTH, this.r.height);
     if (job.kind === 'gain') {
       glow(ctx, hero.x, hero.y - 70, 170, '#ffdb6044', intensity);
       const count = sim.settings.visualQuality === 'Low' ? 5 : 11;
@@ -212,9 +213,9 @@ export class WinShow {
     const side=hero.x>WIDTH/2?-1:1;
     const arrival=out(segment(t,0,.23)),brake=segment(t,.18,.32);
     const leave=segment(t,.74,1),acceleration=leave*leave;
-    const startX=side>0?WIDTH+105:-105,stopX=hero.x+side*61;
+    const edge=this.r.offsetX||0,startX=side>0?WIDTH+edge+105:-edge-105,stopX=hero.x+side*61;
     const skid=-side*Math.sin(brake*Math.PI)*12;
-    const bx=lerp(lerp(startX,stopX,arrival)+skid,side>0?WIDTH+145:-145,acceleration);
+    const bx=lerp(lerp(startX,stopX,arrival)+skid,side>0?WIDTH+edge+145:-edge-145,acceleration);
     const by=hero.y+7-(1-arrival)*18-Math.sin(arrival*Math.PI)*12-acceleration*82;
     const reach=ease(t,.32,.43)*(1-ease(t,.64,.72));
     const grip=ease(t,.42,.45)*(1-ease(t,.62,.68));

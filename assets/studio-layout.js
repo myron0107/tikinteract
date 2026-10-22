@@ -10,10 +10,14 @@
         const frame = document.getElementById('live-game-frame');
         const wrap = frame?.parentElement;
         if (!frame || !wrap || !wrap.clientWidth || !wrap.clientHeight) return;
-        const desktopApp = document.body?.classList?.contains('studio-app') && window.innerWidth >= 1000;
+        const studioApp = document.body?.classList?.contains('studio-app');
+        const desktopApp = studioApp && window.innerWidth >= 1000;
         const available = typeof wrap.getBoundingClientRect === 'function' ? window.innerHeight - wrap.getBoundingClientRect().top - 65 : window.innerHeight - 280;
         const maxScale = desktopApp ? Math.min(.8, Math.max(.15, available / nativeHeight)) : .8;
-        const scale = Math.min(wrap.clientWidth / nativeWidth, maxScale);
+        // The workspace footer makes the real panel shorter than the remaining
+        // window height. Fit both axes inside that panel, including on phones.
+        const panelScale = studioApp ? Math.min(Math.max(1, wrap.clientWidth - 2) / nativeWidth, Math.max(1, wrap.clientHeight - 2) / nativeHeight) : Infinity;
+        const scale = Math.min(wrap.clientWidth / nativeWidth, maxScale, panelScale);
         wrap.style.setProperty('--studio-preview-height', `${nativeHeight * scale}px`);
         frame.style.setProperty('--game-native-width', `${nativeWidth}px`);
         frame.style.setProperty('--game-native-height', `${nativeHeight}px`);

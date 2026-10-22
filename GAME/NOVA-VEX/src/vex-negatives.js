@@ -30,7 +30,8 @@ export class VexNegatives {
     const a=sim.active;if(!a||!isVexNegative(a.kind))return null;
     const f=giftFrame(a),q=f.time/f.contact,side=a.startX>240?-1:1;
     const arrive=ease(q*2),leave=f.exit,baseX=clamp(x+side*83,60,420);
-    let bx=lerp(side>0?565:-85,baseX,arrive)+side*leave*leave*380;
+    const edge=this.r.offsetX||0;
+    let bx=lerp(side>0?565+edge:-85-edge,baseX,arrive)+side*leave*leave*(380+edge);
     let by=y+7+Math.sin(sim.clock*6)*1.3-leave*leave*55;
     const cast=ease((q-.55)/.45),retract=1-ease(f.progress/.32);
     let pose=q>.48&&f.progress<.5?{anvil:'vexThrow',wind:'vexPush',vortex:'vexPull',meteor:'vexPush'}[a.kind]:'idle';
@@ -39,7 +40,7 @@ export class VexNegatives {
     if(a.kind==='vortex'){
       const pickup=ease((q-.48)/.52),toss=ease((f.progress-VEX_BOARD_RELEASE)/.16);
       boardSize=lerp(94,142,pickup);
-      boardX=lerp(bx,x,pickup)+side*toss*toss*330;
+      boardX=lerp(bx,x,pickup)+side*toss*toss*(330+edge);
       boardY=y+7-toss*84-leave*leave*55;
       bx=boardX+side*28*pickup;by=boardY;
       pose=q<.48?'idle':f.progress<VEX_BOARD_RELEASE?'vexPull':toss<.8?'vexPush':'idle';

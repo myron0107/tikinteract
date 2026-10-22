@@ -74,3 +74,110 @@ button:focus-visible,input:focus-visible,select:focus-visible,.switch-row input:
 #quick-test>button[data-quick-action=meteor]{color:#e0b3ff;background:#a667dd18;border-color:#c19aff30}
 @media(max-width:390px){.hud-heading{gap:8px;padding-left:28px}.hud-heading .game-title{font-size:17px}.hud-heading .brand{font-size:8px;gap:3px}.hud-heading .brand img{width:14px;height:14px}}
 @media(max-width:340px){.hud-heading{padding-left:30px;gap:5px}.hud-heading .game-title{font-size:15px}.hud-heading .brand{font-size:7px}.hud-heading .brand img{width:12px;height:12px}}
+
+/* A composed horizontal HUD, independent from the portrait column. */
+html[data-game-format=landscape] body #hud {
+    inset: max(12px,env(safe-area-inset-top)) 3% auto;
+    display: grid; grid-template-columns: minmax(0,1fr) minmax(160px,32%) minmax(0,1fr);
+    align-items: start; gap: 10px;
+}
+html[data-game-format=landscape] body .hud-heading { display: contents; }
+html[data-game-format=landscape] body .hud-heading .game-title { grid-column: 1; grid-row: 1; font-size: clamp(14px,3.7vh,21px); }
+html[data-game-format=landscape] body .hud-heading .brand { grid-column: 3; grid-row: 1; justify-self: end; }
+html[data-game-format=landscape] body .metrics {
+    position: static; grid-column: 3; grid-row: 1; justify-content: flex-start;
+    flex-direction: column-reverse; align-items: flex-end;
+    min-height: 0; min-width: 0; width: 100%; margin: 0; gap: 5px;
+}
+html[data-game-format=landscape] body .progress { grid-column: 2; grid-row: 1; width: 100%; margin: 0; height: 25px; }
+html[data-game-format=landscape] body .distance-number { -webkit-text-stroke-width: 2px; }
+html[data-game-format=landscape] body .wins-bubble { min-width: 0; padding: 0; border-radius: 0; }
+html[data-game-format=landscape] body .wins-bubble canvas { width: 34px; height: 36px; }
+html[data-game-format=landscape] body .wins-bubble strong { font-size: 23px!important; }
+html[data-game-format=landscape] body #feed { width: min(280px,50%); max-width: 50%; gap: 4px; }
+html[data-game-format=landscape] body .gift-card { min-height: 42px; gap: 5px; }
+html[data-game-format=landscape] body .gift-card canvas { width: 36px; height: 36px; }
+html[data-game-format=landscape] body .gift-card b { font-size: 11px; }
+html[data-game-format=landscape] body .gift-card .multiplier { font-size: 11px; }
+html[data-game-format=landscape] body #finish-card { top: clamp(92px,22vh,130px); padding: 7px 16px; min-width: 115px; }
+html[data-game-format=landscape] body #countdown { font-size: clamp(25px,6vh,36px); }
+html[data-game-format=landscape] body #status { top: 48%; font-size: clamp(13px,3vh,18px); padding: 10px 18px; }
+html[data-game-format=landscape] body #victory { top: 40%; }
+html[data-game-format=landscape] body #victory canvas { width: 60px; height: 60px; }
+html[data-game-format=landscape] body #victory strong { font-size: 25px; }
+
+/* Unboxed score and a quiet signature, leaving the course unobstructed. */
+#hud .hud-heading { padding-left: 0; }
+#hud .metrics { justify-content: flex-end; }
+#hud .wins-bubble,
+#hud .wins-bubble:is(.negative-score,.score-gain,.score-theft) {
+    padding: 0; min-width: 0; border: 0; border-radius: 0;
+    background: transparent; box-shadow: none; backdrop-filter: none;
+    filter: drop-shadow(0 2px 3px #060b25);
+}
+#hud .wins-bubble strong { text-shadow: 0 2px 4px #080c26; }
+#hud .wins-bubble.score-gain { filter: drop-shadow(0 0 7px #ffe681aa); }
+#hud .wins-bubble.score-theft { filter: drop-shadow(0 0 7px #b886ffaa); }
+#stage > .game-watermark {
+    position: absolute; z-index: 3; right: max(14px,env(safe-area-inset-right));
+    bottom: max(14px,env(safe-area-inset-bottom)); margin: 0; gap: 5px;
+    min-height: 18px; font-size: 9px; pointer-events: none;
+    text-shadow: 0 2px 5px #000; opacity: .9;
+}
+#stage > .game-watermark img { width: 16px; height: 16px; }
+#stage #queue { right: max(14px,env(safe-area-inset-right)); bottom: max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
+
+/* Portrait has its own compact hierarchy, rather than a large desktop score. */
+html[data-game-format=portrait] body #stage {
+    width: min(100vw,calc(100dvh * .5625));
+    height: min(100dvh,calc(100vw * 16 / 9));
+    aspect-ratio: 9 / 16;
+}
+html[data-game-format=portrait] body #hud {
+    inset: max(18px,env(safe-area-inset-top)) 5.5% auto;
+    display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1.2fr);
+    align-items: center; column-gap: 12px; row-gap: 5px;
+}
+html[data-game-format=portrait] body #hud::before {
+    inset: -28px -10vw -24px;
+    background: linear-gradient(#080d25da,#080d2570 65%,transparent);
+}
+html[data-game-format=portrait] body #hud .hud-heading {
+    grid-column: 1; grid-row: 1; min-width: 0; min-height: 0; padding: 0;
+}
+html[data-game-format=portrait] body #hud .game-title { font-size: clamp(22px,4.8vw,26px); }
+html[data-game-format=portrait] body #hud .game-title > small { display: none; }
+html[data-game-format=portrait] body #hud .metrics { display: contents; }
+html[data-game-format=portrait] body #hud .wins-bubble {
+    grid-column: 2; grid-row: 1; justify-self: end; gap: 6px;
+}
+html[data-game-format=portrait] body #hud .wins-bubble canvas {
+    width: clamp(36px,9vw,46px); height: clamp(38px,9.4vw,48px);
+}
+html[data-game-format=portrait] body #hud .distance-number {
+    grid-column: 1 / -1; grid-row: 2; justify-self: stretch; justify-content: flex-end;
+    min-width: 0; gap: 5px; -webkit-text-stroke-width: 3px;
+}
+html[data-game-format=portrait] body #hud .unit { font-size: 19px; -webkit-text-stroke-width: 1.5px; }
+html[data-game-format=portrait] body #hud .progress {
+    grid-column: 1 / -1; grid-row: 3; width: 100%; height: 10px; margin-top: 27px;
+    border: 0; border-radius: 0; box-shadow: none; background: transparent;
+}
+html[data-game-format=portrait] body #hud .progress-track { inset: 0; border-radius: 3px; }
+html[data-game-format=portrait] body #hud #progress-fill { box-shadow: 0 0 8px #60cfff,0 0 16px #706aff88; }
+html[data-game-format=portrait] body #hud #remaining {
+    inset: auto 0 15px; justify-items: end; padding: 0; font-size: clamp(18px,3.7vw,20px); line-height: 1;
+    color: #d5e2f9; font-weight: 600; letter-spacing: .02em;
+}
+html[data-game-format=portrait] body #hud .finish-flag { display: none; }
+
+/* A single neon line, with signed progress starting at its center. */
+#hud #progress-fill { inset: 0 auto 0 50%; border: 0; border-radius: 3px; }
+#hud #progress-fill { box-shadow: 0 0 8px #60cfff,0 0 16px #706aff88; }
+html[data-game-format] body #hud #progress-fill.is-negative { background: linear-gradient(90deg,#e92e50,#ff8294); box-shadow: 0 0 8px #ff4566,0 0 16px #ff456688; }
+html[data-game-format] body #hud .progress-track { inset: 0; overflow: visible; background: #9acbff26; border-radius: 3px; }
+html[data-game-format=landscape] body #hud .progress { height: 10px; margin-top: 24px; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
+html[data-game-format=landscape] body #hud #remaining {
+    inset: auto 0 15px; justify-items: center; padding: 0; font-size: 14px; line-height: 1;
+}
+html[data-game-format=landscape] body #hud .finish-flag { display: none; }

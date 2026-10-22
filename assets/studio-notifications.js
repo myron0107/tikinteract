@@ -1,5 +1,5 @@
 // A compact view of the existing authenticated site inbox; no separate store.
-import {mountNotifications,refreshInbox} from './creator-account.js?v=8';
+import {mountNotifications,refreshInbox} from './creator-account.js?v=9';
 import {ct,ic} from './creator-ui.js?v=2';
 let wrapper,panel,bell;
 function close({focus=false}={}){if(!panel)return;panel.hidden=true;bell.setAttribute('aria-expanded','false');if(focus)bell.focus();}

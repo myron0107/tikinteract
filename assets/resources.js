@@ -144,7 +144,7 @@
     document.body.append(dialog);
     if(!document.querySelector('link[href*="assets/support-center.css"]')){const styles=document.createElement('link');styles.rel='stylesheet';styles.href='assets/support-center.css?v=2';document.head.append(styles);}
     let support, previousFocus;
-    const ready=import('./support-widget.js?v=1').then(({mountSupport})=>support=mountSupport({dialog,topics,robot,onOpen(){
+    const ready=import('./support-widget.js?v=2').then(({mountSupport})=>support=mountSupport({dialog,topics,robot,onOpen(){
         previousFocus=nav.contains(document.activeElement)?trigger:document.activeElement;closeMenu();
     }}));
     document.addEventListener('click', async event => {

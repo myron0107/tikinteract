@@ -40,7 +40,21 @@ test('standalone desktop Studio fits the preview to the available screen height'
     vm.createContext(context);vm.runInContext(code,context);context.window.TikInteractStudioLayout.fitGame();
     assert.equal(Number.parseFloat(properties['--studio-preview-height']),488);
     context.window.innerHeight=1080;context.window.TikInteractStudioLayout.fitGame();
-    assert.equal(Number(properties['--game-fit-scale']),.8);
+    assert(Number(properties['--game-fit-scale'])<=.8);
+    assert(Number.parseFloat(properties['--studio-preview-height'])<=wrap.clientHeight);
+});
+
+for(const [width,height,windowWidth]of [[650,410,1366],[280,388,390]])test(`Studio keeps the complete game inside its ${width}x${height} panel`,()=>{
+    const properties={},wrap={clientWidth:width,clientHeight:height,style:{setProperty(key,value){properties[key]=value;}}};
+    const context={document:{body:{classList:{contains:()=>true}},getElementById(){return{parentElement:wrap,style:wrap.style};},addEventListener(){}},window:{innerWidth:windowWidth,innerHeight:900}};
+    vm.createContext(context);vm.runInContext(code,context);
+    for(const [w,h]of [[540,960],[960,540]]){
+        context.window.TikInteractStudioLayout.fitGame({width:w,height:h});
+        const scale=Number(properties['--game-fit-scale']);
+        assert(w*scale<width,'Full game width is visible');
+        assert(h*scale<height,'Full game height is visible');
+        assert(scale>0,'Game remains visible');
+    }
 });
 test('game viewport normalization applies only inside Studio', () => {
     const source = readFileSync(new URL('../assets/game-viewport.js',import.meta.url),'utf8');

@@ -126,3 +126,53 @@ input.studio-test-input[type="file"]::file-selector-button { color: var(--test-a
 .studio-test-panel button:focus-visible,
 .studio-test-panel input:focus-visible,
 .studio-test-panel select:focus-visible { outline: 2px solid var(--test-accent); outline-offset: 2px; }
+
+/* Native game controls share the Studio palette in both appearance modes. */
+body#tikinteract-studio #studio-test-panel { --test-accent: var(--studio-accent); }
+body#tikinteract-studio #studio-test-tabs {
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr);
+    gap: 3px; padding: 3px; margin: 8px 0 12px; border: 1px solid var(--studio-line);
+    border-radius: 8px; background: var(--studio-soft);
+}
+body#tikinteract-studio #studio-test-tabs:empty { display: none; }
+body#tikinteract-studio #studio-test-tabs > button {
+    flex-direction: column; gap: 5px; min-width: 0; min-height: 43px; padding: 6px 2px;
+    border: 0; border-radius: 5px; font-size: 10px; line-height: 1.2; overflow-wrap: anywhere;
+    background: transparent; color: var(--studio-muted); box-shadow: none;
+}
+body#tikinteract-studio #studio-test-tabs > button::before { font-size: 12px; }
+body#tikinteract-studio #studio-test-tab-appearance::before { content: '\f1fc'; }
+body#tikinteract-studio #studio-test-tabs > button:hover { background: var(--studio-panel); color: var(--studio-ink); }
+body#tikinteract-studio #studio-test-tabs > button[aria-selected=true] {
+    background: var(--studio-panel); color: var(--studio-accent); box-shadow: inset 0 -2px var(--studio-accent);
+}
+body#tikinteract-studio #studio-test-panel .studio-test-group-body { min-width: 0; gap: 8px; }
+body#tikinteract-studio #studio-test-panel .studio-test-action {
+    background: var(--studio-soft); color: var(--studio-ink); border-color: var(--studio-line);
+    white-space: normal; overflow-wrap: anywhere;
+}
+body#tikinteract-studio #studio-test-panel .studio-test-action:is(:hover,[aria-pressed=true]) {
+    color: var(--studio-accent); background: var(--studio-active);
+}
+body#tikinteract-studio #studio-test-panel .studio-test-gift small { color: var(--studio-accent); }
+body#tikinteract-studio #studio-test-panel .studio-test-gift strong { font-size: 10px; line-height: 1.3; }
+body#tikinteract-studio #studio-test-panel .studio-test-gift canvas { width: 25px; height: 25px; }
+body#tikinteract-studio #studio-test-panel .studio-test-group--race .studio-test-group-body { grid-template-columns: repeat(2,minmax(0,1fr)); }
+body#tikinteract-studio #studio-test-panel .studio-test-field { min-width: 0; }
+body#tikinteract-studio #studio-test-panel .studio-test-field--range { grid-template-columns: minmax(65px,1fr) minmax(40px,1fr) 30px; gap: 6px; }
+body#tikinteract-studio #studio-test-panel .studio-test-input {
+    color: var(--studio-ink); accent-color: var(--studio-accent); font-size: 11px;
+}
+body#tikinteract-studio #studio-test-panel :is(input.studio-test-input:not([type=range]):not([type=checkbox]),select.studio-test-input) {
+    background: var(--studio-soft); color: var(--studio-ink); border: 1px solid var(--studio-line);
+    border-radius: 6px; min-height: 34px; padding: 6px 8px; color-scheme: inherit;
+}
+body#tikinteract-studio #studio-test-panel select.studio-test-input > option { background: var(--studio-panel); color: var(--studio-ink); }
+body#tikinteract-studio #studio-test-panel .studio-test-field > output { color: var(--studio-accent); }
+body#tikinteract-studio #studio-test-panel .studio-native-colors { gap: 7px; padding: 2px; }
+body#tikinteract-studio #studio-test-panel .studio-native-colors button {
+    background: var(--color); color: #101420; border-color: #0002; font-size: 10px;
+}
+body#tikinteract-studio #studio-test-panel .studio-native-colors button[aria-checked=true] {
+    outline: 2px solid var(--studio-accent); outline-offset: 2px;
+}

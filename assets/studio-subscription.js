@@ -17,7 +17,7 @@ function render(){
  const input=root.querySelector('#pp-code');input.value=value;if(focused){input.focus({preventScroll:true});input.setSelectionRange(selection,selection);}
 }
 export function mountSubscription(element){
- if(root!==element){root=element;signature='';root.setAttribute('data-native-i18n','');root.addEventListener('click',event=>{if(event.target.closest('[data-subscription-refresh]'))window.TikInteractPass?.refresh();const button=event.target.closest('[data-ticket-action]');if(!button)return;selected=button.dataset.ticketAction;signature='';render();if(selectBillingPlan(selected))return;root.querySelector('#pp-access-key')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});root.querySelector('#pp-code')?.focus({preventScroll:true});});}
+ if(root!==element){root=element;signature='';root.setAttribute('data-native-i18n','');root.addEventListener('click',event=>{if(event.target.closest('[data-subscription-refresh]'))window.TikInteractPass?.refresh();const button=event.target.closest('[data-ticket-action]');if(!button)return;selected=button.dataset.ticketAction;signature='';render();if(selectBillingPlan(selected))return;root.querySelector('#pp-access-key')?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});});}
  render();
 }
 export function selectSubscriptionPlan(plan){selected=['free','play_pass','play_pass_pro'].includes(plan)?plan:'';signature='';render();}

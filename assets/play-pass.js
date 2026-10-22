@@ -57,7 +57,7 @@ async function redeem(event){
 }
 function initialize(){
  document.addEventListener('submit',event=>{if(event.target.id==='pp-redeem-form')redeem(event);});
- document.addEventListener('click',event=>{const button=event.target.closest('[data-pp-plan]');if(!button)return;if(button.dataset.ppPlan==='free'){window.switchView?.('live');return;}const active=canAccess(button.dataset.ppPlan),section=document.getElementById(active?'pp-account-status':'pp-access-key');section?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});if(!active)document.getElementById('pp-code')?.focus({preventScroll:true});});
+ document.addEventListener('click',event=>{const button=event.target.closest('[data-pp-plan]');if(!button)return;if(button.dataset.ppPlan==='free'){window.switchView?.('live');return;}const active=canAccess(button.dataset.ppPlan),section=document.getElementById(active?'pp-account-status':'pp-access-key');section?.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});});
  refresh();
 }
 window.TikInteractPass=Object.freeze({canAccess,getAccess:()=>access?JSON.parse(JSON.stringify(access)):null,refresh});

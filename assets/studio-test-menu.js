@@ -2,6 +2,26 @@
 let studioTestBridge = null;
 let studioTestSyncTimer = null;
 
+const studioControlEnglish = {
+    'Test':'Test', 'Aspect':'Appearance', 'Audio':'Audio', 'Decor':'Scenery', 'Muzică':'Music',
+    'Cadouri de test':'Test gifts', 'Spectator':'Viewer', 'Cantitate':'Quantity',
+    'Control joc':'Game controls', 'Rundă nouă':'New round', 'Urcare automată':'Auto climb',
+    'Personaj și peisaj':'Character and scenery', 'Peisaj':'Scenery',
+    'Intensitate efecte':'Effect intensity', 'Sunetele jocului':'Game audio',
+    'Efecte sonore':'Sound effects', 'Muzică activă':'Music enabled',
+    'Pauză':'Pause', 'Reia jocul':'Resume game',
+    'Pornește sunetul':'Unmute game', 'Oprește sunetul':'Mute game'
+};
+function studioControlText(value) {
+    return globalThis.TikInteractLanguage?.get() === 'en' ? studioControlEnglish[value] || value : value;
+}
+function studioControlCopy(node, value) {
+    if (!studioTestBridge?.api) { node.textContent = value; return; }
+    node.setAttribute('data-native-i18n', '');
+    (studioTestBridge.copy ||= []).push({node, value});
+    node.textContent = studioControlText(value);
+}
+
 function resetStudioTestMenu() {
     clearInterval(studioTestSyncTimer);
     studioTestSyncTimer = null;
@@ -64,7 +84,7 @@ function createStudioTestGroup(title, kind, category = kind) {
     section.className = `studio-test-group${kind ? ` studio-test-group--${kind}` : ''}`;
     section.dataset.studioTestCategory = category;
     const heading = document.createElement('h6');
-    heading.textContent = title;
+    studioControlCopy(heading, title);
     const body = document.createElement('div');
     body.className = 'studio-test-group-body';
     section.append(heading, body);
@@ -80,7 +100,7 @@ function initializeStudioTestTabs() {
     for (const [key, label] of categories) {
         if (!studioTestBridge.groups.some(group => group.category === key)) continue;
         const button = document.createElement('button');
-        button.type = 'button'; button.textContent = label;
+        button.type = 'button'; studioControlCopy(button, label);
         button.id = `studio-test-tab-${key}`;
         button.setAttribute('role','tab');
         button.setAttribute('aria-controls', `studio-test-controls`);
@@ -111,6 +131,11 @@ function selectStudioTestTab(key) {
 }
 
 function studioTestActionLabel(source) {
+    if (studioTestBridge?.api) {
+        if (source.id === 'pause') return studioControlText(source.getAttribute('aria-pressed') === 'true' ? 'Reia jocul' : 'Pauză');
+        if (source.id === 'sound') return studioControlText(source.getAttribute('aria-pressed') === 'true' ? 'Pornește sunetul' : 'Oprește sunetul');
+        if (source.id === 'studio-round-restart') return studioControlText('Rundă nouă');
+    }
     if(source.dataset.color)return source.getAttribute('aria-label')||source.dataset.color;
     if (source.dataset.team !== undefined) {
         const kind = source.dataset.kind || source.dataset.action;
@@ -135,6 +160,7 @@ function addStudioTestControl(group, source, labelText) {
     const tag = source.tagName.toLowerCase();
     const proxy = document.createElement(tag);
     proxy.className = tag === 'button' ? 'studio-test-action' : 'studio-test-input';
+    if (studioTestBridge.api && tag === 'button') proxy.setAttribute('data-native-i18n', '');
     if (source.id) proxy.dataset.testControl = source.id;
     for (const key of ['type', 'min', 'max', 'step', 'accept', 'maxlength', 'placeholder']) {
         if (source.hasAttribute(key)) proxy.setAttribute(key, source.getAttribute(key));
@@ -191,7 +217,7 @@ function addStudioTestControl(group, source, labelText) {
         const label = document.createElement('label');
         label.className = `studio-test-field studio-test-field--${source.type || 'select'}`;
         const title = document.createElement('span');
-        title.textContent = labelText;
+        studioControlCopy(title, labelText);
         label.append(title, proxy);
         if (source.type === 'range') {
             const value = document.createElement('output');
@@ -258,6 +284,10 @@ function buildStudioTestControls(original) {
 
 function syncStudioTestMenu() {
     if (!studioTestBridge) return;
+    for (const {node, value} of studioTestBridge.copy || []) {
+        const text = studioControlText(value);
+        if (node.textContent !== text) node.textContent = text;
+    }
     for (const {source, proxy, value} of studioTestBridge.pairs) {
         proxy.disabled = source.disabled || false;
         const tag = source.tagName;
@@ -265,10 +295,14 @@ function syncStudioTestMenu() {
             if (source.type === 'checkbox') proxy.checked = source.checked;
             else if (source.type === 'file') { if (!source.value && proxy.value) proxy.value = ''; }
             else if (document.activeElement !== proxy) proxy.value = source.value;
+            if (tag === 'SELECT') for (let i = 0; i < source.options.length; i++) {
+                if (proxy.options[i] && proxy.options[i].textContent !== source.options[i].textContent) proxy.options[i].textContent = source.options[i].textContent;
+            }
             if (value) value.textContent = `${source.value}%`;
             if (proxy.setCustomValidity && source.validity) proxy.setCustomValidity(source.validity.customError ? source.validationMessage : '');
         } else {
             const text = tag === 'BUTTON' ? studioTestActionLabel(source) : source.textContent;
+            if (studioTestBridge.api && tag === 'BUTTON') proxy.setAttribute('aria-label', proxy.giftCopy ? source.getAttribute('aria-label') || source.textContent : text);
             if(proxy.giftCopy){proxy.giftCopy.title.textContent=source.querySelector('strong').textContent;proxy.giftCopy.amount.textContent=source.querySelector('small').textContent;}
             else if (proxy.textContent !== text) proxy.textContent = text;
             if (tag === 'BUTTON' && source.dataset.team !== undefined) {
@@ -290,7 +324,8 @@ function initializeActionGameTestMenu(frame,doc){
     const grid=document.createElement('div');grid.className='studio-test-gift-grid';gifts.append(grid);
     for(const source of doc.querySelectorAll('#gift-buttons .gift-button'))addStudioTestControl(grid,source);
     const control=createStudioTestGroup('Control joc','race','teams');add(control,'pause');
-    const restart=doc.createElement('button');restart.textContent='Rundă nouă';restart.type='button';restart.hidden=true;
+    doc.getElementById('studio-round-restart')?.remove();
+    const restart=doc.createElement('button');restart.id='studio-round-restart';restart.textContent='Rundă nouă';restart.type='button';restart.hidden=true;
     restart.addEventListener('click',()=>api.control({action:'session.restart'}));doc.getElementById('test-panel').append(restart);addStudioTestControl(control,restart);
     add(control,'autoplay-input','Urcare automată');
     const appearance=createStudioTestGroup('Personaj și peisaj','appearance','appearance');
@@ -299,8 +334,7 @@ function initializeActionGameTestMenu(frame,doc){
     for(const source of doc.querySelectorAll('[data-color]')){const proxy=addStudioTestControl(colors,source);proxy.style.cssText=source.style.cssText;proxy.textContent=source.dataset.color;}
     const audio=createStudioTestGroup('Sunetele jocului','audio','audio');
     add(audio,'sound');add(audio,'fx-volume','Efecte sonore');add(audio,'music-volume','Muzică');add(audio,'music-input','Muzică activă');
-    const bindings=createStudioTestGroup('Cadouri TikTok → acțiuni','bindings','gifts');
-    buildActionGameGiftBindings(bindings,studioTestBridge);
+    // Gift mappings remain saved and active; their editor is temporarily removed.
     initializeStudioTestTabs();syncStudioTestMenu();
     document.getElementById('studio-test-panel').setAttribute('aria-busy','false');
     studioTestSyncTimer=setInterval(()=>{if(!document.hidden)syncStudioTestMenu();},300);

@@ -1,6 +1,6 @@
 import {ACTIONS,clamp} from './config.js';
 import {giftFrame,ease,isVexNegative} from './gift-motion.js';
-import {VexNegatives} from './vex-negatives.js';
+import {VexNegatives} from './vex-negatives.js?v=2';
 const TAU=Math.PI*2;
 export class NeonGiftFX {
   constructor(renderer){this.r=renderer;this.bursts=[];this.vex=new VexNegatives(renderer);}
@@ -49,8 +49,9 @@ export class NeonGiftFX {
     ctx.save();ctx.globalAlpha=1-f.exit;const t=f.time;
     if(a.kind==='magnet'){
       const hx=clamp(x+68,55,425),hy=y-185,cast=ease(t/(f.contact*.65));
-      ctx.fillStyle='#152d42';ctx.fillRect(hx-37,hy-42,480-hx+37,14);
-      ctx.fillStyle='#5fdef2';ctx.fillRect(hx-37,hy-42,480-hx+37,3);
+      const reach=480+(this.r.offsetX||0)-hx+37;
+      ctx.fillStyle='#152d42';ctx.fillRect(hx-37,hy-42,reach,14);
+      ctx.fillStyle='#5fdef2';ctx.fillRect(hx-37,hy-42,reach,3);
       for(let i=0;i<3;i++){ctx.fillStyle='#bbf6ff';ctx.beginPath();ctx.arc(hx-25+i*22,hy-35,2,0,TAU);ctx.fill();}
       const endX=x+16+(hx-x-16)*cast,endY=y-51+(hy-y+51)*cast;
       this.line(ctx,[[x+16,y-51],[endX,endY]],'#102638',7);this.line(ctx,[[x+16,y-51],[endX,endY]],'#b4f8ff',3);

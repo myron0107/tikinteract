@@ -178,7 +178,7 @@
         document.body.style.overflow = 'hidden';
         dialog.showModal();
         dialog.querySelector('.home-gift-catalog-scroll').scrollTop = 0;
-        search.focus({preventScroll: true});
+        dialog.querySelector('.home-gift-catalog-close')?.focus({preventScroll: true});
         updatePlayback();
     });
     if(!compact){

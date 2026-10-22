@@ -339,16 +339,17 @@ body.embedded .creator-only{display:none!important}
 @media(max-width:390px){#hud{left:5%;right:5%}.brand{font-size:9px}.metrics{gap:11px;min-height:67px;margin-top:17px;margin-bottom:14px}#distance{font-size:58px}.wins-bubble canvas{width:25px;height:27px}.wins-bubble{padding-right:8px}.progress{height:34px}#remaining{font-size:10px;padding-right:28px}.finish-flag{width:38px;height:46px;top:-16px;right:-5px}#dock{left:10px;top:max(12px,env(safe-area-inset-top))}.dock-button{width:41px;height:41px}.dock-button svg{width:25px;height:25px}#game-menu{left:10px;width:calc(100% - 20px);max-width:320px;top:64px;max-height:calc(100% - 76px);padding:14px}#finish-card{top:192px}.distance-number{-webkit-text-stroke-width:3.7px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:0s!important;transition-duration:0s!important}}
 </style>
-<link rel="stylesheet" href="theme.css?v=2">
+<link rel="stylesheet" href="theme.css?v=8">
 </head>
 <body data-native-i18n>
   <main id="stage" tabindex="0" aria-label="Nova &amp; Vex" aria-keyshortcuts="ArrowLeft ArrowRight A D">
     <canvas id="scene" aria-label="Nova &amp; Vex game world"></canvas>
     <canvas id="hud-fx" aria-hidden="true"></canvas>
-    <header id="hud"><div class="hud-heading"><div class="game-title"><span class="title-nova">NOVA</span> &amp; <span class="title-vex">VEX</span><small><span data-copy="tagline"></span></small></div><div class="brand" aria-label="TikInteract"><img src="../../assets/tikinteract-mark-digital.png" alt="" width="24" height="24"><span class="brand-name">TIK<span>INTERACT</span></span></div></div>
+    <header id="hud"><div class="hud-heading"><div class="game-title"><span class="title-nova">NOVA</span> &amp; <span class="title-vex">VEX</span><small><span data-copy="tagline"></span></small></div></div>
       <div class="metrics"><div class="distance-number"><span id="distance">0</span><span class="unit">m</span></div><div class="wins-bubble"><canvas id="trophy" width="80" height="80" aria-hidden="true"></canvas><strong id="wins">0</strong></div></div>
-      <div class="progress"><div class="progress-track"><div id="progress-fill"></div></div><span id="remaining"></span><canvas id="finish-flag" class="finish-flag" width="96" height="112" aria-hidden="true"></canvas></div>
+      <div id="distance-progress" class="progress" role="progressbar" aria-labelledby="remaining" aria-valuemin="-10000" aria-valuemax="10000" aria-valuenow="0"><div class="progress-track"><div id="progress-fill"></div></div><span id="remaining"></span><canvas id="finish-flag" class="finish-flag" width="96" height="112" aria-hidden="true"></canvas></div>
     </header>
+    <div class="brand game-watermark" aria-label="TikInteract"><img src="../../assets/tikinteract-mark-digital.png" alt="" width="16" height="16"><span class="brand-name">TIK<span>INTERACT</span></span></div>
     <div id="finish-card" hidden><small data-copy="hold"></small><strong id="countdown">10</strong></div>
     <div id="victory" hidden><canvas id="victory-cup" width="160" height="160" aria-hidden="true"></canvas><strong data-copy="victory"></strong><span id="victory-award"></span></div>
     <div id="status" hidden role="status"></div>
@@ -399,6 +400,6 @@ body.embedded .creator-only{display:none!important}
   <script src="../../assets/game-live-sdk.js?v=1"></script>
   <script src="art/manifest.js"></script>
 
-<script type="module">import "./src/main.js?v=7";</script>
+<script type="module">import "./src/main.js?v=12";</script>
 </body>
 </html>
