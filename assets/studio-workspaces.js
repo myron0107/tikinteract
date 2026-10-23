@@ -6,7 +6,7 @@ let mode=document.documentElement.dataset.workspace==='ai'?'ai':'live',aiTab=new
 if(!labels[aiTab])aiTab='generator';
 function paint(){
  document.documentElement.dataset.workspace=mode;
- for(const b of document.querySelectorAll('[data-workspace]')){
+ for(const b of document.querySelectorAll('.studio-workspace-switch button[data-workspace]')){
   b.setAttribute('aria-pressed',String(b.dataset.workspace===mode));
   if(b.dataset.workspace==='ai')b.disabled=window.TikInteractStudioVisibility?.isVisible('animations')===false;
  }
@@ -36,7 +36,7 @@ async function open(next,{tab,clip,configure=false,history:recordHistory=true}={
 window.TikInteractWorkspaces=Object.freeze({getMode:()=>mode,open});
 async function refreshWallet(){if(!window.tikInteractUser){wallet=null;paint();return;}try{await loadAnimationState();}catch{wallet=null;paint();}}
 async function init(){
- document.querySelectorAll('[data-workspace]').forEach(b=>b.onclick=()=>open(b.dataset.workspace));
+ document.querySelectorAll('.studio-workspace-switch button[data-workspace]').forEach(b=>b.onclick=()=>open(b.dataset.workspace));
  document.querySelectorAll('[data-ai-tab]').forEach(b=>b.onclick=()=>open('ai',{tab:b.dataset.aiTab}));
  document.querySelector('[data-credit-view]')?.addEventListener('click',()=>open('ai',{tab:'credits'}));
  document.querySelector('[data-credit-topup]')?.addEventListener('click',()=>openAnimationCredits());

@@ -45,6 +45,15 @@ await new Promise(r=>server.listen(3033,'127.0.0.1',r));await mkdir(folder,{recu
 const b=await openSkyShiftBrowser('studio-workspaces-review'),run=e=>b.evaluate(e),click=s=>run(`document.querySelector(${JSON.stringify(s)}).click()`);
 const rect=s=>run(`(()=>{const n=document.querySelector(${JSON.stringify(s)});n.scrollIntoView({block:'center',behavior:'instant'});const r=n.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height*(n.matches(".live-favorite-card")?.8:.5),w:r.width,h:r.height};})()`);
 async function drag(selector,dx,dy,check){const r=await rect(selector);await b.page('Input.dispatchMouseEvent',{type:'mousePressed',x:r.x,y:r.y,button:'left',clickCount:1});for(let i=1;i<=12;i++)await b.page('Input.dispatchMouseEvent',{type:'mouseMoved',x:r.x+dx*i/12,y:r.y+dy*i/12,buttons:1});await run('new Promise(requestAnimationFrame)');if(check)await check();await b.page('Input.dispatchMouseEvent',{type:'mouseReleased',x:r.x+dx,y:r.y+dy,button:'left',clickCount:1});}
+async function pointerClick(selector){const r=await rect(selector);await b.page('Input.dispatchMouseEvent',{type:'mousePressed',x:r.x,y:r.y,button:'left',clickCount:1});await b.page('Input.dispatchMouseEvent',{type:'mouseReleased',x:r.x,y:r.y,button:'left',clickCount:1});await run('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');}
+async function checkLiveNavigation(){
+ for(const [tab,panel] of [['games','game-center-panel'],['audio','audio-center-panel'],['animations','studio-animations-panel'],['studio','live-studio-panel']]){
+  await pointerClick(`.studio-app-nav [data-studio-tab="${tab}"]`);
+  assert.equal(await run(`document.getElementById('${panel}').classList.contains('hidden')`),false,`Native ${tab} click must keep its panel open`);
+  assert.equal(await run(`document.querySelector('.studio-app-nav [data-studio-tab="${tab}"]').getAttribute('aria-selected')`),'true',`Native ${tab} selection must persist`);
+  assert.equal(await run('TikInteractWorkspaces.getMode()'),'live');
+ }
+}
 try{
  await b.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true);'+`
  if(localStorage.getItem('qa-workspace-run')!=='${runId}'){for(const key of Object.keys(localStorage))if(key.startsWith('tikinteract_layout_'))localStorage.removeItem(key);localStorage.setItem('qa-workspace-run','${runId}');localStorage.setItem('qa-user','${f.user.id}');} const c=window.supabase.createClient(),rpc=c.rpc.bind(c),session=c.auth.getSession.bind(c.auth),on=c.auth.onAuthStateChange.bind(c.auth);
@@ -59,6 +68,8 @@ try{
  assert.equal(await run('document.querySelectorAll("[data-ai-tab]").length'),5);
  assert.equal(await run('document.querySelector("[data-credit-balance]").textContent'),'500');assert.equal(await run('getComputedStyle(document.getElementById("studio-ai-nav")).display'),'flex');assert.equal(await run('getComputedStyle(document.querySelector(".studio-app-nav")).display'),'none');assert.equal(await run('window.__qaSockets.length'),0,'Direct AI entry must not start local LIVE transport');
  assert.equal(await run('document.getElementById("live-game-frame").getAttribute("src")'),null);
+ await pointerClick('.studio-workspace-switch [data-workspace=live]');await checkLiveNavigation();
+ await pointerClick('.studio-workspace-switch [data-workspace=ai]');await b.waitFor('!!document.querySelector("#an-prompt")');
  await click('[data-ai-tab=universes]');assert.equal(await run('document.querySelectorAll("[data-an-world]").length'),8);
  await click('[data-ai-tab=library]');assert.equal(await run('document.querySelectorAll(".an-media").length'),2);
  await click('[data-an-action=preview][data-id="'+image+'"]');assert(await run('!!document.querySelector(".an-dialog img.an-full-image")'));await click('[data-an-close]');
@@ -100,6 +111,7 @@ try{
   await b.page('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<700});
   await run(`localStorage.setItem('tikinteract_mode','${mode}');localStorage.setItem('tikinteract_brand','${theme}');localStorage.setItem('tikinteract_language','${lang}')`);await b.page('Page.reload');await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!document.querySelector("[data-sle=edit]").disabled');
   assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,`STREAM overflow ${width}/${mode}/${theme}`);assert.equal(await run('document.querySelectorAll(".studio-app-nav [data-studio-tab]").length'),4);
+  await checkLiveNavigation();
   await b.screenshot(`${folder}/stream-${width}-${mode}-${theme}.webp`);await run('TikInteractWorkspaces.open("ai")');await b.waitFor('!!document.querySelector("#an-prompt")');assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,'AI overflow');await b.screenshot(`${folder}/ai-${width}-${mode}-${theme}.webp`);await run('TikInteractWorkspaces.open("live")');
  }
  await run('TikInteractWorkspaces.open("ai",{tab:"generator"})');await b.waitFor('!!document.getElementById("an-prompt")');await run('window.__qaOffline=true');await click('[data-an-action=refresh]');await b.waitFor('!document.getElementById("an-prompt")');assert.equal(await run('document.querySelector("[data-credit-balance]").textContent'),'—');await click('[data-ai-tab=guide]');assert(await run('!!document.querySelector(".ai-guide-grid")'));assert.equal(await run('getComputedStyle(document.getElementById("studio-ai-nav")).display'),'flex');await run('window.__qaOffline=false');await click('[data-an-action=refresh]');await b.waitFor('document.querySelector("[data-credit-balance]").textContent==="500"');
