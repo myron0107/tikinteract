@@ -21,7 +21,7 @@ for(const [id,mime,kind,bytes]of [[video,'video/mp4','upload',f.video],[image,'i
 }
 f.store.usage=(u,test)=>f.store.rpc('animation_account_usage',{p_user:u,p_test:test});
 f.store.authenticate=async r=>({id:r.headers.get('x-qa-user')||f.user.id,email:'fixture@example.invalid'});
-const service=createAnimationService({store:f.store,provider:f.provider,approved:false,siteUrl:origin});
+const service=createAnimationService({store:f.store,provider:f.provider,approved:false,siteUrl:process.env.QA_PUBLIC_SITE_URL||origin});
 let queue=Promise.resolve();const serial=fn=>{const job=queue.then(fn);queue=job.catch(()=>{});return job;};
 const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.mp4':'video/mp4','.webm':'video/webm','.woff2':'font/woff2','.json':'application/json'};
 const server=createServer(async(req,res)=>{try{

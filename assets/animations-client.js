@@ -8,6 +8,8 @@ export async function animationAPI(body,{signal,client=window.tikInteractSupabas
 export const animationText=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 export function animationError(code){
  const messages={
+  INVALID_ORIGIN:['Conexiunea cu AI Studio a fost refuzată pentru această adresă. Reîncarcă pagina; dacă problema continuă, contactează suportul.','The AI Studio connection was rejected for this address. Reload the page; if it continues, contact support.'],
+  ANIM_ACCOUNT_REQUIRED:['AI Studio necesită un cont înregistrat, cu adresa de e-mail confirmată. Conturile temporare de previzualizare nu pot folosi funcțiile AI.','AI Studio requires a registered account with a confirmed email address. Temporary preview accounts cannot use AI features.'],
   ANIM_COMMERCE_SETUP:['Rulează supabase/animations-commerce.sql după animations.sql pentru a activa configurația comercială de test.','Run supabase/animations-commerce.sql after animations.sql to install test commerce.'],
   ANIM_TEST_ONLY:['Această ofertă este disponibilă doar în Stripe Test Mode. Configurează cheile de test pe server.','This offer is available only in Stripe Test Mode. Configure server test keys.'],
   ANIM_PRICE_REQUIRED:['Lipsește Price ID-ul Stripe de test al ofertei.','The offer is missing its Stripe test Price ID.'],

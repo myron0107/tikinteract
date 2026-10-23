@@ -81,6 +81,16 @@ test('HTTP rejects unauthenticated, cross-origin, oversized and forged worker re
   const service=createAnimationService({store:f.store,provider:f.provider,approved:false,siteUrl:'http://127.0.0.1:3031',cronSecret:'local-cron'});
   const call=(body,headers={},path='')=>handleAnimationRequest(new Request('http://127.0.0.1:3031/api/animations'+path,{method:'POST',headers:{Origin:'http://127.0.0.1:3031',...headers},body:JSON.stringify(body)}),{service,store:f.store});
   assert.equal((await call({action:'state'})).status,401);assert.equal((await call({action:'state'},{Origin:'https://evil.invalid'})).status,403);assert.equal((await call({padding:'x'.repeat(33000)})).status,413);
+  // PUBLIC_SITE_URL may be absent or point to the production domain while a
+  // user is on its preview/custom domain. Same-origin requests still work;
+  // missing, opaque and cross-site origins remain forbidden before auth/data.
+  for(const configured of ['', 'https://another-owned-domain.invalid']){
+   const alternate=createAnimationService({store:f.store,provider:f.provider,approved:false,siteUrl:configured});
+   const post=origin=>handleAnimationRequest(new Request('https://tikinteract.vercel.app/api/animations',{method:'POST',headers:{'Content-Type':'application/json',...(origin===null?{}:{Origin:origin}),Authorization:'Bearer local-fixture'},body:'{"action":"state"}'}),{service:alternate,store:f.store});
+   const accepted=await post('https://tikinteract.vercel.app');assert.equal(accepted.status,200);assert.equal((await accepted.json()).worlds.length,8);
+   for(const origin of [null,'null','https://evil.invalid','http://tikinteract.vercel.app','https://tikinteract.vercel.app.evil.invalid']){const denied=await post(origin);assert.equal(denied.status,403);assert.equal((await denied.json()).error,'INVALID_ORIGIN');}
+  }
+  assert.equal(f.calls.length,0,'Loading Studio must never start paid generation');
   assert.equal((await call({},{},'/worker')).status,401);assert.equal((await call({},{Authorization:'Bearer local-cron'},'/worker')).status,200);
   const photo=await f.addPhoto();const p=imageInput({format:'9:16'},'https://private/photo','original knight');assert.equal(p.safety_tolerance,'1');assert.equal(p.aspect_ratio,'9:16');const v=videoInput({tier:'premium',prompt:'waves',format:'9:16'},'image','photo','original knight');assert.equal(v.duration,'5');assert.equal(v.elements[0].frontal_image_url,'photo');assert.equal(v.enable_safety_checker,true);
   const config=(await f.store.one('animation_settings',{singleton:true})).config;assert.doesNotThrow(()=>validateAnimationConfig(config));assert.throws(()=>validateAnimationConfig({...config,standardCredits:-1}),/ANIM_CONFIG_INVALID/);
