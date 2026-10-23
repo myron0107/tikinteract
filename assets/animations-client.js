@@ -8,6 +8,16 @@ export async function animationAPI(body,{signal,client=window.tikInteractSupabas
 export const animationText=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 export function animationError(code){
  const messages={
+  ANIM_COMMERCE_SETUP:['Rulează supabase/animations-commerce.sql după animations.sql pentru a activa configurația comercială de test.','Run supabase/animations-commerce.sql after animations.sql to install test commerce.'],
+  ANIM_TEST_ONLY:['Această ofertă este disponibilă doar în Stripe Test Mode. Configurează cheile de test pe server.','This offer is available only in Stripe Test Mode. Configure server test keys.'],
+  ANIM_PRICE_REQUIRED:['Lipsește Price ID-ul Stripe de test al ofertei.','The offer is missing its Stripe test Price ID.'],
+  ANIM_PRICE_MISMATCH:['Price ID-ul Stripe nu corespunde prețului, monedei sau tipului de plată configurat. Creează un Price nou în Test Mode.','The Stripe Price ID does not match the configured amount, currency or payment type. Create a new Price in Test Mode.'],
+  ANIM_PRICE_TERMS:['Acest Price ID a fost deja folosit cu alte condiții. Creează un Price nou pentru oferta modificată.','This Price ID was already used with different terms. Create a new Price for the changed offer.'],
+  ANIM_SUBSCRIPTION_EXISTS:['Ai deja un abonament de test sau o comandă de abonament în așteptare. Verifică în Stripe Test înainte de altă achiziție.','You already have a test subscription or a pending subscription order. Check Stripe Test before another purchase.'],
+  ANIM_CONFIG_CONFLICT:['Configurația s-a schimbat. Reîncarcă secțiunea înainte să salvezi.','Configuration changed. Reload this section before saving.'],
+  ANIM_CONFIG_INVALID:['Verifică valorile introduse. FREE rămâne 0 € / 0 credite; Price ID-urile trebuie să fie distincte.','Check the entered values. FREE stays €0 / 0 credits; Price IDs must be distinct.'],
+  ANIM_COST_SYNC_UNAVAILABLE:['Citirea costurilor fal.ai nu este configurată sau cheia nu are permisiuni de facturare.','fal.ai cost reporting is not configured, or the key lacks billing permissions.'],
+  ANIM_COST_REVIEW:['Raportul costului necesită verificare. Cererile fără identificator sau mai vechi de 89 de zile nu se sincronizează automat.','The cost report needs review. Requests without an ID or older than 89 days cannot be synced automatically.'],
   ANIM_SETUP_REQUIRED:['Leagă modulul la Supabase pentru a-l folosi. Configurarea backendului nu este încă finalizată.','Connect this module to Supabase. Backend setup is not complete yet.'],
   ANIM_ACTIVATION_REQUIRED:['Generarea AI așteaptă activarea și aprobarea primului test.','AI generation is awaiting activation and first-test approval.'],
   ANIM_DISABLED:['Generarea este oprită de administrator.','Generation is disabled by the administrator.'],

@@ -14,7 +14,7 @@ function suggestions(){
 function covers(){document.querySelectorAll('.studio-game-option').forEach(button=>{const game=window.TikInteractPlatform?.getGame(button.dataset.liveGame),img=button.querySelector('img');if(game&&img&&img.getAttribute('src')!==game.cover)img.src=game.cover;});}
 function header(){
  const logo=$('.cp-rail-brand');if(logo){logo.title=t('Deschide transmisia','Open STREAM');logo.setAttribute('aria-label','TikInteract / '+label('studio'));}
- const crumb=$('#studio-current-section');const section=$('#creator-account-panel')?.dataset.accountSection;const sections={profile:['Profil','Profile'],subscription:['Abonamentul meu','My subscription'],messages:['Mesajele mele','My messages'],security:['Securitate','Security']};if(crumb)crumb.textContent=label(currentTab)+(currentTab==='account'&&sections[section]?' / '+t(...sections[section]):'');
+ const crumb=$('#studio-current-section');const section=$('#creator-account-panel')?.dataset.accountSection;const sections={profile:['Profil','Profile'],subscription:['Abonamentul meu','My subscription'],messages:['Mesajele mele','My messages'],security:['Securitate','Security']};if(crumb)crumb.textContent=window.TikInteractWorkspaces?.getMode()==='ai'?'AI STUDIO':label(currentTab)+(currentTab==='account'&&sections[section]?' / '+t(...sections[section]):'');
  const title=$('.app-workspace-heading h1 [data-cp="studio"]');if(title)title.textContent=label('studio');
  document.querySelectorAll('.studio-app-rail [data-studio-tab]').forEach(button=>{const tab=button.dataset.studioTab;if(!names[tab])return;const span=button.querySelector('[data-cp],[data-an-nav-label]');if(span)span.textContent=label(tab);button.title=label(tab);button.setAttribute('aria-label',label(tab));});
  connectionLabels();

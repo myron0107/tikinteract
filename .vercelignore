@@ -28,3 +28,7 @@ assets/utility.source.css
 
 # Static-header source is compiled into the HTML pages above.
 partials/
+
+# Integration references are local design inputs.
+tikinteract-site-adapted/
+tikinteract-transmisie-layout-editor/

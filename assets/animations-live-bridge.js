@@ -1,4 +1,4 @@
-import {animationAPI} from './animations-client.js?v=1';
+import {animationAPI} from './animations-client.js?v=2';
 import {matchesAnimationRule} from './animations-live-rules.js?v=1';
 // Reuse the existing authenticated local normalizer. Vercel never connects to
 // localhost. Only matching events are sent, in bounded batches.

@@ -3,6 +3,7 @@
 (() => {
     const root = document.documentElement;
     const studio = root.dataset.paletteScope === 'studio';
+    if(studio)root.dataset.workspace=new URLSearchParams(location.search).get('workspace')==='ai'?'ai':'live';
     const read = key => { try { return localStorage.getItem(key); } catch { return null; } };
     const requested = new URLSearchParams(location.search).get('lang');
     const language = ['ro', 'en'].includes(requested) ? requested : read('tikinteract_language') === 'en' ? 'en' : 'ro';
@@ -27,7 +28,7 @@
     }
     function check() {
         if (revealed || preparing || !finished.has('language') || !finished.has('layout')) return;
-        if (studio && (!finished.has('auth') || !finished.has('navigation') || (window.tikInteractUser && !window.TikInteractAccount?.getStatus()))) return;
+        if (studio && (!finished.has('auth') || !finished.has('navigation') || !finished.has('workspace') || !finished.has('user-layout') || (window.tikInteractUser && !window.TikInteractAccount?.getStatus()))) return;
         preparing = true;
         // Font loading changes word widths; settle those before showing menus.
         Promise.race([document.fonts?.ready, new Promise(resolve => setTimeout(resolve, 1000))])

@@ -24,7 +24,8 @@ test('Studio reveals after its static layout, locale and actual account decision
  for(const part of ['language','layout','auth'])s.window.TikInteractStartup.ready(part);
  await s.paint();assert('uiPending' in s.root.dataset);assert.equal(s.root.dataset.theme,'blue');
  status={allowed:true};s.events['tikinteract:account-status']();await s.paint();assert.equal(s.root.dataset.uiReady,undefined);
- s.window.TikInteractStartup.ready('navigation');await s.paint();assert.equal(s.root.dataset.uiReady,'ready');
+ s.window.TikInteractStartup.ready('navigation');await s.paint();assert.equal(s.root.dataset.uiReady,undefined);
+ s.window.TikInteractStartup.ready('workspace');s.window.TikInteractStartup.ready('user-layout');await s.paint();assert.equal(s.root.dataset.uiReady,'ready');
 });
 test('blocked storage has safe defaults and a language URL override still works',()=>{
  const s=boot({denied:true,search:'?lang=ro'});assert.equal(s.root.lang,'ro');assert.equal(s.root.dataset.mode,'dark');assert.equal(s.root.dataset.theme,'burgundy');

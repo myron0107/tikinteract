@@ -16,7 +16,7 @@ test('Real async pipeline: private photo → moderation → image queue → vide
   await service.command(f.user,{action:'moderate',id:job.id,approve:true});await service.processOne();
   assert.equal((await f.store.one('animation_jobs',{id:job.id})).status,'image_queued');await f.db.exec("update public.animation_jobs set next_poll_at=now()");await service.processOne();
   assert.equal((await f.store.one('animation_jobs',{id:job.id})).status,'video_queued');await f.db.exec("update public.animation_jobs set next_poll_at=now()");await service.processOne();
-  const state=await service.command(f.user,{action:'state'});assert.equal(state.library.length,1);assert.equal(state.library[0].kind,'generated');assert.equal(state.jobs[0].status,'completed');assert.equal(state.wallet.purchased,90);assert.equal(f.calls.length,2);
+  const state=await service.command(f.user,{action:'state'});assert.equal(state.library.length,2);assert.equal(state.library[0].kind,'generated');assert(state.library.some(m=>m.kind==='character'&&m.mime==='image/jpeg'));assert.equal(state.jobs[0].status,'completed');assert.equal(state.wallet.purchased,90);assert.equal(f.calls.length,2);
   const json=JSON.stringify(state);assert(!json.includes('estimated_usd_micros'));assert(!json.includes('character_path'));assert(!json.includes('fixture.fal.media'));assert.equal(state.library[0].url.includes('/__media'),true);
   await service.processOne();assert.equal(f.calls.length,2);const download=await service.command(f.user,{action:'download',id:state.library[0].id});assert(download.url);assert.equal((await service.command(f.user,{action:'state'})).wallet.purchased,90);
  }finally{await f.db.close();}

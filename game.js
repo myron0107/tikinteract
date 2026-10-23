@@ -319,7 +319,7 @@ function renderLiveFavoriteSounds() {
     if (!tableBody || !emptyState || !count) return;
 
     tableBody.replaceChildren();
-    const favorites = soundEffectCatalog.filter((sound) => favoriteSoundIds.has(sound.id));
+    const favorites = [...favoriteSoundIds].map(id => soundEffectCatalog.find(sound => sound.id === id)).filter(Boolean);
     count.textContent = String(favorites.length);
     const audioFavoritesCount = document.getElementById('audio-favorites-count');
     if (audioFavoritesCount) audioFavoritesCount.textContent = `${favorites.length}/${MAX_AUDIO_FAVORITES}`;
@@ -390,6 +390,7 @@ function toggleSoundFavorite(soundId) {
 
     updateSoundFavoriteButton(soundId);
     renderLiveFavoriteSounds();
+    window.dispatchEvent(new CustomEvent('tikinteract:favorites', {detail: window.TikInteractFavorites?.get()}));
     if (!saved) {
         const message = 'Nu am putut salva favoritele în browser. Verifică setările de stocare.';
         setSoundLibraryStatus(message, true);
@@ -759,6 +760,7 @@ function toggleGameFavorite(gameId) {
     else favoriteGameIds.add(gameId);
     try { localStorage.setItem(GAME_FAVORITES_KEY, JSON.stringify([...favoriteGameIds])); } catch { /* Keep favorites usable in memory when storage is unavailable. */ }
     refreshGameFavorites();
+    window.dispatchEvent(new CustomEvent('tikinteract:favorites', {detail: window.TikInteractFavorites?.get()}));
 }
 
 function refreshGameFavorites() {
@@ -780,7 +782,7 @@ function renderQuickGames() {
     const list = document.querySelector('.studio-game-options');
     if (!list) return;
     const query = (document.getElementById('studio-quick-search')?.value || '').trim().toLocaleLowerCase('ro');
-    const games = studioGameCatalog.filter(game => query ? game.name.toLocaleLowerCase('ro').includes(query) : favoriteGameIds.has(game.id));
+    const games = query ? studioGameCatalog.filter(game => game.name.toLocaleLowerCase('ro').includes(query)) : [...favoriteGameIds].map(id => studioGameCatalog.find(game => game.id === id)).filter(Boolean);
     const selectedId = document.getElementById('live-game-select')?.value;
     list.replaceChildren();
     games.forEach(game => {
@@ -816,6 +818,20 @@ function renderQuickGames() {
         empty.textContent = query ? 'Niciun joc găsit.' : 'Adaugă jocuri cu ★ din Game Center.';
     }
 }
+
+// Ordered shortcuts only. Applying a layout never starts/stops audio or games.
+window.TikInteractFavorites = Object.freeze({
+    get: () => ({games:[...favoriteGameIds],audio:[...favoriteSoundIds]}),
+    catalog: () => ({games:studioGameCatalog.map(({id,name,image})=>({id,name,image})),audio:soundEffectCatalog.map(({id,name})=>({id,name,icon:soundEffectVisuals[name]?.[0]||'fa-wave-square',accent:soundEffectVisuals[name]?.[1]||'#fb7185'}))}),
+    set(value,{emit=false}={}) {
+        const gameIds = window.TikInteractPlatform?.getConfig()?.games?.filter(g=>g.status==='published').map(g=>g.id) || [...(document.getElementById('live-game-select')?.options||[])].map(o=>o.value);
+        if(Array.isArray(value.games))favoriteGameIds=new Set(value.games.filter(id=>gameIds.includes(id)).slice(0,40));
+        if(Array.isArray(value.audio))favoriteSoundIds=new Set(value.audio.filter(id=>soundEffectCatalog.some(s=>s.id===id)).slice(0,MAX_AUDIO_FAVORITES));
+        try{localStorage.setItem(GAME_FAVORITES_KEY,JSON.stringify([...favoriteGameIds]));localStorage.setItem(SOUND_FAVORITES_KEY,JSON.stringify([...favoriteSoundIds]));}catch{}
+        refreshGameFavorites();renderLiveFavoriteSounds();soundEffectCatalog.forEach(s=>updateSoundFavoriteButton(s.id));
+        if(emit)window.dispatchEvent(new CustomEvent('tikinteract:favorites',{detail:this.get()}));
+    }
+});
 
 function createLeaderboardPerson(profile, rank) {
     const person = document.createElement('div');
@@ -1743,7 +1759,7 @@ window.startTikInteractStudio = () => {
         runEngine();
         loadSoundEffectLibrary();
     }
-    connectToLocalServer();
+    if(document.documentElement.dataset.workspace !== 'ai')connectToLocalServer();
 };
 
 window.stopTikInteractStudio = () => {

@@ -2,12 +2,13 @@ import {mountAdminMaintenance} from './admin-maintenance.js?v=1';
 import {withPublicationDate} from './catalog-featured-data.js?v=1';
 import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES,studioVisibility} from './platform-schema.js?v=2';
 import {studioVisibilityControls} from './admin-studio-visibility.js?v=2';
-import {mountAdminAnimations} from './admin-animations.js?v=1';
+import {mountAdminFinance} from './admin-finance.js?v=1';
+import {mountAdminAnimations} from './admin-animations.js?v=2';
 import {SupportInbox,supportError} from './support-center.js';
 import {mountAdminAccessKeys} from './admin-access-keys.js';
 import {mountAdminUsers} from './admin-users.js';
 const $=id=>document.getElementById(id),escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const labels={animations:'Animații AI',overview:'Tablou de bord',messages:'Mesaje și suport',keys:'Chei de acces',games:'Jocuri',plans:'Abonamente',studio:'LIVE Studio',content:'Conținut',team:'Echipă și grade',history:'Istoric',maintenance:'Mentenan\u021b\u0103 \u0219i invita\u021bii'};
+const labels={finance:'Financiar',animations:'Animații AI',overview:'Tablou de bord',messages:'Mesaje și suport',keys:'Chei de acces',games:'Jocuri',plans:'Abonamente',studio:'LIVE Studio',content:'Conținut',team:'Echipă și grade',history:'Istoric',maintenance:'Mentenan\u021b\u0103 \u0219i invita\u021bii'};
 const roles={owner:'Proprietar',admin:'Administrator',editor:'Editor'};
 let client,state,draft,tab='overview',dirty=false,busy=false,authRequest=0,editingGame=null,previewToken,previewTarget='index.html';
 let messageInbox,messageDrafts=new Map(),messageRequests=new Map(),supportStats,keyManager,userManager,maintenanceManager,adminUserId;
@@ -15,10 +16,11 @@ function updateMaintenanceLabel(){
  const value=window.TikInteractLanguage?.get()==='en'?'Maintenance and invitations':'Mentenan\u021b\u0103 \u0219i invita\u021bii';
  const nav=document.querySelector('[data-maintenance-nav-label]');if(nav)nav.textContent=value;
  const animationLabel=window.TikInteractLanguage?.get()==='en'?'AI ANIMATIONS':'ANIMAȚII AI';const animationNav=document.querySelector('[data-admin-tab=animations] [data-native-i18n]');if(animationNav)animationNav.textContent=animationLabel;
- const title=$('admin-section-title');if(title){if(tab==='maintenance'||tab==='animations'){title.dataset.nativeI18n='';title.textContent=tab==='animations'?animationLabel:value;}else delete title.dataset.nativeI18n;}
+ const financeLabel=window.TikInteractLanguage?.get()==='en'?'FINANCE':'FINANCIAR';const financeNav=document.querySelector('[data-admin-tab=finance] span');if(financeNav)financeNav.textContent=financeLabel;
+ const title=$('admin-section-title');if(title){if(tab==='finance'){title.dataset.nativeI18n='';title.textContent=financeLabel;}else if(tab==='maintenance'||tab==='animations'){title.dataset.nativeI18n='';title.textContent=tab==='animations'?animationLabel:value;}else delete title.dataset.nativeI18n;}
 }
 window.addEventListener('tikinteract:language',updateMaintenanceLabel);updateMaintenanceLabel();
-window.addEventListener('tikinteract:language',()=>{if(['studio','animations'].includes(tab)&&state)render();});
+window.addEventListener('tikinteract:language',()=>{if(['studio','animations','finance'].includes(tab)&&state)render();});
 function closeInbox(clear=false){if(messageInbox){messageDrafts=messageInbox.drafts;messageRequests=messageInbox.requests;messageInbox.destroy({clear});messageInbox=null;}if(clear){messageDrafts.clear();messageRequests.clear();supportStats=null;}}
 function updateSupportStats(stats){supportStats=stats;document.querySelectorAll('[data-admin-unread]').forEach(b=>{b.textContent=stats.unread;b.hidden=!stats.unread;});}
 const status=(message,error=false)=>{$('admin-status').textContent=message;$('admin-status').hidden=!message;$('admin-status').dataset.error=String(error);};
@@ -35,7 +37,7 @@ async function load(){
   const next=await rpc('get_site_admin_state');if(request!==authRequest)return;
   if(!next?.draft||!roles[next.role])throw Error('Administrarea nu este încă activată. Rulează supabase/admin.sql în SQL Editor, apoi reîncarcă pagina.');
   adminUserId=data.user.id;state=next;draft=validateConfig(next.draft);dirty=false;$('admin-gate').hidden=true;$('admin-app').hidden=false;$('admin-identity').textContent=data.user.email;$('admin-role').textContent=roles[next.role];
-  $('admin-publish').hidden=next.role==='editor';document.querySelectorAll('[data-owner-only]').forEach(el=>el.hidden=next.role!=='owner');document.querySelectorAll('[data-support-staff-only]').forEach(el=>el.hidden=next.role==='editor');if((['team','maintenance'].includes(tab)&&next.role!=='owner')||(['messages','keys','animations'].includes(tab)&&next.role==='editor'))tab='overview';
+  $('admin-publish').hidden=next.role==='editor';document.querySelectorAll('[data-owner-only]').forEach(el=>el.hidden=next.role!=='owner');document.querySelectorAll('[data-support-staff-only]').forEach(el=>el.hidden=next.role==='editor');if((['team','maintenance'].includes(tab)&&next.role!=='owner')||(['messages','keys','animations','finance'].includes(tab)&&next.role==='editor'))tab='overview';
   $('admin-save-state').textContent='Ciornă v'+state.revision+' · publicat v'+state.publishedRevision;status('');render();
  }catch(error){if(request!==authRequest)return;const missing=/PGRST202|schema cache|function.*does not exist/i.test(error.code+' '+error.message);showGate(missing?'Administrarea trebuie activată':'Acces restricționat',missing?'Rulează fișierul supabase/admin.sql în Supabase → SQL Editor. Contul proprietarului trebuie să fie înregistrat și confirmat.':error.message?.includes('ADMIN_REQUIRED')?'Contul tău nu are un grad de administrare.':errorText(error));}
 }
@@ -50,7 +52,7 @@ function renderOverview(root){
  }).catch(e=>{if(request===authRequest&&tab==='overview')$('admin-recent-messages').innerHTML='<p class="admin-note">'+escape(supportError(e))+'</p>';});}
 }
 function render(){
- closeInbox();maintenanceManager?.destroy();maintenanceManager=null;keyManager?.destroy();keyManager=null;userManager?.destroy();userManager=null;document.querySelector('.admin-actions').hidden=['messages','keys','team','maintenance','animations'].includes(tab);$('admin-save-state').hidden=['messages','keys','team','maintenance','animations'].includes(tab);
+ closeInbox();maintenanceManager?.destroy();maintenanceManager=null;keyManager?.destroy();keyManager=null;userManager?.destroy();userManager=null;document.querySelector('.admin-actions').hidden=['messages','keys','team','maintenance','animations','finance'].includes(tab);$('admin-save-state').hidden=['messages','keys','team','maintenance','animations','finance'].includes(tab);
  $('admin-section-title').textContent=labels[tab];updateMaintenanceLabel();document.querySelectorAll('[data-admin-tab]').forEach(b=>b.classList.toggle('is-active',b.dataset.adminTab===tab));
  const root=$('admin-content');
  if(tab==='overview'){
@@ -59,6 +61,8 @@ function render(){
   root.innerHTML='<div id="admin-inbox"></div>';messageInbox=new SupportInbox({root:$('admin-inbox'),rpc,staff:true,onStats:updateSupportStats});messageInbox.drafts=messageDrafts;messageInbox.requests=messageRequests;messageInbox.start();
  }else if(tab==='keys'){
   keyManager=mountAdminAccessKeys({root,rpc});
+ }else if(tab==='finance'){
+  mountAdminFinance(root,{client,getUserId:()=>adminUserId});
  }else if(tab==='animations'){
   mountAdminAnimations(root,{client,getUserId:()=>adminUserId});
  }else if(tab==='plans'){
@@ -97,7 +101,7 @@ document.addEventListener('input',event=>{
 });
 document.addEventListener('click',async event=>{
  const b=event.target.closest('button');if(!b)return;
- if(b.dataset.adminTab){tab=b.dataset.adminTab;if((['team','maintenance'].includes(tab)&&state?.role!=='owner')||(['messages','keys','animations'].includes(tab)&&state?.role==='editor')){tab='overview';return;}status('');render();}
+ if(b.dataset.adminTab){tab=b.dataset.adminTab;if((['team','maintenance'].includes(tab)&&state?.role!=='owner')||(['messages','keys','animations','finance'].includes(tab)&&state?.role==='editor')){tab='overview';return;}status('');render();}
  if(b.dataset.overviewTicket){const id=b.dataset.overviewTicket;tab='messages';render();messageInbox.open(id);}
  if(b.hasAttribute('data-new-game'))editGame(null);
  if(b.dataset.editGame!==undefined)editGame(Number(b.dataset.editGame));
