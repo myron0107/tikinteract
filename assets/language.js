@@ -1,13 +1,13 @@
 import {localizeText} from './language-copy.js?v=6';
+import {createLanguagePreference} from './language-preference.js?v=1';
 
 const preferenceKey='tikinteract_language';
 const texts=new WeakMap(),attributes=new WeakMap();
 const attributeNames=['title','placeholder','aria-label','aria-valuetext','alt'];
 const ignored='script,style,code,pre,textarea,[contenteditable="true"],[translate="no"],#header-account-name,#account-display-name,#account-avatar-display,#tiktok-profile-name,.leaderboard-avatar,.header-account-avatar,a[href^="https://www.tiktok.com/@"]:not(.stream-tiktok-btn),.support-message-body,.support-message-text,.support-message-content,.audio-sound-card h4,.team-rankings li b,[data-native-i18n],.au-identity-name,.si-ticket>strong,.si-ticket-preview,.si-thread-heading h3,.si-message>p,.si-message header>strong,.gift-card h3,.gift-recent-info>strong,.gifts-stat:last-child>strong,[data-gifts-featured] h3,.home-gift-catalog-grid h3,.home-gifts-pick>span,.stream-creator-name,.stream-creator-handle';
-let language='ro',queued=false;
-try{if(localStorage.getItem(preferenceKey)==='en')language='en';}catch{}
 const requestedLanguage=new URLSearchParams(location.search).get('lang');
-if(['ro','en'].includes(requestedLanguage))language=requestedLanguage;
+const preference=createLanguagePreference({storage:{getItem:key=>localStorage.getItem(key),setItem:(key,value)=>localStorage.setItem(key,value),removeItem:key=>localStorage.removeItem(key)},getUser:()=>window.tikInteractUser,updateUser:change=>{const auth=window.tikInteractSupabase?.auth;if(!auth?.updateUser)throw Error('Language preference offline');return auth.updateUser(change);},apply:value=>choose(value,{persist:false}),requested:requestedLanguage});
+let language=preference.initial(),queued=false;
 
 function translate(value){return localizeText(value,'en');}
 
@@ -45,7 +45,7 @@ function close(){
 function choose(next,{persist=true}={}){
     if(!['ro','en'].includes(next))return;
     language=next;document.documentElement.lang=language;
-    if(persist){try{localStorage.setItem(preferenceKey,language);}catch{}}
+    if(persist)preference.record(language);
     document.querySelectorAll('[data-language-label]').forEach(node=>{node.textContent=language.toUpperCase();});
     document.querySelectorAll('[data-language-flag]').forEach(image=>{image.src=new URL(`./language-${language}.svg`,import.meta.url).href;});
     document.querySelector('.language-trigger')?.setAttribute('aria-label',language==='en'?'Choose language: English':'Alege limba: Română');
@@ -89,7 +89,7 @@ function initialize(){
         });
         document.addEventListener('click',event=>{if(!picker.contains(event.target))close();});
     }
-    choose(language,{persist:false});
+    choose(language,{persist:false});preference.restore();
     const dirty=new Set();
     new MutationObserver(records=>{
         for(const record of records){
@@ -109,6 +109,7 @@ function initialize(){
 
 window.addEventListener('message',event=>{if(parent!==window && event.source===parent && event.origin===location.origin && event.data?.type==='tikinteract:language' && ['ro','en'].includes(event.data.language))choose(event.data.language,{persist:false});});
 window.addEventListener('resize',close);
-window.addEventListener('storage',event=>{if(event.key===preferenceKey)choose(event.newValue==='en'?'en':'ro',{persist:false});});
+window.addEventListener('storage',event=>{if(event.key===preferenceKey)preference.external(event.newValue);});
+window.addEventListener('tikinteract:auth',()=>preference.restore());
 window.TikInteractLanguage=Object.freeze({get:()=>language,set:choose,close,locale:()=>language==='en'?'en-GB':'ro-RO',translate:value=>localizeText(value,language)});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();

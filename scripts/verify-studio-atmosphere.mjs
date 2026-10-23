@@ -29,9 +29,9 @@ try{
  await run('window.__gameFrame=document.getElementById("live-game-frame");window.__gameSource=__gameFrame.src;');
  await b.screenshot('.tools/atmosphere-review/game-custom.webp');
  await palette('racing');assert(await run('document.getElementById("live-game-frame")===__gameFrame&&__gameFrame.src===__gameSource'));await b.waitFor(fits);
- await run('TikInteractAppearance.set({mode:"light"})');await b.waitFor(fits);
+ await run('TikInteractStudioBackgrounds.set("neon-city");TikInteractAppearance.set({mode:"light"})');await b.waitFor(fits);
  const backdrop=await run('(()=>{const c=getComputedStyle(document.body,"::before");return{background:c.backgroundImage,filter:c.filter,opacity:c.opacity,panel:getComputedStyle(document.body).getPropertyValue("--sd-panel")}})()');
- assert(backdrop.background.includes('studio-cinematic.jpg'));assert(!backdrop.background.includes('239, 244, 255'));assert.equal(backdrop.filter,'none');assert.equal(backdrop.opacity,'1');
+ assert(backdrop.background.includes('neon-city.webp'));assert(!backdrop.background.includes('239, 244, 255'));assert.equal(backdrop.filter,'none');assert.equal(backdrop.opacity,'1');
  await click('[data-studio-tab=home]');await b.screenshot('.tools/atmosphere-review/home-light.webp');
  await b.page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await run('dispatchEvent(new Event("resize"))');
  assert(await run('document.documentElement.scrollWidth<=innerWidth+1'));await b.screenshot('.tools/atmosphere-review/mobile-light.webp');

@@ -1,0 +1,52 @@
+/* Compact dock, logo-only minimization and touch-sized window controls. */
+body#tikinteract-studio .studio-utilities-collapse{display:grid;place-items:center;width:24px;height:30px;min-width:24px;padding:4px;border:0;background:transparent;color:var(--sd-muted);cursor:pointer}
+body#tikinteract-studio .studio-utilities-collapse svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+body#tikinteract-studio #studio-dock-utilities .header-account-actions>:is(#studio-user-menu-wrap,#studio-account-avatar){order:90}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #studio-dock-utilities[data-utilities-collapsed=true] .studio-topbar-grip{display:grid;place-items:center}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #studio-dock-utilities[data-utilities-collapsed=true] .header-account-actions>:not(.studio-credit-balance):not(#studio-user-menu-wrap):not(#studio-account-avatar){display:none!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,#studio-user-dialog[open]){resize:none!important;clip-path:inset(0 round 17px);border-radius:17px!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail>.studio-dock-collapse{position:absolute;right:-7px;top:-7px;z-index:3;display:grid;place-items:center;width:24px;height:24px;min-height:24px;padding:4px;border:1px solid var(--sd-line);border-radius:50%;background:var(--sd-panel);color:var(--sd-text);cursor:pointer;touch-action:manipulation}
+body#tikinteract-studio .studio-dock-collapse svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail[data-collapsed=true]>.studio-dock-collapse{top:auto;bottom:3px;right:50%;transform:translateX(50%);width:28px;height:24px;border:0;background:transparent;box-shadow:none}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail[data-collapsed=true]{width:64px!important;min-height:0!important;height:82px!important;gap:0!important;padding:7px!important;border-radius:16px!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail[data-collapsed=true]>:not(.cp-rail-brand):not(.studio-dock-collapse){display:none!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail[data-collapsed=true] .cp-rail-brand{width:100%!important;height:44px!important;min-height:44px!important}
+body#tikinteract-studio .studio-window-resize{position:fixed;display:flex;align-items:flex-end;justify-content:flex-end;width:24px;height:24px;min-height:24px;padding:2px;border:0;border-radius:0;background:transparent!important;box-shadow:none!important;color:var(--sd-muted);cursor:nwse-resize;touch-action:none;z-index:8}
+body#tikinteract-studio .studio-window-resize[hidden]{display:none!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,#studio-user-dialog[open]){overflow-x:hidden!important}
+body#tikinteract-studio .studio-window-resize svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;opacity:.7}
+body#tikinteract-studio .studio-window-resize:is(:hover,:active) svg{opacity:1}
+@media(max-width:700px){
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail{width:52px!important;padding:8px 4px!important;gap:5px!important}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail :is(.studio-app-nav button,.studio-ai-nav button,.sw-rail-footer button,.studio-workspace-switch button)>span{display:none!important}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail :is(.studio-app-nav button,.studio-ai-nav button,.sw-rail-footer button){min-height:42px!important;padding:8px 0!important;gap:0!important}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail :is(.studio-app-nav,#studio-ai-nav){gap:4px!important}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-workspace-switch{margin:6px 0 10px!important;padding-bottom:10px}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .sw-rail-footer{padding-top:8px!important;margin-top:8px!important}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-app-rail[data-collapsed=true]{width:52px!important;height:74px!important;padding:4px!important}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #view-live .studio-widget-window{max-width:calc(100vw - 16px)!important;min-width:200px;max-height:calc(100dvh - 82px);resize:none}
+ html[data-mode] body#tikinteract-studio.studio-widget-desktop #studio-user-dialog[open]{max-width:calc(100vw - 16px);min-width:200px;max-height:calc(100dvh - 82px);resize:none}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #view-live .studio-widget-title{gap:8px!important;padding-left:12px!important;padding-right:12px!important}
+ body#tikinteract-studio .widget-title-identity{min-width:0;flex:1}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-widget-title h2{font-size:13px!important;white-space:normal}
+ body#tikinteract-studio .widget-title-grip{display:none}
+ body#tikinteract-studio .studio-window-resize{width:28px;height:28px;min-height:28px}
+ body#tikinteract-studio #studio-back-to-site span{display:none}
+ body#tikinteract-studio #studio-back-to-site{min-width:32px;min-height:32px;justify-content:center}
+}
+/* Shared window details: friendly headings, quiet scrollbars and flat close icons. */
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-widget-config>header{background:var(--sd-panel)!important;color:var(--sd-text);min-height:54px;padding:12px 16px;border-bottom:1px solid var(--sd-line)!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop .studio-widget-config h2{color:var(--sd-text)!important;font:600 14px/1.4 Inter,sans-serif}
+body#tikinteract-studio .widget-section-intro{margin:0 0 18px;color:var(--sd-muted);font:400 12px/1.65 Inter,sans-serif}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #studio-animations-panel.studio-widget-window>.an-heading>div:first-child{display:none}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop :is(.widget-title-close,.studio-widget-config>header>button,[data-sw-close]){display:grid;place-items:center;flex:none;width:28px;height:28px;min-width:28px;min-height:28px;padding:3px;border:0!important;border-radius:50%;background:transparent!important;box-shadow:none!important;filter:none!important;color:var(--sd-muted)!important;font:300 20px/1 Inter,sans-serif;cursor:pointer;transition:color .15s ease,opacity .15s ease}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop :is(.widget-title-close,.studio-widget-config>header>button,[data-sw-close]):hover{color:var(--sd-text)!important;opacity:.8;background:transparent!important;box-shadow:none!important}
+body#tikinteract-studio [data-sw-close] svg{width:17px;height:17px;stroke-width:1.5}
+body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,.sw-window-content,.studio-dock-scroll){scrollbar-width:thin;scrollbar-color:#8295b955 transparent;overscroll-behavior:contain}
+body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,.sw-window-content,.studio-dock-scroll)::-webkit-scrollbar{width:4px;height:4px}
+body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config)::-webkit-scrollbar-track{background:transparent;margin-block:58px var(--window-scroll-end,34px)}
+body#tikinteract-studio.studio-widget-desktop :is(.sw-window-content,.studio-dock-scroll)::-webkit-scrollbar-track{background:transparent;margin-block:12px 20px}
+body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,.sw-window-content,.studio-dock-scroll)::-webkit-scrollbar-thumb{border:1px solid transparent;border-radius:10px;background:#8295b955;background-clip:padding-box}
+body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,.sw-window-content,.studio-dock-scroll)::-webkit-scrollbar-button{display:none;width:0;height:0}
+body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,.sw-window-content,.studio-dock-scroll)::-webkit-scrollbar-corner{background:transparent}
+@supports selector(::-webkit-scrollbar){body#tikinteract-studio.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,.sw-window-content,.studio-dock-scroll){scrollbar-width:auto}}

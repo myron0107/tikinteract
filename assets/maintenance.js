@@ -6,8 +6,8 @@ const pairs={
  checking:['Verificăm accesul…','Checking access…'],ready:['Accesul tău este activ.','Your access is active.'],
  INVALID_INVITE:['Invitația este invalidă, expirată sau a fost deja folosită.','This invitation is invalid, expired or has already been used.'],RATE_LIMIT:['Prea multe încercări. Așteaptă un minut și încearcă din nou.','Too many attempts. Wait a minute and try again.'],OWNER_REQUIRED:['Acest cont nu are acces de proprietar.','This account does not have owner access.'],SETUP_REQUIRED:['Accesul de previzualizare nu este încă pregătit. Revino în curând.','Preview access is not ready yet. Please come back soon.'],SERVICE_UNAVAILABLE:['Accesul nu poate fi verificat acum. Încearcă din nou.','Access cannot be verified right now. Please try again.'],AUTH_ERROR:['Autentificarea nu a reușit. Verifică datele contului.','Sign-in failed. Check your account details.']
 };
-let language='ro',client,busy=false,message='',messageError=false;
-try{language=localStorage.getItem('tikinteract_language')==='en'?'en':'ro';}catch{}
+let language='en',client,busy=false,message='',messageError=false;
+try{language=localStorage.getItem('tikinteract_language')==='ro'?'ro':'en';}catch{}
 const t=key=>(pairs[key]||pairs.SERVICE_UNAVAILABLE)[language==='en'?1:0];
 function render(){
  document.documentElement.lang=language;document.title=t('title');document.querySelectorAll('[data-copy]').forEach(el=>el.textContent=t(el.dataset.copy));

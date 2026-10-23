@@ -34,3 +34,15 @@ html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-d
 body#tikinteract-studio.studio-widget-desktop .widget-panel-dot{display:block;width:10px;height:10px;border-radius:50%;background:#d76872;flex:none;box-shadow:none}
 body#tikinteract-studio.studio-widget-desktop [aria-checked=true]>.widget-panel-dot{background:#42ba86}
 @media(max-width:380px){body#tikinteract-studio.studio-widget-desktop .widget-panel-toggle{padding:8px;gap:7px;font-size:11px}}
+/* Opt out of atmosphere tinting without changing the image or remembered palette. */
+html[data-studio-palette=off][data-mode=dark] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop{--atmosphere-primary:#b9bdc5;--atmosphere-secondary:#b9bdc5;--atmosphere-solid:#626873;--sd-bg:#111215;--sd-panel:#1b1c20ed;--sd-soft:#26272ced;--sd-hover:#303137;--sd-accent:#d4d7de;--sd-secondary:#c2c6cf;--sd-solid:#626873;--sd-selection:#ffffff0e;--sd-text:#f0f1f4;--sd-muted:#b9bdc5}
+html[data-studio-palette=off][data-mode=light] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop{--atmosphere-primary:#b9bdc5;--atmosphere-secondary:#b9bdc5;--atmosphere-solid:#626873;--sd-bg:#e2e3e6;--sd-panel:#e9eaedf7;--sd-soft:#dcdde1;--sd-hover:#cfd1d6;--sd-accent:#4e535d;--sd-secondary:#626873;--sd-solid:#626873;--sd-selection:#0000000c;--sd-text:#292d35;--sd-muted:#5d626c}
+html[data-studio-palette=off][data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{background:url('./studio-cinematic.jpg') center/cover no-repeat;filter:none;opacity:1}
+body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-palette-neutral{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;height:auto;min-height:58px;margin-top:14px;padding:10px 12px;border:1px solid var(--sd-line);border-radius:10px;background:var(--sd-soft);color:var(--sd-text);font:600 12px/1.4 Inter,sans-serif;text-align:left;white-space:normal;cursor:pointer}
+body#tikinteract-studio .sd-palette-neutral small{display:block;margin-top:3px;font-size:10px;font-weight:400;color:var(--sd-muted)}
+body#tikinteract-studio .sd-palette-neutral>i{position:relative;width:30px;height:18px;flex:none;border-radius:12px;background:var(--sd-muted);opacity:.7}
+body#tikinteract-studio .sd-palette-neutral>i::after{content:'';position:absolute;top:3px;left:3px;width:12px;height:12px;border-radius:50%;background:var(--sd-panel);transition:transform .15s ease}
+body#tikinteract-studio .sd-palette-neutral[aria-checked=true]>i{background:var(--sd-text);opacity:1}
+body#tikinteract-studio .sd-palette-neutral[aria-checked=true]>i::after{transform:translateX(12px)}
+body#tikinteract-studio .sd-palette-panel{max-height:calc(100dvh - 100px);overflow-y:auto;overscroll-behavior:contain}
+@media(prefers-reduced-motion:reduce){body#tikinteract-studio .sd-palette-neutral>i::after{transition:none}}

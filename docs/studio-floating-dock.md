@@ -22,6 +22,10 @@ Modificările acestei etape privesc exclusiv Studio. Nu s-au modificat index.htm
 
 ## Design și imagine
 
+Actualizările selectorului de fundal, meniurilor compacte, redimensionării, încărcării și limbii sunt descrise în [studio-appearance.md](studio-appearance.md). Cele trei peisaje aprobate sunt disponibile în „Aspectul studioului”, alături de fundalurile simple; fundalul implicit se adaptează la Light/Dark.
+
+În „Alege atmosfera”, comutatorul „Fără paletă” dezactivează nuanțarea suprafețelor și a fundalului. Imaginea rămâne vizibilă, iar controalele folosesc griuri neutre în Light/Dark. Preferința este salvată local separat pentru LIVE și AI, păstrând paleta aleasă anterior. Dezactivarea comutatorului sau alegerea unei culori reactivează paleta. Verificat în browser: comutare, refresh, separarea LIVE/AI, imagine neschimbată și încadrare pe mobil.
+
 Fundalul original anime/cyberpunk a fost generat cu instrumentul imagegen integrat și optimizat la JPEG de aproximativ 313 KiB: `assets/studio-cinematic.jpg`. Imaginea nu conține interfață, texte sau statistici. Folosește un singur fundal static, fără video ori animație continuă. Panourile au culori semitransparente; blurul este limitat la dock și panoul de setări. Modul luminos și preferințele existente rămân disponibile.
 
 Promptul final folosit:

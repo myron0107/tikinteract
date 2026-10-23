@@ -8,7 +8,7 @@ const b=await openSkyShiftBrowser('studio-desktop-exclusive-review'),run=e=>b.ev
 const visible=()=>run('[...document.querySelectorAll(".studio-widget-window")].filter(n=>getComputedStyle(n).display!=="none").map(n=>n.id)');
 const click=selector=>run(`document.querySelector(${JSON.stringify(selector)}).click()`);
 async function drag(selector,dx,dy){
- const r=await run(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});const r=n.getBoundingClientRect();return{x:r.x+12,y:r.y+12}})()`);
+ const r=await run(`(()=>{const n=document.querySelector(${JSON.stringify(selector)});const r=n.getBoundingClientRect();return{x:r.x+(${JSON.stringify(selector)}==='.cp-rail-brand'?r.width/2:12),y:r.y+(${JSON.stringify(selector)}==='.cp-rail-brand'?r.height/2:12)}})()`);
  await b.page('Input.dispatchMouseEvent',{type:'mousePressed',button:'left',clickCount:1,...r});
  for(let i=1;i<=10;i++)await b.page('Input.dispatchMouseEvent',{type:'mouseMoved',buttons:1,x:r.x+dx*i/10,y:r.y+dy*i/10});
  if(selector.includes('data-sle-handle'))assert(await run('!document.querySelector(".sle-drop")'),'STREAM dragging creates no blue ghost rectangle');
@@ -22,11 +22,12 @@ try{
  // Start each browser review with fresh desktop preferences in this isolated QA profile.
  await run('localStorage.removeItem("tik_studio_desktop_v1:"+tikInteractUser.id)');await b.page('Page.reload');
  await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!!window.TikInteractWidgetDesktop&&!document.querySelector("[data-sle=edit]").disabled');
- await run('(async()=>{for(const id of TikInteractWidgetDesktop.get())await TikInteractWidgetDesktop.choose(id,false);TikInteractFloatingDock.reset();TikInteractAppearance.set({mode:"dark"})})()');
+ await run('(async()=>{TikInteractLanguage.set("ro",{persist:false});for(const id of TikInteractWidgetDesktop.get())await TikInteractWidgetDesktop.choose(id,false);TikInteractFloatingDock.collapse(false);TikInteractFloatingDock.reset();TikInteractAppearance.set({mode:"dark"});if(document.getElementById("studio-dock-utilities").dataset.utilitiesCollapsed==="true")document.querySelector("[data-utilities-collapse]").click()})()');
  assert(await run('!document.querySelector("[data-dock-resize],[data-dock-orientation]")'));
  assert(await run('document.querySelector(".studio-app-rail").dataset.orientation==="vertical"'));
  assert(await run('[...document.querySelectorAll(".studio-workspace-switch [data-workspace]")].every(b=>b.title&&b.getAttribute("aria-label")&&b.querySelector("svg")&&getComputedStyle(b.querySelector("span")).display==="none")'));
  await run('if(TikInteractFloatingDock.get().locked)document.querySelector("[data-dock-lock]").click()');
+ await run('new Promise(requestAnimationFrame)');
  await drag('.cp-rail-brand',120,65);assert((await run('TikInteractFloatingDock.get()')).x>100);assert(await run('document.querySelector(".studio-widget-config").hidden'));
  await click('[data-dock-lock]');const locked=await run('TikInteractFloatingDock.get().x');await drag('.cp-rail-brand',70,20);assert.equal(await run('TikInteractFloatingDock.get().x'),locked);await click('[data-dock-lock]');await run('TikInteractFloatingDock.reset()');
  assert(await run('getComputedStyle(document.querySelector("[data-credit-label]")).display==="none"&&getComputedStyle(document.querySelector("[data-credit-topup]")).display==="none"'));
@@ -61,6 +62,7 @@ try{
  await drag('#game-center-panel [data-widget-drag]',80,40);
  const position=await run('document.getElementById("game-center-panel").getBoundingClientRect().toJSON()');
  await b.page('Page.reload');await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!!window.TikInteractWidgetDesktop');
+ await run('TikInteractLanguage.set("ro",{persist:false})');
  assert.deepEqual(await visible(),['game-center-panel']);assert(Math.abs(await run('document.getElementById("game-center-panel").getBoundingClientRect().x')-position.x)<2);
  await b.screenshot('.tools/desktop-review/games.webp');
  await click('[data-credit-view]');await b.waitFor('TikInteractWidgetDesktop.getActive()==="media"&&document.querySelector("#studio-animations-panel>.studio-widget-title h2")?.textContent==="Credite AI"');

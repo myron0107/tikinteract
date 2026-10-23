@@ -7,6 +7,7 @@ const labels={games:['Favorite jocuri','Favorite games'],audio:['Favorite audio'
 const read=key=>{try{return JSON.parse(localStorage.getItem(key));}catch{return null;}},write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));}catch{}};
 const legacy={games:read('tikinteract_game_favorites_v1')||[],audio:read('tikinteract-audio-favorites')||[],animations:[]};
 let root,toolbar,dialog,ghost,user=null,epoch=0,profiles=[],active=null,draft=normalizeLayout(),saved=normalizeLayout(),editing=false,loaded=false,cloud='loading',busy=false,timer,drag=null,dragFrame=0,applying=false,library=[],message='';
+const panelIcons={games:'gamepad',audio:'table-cells',preview:'display',controls:'sliders',streamer:'tower-broadcast',stats:'chart-simple',feed:'bolt',audience:'comments',animations:'clapperboard'};
 const nodes=new Map(),originalHidden=new Map(),mode=()=>matchMedia('(max-width:700px)').matches?'mobile':'desktop',ids=()=>[...nodes.keys()];
 let platformDefault=null,defaultRevision=0,canPublish=false,restoredLayout=false;
 const presentationKey=()=>`tikinteract_control_room_layout:${user}`;
@@ -34,16 +35,18 @@ function apply(){
   node.hidden=custom?p.hidden:originalHidden.get(id);node.classList.toggle('sle-panel',custom);
   if(custom)for(const [key,value]of Object.entries({left:p.x*scale,top:p.y,width:p.w*scale,'panel-height':p.h}))node.style.setProperty('--sle-'+key,value+'px');
  }
- buttons();requestAnimationFrame(()=>window.TikInteractStudioLayout?.fitGame());
+ buttons();requestAnimationFrame(()=>{window.TikInteractStudioLayout?.fitGame();nodes.forEach(node=>window.TikInteractWidgetDesktop?.positionResize(node));});
 }
 function register(id,node){
  if(!node||nodes.has(id)||!/^[a-z][a-z0-9-]{0,49}$/.test(id))return;
  nodes.set(id,node);originalHidden.set(id,node.hidden);node.dataset.layoutPanel=id;
  const controls=document.createElement('div');controls.className='sle-panel-tools';controls.dataset.sleHandle=id;controls.tabIndex=0;controls.setAttribute('role','group');
- controls.innerHTML=`${ic('grip-vertical')}<span data-sle-label>${esc(name(id))}</span><button type="button" data-sle-left="${id}" aria-label="${t('Mută spre stânga','Move left')}">‹</button><button type="button" data-sle-up="${id}" aria-label="${t('Mută în sus','Move up')}">↑</button><button type="button" data-sle-down="${id}" aria-label="${t('Mută în jos','Move down')}">↓</button><button type="button" data-sle-right="${id}" aria-label="${t('Mută spre dreapta','Move right')}">›</button><button type="button" data-sle-hide="${id}" aria-label="${t('Ascunde panoul','Hide panel')}">${ic('xmark')}</button>`;
- node.append(controls);const resize=document.createElement('button');resize.type='button';resize.className='sle-resize';resize.dataset.sleResize=id;resize.innerHTML=ic('up-right-and-down-left-from-center');resize.setAttribute('aria-label',t('Redimensionează; săgețile modifică dimensiunea','Resize; arrow keys change size'));node.append(resize);
- // Some existing LIVE panels repaint their contents. Retain the same handles.
- new MutationObserver(()=>{if(!node.contains(controls))node.append(controls);if(!node.contains(resize))node.append(resize);}).observe(node,{childList:true});
+ controls.innerHTML=`<i class="fa-solid fa-grip-vertical sle-panel-grip" aria-hidden="true"></i><i class="fa-solid fa-${panelIcons[id]||'window-maximize'} sle-panel-icon" aria-hidden="true"></i><span data-sle-label>${esc(name(id))}</span><button type="button" data-sle-left="${id}" aria-label="${t('Mută spre stânga','Move left')}">‹</button><button type="button" data-sle-up="${id}" aria-label="${t('Mută în sus','Move up')}">↑</button><button type="button" data-sle-down="${id}" aria-label="${t('Mută în jos','Move down')}">↓</button><button type="button" data-sle-right="${id}" aria-label="${t('Mută spre dreapta','Move right')}">›</button><button type="button" data-sle-hide="${id}" aria-label="${t('Ascunde panoul','Hide panel')}">${ic('xmark')}</button>`;
+ node.prepend(controls);const resize=document.createElement('button');resize.type='button';resize.className='sle-resize';resize.dataset.sleResize=id;resize.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 13 10-10m-5 10 5-5"/></svg>';resize.setAttribute('aria-label',t('Redimensionează; săgețile modifică dimensiunea','Resize; arrow keys change size'));node.append(resize);
+ // LIVE updates may repaint a panel; keep its header and the same resize grip.
+ const attach=()=>window.TikInteractWidgetDesktop?.attachResize(node,resize);
+ attach();window.addEventListener('tikinteract:desktop-ready',attach,{once:true});
+ new MutationObserver(()=>{if(!node.contains(controls))node.prepend(controls);if(!resize.isConnected)node.append(resize);window.TikInteractWidgetDesktop?.positionResize(node);}).observe(node,{childList:true});
  for(const h of node.querySelectorAll(':scope>h3,:scope>h4,:scope>.live-favorites-heading,:scope>.studio-test-header'))h.dataset.sleDrag=id;
 }
 function showDialog(title,html){
@@ -143,10 +146,15 @@ async function loadUser(force=false){
  }catch(e){if(token!==epoch)return;cloud=/PGRST202|does not exist|schema cache/.test(String(e.message))?'missing':'offline';say(errorText(e));}
  finally{if(token===epoch){loaded=true;applyFavorites();apply();cache();window.TikInteractStartup?.ready('user-layout');if(!effectiveLayout()[mode()].find(p=>p.id==='animations')?.hidden)loadLibrary();}}
 }
+function enableFreeLayout(){if(!draft.custom||!restoredLayout){const r=root.getBoundingClientRect(),scale=CANVAS_WIDTH[mode()]/r.width;draft=structuredClone(effectiveLayout());for(const p of draft[mode()]){const n=nodes.get(p.id);if(!n||!n.getClientRects().length)continue;const b=n.getBoundingClientRect();Object.assign(p,{x:Math.max(0,Math.round((b.left-r.left)*scale)),y:Math.max(0,Math.round(b.top-r.top)),w:Math.min(CANVAS_WIDTH[mode()],Math.round(b.width*scale)),h:Math.max(96,Math.round(b.height)),hidden:false});}}draft.custom=true;restoredLayout=true;write(presentationKey(),true);apply();}
+function frontPanel(node){
+ const ordered=[...nodes.values()].sort((a,b)=>(parseInt(a.style.zIndex,10)||20)-(parseInt(b.style.zIndex,10)||20)).filter(n=>n!==node);ordered.push(node);
+ ordered.forEach((n,i)=>{n.style.zIndex=String(20+i*3);window.TikInteractWidgetDesktop?.positionResize(n);});
+}
 function startPointer(e){
  const free=document.body.classList.contains('studio-widget-desktop')&&e.target.closest('[data-sle-handle],[data-sle-resize]');
  if((!editing&&!free)||e.button!==0||drag)return;
- if(free&&!editing){if(!draft.custom||!restoredLayout){const r=root.getBoundingClientRect(),scale=CANVAS_WIDTH[mode()]/r.width;draft=structuredClone(effectiveLayout());for(const p of draft[mode()]){const n=nodes.get(p.id);if(!n||!n.getClientRects().length)continue;const b=n.getBoundingClientRect();Object.assign(p,{x:Math.max(0,Math.round((b.left-r.left)*scale)),y:Math.max(0,Math.round(b.top-r.top)),w:Math.min(CANVAS_WIDTH[mode()],Math.round(b.width*scale)),h:Math.max(96,Math.round(b.height)),hidden:false});}}draft.custom=true;restoredLayout=true;write(presentationKey(),true);apply();}
+ if(free&&!editing)enableFreeLayout();
  const favorite=e.target.closest('.studio-quick-item,.live-favorite-card');
  if(favorite){if(e.target.closest('.game-favorite-star,.live-favorite-remove'))return;const kind=favorite.closest('.studio-game-options')?'games':favorite.closest('#live-favorite-sounds')?'audio':'animations',id=kind==='games'?favorite.querySelector('[data-live-game]')?.dataset.liveGame:kind==='audio'?favorite.dataset.soundId:favorite.dataset.animationId;if(!id)return;drag={kind:'favorite',list:kind,id,node:favorite,startX:e.clientX,startY:e.clientY,moved:false};}
  else{
@@ -154,7 +162,7 @@ function startPointer(e){
   const id=handle.dataset.sleHandle||handle.dataset.sleDrag||handle.dataset.sleResize,p=draft[mode()].find(p=>p.id===id);if(!p)return;
   drag={kind:handle.dataset.sleResize?'resize':'move',id,node:nodes.get(id),start:{...p},startX:e.clientX,startY:e.clientY,moved:false};
  }
- drag.rect=drag.node.getBoundingClientRect();drag.scroll=scrollY;
+ frontPanel(drag.node);drag.rect=drag.node.getBoundingClientRect();drag.scroll=scrollY;
  drag.styles=Object.fromEntries(['transform','z-index','width','height','pointer-events'].map(k=>[k,[drag.node.style.getPropertyValue(k),drag.node.style.getPropertyPriority(k)]]));
  drag.pointer=e.pointerId;drag.capture=e.target;e.target.setPointerCapture?.(e.pointerId);e.preventDefault();
 }
@@ -167,7 +175,7 @@ function renderDrag(){
  dragFrame=0;const d=drag;if(!d?.point)return;
  const {x,y}=d.point,dx=x-d.startX,dy=y-d.startY+scrollY-d.scroll;
  if(Math.hypot(dx,dy)<5&&!d.moved)return;d.moved=true;
- document.body.classList.add('sle-dragging');d.node.classList.add('sle-moving');d.node.style.setProperty('z-index','15','important');d.node.style.setProperty('pointer-events','none');
+ document.body.classList.add('sle-dragging');d.node.classList.add('sle-moving');d.node.style.setProperty('pointer-events','none');
  const rect=root.getBoundingClientRect(),width=CANVAS_WIDTH[mode()],scale=rect.width/width;
  if(d.kind==='favorite'){
   const selector=d.list==='games'?'.studio-game-options .studio-quick-item':d.list==='audio'?'#live-favorite-sounds .live-favorite-card':'#studio-favorite-animations .live-favorite-card';
@@ -184,6 +192,7 @@ function renderDrag(){
   p.w=Math.max(min,Math.min(width-p.x,panelSnap(w)));p.h=Math.max(96,Math.min(1800,panelSnap(h)));
   d.node.style.setProperty('width',w*scale+'px','important');d.node.style.setProperty('height',h+'px','important');
  }
+ window.TikInteractWidgetDesktop?.positionResize(d.node);
  d.next=p;if(!document.body.classList.contains('studio-widget-desktop')){
   if(!ghost){ghost=document.createElement('div');ghost.className='sle-drop';root.append(ghost);}
   Object.assign(ghost.style,{left:p.x*scale+'px',top:p.y+'px',width:p.w*scale+'px',height:p.h+'px'});
@@ -210,7 +219,7 @@ function init(){
  toolbar.addEventListener('change',async e=>{if(!e.target.matches('[data-sle-profile]'))return;const next=e.target.value;active=next;restoredLayout=true;write(presentationKey(),true);draft=normalizeLayout(profiles.find(p=>p.id===next)?.layout,ids());saved=structuredClone(draft);applyFavorites();apply();cache();try{await rpc('studio_layout_select',{p_id:next});}catch(error){say(errorText(error));}});
  for(const [id,selector]of Object.entries({games:'.studio-game-picker',audio:'.studio-audio',preview:'.studio-stage',controls:'#studio-test-panel',streamer:'.studio-connection',stats:'.studio-stats',feed:'.studio-controls>.live-grid',audience:'#studio-live-session',animations:'#studio-favorite-animations'}))register(id,root.querySelector(selector));
  root.querySelectorAll('[data-layout-panel]').forEach(node=>register(node.dataset.layoutPanel,node));
- root.addEventListener('pointerdown',startPointer,{capture:true});document.addEventListener('pointermove',pointerMove);document.addEventListener('pointerup',()=>endPointer(true));document.addEventListener('pointercancel',()=>endPointer(false));
+ root.addEventListener('pointerdown',e=>{const panel=e.target.closest('[data-layout-panel]');if(panel)frontPanel(panel);startPointer(e);},{capture:true});document.addEventListener('pointerdown',e=>{if(e.target.closest('[data-sle-resize]')&&!root.contains(e.target))startPointer(e);},{capture:true});document.addEventListener('pointermove',pointerMove);document.addEventListener('pointerup',()=>endPointer(true));document.addEventListener('pointercancel',()=>endPointer(false));
  root.addEventListener('click',async e=>{
   const hide=e.target.closest('[data-sle-hide]'),move=e.target.closest('[data-sle-up],[data-sle-down],[data-sle-left],[data-sle-right]');
   if(hide&&!editing&&document.body.classList.contains('studio-widget-desktop')){window.TikInteractWidgetDesktop?.choose(hide.dataset.sleHide,false);return;}
@@ -220,7 +229,7 @@ function init(){
   if(e.target.closest('[data-sle-add-animations]')){await favoritePicker('animations');return;}
   const play=e.target.closest('[data-sle-play]');if(play&&!editing){play.disabled=true;try{await animationAPI({action:'event',manual:true,clip:play.dataset.slePlay,requestId:crypto.randomUUID()});say(t('Animație adăugată în coada LIVE.','Animation added to the LIVE queue.'));}catch(error){say(animationError(error.message));}finally{play.disabled=false;}}
  });
- root.addEventListener('keydown',e=>{const resize=e.target.closest('[data-sle-resize]');if(!resize||!editing||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();const p=draft[mode()].find(p=>p.id===resize.dataset.sleResize);p.w=Math.max(mode()==='mobile'?120:160,Math.min(CANVAS_WIDTH[mode()]-p.x,p.w+(e.key==='ArrowRight'?8:e.key==='ArrowLeft'?-8:0)));p.h=Math.max(96,Math.min(1800,p.h+(e.key==='ArrowDown'?8:e.key==='ArrowUp'?-8:0)));apply();});
+ document.addEventListener('keydown',e=>{const resize=e.target.closest('[data-sle-resize]'),handle=e.target.closest('[data-sle-handle]');if((!resize&&!handle)||(!editing&&!document.body.classList.contains('studio-widget-desktop'))||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key)||(!resize&&e.target!==handle))return;e.preventDefault();if(!editing)enableFreeLayout();if(!resize){const p=draft[mode()].find(p=>p.id===handle.dataset.sleHandle);p.x=Math.max(0,Math.min(CANVAS_WIDTH[mode()]-p.w,p.x+(e.key==='ArrowRight'?8:e.key==='ArrowLeft'?-8:0)));p.y=Math.max(0,Math.min(12000,p.y+(e.key==='ArrowDown'?8:e.key==='ArrowUp'?-8:0)));apply();queueWorkspaceSave();return;}const p=draft[mode()].find(p=>p.id===resize.dataset.sleResize);p.w=Math.max(mode()==='mobile'?120:160,Math.min(CANVAS_WIDTH[mode()]-p.x,p.w+(e.key==='ArrowRight'?8:e.key==='ArrowLeft'?-8:0)));p.h=Math.max(96,Math.min(1800,p.h+(e.key==='ArrowDown'?8:e.key==='ArrowUp'?-8:0)));apply();queueWorkspaceSave();});
  window.addEventListener('tikinteract:favorites',e=>{if(!user||applying||!loaded)return;Object.assign(draft.favorites,e.detail);changedFavorites();});
  window.addEventListener('tikinteract:animation-state',e=>{library=e.detail.library;renderAnimations();});
  window.addEventListener('tikinteract:auth',()=>loadUser());
@@ -231,7 +240,7 @@ function init(){
  window.addEventListener('blur',()=>endPointer(false));
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drag){e.preventDefault();endPointer(false);apply();}});
  new MutationObserver(records=>{let added=false;for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;for(const panel of [node,...node.querySelectorAll('[data-layout-panel]')]){const id=panel.dataset.layoutPanel;if(id&&!nodes.has(id)){register(id,panel);added=true;}}}if(added){draft=normalizeLayout(draft,ids());apply();}}).observe(root,{childList:true,subtree:true});
- window.TikInteractStudioPersonalization=Object.freeze({getFavorites:()=>structuredClone(draft.favorites),toggleAnimation,registerPanel:(id,node)=>{register(id,node);draft=normalizeLayout(draft,ids());apply();},getLayout:()=>structuredClone(effectiveLayout()),isEditing:()=>editing});
+ window.TikInteractStudioPersonalization=Object.freeze({getFavorites:()=>structuredClone(draft.favorites),toggleAnimation,registerPanel:(id,node)=>{register(id,node);draft=normalizeLayout(draft,ids());apply();},getLayout:()=>structuredClone(effectiveLayout()),setPanelVisible:(id,visible)=>{const p=draft[mode()].find(p=>p.id===id);if(!p)return;const changed=p.hidden===visible;p.hidden=!visible;originalHidden.set(id,!visible);apply();if(changed)queueWorkspaceSave();},isEditing:()=>editing});
  loadUser();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

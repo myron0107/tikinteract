@@ -6,7 +6,7 @@
     if(studio)root.dataset.workspace=new URLSearchParams(location.search).get('workspace')==='ai'?'ai':'live';
     const read = key => { try { return localStorage.getItem(key); } catch { return null; } };
     const requested = new URLSearchParams(location.search).get('lang');
-    const language = ['ro', 'en'].includes(requested) ? requested : read('tikinteract_language') === 'en' ? 'en' : 'ro';
+    const language = ['ro', 'en'].includes(requested) ? requested : read('tikinteract_language') === 'ro' ? 'ro' : 'en';
     const mode = read('tikinteract_mode') === 'light' ? 'light' : 'dark';
     const theme = studio && read('tikinteract_brand') === 'blue' ? 'blue' : 'burgundy';
     root.lang = language;
