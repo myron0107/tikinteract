@@ -1,5 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/animations/index.js": {"maxDuration": 120},
+    "api/animations/worker.js": {"maxDuration": 120}
+  },
   "redirects": [
     {
       "source": "/GAME/NEON-ASCENT/:path*",

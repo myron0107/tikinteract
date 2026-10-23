@@ -12,6 +12,7 @@ import {fetchTikTokGiftCatalog} from './lib/tiktok-gift-source.js';
 import {maintenanceService} from './lib/maintenance-service.js';
 import {nodeMaintenanceHandler,isMaintenancePublic,PRIVATE_HEADERS} from './lib/maintenance-http.js';
 import {nodeBillingHandler} from './lib/billing-http.js';
+import {nodeAnimationHandler} from './lib/animations-http.js';
 
 const ROOT = path.dirname(fileURLToPath(import.meta.url));
 const importedGiftCatalog = JSON.parse(await readFile(path.join(ROOT, 'assets/tiktok-gifts-catalog.json'), 'utf8'));
@@ -36,6 +37,7 @@ const STATIC_FILES = new Set([
     '/404.html',
     '/maintenance.html',
     '/live-studio.html',
+    '/animation-overlay.html',
     '/admin.html',
     '/style.css',
     '/game.js',
@@ -124,6 +126,9 @@ const server = createServer(async (request, response) => {
 
     if (pathname === '/api/billing' || pathname === '/api/billing/') {
         await nodeBillingHandler(request,response);return;
+    }
+    if (['/api/animations','/api/animations/','/api/animations/worker','/api/animations/overlay'].includes(pathname)) {
+        await nodeAnimationHandler(request,response);return;
     }
     if(pathname.startsWith('/GAME/NEON-ASCENT/')){
         const destination=new URL(request.url,`http://${HOST}:${PORT}`);

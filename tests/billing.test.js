@@ -95,7 +95,8 @@ test('real billing SQL: permissions, published pricing, replay safety, keys, upg
   create table storage.objects(id uuid default gen_random_uuid(),bucket_id text,name text);alter table storage.objects enable row level security;
   create function storage.foldername(text) returns text[] language sql immutable as $$select string_to_array($1,'/')$$;`);
   await db.query('insert into auth.users(id,email,email_confirmed_at) values($1,$2,now()),($3,$4,now())',[user,'mironsergiuflorin@gmail.com',other,'other@example.invalid']);
-  for(const file of ['admin.sql','access-keys.sql','billing.sql'])await db.exec(await readFile(new URL('../supabase/'+file,import.meta.url),'utf8'));
+  for(const file of ['admin.sql','access-keys.sql','billing.sql','animations.sql'])await db.exec(await readFile(new URL('../supabase/'+file,import.meta.url),'utf8'));
+  await db.exec(`update public.animation_settings set config=jsonb_set(config,'{monthlyCredits}','{"play_pass":5,"play_pass_pro":15}')`);
   async function rpc(role,id,sql,args=[]){await db.exec(`reset role;set request.jwt.claim.sub='${id||''}';set role ${role}`);try{return(await db.query('select public.'+sql+' as data',args)).rows[0].data;}finally{await db.exec('reset role');}}
   const service=(sql,args=[])=>rpc('service_role',null,sql,args),get=id=>rpc('authenticated',id,'get_my_access()');
   const reserve=(id=user,plan='play_pass',live=true,amount=2900,request=randomUUID())=>service('billing_create_order($1,$2,$3,$4,\'ron\',$5,\'ro\')',[id,plan,request,amount,live]);
@@ -110,9 +111,11 @@ test('real billing SQL: permissions, published pricing, replay safety, keys, upg
   await assert.rejects(paid(o,{amount:1}),/BILLING_PAYMENT_MISMATCH/);
   await paid(o);const initial=await get(user);assert.equal(initial.plan,'play_pass');assert.equal(initial.periods.length,1);
   await paid(o);assert.equal((await get(user)).periods.length,1);
+  assert.equal((await service('animation_wallet($1,false)',[user])).included,5,'Existing paid access grants its included AI lot exactly once');
   const pro=await reserve(user,'play_pass_pro',true,7900);await paid(pro);const upgraded=await get(user);assert.equal(upgraded.plan,'play_pass_pro');
   assert(Date.parse(upgraded.periods.find(p=>p.plan==='play_pass').endsAt)>Date.parse(initial.validUntil));
   const testOrder=await reserve(other,'play_pass',false);assert.equal((await paid(testOrder)).status,'test_paid');assert.equal((await get(other)).plan,'free');
+  assert.equal((await service('animation_wallet($1,true)',[other])).included,5);assert.equal((await service('animation_wallet($1,false)',[other])).included,0,'Test payments cannot fund live AI credit lots');
   const reversed=await reserve(other);assert.equal((await paid(reversed,{reversed:'refunded'})).status,'refunded');assert.equal((await get(other)).plan,'free');
   await service('billing_reverse_order($1,\'refunded\')',['pi_'+pro.id.replaceAll('-','')]);await paid(pro);assert.equal((await get(user)).plan,'free','Replayed completion cannot revive refunded PRO or consume preserved future Pass');
   const history=await rpc('authenticated',user,'get_my_billing_orders()');assert.equal(history.length,2);assert.equal((await rpc('authenticated',other,'get_my_billing_orders()')).length,2);assert(!JSON.stringify(history).includes(other));

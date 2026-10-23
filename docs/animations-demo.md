@@ -1,5 +1,10 @@
 # Studio animation DEMO
 
+Historical reference: the active entry point now uses the real integration on
+`codex/animations-production`. See [activation and implementation](animations-production.md).
+The DEMO controller and local example data described below are no longer loaded
+by the Studio entry point on that branch.
+
 Branch: `codex/studio-animations-demo`. No deployment or database migration.
 
 The fourth Studio rail tab opens `#studio-animations-panel` through the existing
