@@ -2,7 +2,7 @@ export const PANEL_DEFAULTS=[
  {id:'games',x:1,y:1,w:3,h:9},{id:'audio',x:1,y:10,w:3,h:10},
  {id:'preview',x:4,y:1,w:6,h:21},{id:'controls',x:10,y:1,w:3,h:12},
  {id:'streamer',x:10,y:13,w:3,h:5},{id:'stats',x:10,y:18,w:3,h:4},
- {id:'feed',x:10,y:22,w:3,h:7,hidden:true},{id:'animations',x:1,y:20,w:3,h:7,hidden:true}
+ {id:'feed',x:10,y:22,w:3,h:7,hidden:true},{id:'animations',x:1,y:20,w:3,h:7,hidden:false}
 ];
 const clamp=(n,a,b)=>Math.min(b,Math.max(a,Number.isFinite(n)?Math.round(n):a));
 function gridLayout(value,ids){
@@ -27,9 +27,9 @@ function gridLayout(value,ids){
 // use a stable reference width; only the horizontal axis adapts to the viewport.
 export const CANVAS_WIDTH={desktop:1280,mobile:384};
 export const snap=n=>Math.round(n/8)*8;
-export function normalizeLayout(value,ids=PANEL_DEFAULTS.map(p=>p.id)){
+export function normalizeLayout(value,ids=PANEL_DEFAULTS.map(p=>p.id),{migrateAnimationFavorites=false}={}){
  const legacy=value?.version!==2?gridLayout(value,ids):null;
- const defaults=gridLayout(null,ids),out={version:2,custom:!!value?.custom,desktop:[],mobile:[],favorites:(legacy||gridLayout({favorites:value?.favorites},ids)).favorites};
+ const defaults=gridLayout(null,ids),out={version:2,animationFavorites:true,custom:!!value?.custom,desktop:[],mobile:[],favorites:(legacy||gridLayout({favorites:value?.favorites},ids)).favorites};
  for(const mode of ['desktop','mobile']){
   const width=CANVAS_WIDTH[mode],seen=new Set(),source=legacy?.[mode]||value?.[mode]||[];
   const convert=p=>({id:p.id,x:Math.round((p.x-1)*width/12),y:(p.y-1)*36,w:Math.round(p.w*width/12-(mode==='mobile'?0:12)),h:p.h*36-12,hidden:!!p.hidden});
@@ -40,6 +40,7 @@ export function normalizeLayout(value,ids=PANEL_DEFAULTS.map(p=>p.id)){
    out[mode].push({id:p.id,x:clamp(p.x,0,width-w),y:clamp(p.y,0,12000),w,h:clamp(p.h,96,1800),hidden:p.hidden===true});
   }
   for(const p of defaults[mode])if(!seen.has(p.id))out[mode].push(convert(p));
+  if(migrateAnimationFavorites&&value?.animationFavorites!==true){const panel=out[mode].find(p=>p.id==='animations'),audio=out[mode].find(p=>p.id==='audio');if(panel?.hidden){panel.hidden=false;panel.y=Math.max(panel.y,(audio?.y||0)+(audio?.h||0)+12);panel.h=Math.max(216,panel.h);}}
  }
  return out;
 }

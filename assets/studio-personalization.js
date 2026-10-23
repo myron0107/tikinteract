@@ -1,6 +1,6 @@
-import {CANVAS_WIDTH,snap,normalizeLayout,moveFavorite} from './studio-personalization-model.js?v=1';
+import {CANVAS_WIDTH,snap,normalizeLayout,moveFavorite} from './studio-personalization-model.js?v=2';
 import {esc,ic} from './creator-ui.js?v=4';
-import {loadAnimationState} from './animations-state.js?v=1';
+import {loadAnimationState} from './animations-state.js?v=2';
 import {animationAPI,animationError} from './animations-client.js?v=2';
 const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 const labels={games:['Favorite jocuri','Favorite games'],audio:['Favorite audio','Favorite audio'],preview:['Joc','Game'],controls:['Control joc','Game controls'],streamer:['TikTok LIVE','TikTok LIVE'],stats:['Scor și cadouri','Score and gifts'],feed:['Evenimente LIVE','LIVE events'],animations:['Favorite animații','Favorite animations']};
@@ -49,7 +49,7 @@ function showDialog(title,html){
 }
 function renderAnimations(){
  const panel=nodes.get('animations');if(!panel)return;const container=panel.querySelector('[data-sle-animation-grid]');
- container.innerHTML=draft.favorites.animations.map(id=>library.find(c=>c.id===id&&c.mime==='video/mp4')).filter(Boolean).map(c=>`<article class="live-favorite-card" data-animation-id="${c.id}"><button type="button" data-sle-remove-animation="${c.id}" class="live-favorite-remove" aria-label="${t('Elimină din favorite','Remove favorite')}">${ic('star')}</button><button type="button" data-sle-play="${c.id}">${ic('film')}<span>${esc(c.title)}</span></button></article>`).join('')||`<p>${t('Adaugă videoclipuri din biblioteca comună.','Add videos from the shared library.')}</p>`;
+ container.innerHTML=draft.favorites.animations.map(id=>library.find(c=>c.id===id&&c.mime==='video/mp4')).filter(Boolean).map((c,index)=>`<article class="live-favorite-card" data-animation-id="${c.id}"><div class="live-favorite-card-topline"><span class="live-favorite-number">${index+1}</span><button type="button" data-sle-remove-animation="${c.id}" class="live-favorite-remove" aria-label="${t('Elimină din favorite','Remove favorite')}">${ic('star')}</button></div><button type="button" class="live-favorite-trigger" data-sle-play="${c.id}"><span class="live-favorite-icon">${ic('film')}</span><span class="live-favorite-title">${esc(c.title)}</span></button></article>`).join('')||`<p>${t('Adaugă videoclipuri din biblioteca comună.','Add videos from the shared library.')}</p>`;
 }
 async function loadLibrary(){try{const state=await loadAnimationState();library=state.library;renderAnimations();return library;}catch(e){say(animationError(e.message));return [];}}
 async function save({lock=true}={}){
@@ -68,16 +68,16 @@ async function save({lock=true}={}){
 }
 function changedFavorites(){
  applyFavorites();cache();
- if(!editing){clearTimeout(timer);timer=setTimeout(()=>save({lock:false}),700);}
+ if(!editing){clearTimeout(timer);timer=setTimeout(()=>{if(!editing)save({lock:false});},700);}
  window.dispatchEvent(new CustomEvent('tikinteract:layout-favorites',{detail:structuredClone(draft.favorites)}));
 }
 function toggleAnimation(id){
  if(!user)return;const list=draft.favorites.animations;if(list.includes(id))draft.favorites.animations=list.filter(x=>x!==id);else if(list.length<40)list.push(id);changedFavorites();
 }
-async function favoritePicker(){
+async function favoritePicker(only){
  await loadLibrary();const catalog=window.TikInteractFavorites?.catalog()||{games:[],audio:[]};
  const group=(kind,title,items)=>`<section><h3>${title}</h3>${items.map(item=>`<label><input type="checkbox" data-favorite-kind="${kind}" value="${esc(item.id)}" ${draft.favorites[kind].includes(item.id)?'checked':''}>${esc(item.name||item.title)}</label>`).join('')||`<p>${t('Niciun fișier disponibil.','No files available.')}</p>`}</section>`;
- showDialog(t('Favoritele tale','Your favorites'),`<p>${t('Sunt scurtături. Eliminarea nu șterge fișierele originale. În modul de editare poți trage cardurile pentru a le reordona.','These are shortcuts. Removing one never deletes the original file. Drag cards in edit mode to reorder them.')}</p><div class="sle-panel-picker">${group('games',t('Jocuri','Games'),catalog.games)}${group('audio',t('Sunete','Sounds'),catalog.audio)}${group('animations',t('Animații','Animations'),library.filter(c=>c.mime==='video/mp4'))}</div>`);
+ showDialog(t('Favoritele tale','Your favorites'),`<p>${t('Sunt scurtături. Eliminarea nu șterge fișierele originale. În modul de editare poți trage cardurile pentru a le reordona.','These are shortcuts. Removing one never deletes the original file. Drag cards in edit mode to reorder them.')}</p><div class="sle-panel-picker">${!only?group('games',t('Jocuri','Games'),catalog.games)+group('audio',t('Sunete','Sounds'),catalog.audio):''}${group('animations',t('Animații','Animations'),library.filter(c=>c.mime==='video/mp4'))}</div>`);
  dialog.querySelectorAll('[data-favorite-kind]').forEach(input=>input.onchange=()=>{const kind=input.dataset.favoriteKind,list=draft.favorites[kind],limit=kind==='audio'?12:40;if(input.checked&&!list.includes(input.value)&&list.length<limit)list.push(input.value);else draft.favorites[kind]=list.filter(x=>x!==input.value);input.checked=draft.favorites[kind].includes(input.value);changedFavorites();});
 }
 function panelPicker(){
@@ -94,6 +94,7 @@ async function action(event){
  const button=event.target.closest('[data-sle]');if(!button)return;
  switch(button.dataset.sle){
   case 'edit':{
+   clearTimeout(timer);
    saved=structuredClone(draft);
    draft=structuredClone(effectiveLayout());
    if(!draft.custom){const r=root.getBoundingClientRect(),scale=CANVAS_WIDTH[mode()]/r.width;for(const p of draft[mode()]){const n=nodes.get(p.id);if(!n||n.hidden||!n.getClientRects().length)continue;const b=n.getBoundingClientRect();Object.assign(p,{x:Math.max(0,Math.round((b.left-r.left)*scale)),y:Math.max(0,Math.round(b.top-r.top)),w:Math.min(CANVAS_WIDTH[mode()],Math.round(b.width*scale)),h:Math.max(96,Math.round(b.height))});}}
@@ -125,14 +126,14 @@ async function loadUser(force=false){
  draft=normalizeLayout(null,ids());saved=structuredClone(draft);applyFavorites();apply();
  if(!user){loaded=true;cloud='offline';apply();window.TikInteractStartup?.ready('user-layout');return;}
  const cached=read(key());if(Array.isArray(cached?.profiles)){
-  profiles=cached.profiles.filter(p=>typeof p.id==='string'&&typeof p.name==='string'&&Number.isInteger(p.revision)).slice(0,8).map(p=>({...p,layout:normalizeLayout(p.layout,ids())}));active=profiles.some(p=>p.id===cached.active)?cached.active:profiles[0]?.id;
+  profiles=cached.profiles.filter(p=>typeof p.id==='string'&&typeof p.name==='string'&&Number.isInteger(p.revision)).slice(0,8).map(p=>({...p,layout:normalizeLayout(p.layout,ids(),{migrateAnimationFavorites:true})}));active=profiles.some(p=>p.id===cached.active)?cached.active:profiles[0]?.id;
  }
  if(!profiles.length){let favorites={games:[],audio:[],animations:[]};if(!read('tikinteract_layout_legacy_owner')){favorites=legacy;write('tikinteract_layout_legacy_owner',user);}profiles=[{id:crypto.randomUUID(),name:t('Principal','Main'),revision:0,layout:normalizeLayout({favorites},ids())}];active=profiles[0].id;}
  draft=normalizeLayout(profiles.find(p=>p.id===active).layout,ids());saved=structuredClone(draft);applyFavorites();apply();
  try{
   const [result,context]=await Promise.all([rpc('studio_layout_list'),rpc('studio_layout_context')]);if(token!==epoch)return;
   canPublish=context?.can_publish===true;platformDefault=context?.default?.layout?normalizeLayout(context.default.layout,ids()):null;defaultRevision=context?.default?.revision||0;write('tikinteract_layout_default_v1',context?.default||null);
-  if(result.profiles?.length){const cached=profiles,preferred=active;profiles=result.profiles.map(p=>{const local=cached.find(q=>q.id===p.id);return {...p,layout:normalizeLayout(local?.pending&&local.revision===p.revision?local.layout:p.layout,ids()),pending:!!(local?.pending&&local.revision===p.revision)};});profiles.push(...cached.filter(p=>p.pending&&p.revision===0&&!profiles.some(q=>q.id===p.id)).slice(0,8-profiles.length));active=profiles.some(p=>p.id===preferred&&p.pending)?preferred:profiles.some(p=>p.id===result.active)?result.active:profiles[0].id;draft=normalizeLayout(profiles.find(p=>p.id===active).layout,ids());saved=structuredClone(draft);}
+  if(result.profiles?.length){const cached=profiles,preferred=active;profiles=result.profiles.map(p=>{const local=cached.find(q=>q.id===p.id);return {...p,layout:normalizeLayout(local?.pending&&local.revision===p.revision?local.layout:p.layout,ids(),{migrateAnimationFavorites:true}),pending:!!(local?.pending&&local.revision===p.revision)};});profiles.push(...cached.filter(p=>p.pending&&p.revision===0&&!profiles.some(q=>q.id===p.id)).slice(0,8-profiles.length));active=profiles.some(p=>p.id===preferred&&p.pending)?preferred:profiles.some(p=>p.id===result.active)?result.active:profiles[0].id;draft=normalizeLayout(profiles.find(p=>p.id===active).layout,ids());saved=structuredClone(draft);}
   cloud=profiles.some(p=>p.pending)?'offline':'ready';
  }catch(e){if(token!==epoch)return;cloud=/PGRST202|does not exist|schema cache/.test(String(e.message))?'missing':'offline';say(errorText(e));}
  finally{if(token===epoch){loaded=true;applyFavorites();apply();cache();window.TikInteractStartup?.ready('user-layout');if(!effectiveLayout()[mode()].find(p=>p.id==='animations')?.hidden)loadLibrary();}}
@@ -206,7 +207,7 @@ function init(){
   if(hide&&editing){draft[mode()].find(p=>p.id===hide.dataset.sleHide).hidden=true;apply();return;}
   if(move&&editing){const id=move.dataset.sleUp||move.dataset.sleDown||move.dataset.sleLeft||move.dataset.sleRight,p=draft[mode()].find(p=>p.id===id);p.x=Math.max(0,Math.min(CANVAS_WIDTH[mode()]-p.w,p.x+(move.dataset.sleLeft?-8:move.dataset.sleRight?8:0)));p.y=Math.max(0,Math.min(12000,p.y+(move.dataset.sleUp?-8:move.dataset.sleDown?8:0)));apply();return;}
   const remove=e.target.closest('[data-sle-remove-animation]');if(remove){toggleAnimation(remove.dataset.sleRemoveAnimation);return;}
-  if(e.target.closest('[data-sle-add-animations]')){await favoritePicker();return;}
+  if(e.target.closest('[data-sle-add-animations]')){await favoritePicker('animations');return;}
   const play=e.target.closest('[data-sle-play]');if(play&&!editing){play.disabled=true;try{await animationAPI({action:'event',manual:true,clip:play.dataset.slePlay,requestId:crypto.randomUUID()});say(t('Animație adăugată în coada LIVE.','Animation added to the LIVE queue.'));}catch(error){say(animationError(error.message));}finally{play.disabled=false;}}
  });
  root.addEventListener('keydown',e=>{const resize=e.target.closest('[data-sle-resize]');if(!resize||!editing||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;e.preventDefault();const p=draft[mode()].find(p=>p.id===resize.dataset.sleResize);p.w=Math.max(mode()==='mobile'?120:160,Math.min(CANVAS_WIDTH[mode()]-p.x,p.w+(e.key==='ArrowRight'?8:e.key==='ArrowLeft'?-8:0)));p.h=Math.max(96,Math.min(1800,p.h+(e.key==='ArrowDown'?8:e.key==='ArrowUp'?-8:0)));apply();});

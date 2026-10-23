@@ -7,6 +7,6 @@ export async function loadAnimationState({force=false}={}){
  const current=epoch,promise=animationAPI({action:'state'}).then(data=>{
   if(current!==epoch||user!==window.tikInteractUser?.id)throw Error('ANIM_ACCOUNT_CHANGED');
   cache={user,data};stamp=Date.now();window.dispatchEvent(new CustomEvent('tikinteract:animation-state',{detail:data}));return data;
- }).finally(()=>{if(pending?.promise===promise)pending=null;});pending={user,promise};return promise;
+ }).catch(error=>{if(current===epoch&&user===window.tikInteractUser?.id){cache=null;stamp=0;window.dispatchEvent(new CustomEvent('tikinteract:animation-error'));}throw error;}).finally(()=>{if(pending?.promise===promise)pending=null;});pending={user,promise};return promise;
 }
 window.addEventListener('tikinteract:auth',()=>{epoch++;cache=null;stamp=0;pending=null;});

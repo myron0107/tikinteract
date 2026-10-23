@@ -4,9 +4,12 @@ Implementare în proiectul existent, în branch-ul `codex/studios-layout-finance
 
 ## Același cont și aceleași servicii
 
-- Comutatorul LIVE STUDIO / AI STUDIO se află în conținut. Bara laterală își păstrează dimensiunea și cele patru secțiuni; meniul de sus este păstrat.
+- Comutatorul LIVE STUDIO / AI STUDIO este în bara de sus, lângă soldul real de credite AI și butonul de reîncărcare. Paletele, tema, notificările, limba și contul sunt păstrate. Soldul indisponibil apare ca „—”, fără credite inventate.
+- Bara laterală își păstrează dimensiunea. În LIVE afișează Transmisie, Jocuri, Panou de sunete și Animații. În AI afișează navigarea proprie: Generator AI, Universuri, Biblioteca mea, Credite AI și Ghid AI. Pe mobil, navigarea AI folosește doar pictograme cu etichete accesibile.
 - Acces direct AI: `live-studio.html?workspace=ai`. Acest acces nu pornește jocul sau transportul local LIVE. Revenirea în LIVE reutilizează transportul existent.
-- AI Studio: Generator, Universuri, Biblioteca mea, Creditele mele, Istoric generări. LIVE → ANIMAȚII: biblioteca comună și regulile pentru evenimente.
+- AI Studio urmează structura referinței `tikinteract-site-adapted`: configurarea în stânga, previzualizarea și scurtăturile în mijloc, creditele și accesul LIVE în dreapta, apoi universurile. Istoricul generărilor este accesibil din Credite AI și Ghid AI.
+- LIVE → ANIMAȚII deschide exclusiv biblioteca comună și regulile pentru evenimente, fără generator. „Trimite în LIVE” din AI deschide biblioteca LIVE și evidențiază clipul; asocierea unui eveniment este o acțiune separată. Favorite animații este vizibil în Transmisie sub Favorite audio și redă clipurile prin coada existentă.
+- Meniul AI și ghidul local rămân accesibile chiar dacă backendul nu răspunde. Nu se afișează solduri sau fișiere demonstrative drept date reale.
 - Se reutilizează aceeași sesiune Supabase, aceleași tabele și endpointuri, același portofel și aceleași permisiuni. Nu există un al doilea sistem de conturi.
 - Generatorul păstrează fotografia, consimțământul, moderarea, etapa de imagine și etapa video Standard/Premium. Imaginile intermediare noi sunt afișate în biblioteca privată, alături de MP4-urile generate sau importate; nu se copiază încă o dată în Storage.
 - Biblioteca are previzualizare, căutare, filtre imagini/video/univers, fan, descărcare și ștergere. „Trimite în LIVE” deschide configurarea unui eveniment pentru videoclipul selectat. Favoritele pot fi redate manual în coada existentă, fără o nouă generare AI.
@@ -52,7 +55,7 @@ Un panou nou din suprafața transmisiei se înregistrează prin atributul `data-
 ## Verificări și activare ulterioară
 
 - `npm test`: teste PostgreSQL/RLS, credite, facturare, conector și jocuri existente, model de coordonate, profiluri și implicit administrativ.
-- `node scripts/verify-studio-workspaces.mjs`: Chrome local cu PostgreSQL și utilizatori fictivi; mutare și resize continue, reordonare fără redare, iframe/socket păstrate, profiluri salvate/reîncărcate, implicit administrativ și izolare între conturi. Desktop 1440 px / mobil 390 px, RO/EN, Burgundy/Blue × Light/Dark.
+- `node scripts/verify-studio-workspaces.mjs`: Chrome local cu PostgreSQL și utilizatori fictivi; meniuri LIVE/AI distincte, sold comun în antet, bibliotecă și favorite, redare manuală fără generare, recuperare după eroare backend, mutare și resize continue, iframe/socket păstrate, profiluri și implicit administrativ. Verificat la 1440, 768, 390 și 320 px, RO/EN, Burgundy/Blue × Light/Dark.
 - `node scripts/verify-animations-commerce.mjs`: oferta/creditele de test și interfața financiară, fără Checkout real.
 - `node scripts/verify-animations-live.mjs`: flux complet cu furnizor AI și Storage controlați local, moderare, bibliotecă, fan, evenimente și overlay de test.
 

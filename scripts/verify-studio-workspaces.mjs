@@ -51,26 +51,27 @@ try{
  const uid=()=>localStorage.getItem('qa-user')||'${f.user.id}',fix=s=>{if(s?.user)s.user.id=uid();return s;};
  c.auth.getSession=async()=>{const r=await session();fix(r.data.session);return r;};c.auth.onAuthStateChange=fn=>on((e,s)=>fn(e,fix(s)));c.auth.getUser=async()=>({data:{user:{id:uid(),email:'fixture@example.invalid'}},error:null});
  c.rpc=async(n,a={})=>n.startsWith('studio_layout_')?fetch('/__layout',{method:'POST',body:JSON.stringify({name:n,args:a,user:uid()})}).then(r=>r.json()):n==='get_my_account_status'?{data:{allowed:true,state:'active'},error:null}:n==='get_my_access'?{data:{plan:'free',periods:[],serverNow:new Date().toISOString()},error:null}:rpc(n,a);
- const original=window.fetch.bind(window);window.fetch=(u,o={})=>String(u).includes('/rpc/get_site_public_config')?Promise.resolve(Response.json({})):original(u,String(u).includes('/api/animations')?{...o,headers:{...o.headers,'X-QA-User':uid()}}:o);
+ const original=window.fetch.bind(window);window.fetch=(u,o={})=>window.__qaOffline&&String(u).includes('/api/animations')?Promise.resolve(Response.json({error:'ANIM_SETUP_REQUIRED'},{status:503})):String(u).includes('/rpc/get_site_public_config')?Promise.resolve(Response.json({})):original(u,String(u).includes('/api/animations')?{...o,headers:{...o.headers,'X-QA-User':uid()}}:o);
  `});
  await b.page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
  await b.page('Page.navigate',{url:origin+'/live-studio.html?workspace=ai'});
  await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!!document.querySelector("#an-prompt")');
- assert.equal(await run('document.querySelectorAll("[data-an-tab]").length'),5);
- assert.equal(await run('window.__qaSockets.length'),0,'Direct AI entry must not start local LIVE transport');
+ assert.equal(await run('document.querySelectorAll("[data-ai-tab]").length'),5);
+ assert.equal(await run('document.querySelector("[data-credit-balance]").textContent'),'500');assert.equal(await run('getComputedStyle(document.getElementById("studio-ai-nav")).display'),'flex');assert.equal(await run('getComputedStyle(document.querySelector(".studio-app-nav")).display'),'none');assert.equal(await run('window.__qaSockets.length'),0,'Direct AI entry must not start local LIVE transport');
  assert.equal(await run('document.getElementById("live-game-frame").getAttribute("src")'),null);
- await click('[data-an-tab=universes]');assert.equal(await run('document.querySelectorAll("[data-an-world]").length'),8);
- await click('[data-an-tab=library]');assert.equal(await run('document.querySelectorAll(".an-media").length'),2);
+ await click('[data-ai-tab=universes]');assert.equal(await run('document.querySelectorAll("[data-an-world]").length'),8);
+ await click('[data-ai-tab=library]');assert.equal(await run('document.querySelectorAll(".an-media").length'),2);
  await click('[data-an-action=preview][data-id="'+image+'"]');assert(await run('!!document.querySelector(".an-dialog img.an-full-image")'));await click('[data-an-close]');
- await click('[data-an-tab=credits]');assert(await run('document.querySelector("#an-pane-credits").textContent.includes("500")'));
- await click('[data-an-tab=history]');await click('[data-an-tab=library]');await b.screenshot(folder+'/ai-library.webp');
- await click('[data-an-action=send-live][data-id="'+video+'"]');await b.waitFor('!!document.querySelector(".an-dialog[open] select[name=clip]")');
- assert.equal(await run('document.querySelector("select[name=clip]").value'),video);assert.equal(await run('document.querySelectorAll("[data-an-tab]").length'),2);await click('[data-an-close]');
+ await click('[data-ai-tab=credits]');assert(await run('document.querySelector("#an-pane-credits").textContent.includes("500")'));
+ await click('[data-an-open-tab=history]');await click('[data-ai-tab=guide]');await b.waitFor('!!document.querySelector(".ai-guide-grid")');await click('[data-ai-tab=library]');await b.screenshot(folder+'/ai-library.webp');
+ await click('[data-an-action=send-live][data-id="'+video+'"]');await b.waitFor('!!document.querySelector("#studio-animations-panel[data-workspace=live] .an-selected-clip")');
+ assert.equal(await run('TikInteractWorkspaces.getMode()'),'live');assert.equal(await run('!!document.querySelector("#an-prompt")'),false,'LIVE library must never open AI generator');assert.equal(await run('document.querySelectorAll("[data-an-tab]").length'),2);
+ await click('[data-an-action=live-rule][data-id="'+video+'"]');await b.waitFor('!!document.querySelector(".an-dialog[open] select[name=clip]")');assert.equal(await run('document.querySelector("select[name=clip]").value'),video);await click('[data-an-close]');
  await run('TikInteractWorkspaces.open("live")');await b.waitFor('!document.getElementById("live-studio-panel").classList.contains("hidden")');
  await b.waitFor('!document.querySelector("[data-sle=edit]").disabled');
  await run('launchStudioGame("nova-vex")');await b.waitFor('document.getElementById("live-game-frame").contentDocument?.readyState==="complete"&&!!document.getElementById("live-game-frame").contentDocument?.querySelector("canvas")');
  await run('window.__frame=document.getElementById("live-game-frame");__frame.contentWindow.__layoutMarker=crypto.randomUUID();window.__marker=__frame.contentWindow.__layoutMarker;window.__loads=0;__frame.addEventListener("load",()=>__loads++);window.__plays=0;window.playSoundEffect=()=>__plays++;window.__socket=__qaSockets[0]');
- const rail=await run('document.querySelector(".studio-app-rail").getBoundingClientRect().width');
+ assert.equal(await run('document.getElementById("studio-favorite-animations").hidden'),false,'Favorite animations should be visible in Stream');const rail=await run('document.querySelector(".studio-app-rail").getBoundingClientRect().width');
  await click('[data-sle=edit]');await click('[data-sle=favorites]');await b.waitFor('!!document.querySelector("[data-favorite-kind=audio]")');
  const sounds=await run('Array.from(document.querySelectorAll("[data-favorite-kind=audio]")).slice(0,2).map(n=>n.value)');
  await run(`for(const n of document.querySelectorAll('[data-favorite-kind]')){const wanted=n.dataset.favoriteKind==='games'?n.value==='nova-vex':n.dataset.favoriteKind==='audio'?${JSON.stringify(sounds)}.includes(n.value):n.value==='${video}';if(n.checked!==wanted)n.click();}`);await click('[data-sle-close]');
@@ -85,6 +86,7 @@ try{
  await click('[data-sle=save]');await b.waitFor('!TikInteractStudioPersonalization.isEditing()');
  assert.equal(await run('document.getElementById("live-game-frame")===__frame&&__frame.contentWindow.__layoutMarker===__marker&&__loads===0&&__socket.readyState===1'),true,'Layout must preserve iframe and LIVE connection');
  assert.equal(await run('document.querySelector(".studio-app-rail").getBoundingClientRect().width'),rail);
+ await click('[data-sle-play="'+video+'"]');for(let i=0;i<30&&(await f.store.list('animation_playback')).length===0;i++)await new Promise(r=>setTimeout(r,100));assert.equal((await f.store.list('animation_playback')).length,1,'Favorite animation enters the existing playback queue');assert.equal(f.calls.length,0);
  const layout=await run('TikInteractStudioPersonalization.getLayout()');assert.equal((await f.db.query('select count(*)::int as n from public.studio_layout_profiles')).rows[0].n,1);
  await click('[data-sle=edit]');await click('[data-sle=publish]');await click('[data-publish-default]');await b.waitFor('!document.querySelector(".sle-dialog").open');await click('[data-sle=cancel]');
  const published=(await f.db.query('select layout,revision from public.studio_layout_default')).rows[0];assert.equal(published.revision,1);assert.deepEqual(published.layout.favorites,{games:[],audio:[],animations:[]});
@@ -94,12 +96,13 @@ try{
  assert.equal(await run('__loads'),0);
  await run(`localStorage.removeItem('tikinteract_layout_v1:${f.user.id}')`);await b.page('Page.reload');await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!document.querySelector("[data-sle=edit]").disabled');
  assert.deepEqual(await run('TikInteractStudioPersonalization.getFavorites().audio'),sounds.toReversed());assert.equal(await run('document.querySelectorAll("[data-sle-profile] option").length'),2);
- for(const width of [1440,390])for(const [mode,theme,lang]of [['dark','burgundy','ro'],['light','burgundy','en'],['dark','blue','en'],['light','blue','ro']]){
+ for(const width of (process.env.QA_VIEWPORTS?process.env.QA_VIEWPORTS.split(",").map(Number):[1440,768,390,320]))for(const [mode,theme,lang]of [['dark','burgundy','ro'],['light','burgundy','en'],['dark','blue','en'],['light','blue','ro']]){
   await b.page('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<700});
   await run(`localStorage.setItem('tikinteract_mode','${mode}');localStorage.setItem('tikinteract_brand','${theme}');localStorage.setItem('tikinteract_language','${lang}')`);await b.page('Page.reload');await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!document.querySelector("[data-sle=edit]").disabled');
   assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,`STREAM overflow ${width}/${mode}/${theme}`);assert.equal(await run('document.querySelectorAll(".studio-app-nav [data-studio-tab]").length'),4);
   await b.screenshot(`${folder}/stream-${width}-${mode}-${theme}.webp`);await run('TikInteractWorkspaces.open("ai")');await b.waitFor('!!document.querySelector("#an-prompt")');assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,'AI overflow');await b.screenshot(`${folder}/ai-${width}-${mode}-${theme}.webp`);await run('TikInteractWorkspaces.open("live")');
  }
+ await run('TikInteractWorkspaces.open("ai",{tab:"generator"})');await b.waitFor('!!document.getElementById("an-prompt")');await run('window.__qaOffline=true');await click('[data-an-action=refresh]');await b.waitFor('!document.getElementById("an-prompt")');assert.equal(await run('document.querySelector("[data-credit-balance]").textContent'),'—');await click('[data-ai-tab=guide]');assert(await run('!!document.querySelector(".ai-guide-grid")'));assert.equal(await run('getComputedStyle(document.getElementById("studio-ai-nav")).display'),'flex');await run('window.__qaOffline=false');await click('[data-an-action=refresh]');await b.waitFor('document.querySelector("[data-credit-balance]").textContent==="500"');
  await run(`localStorage.setItem('qa-user','${other}');__qaSignIn()`);await b.waitFor('document.querySelectorAll("[data-sle-profile] option").length===1&&!document.querySelector("[data-sle=edit]").disabled');
  assert.deepEqual(await run('TikInteractStudioPersonalization.getFavorites()'),{games:[],audio:[],animations:[]});
  assert.deepEqual(await run('TikInteractStudioPersonalization.getLayout().desktop'),published.layout.desktop,'Fresh account inherits platform default');await click('[data-sle=edit]');assert.equal(await run('!!document.querySelector("[data-sle=publish]")'),false,'Normal account cannot publish');await click('[data-sle=cancel]');

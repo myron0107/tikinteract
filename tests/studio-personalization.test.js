@@ -12,6 +12,12 @@ test('Layout model upgrades old columns to fine canvas coordinates, clamps sizes
  assert.deepEqual(moveFavorite(['a','b','c'],'c','a'),['c','a','b']);assert.deepEqual(moveFavorite(['a','b','c'],'a',null),['b','c','a']);
  const free=normalizeLayout({version:2,custom:true,desktop:[{id:'games',x:24,y:16,w:240,h:240},{id:'audio',x:24,y:16,w:240,h:240}]});assert.equal(free.desktop.find(p=>p.id==='audio').y,16,'Do not push freely placed panels back into columns');
 });
+test('Favorite animations become visible for older personal profiles while preserving their other panels and later hide choice',()=>{
+ const previous=normalizeLayout({custom:true});delete previous.animationFavorites;previous.desktop.find(p=>p.id==='animations').hidden=true;
+ const next=normalizeLayout(previous,undefined,{migrateAnimationFavorites:true});assert.equal(next.desktop.find(p=>p.id==='animations').hidden,false);assert.deepEqual(next.desktop.filter(p=>p.id!=='animations'),previous.desktop.filter(p=>p.id!=='animations'));
+ next.desktop.find(p=>p.id==='animations').hidden=true;assert.equal(normalizeLayout(next,undefined,{migrateAnimationFavorites:true}).desktop.find(p=>p.id==='animations').hidden,true);
+ assert.equal(normalizeLayout(previous).desktop.find(p=>p.id==='animations').hidden,true,'An administrative default must not be silently changed');
+});
 test('PostgreSQL: private per-user profiles, cross-device active selection, optimistic saves, validation and bounded profile count',async()=>{
  const f=await createAnimationFixture(),other='10000000-0000-0000-0000-000000000002';try{
   const sql=await readFile(new URL('../supabase/studio-workspaces.sql',import.meta.url),'utf8');await f.db.exec(sql);await f.db.exec(sql);
