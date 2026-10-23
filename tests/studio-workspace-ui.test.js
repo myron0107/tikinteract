@@ -3,10 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 globalThis.window={TikInteractLanguage:{get:()=> 'ro'},TikInteractPass:{getAccess:()=>({plan:'free'})}};
 const {renderAnimationWorkspace}=await import('../assets/animations-workspace-views.js');
-test('Studio serves separate AI navigation and common topbar credits while LIVE animations stays a saved-media library',()=>{
- const html=readFileSync(new URL('../live-studio.html',import.meta.url),'utf8'),top=html.slice(html.indexOf('<header class="template-header app-topbar"'),html.indexOf('</header>',html.indexOf('<header class="template-header app-topbar"')));
- assert(top.includes('data-workspace="ai"'));assert(top.includes('data-credit-balance'));assert(top.includes('data-credit-topup'));assert(top.includes('data-mode-toggle'));assert(top.includes('data-studio-theme'));
- const nav=html.slice(html.indexOf('<nav id="studio-ai-nav"'),html.indexOf('</nav>',html.indexOf('<nav id="studio-ai-nav"')));for(const tab of ['generator','universes','library','credits','guide'])assert(nav.includes(`data-ai-tab="${tab}"`));
+test('Studio keeps credits and preferences in the floating dock while LIVE animations stays a saved-media library',()=>{
+ const html=readFileSync(new URL('../live-studio.html',import.meta.url),'utf8'),top=html.slice(html.indexOf('<section id="studio-dock-utilities"'),html.indexOf('</section>',html.indexOf('<section id="studio-dock-utilities"')));
+ assert(!html.includes('<header class="template-header app-topbar"'));assert(html.includes('data-dock-handle'));
+ assert(html.includes('data-workspace="ai"'));assert(top.includes('data-credit-balance'));assert(top.includes('data-credit-topup'));assert(top.includes('data-mode-toggle'));assert(top.includes('data-design-palette-toggle'));
+ const nav=html.slice(html.indexOf('<nav id="studio-ai-nav"'),html.indexOf('</nav>',html.indexOf('<nav id="studio-ai-nav"')));for(const tab of ['generator','universes','library','credits'])assert(nav.includes(`data-ai-tab="${tab}"`));assert(!nav.includes('data-ai-tab="guide"'));
+ const footer=html.slice(html.indexOf('<div class="sw-rail-footer"'),html.indexOf('</div>',html.indexOf('<div class="sw-rail-footer"')));assert(footer.includes('data-ai-tab="guide"'));assert(footer.includes('data-sw-rail-help'));assert(!html.includes('studio-dock-orientation.css'));
  const state={workspace:'live',tab:'library',ready:true,config:{enabled:false,testMode:true},library:[],worlds:[],filter:'all',query:''};const live=renderAnimationWorkspace(state);assert(!live.includes('data-an-action="open-ai"'));assert(!live.includes('id="an-prompt"'));assert(live.includes('data-an-tab="library"'));assert(live.includes('data-an-tab="events"'));
 });
 test('AI backend failure retains the workspace heading and local guide without inventing wallet data',()=>{

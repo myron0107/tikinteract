@@ -19,7 +19,7 @@ function renderMenu(){
  const plan=access?.plan==='play_pass_pro'?'Play Pass PRO':access?.plan==='play_pass'?'Play Pass':access?.plan==='free'?t('Gratuit','Free'):'—';
  const planId=['free','play_pass','play_pass_pro'].includes(access?.plan)?access.plan:'unknown';
  const current=document.activeElement?.dataset?.studioUserView;
- menu.innerHTML=`<div class="sw-menu-identity"><div><strong translate="no">${esc(name)}</strong><span class="sw-menu-plan" data-plan="${planId}">${planId!=='unknown'?ic('ticket'):''}<span>${plan}</span></span></div><small translate="no">${esc(user.email||'')}</small></div><div class="sw-menu-items">${['account','subscription','analytics','support'].map(id=>`<button type="button" role="menuitem" data-studio-user-view="${id}">${ic(icons[id])}<span>${t(...titles[id])}</span>${ic('chevron-right')}</button>`).join('')}</div><div class="sw-menu-footer"><a href="admin.html" role="menuitem" data-sw-admin hidden>${ic('user-shield')}<span>${t('Administrare','Administration')}</span></a><button type="button" role="menuitem" data-sw-signout>${ic('right-from-bracket')}<span>${t('Deconectare','Sign out')}</span></button></div>`;
+ menu.innerHTML=`<div class="sw-menu-identity"><div><strong translate="no">${esc(name)}</strong><span class="sw-menu-plan" data-plan="${planId}">${planId!=='unknown'?ic('ticket'):''}<span>${plan}</span></span></div><small translate="no">${esc(user.email||'')}</small></div><div class="sw-menu-items">${['account','subscription','support'].map(id=>`<button type="button" role="menuitem" data-studio-user-view="${id}">${ic(icons[id])}<span>${t(...titles[id])}</span>${ic('chevron-right')}</button>`).join('')}</div><div class="sw-menu-footer"><a href="admin.html" role="menuitem" data-sw-admin hidden>${ic('user-shield')}<span>${t('Administrare','Administration')}</span></a><button type="button" role="menuitem" data-sw-signout>${ic('right-from-bracket')}<span>${t('Deconectare','Sign out')}</span></button></div>`;
  const admin=menu.querySelector('[data-sw-admin]');admin.hidden=adminUser!==user.id;
  trigger.title=t('Meniul contului','Account menu');trigger.setAttribute('aria-label',trigger.title);
  if(current&&!menu.hidden)menu.querySelector(`[data-studio-user-view="${current}"]`)?.focus({preventScroll:true});positionMenu();
@@ -66,7 +66,7 @@ export async function openStudioWindow(target,{section='profile',plan=''}={}){
  closeMenu();document.querySelector('[data-notifications-close]')?.click();window.TikInteractLanguage?.close();
  const switching=dialog.open;if(!switching)opener=trigger;view=target;pane=['profile','preferences','security'].includes(section)?section:'profile';
  hiddenPanels();syncWindow();const loading=content.querySelector('[data-sw-loading]');loading.textContent=t('Se încarcă…','Loading…');loading.hidden=false;content.setAttribute('aria-busy','true');
- if(!dialog.open){dialog.showModal();document.body.classList.add('sw-modal-open');}
+ if(!dialog.open){document.body.dataset.page==='studio'&&document.querySelector('[data-dock-handle]')?dialog.show():dialog.showModal();document.body.classList.add('sw-modal-open');}
  try{
   let root;
   if(['account','subscription','support'].includes(target)){
@@ -88,7 +88,7 @@ export async function openStudioWindow(target,{section='profile',plan=''}={}){
 }
 function localizeRailFooter(){
  const footer=document.querySelector('.sw-rail-footer');if(!footer)return;
- const help=footer.querySelector('[data-sw-rail-help]'),back=footer.querySelector('a');
+ const help=footer.querySelector('[data-sw-rail-help]'),back=document.getElementById('studio-back-to-site')||footer.querySelector('a');
  for(const [item,name]of [[help,t('Ghid Studio','Studio guide')],[back,t('Înapoi la site','Back to website')]]){
   if(item){item.title=name;item.setAttribute('aria-label',name);item.querySelector('span').textContent=name;}
  }

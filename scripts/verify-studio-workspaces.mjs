@@ -7,8 +7,8 @@ import {createAnimationFixture} from '../tests/helpers/animations-fixture.mjs';
 import {createAnimationService} from '../lib/animations-service.js';
 import {handleAnimationRequest} from '../lib/animations-http.js';
 import {openSkyShiftBrowser} from './skyshift-browser.mjs';
-import {installQAAuth} from './qa-auth-fixture.mjs';
-const runId=crypto.randomUUID();
+import {studioFixtureBootstrap} from './studio-preview-bootstrap.mjs';
+const runId=crypto.randomUUID(),localPreview=process.env.QA_STUDIO_PREVIEW==='1';
 const origin='http://127.0.0.1:3033',folder='.tools/studio-workspaces-review',f=await createAnimationFixture({origin});
 await f.db.exec(await readFile('supabase/studio-workspaces.sql','utf8'));
 await f.db.exec(await readFile('supabase/animations-studios.sql','utf8'));
@@ -22,8 +22,9 @@ for(const [id,mime,kind,bytes]of [[video,'video/mp4','upload',f.video],[image,'i
 f.store.usage=(u,test)=>f.store.rpc('animation_account_usage',{p_user:u,p_test:test});
 f.store.authenticate=async r=>({id:r.headers.get('x-qa-user')||f.user.id,email:'fixture@example.invalid'});
 const service=createAnimationService({store:f.store,provider:f.provider,approved:false,siteUrl:process.env.QA_PUBLIC_SITE_URL||origin});
+const authSource=studioFixtureBootstrap(f.user,runId,{preview:localPreview});
 let queue=Promise.resolve();const serial=fn=>{const job=queue.then(fn);queue=job.catch(()=>{});return job;};
-const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.mp4':'video/mp4','.webm':'video/webm','.woff2':'font/woff2','.json':'application/json'};
+const mime={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.jpg':'image/jpeg','.png':'image/png','.mp4':'video/mp4','.webm':'video/webm','.woff2':'font/woff2','.ttf':'font/ttf','.webp':'image/webp','.avif':'image/avif','.mp3':'audio/mpeg','.wav':'audio/wav','.ogg':'audio/ogg','.m4a':'audio/mp4','.json':'application/json'};
 const server=createServer(async(req,res)=>{try{
  const u=new URL(req.url,origin);
  if(u.pathname==='/__layout'){
@@ -39,15 +40,17 @@ const server=createServer(async(req,res)=>{try{
   res.writeHead(r.status,Object.fromEntries(r.headers)).end(await r.text());return;
  }
  const file=path.resolve('.','.'+decodeURIComponent(u.pathname));if(!file.startsWith(path.resolve('.')+path.sep)){res.writeHead(403).end();return;}
- const bytes=await readFile(file);res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream'}).end(bytes);
+ if(localPreview&&(!mime[path.extname(file)]||u.pathname.split('/').some(p=>p.startsWith('.')))){res.writeHead(404).end();return;}
+ let bytes=await readFile(file);if(localPreview&&u.pathname==='/live-studio.html')bytes=Buffer.from(bytes.toString('utf8').replace('<head>','<head><script>'+authSource+'</script>'));res.writeHead(200,{'Content-Type':mime[path.extname(file)]||'application/octet-stream'}).end(bytes);
 }catch(e){res.writeHead(400,{'Content-Type':'application/json'}).end(JSON.stringify({error:{message:e.message}}));}});
 await new Promise(r=>server.listen(3033,'127.0.0.1',r));await mkdir(folder,{recursive:true});
+if(localPreview){console.log('LOCAL DESIGN PREVIEW: '+origin+'/live-studio.html');console.log('Isolated test data only. No production account, real LIVE, Stripe or paid AI.');await new Promise(resolve=>process.once('SIGINT',resolve));await new Promise(resolve=>server.close(resolve));await f.db.close();process.exit(0);}
 const b=await openSkyShiftBrowser('studio-workspaces-review'),run=e=>b.evaluate(e),click=s=>run(`document.querySelector(${JSON.stringify(s)}).click()`);
 const rect=s=>run(`(()=>{const n=document.querySelector(${JSON.stringify(s)});n.scrollIntoView({block:'center',behavior:'instant'});const r=n.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height*(n.matches(".live-favorite-card")?.8:.5),w:r.width,h:r.height};})()`);
 async function drag(selector,dx,dy,check){const r=await rect(selector);await b.page('Input.dispatchMouseEvent',{type:'mousePressed',x:r.x,y:r.y,button:'left',clickCount:1});for(let i=1;i<=12;i++)await b.page('Input.dispatchMouseEvent',{type:'mouseMoved',x:r.x+dx*i/12,y:r.y+dy*i/12,buttons:1});await run('new Promise(requestAnimationFrame)');if(check)await check();await b.page('Input.dispatchMouseEvent',{type:'mouseReleased',x:r.x+dx,y:r.y+dy,button:'left',clickCount:1});}
 async function pointerClick(selector){const r=await rect(selector);await b.page('Input.dispatchMouseEvent',{type:'mousePressed',x:r.x,y:r.y,button:'left',clickCount:1});await b.page('Input.dispatchMouseEvent',{type:'mouseReleased',x:r.x,y:r.y,button:'left',clickCount:1});await run('new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))');}
 async function checkLiveNavigation(){
- for(const [tab,panel] of [['games','game-center-panel'],['audio','audio-center-panel'],['animations','studio-animations-panel'],['studio','live-studio-panel']]){
+ for(const [tab,panel] of [['home','studio-home-panel'],['games','game-center-panel'],['audio','audio-center-panel'],['animations','studio-animations-panel'],['studio','live-studio-panel']]){
   await pointerClick(`.studio-app-nav [data-studio-tab="${tab}"]`);
   assert.equal(await run(`document.getElementById('${panel}').classList.contains('hidden')`),false,`Native ${tab} click must keep its panel open`);
   assert.equal(await run(`document.querySelector('.studio-app-nav [data-studio-tab="${tab}"]').getAttribute('aria-selected')`),'true',`Native ${tab} selection must persist`);
@@ -55,13 +58,7 @@ async function checkLiveNavigation(){
  }
 }
 try{
- await b.page('Page.addScriptToEvaluateOnNewDocument',{source:'('+installQAAuth.toString()+')(true);'+`
- if(localStorage.getItem('qa-workspace-run')!=='${runId}'){for(const key of Object.keys(localStorage))if(key.startsWith('tikinteract_layout_'))localStorage.removeItem(key);localStorage.setItem('qa-workspace-run','${runId}');localStorage.setItem('qa-user','${f.user.id}');} const c=window.supabase.createClient(),rpc=c.rpc.bind(c),session=c.auth.getSession.bind(c.auth),on=c.auth.onAuthStateChange.bind(c.auth);
- const uid=()=>localStorage.getItem('qa-user')||'${f.user.id}',fix=s=>{if(s?.user)s.user.id=uid();return s;};
- c.auth.getSession=async()=>{const r=await session();fix(r.data.session);return r;};c.auth.onAuthStateChange=fn=>on((e,s)=>fn(e,fix(s)));c.auth.getUser=async()=>({data:{user:{id:uid(),email:'fixture@example.invalid'}},error:null});
- c.rpc=async(n,a={})=>n.startsWith('studio_layout_')?fetch('/__layout',{method:'POST',body:JSON.stringify({name:n,args:a,user:uid()})}).then(r=>r.json()):n==='get_my_account_status'?{data:{allowed:true,state:'active'},error:null}:n==='get_my_access'?{data:{plan:'free',periods:[],serverNow:new Date().toISOString()},error:null}:rpc(n,a);
- const original=window.fetch.bind(window);window.fetch=(u,o={})=>window.__qaOffline&&String(u).includes('/api/animations')?Promise.resolve(Response.json({error:'ANIM_SETUP_REQUIRED'},{status:503})):String(u).includes('/rpc/get_site_public_config')?Promise.resolve(Response.json({})):original(u,String(u).includes('/api/animations')?{...o,headers:{...o.headers,'X-QA-User':uid()}}:o);
- `});
+ await b.page('Page.addScriptToEvaluateOnNewDocument',{source:authSource});
  await b.page('Emulation.setDeviceMetricsOverride',{width:1440,height:1000,deviceScaleFactor:1,mobile:false});
  await b.page('Page.navigate',{url:origin+'/live-studio.html?workspace=ai'});
  await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!!document.querySelector("#an-prompt")');
@@ -80,6 +77,7 @@ try{
  await click('[data-an-action=live-rule][data-id="'+video+'"]');await b.waitFor('!!document.querySelector(".an-dialog[open] select[name=clip]")');assert.equal(await run('document.querySelector("select[name=clip]").value'),video);await click('[data-an-close]');
  await run('TikInteractWorkspaces.open("live")');await b.waitFor('!document.getElementById("live-studio-panel").classList.contains("hidden")');
  await b.waitFor('!document.querySelector("[data-sle=edit]").disabled');
+ if(process.env.QA_DESIGN_REVIEW){const {reviewStudioDesign}=await import('./studio-design-review.mjs');await reviewStudioDesign({b,run,click});}
  await run('launchStudioGame("nova-vex")');await b.waitFor('document.getElementById("live-game-frame").contentDocument?.readyState==="complete"&&!!document.getElementById("live-game-frame").contentDocument?.querySelector("canvas")');
  await run('window.__frame=document.getElementById("live-game-frame");__frame.contentWindow.__layoutMarker=crypto.randomUUID();window.__marker=__frame.contentWindow.__layoutMarker;window.__loads=0;__frame.addEventListener("load",()=>__loads++);window.__plays=0;window.playSoundEffect=()=>__plays++;window.__socket=__qaSockets[0]');
  assert.equal(await run('document.getElementById("studio-favorite-animations").hidden'),false,'Favorite animations should be visible in Stream');const rail=await run('document.querySelector(".studio-app-rail").getBoundingClientRect().width');
@@ -89,9 +87,9 @@ try{
  const first=await rect('[data-sound-id="'+sounds[0]+'"]'),second=await rect('[data-sound-id="'+sounds[1]+'"]');
  await drag('[data-sound-id="'+sounds[1]+'"]',first.x-second.x,first.y-second.y,async()=>assert.match(await run('document.querySelector("[data-sound-id=\\"'+sounds[1]+'\\"]").style.transform'),/translate3d/));
  assert.deepEqual(await run('TikInteractStudioPersonalization.getFavorites().audio'),sounds.toReversed());assert.equal(await run('__plays'),0);
+ await drag('[data-sle-resize=preview]',-65,-70,async()=>assert.match(await run('document.querySelector(".studio-stage").style.width'),/px/));
  await drag('[data-sle-handle=streamer]>i',-200,70,async()=>assert.match(await run('document.querySelector(".studio-connection").style.transform'),/translate3d/));
  const previous=await run('TikInteractStudioPersonalization.getLayout().desktop.find(p=>p.id==="streamer")');assert(previous.x<900);
- await drag('[data-sle-resize=preview]',-65,-70,async()=>assert.match(await run('document.querySelector(".studio-stage").style.width'),/px/));
  await click('[data-sle-hide=controls]');assert(await run('document.getElementById("studio-test-panel").hidden'));
  await click('[data-sle=panels]');await click('[data-show-panel=controls]');await click('[data-sle-close]');assert.equal(await run('document.getElementById("studio-test-panel").hidden'),false);
  await click('[data-sle=save]');await b.waitFor('!TikInteractStudioPersonalization.isEditing()');
@@ -110,7 +108,7 @@ try{
  for(const width of (process.env.QA_VIEWPORTS?process.env.QA_VIEWPORTS.split(",").map(Number):[1440,768,390,320]))for(const [mode,theme,lang]of [['dark','burgundy','ro'],['light','burgundy','en'],['dark','blue','en'],['light','blue','ro']]){
   await b.page('Emulation.setDeviceMetricsOverride',{width,height:1000,deviceScaleFactor:1,mobile:width<700});
   await run(`localStorage.setItem('tikinteract_mode','${mode}');localStorage.setItem('tikinteract_brand','${theme}');localStorage.setItem('tikinteract_language','${lang}')`);await b.page('Page.reload');await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!document.querySelector("[data-sle=edit]").disabled');
-  assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,`STREAM overflow ${width}/${mode}/${theme}`);assert.equal(await run('document.querySelectorAll(".studio-app-nav [data-studio-tab]").length'),4);
+  assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,`STREAM overflow ${width}/${mode}/${theme}`);assert.equal(await run('document.querySelectorAll(".studio-app-nav [data-studio-tab]").length'),5);
   await checkLiveNavigation();
   await b.screenshot(`${folder}/stream-${width}-${mode}-${theme}.webp`);await run('TikInteractWorkspaces.open("ai")');await b.waitFor('!!document.querySelector("#an-prompt")');assert.equal(await run('document.documentElement.scrollWidth<=innerWidth+1'),true,'AI overflow');await b.screenshot(`${folder}/ai-${width}-${mode}-${theme}.webp`);await run('TikInteractWorkspaces.open("live")');
  }

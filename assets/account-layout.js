@@ -5,9 +5,11 @@ const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 const choice=(kind,value,label,icon='')=>`<button type="button" data-account-preference="${kind}" data-value="${value}" aria-pressed="false">${icon}${label}</button>`;
 
 function preferences(){
+ const studio=window.TikInteractStudioDesign;
+ const paletteRows=studio?['live','ai'].map(workspace=>`<div class="account-preference-row"><span>${workspace==='ai'?'AI Studio':'LIVE Studio'}</span><div role="group" aria-label="${workspace==='ai'?'AI Studio':'LIVE Studio'}">${studio.palettes(workspace).map(s=>choice('skin-'+workspace,s.id,s.label,`<span class="account-swatch" style="background:${s.color}"></span>`)).join('')}</div></div>`).join(''):`<div class="account-preference-row"><span>${t('Paleta Studio','Studio palette')}</span><div role="group" aria-label="${t('Paleta Studio','Studio palette')}">${choice('theme','burgundy','Burgundy','<span class="account-swatch account-swatch-burgundy"></span>')}${choice('theme','blue','Racing Blue','<span class="account-swatch account-swatch-blue"></span>')}</div></div>`;
  return `<section class="cp-panel account-preferences"><h3>${ic('sliders')}${t('Preferințe','Preferences')}</h3><p>${t('Alege cum arată spațiul tău.','Make this space your own.')}</p>
  <div class="account-preference-row"><span>${t('Aspect','Appearance')}</span><div role="group" aria-label="${t('Aspect','Appearance')}">${choice('mode','light',t('Luminos','Light'),ic('sun'))}${choice('mode','dark',t('Întunecat','Dark'),ic('moon'))}</div></div>
- <div class="account-preference-row"><span>${t('Paleta Studio','Studio palette')}</span><div role="group" aria-label="${t('Paleta Studio','Studio palette')}">${choice('theme','burgundy','Burgundy','<span class="account-swatch account-swatch-burgundy"></span>')}${choice('theme','blue','Racing Blue','<span class="account-swatch account-swatch-blue"></span>')}</div></div>
+ ${paletteRows}
  <div class="account-preference-row"><span>${t('Limba','Language')}</span><div role="group" aria-label="${t('Limba','Language')}">${choice('language','ro','Română','<img src="assets/language-ro.svg" alt="" width="18" height="13">')}${choice('language','en','English','<img src="assets/language-en.svg" alt="" width="18" height="13">')}</div></div></section>`;
 }
 
@@ -65,7 +67,7 @@ export function arrangeAccountLayout(root){
    const go=event.target.closest('[data-account-go]');if(go)root.querySelector(`[data-account-section-button="${go.dataset.accountGo}"]`)?.click();
    const button=event.target.closest('[data-account-preference]');if(!button)return;
    const kind=button.dataset.accountPreference,value=button.dataset.value;
-   if(kind==='language')window.TikInteractLanguage?.set(value);else window.TikInteractAppearance?.set({[kind]:value});
+   if(kind==='language')window.TikInteractLanguage?.set(value);else if(kind.startsWith('skin-'))window.TikInteractStudioDesign?.setSkin(value,kind.slice(5));else window.TikInteractAppearance?.set({[kind]:value});
   });
   root.addEventListener('keydown',event=>{
    const button=event.target.closest('[data-account-section-button]');if(!button)return;
@@ -85,7 +87,7 @@ export function refreshAccountLayout(root){
  root.querySelector('[data-account-summary-plan]').textContent=plan;
  root.querySelector('.account-summary-access').dataset.plan=access?.plan||'unknown';
  const appearance=window.TikInteractAppearance?.get()||{},language=window.TikInteractLanguage?.get()||'ro';
- for(const button of root.querySelectorAll('[data-account-preference]'))button.setAttribute('aria-pressed',String(button.dataset.value===(button.dataset.accountPreference==='language'?language:appearance[button.dataset.accountPreference])));
+ for(const button of root.querySelectorAll('[data-account-preference]')){const kind=button.dataset.accountPreference,selected=kind==='language'?language:kind.startsWith('skin-')?window.TikInteractStudioDesign?.get(kind.slice(5)).skin:appearance[kind];button.setAttribute('aria-pressed',String(button.dataset.value===selected));}
  root.querySelector('[data-account-security-email]').textContent=user?.email||'—';
  const providers=user?.app_metadata?.providers||[user?.app_metadata?.provider].filter(Boolean);
  root.querySelector('[data-account-provider]').textContent=providers.map(value=>value==='google'?'Google':value==='email'?t('E-mail și parolă','Email and password'):value).join(', ')||'—';
@@ -94,3 +96,4 @@ export function refreshAccountLayout(root){
 }
 
 window.addEventListener('tikinteract:appearance',()=>{for(const root of roots){if(root.isConnected)refreshAccountLayout(root);else roots.delete(root);}});
+window.addEventListener('tikinteract:studio-appearance',()=>{for(const root of roots){if(root.isConnected)refreshAccountLayout(root);else roots.delete(root);}});

@@ -1,11 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {latestPublishedGame,withPublicationDate} from '../assets/catalog-featured-data.js';
+import {latestPublishedGame,withPublicationDate,isRecentRelease} from '../assets/catalog-featured-data.js';
 import {DEFAULT_CONFIG,cloneConfig,validateConfig} from '../assets/platform-schema.js';
 test('newest published release is independent of catalog order; hidden games are never featured',()=>{
  const games=[{id:'new',status:'published',publishedAt:'2026-10-21T10:00:00Z'},{id:'future-draft',status:'draft',publishedAt:'2027-01-01T00:00:00Z'},{id:'old',status:'published',publishedAt:'2026-01-01T00:00:00Z'},{id:'disabled',status:'disabled',publishedAt:'2027-01-01T00:00:00Z'}];
  assert.equal(latestPublishedGame(games).id,'new');assert.equal(latestPublishedGame([...games].reverse()).id,'new');assert.equal(latestPublishedGame([]),null);
  assert.equal(latestPublishedGame(DEFAULT_CONFIG.games).id,'nova-vex');
+});
+test('NEW badges require an actual recent publication; missing, future and old dates are excluded',()=>{
+ const now=Date.parse('2026-10-23T12:00:00Z'),game={status:'published',publishedAt:'2026-10-21T10:00:00Z'};
+ assert.equal(isRecentRelease(game,now),true);
+ for(const change of [{publishedAt:undefined},{publishedAt:'invalid'},{publishedAt:'2026-10-24T12:00:00Z'},{publishedAt:'2026-09-23T12:00:00Z'},{status:'draft'}])assert.equal(isRecentRelease({...game,...change},now),false);
 });
 test('drafts get a first-publication date on release; edits and reactivation retain it',()=>{
  const draft={id:'new',status:'draft'},now='2026-10-21T10:00:00Z';

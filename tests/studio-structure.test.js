@@ -30,8 +30,10 @@ test('custom administration layouts move original panels once and remain stable 
 test('Studio serves the current navigation, icons and controls directly in HTML',()=>{
  const html=readFileSync(new URL('../live-studio.html',import.meta.url),'utf8');
  const rail=html.slice(html.indexOf('<aside class="studio-app-rail"'),html.indexOf('</aside>',html.indexOf('<aside class="studio-app-rail"')));
- assert.equal((rail.match(/data-studio-tab=/g)||[]).length,4);
- assert.equal((rail.match(/class="studio-nav-icon/g)||[]).length,4);
+ assert.equal((rail.match(/data-studio-tab=/g)||[]).length,5);
+ const liveNav=rail.slice(rail.indexOf('class="live-studio-tabs studio-app-nav"'),rail.indexOf('<nav id="studio-ai-nav"'));
+ assert.equal((liveNav.match(/class="studio-nav-icon/g)||[]).length,5);
+ assert.equal((rail.match(/data-ai-tab=/g)||[]).length,5);
  assert(rail.indexOf('data-studio-tab="animations"')>rail.indexOf('data-studio-tab="audio"'));
  assert(rail.includes('PANOU DE SUNETE'));assert(rail.includes('sw-rail-footer'));
  assert(html.includes('id="creator-orientation"'));assert(html.includes('class="compact-connect-row"'));

@@ -1,0 +1,36 @@
+// Studio-only shell. Native navigation, account and service controllers remain intact.
+(()=>{
+const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
+let dock,handle,panel,state={x:16,y:16,locked:false},owner=null,drag=null,frame=0,timer,epoch=0;
+const key=()=>`tik_studio_floating_dock_v1:${owner||'guest'}`;
+const normalize=v=>({x:Number.isFinite(v?.x)?v.x:16,y:Number.isFinite(v?.y)?v.y:16,locked:v?.locked===true});
+function place(){if(!dock)return;const r=dock.getBoundingClientRect();state.x=Math.max(8,Math.min(state.x,innerWidth-r.width-8));state.y=Math.max(8,Math.min(state.y,innerHeight-r.height-8));dock.style.setProperty('--dock-x',state.x+'px');dock.style.setProperty('--dock-y',state.y+'px');if(panel&&!panel.hidden&&!panel.dataset.pinned){const width=Math.min(320,innerWidth-24),x=state.x+r.width+12;panel.style.left=Math.max(12,Math.min(x,innerWidth-width-12))+'px';panel.style.top=Math.max(12,Math.min(state.y,innerHeight-panel.getBoundingClientRect().height-12))+'px';}}
+function labels(){dock.dataset.orientation='vertical';handle.title=t('Trage pentru a muta. Săgețile mută din tastatură.','Drag to move. Arrow keys move with keyboard.');handle.setAttribute('aria-label',handle.title);handle.setAttribute('aria-disabled',String(state.locked));const logo=dock.querySelector('.cp-rail-brand');if(logo){logo.title=handle.title;logo.setAttribute('aria-label',handle.title);logo.setAttribute('aria-disabled',String(state.locked));}const lock=dock.querySelector('[data-dock-lock]');lock.title=t(state.locked?'Deblochează poziția':'Blochează poziția',state.locked?'Unlock position':'Lock position');lock.setAttribute('aria-label',lock.title);lock.setAttribute('aria-pressed',String(state.locked));lock.innerHTML=`<i class="fa-solid fa-${state.locked?'lock':'lock-open'}" aria-hidden="true"></i>`;dock.querySelector('[data-dock-reset]').title=t('Resetează poziția','Reset position');dock.querySelector('[data-dock-settings]').title=t('Cont, credite și setări','Account, credits and settings');}
+function persist(){try{localStorage.setItem(key(),JSON.stringify(state));}catch{}clearTimeout(timer);const own=owner,version=epoch,value={...state};if(own&&window.tikInteractSupabase?.auth?.updateUser)timer=setTimeout(async()=>{if(own!==owner||version!==epoch)return;try{const {error}=await window.tikInteractSupabase.auth.updateUser({data:{tik_studio_floating_dock_v1:value}});if(error)throw error;}catch{/* Local preference remains available while offline. */}},600);}
+function load(){const next=window.tikInteractUser?.id||null;if(next===owner&&dock.dataset.loaded)return;epoch++;clearTimeout(timer);owner=next;let saved;try{saved=JSON.parse(localStorage.getItem(key()));}catch{}state=normalize(saved||window.tikInteractUser?.user_metadata?.tik_studio_floating_dock_v1);dock.dataset.loaded='true';labels();place();}
+function finish(cancel=false){if(!drag)return;if(frame){cancelAnimationFrame(frame);frame=0;}if(cancel)state={...drag.original};const capture=drag.handle;const pointer=drag.id;drag=null;if(capture?.hasPointerCapture?.(pointer))capture.releasePointerCapture(pointer);dock.classList.remove('dock-dragging');place();if(!cancel)persist();}
+function init(){
+ dock=document.querySelector('.studio-app-rail');handle=dock.querySelector('[data-dock-handle]');panel=document.getElementById('studio-dock-utilities');if(!handle||!panel)return;
+ load();new ResizeObserver(place).observe(dock);window.addEventListener('resize',()=>{finish();place();});
+ const handles=[handle,dock.querySelector('.cp-rail-brand')].filter(Boolean);
+ for(const moveHandle of handles){
+ moveHandle.addEventListener('pointerdown',e=>{if(state.locked||e.button!==0||drag)return;e.preventDefault();drag={id:e.pointerId,x:e.clientX,y:e.clientY,original:{...state},handle:moveHandle};moveHandle.setPointerCapture(e.pointerId);dock.classList.add('dock-dragging');});
+ moveHandle.addEventListener('pointermove',e=>{if(!drag||e.pointerId!==drag.id)return;state.x=drag.original.x+e.clientX-drag.x;state.y=drag.original.y+e.clientY-drag.y;if(!frame)frame=requestAnimationFrame(()=>{frame=0;place();});});
+ moveHandle.addEventListener('pointerup',()=>finish());moveHandle.addEventListener('pointercancel',()=>finish(true));moveHandle.addEventListener('lostpointercapture',()=>finish());
+ moveHandle.addEventListener('keydown',e=>{if(e.key==='Escape'){finish(true);return;}if(state.locked||!['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const d=e.shiftKey?32:8;state.x+=e.key==='ArrowLeft'?-d:e.key==='ArrowRight'?d:0;state.y+=e.key==='ArrowUp'?-d:e.key==='ArrowDown'?d:0;place();persist();});
+ }
+ dock.addEventListener('click',e=>{if(e.target.closest('.cp-rail-brand')){e.preventDefault();e.stopImmediatePropagation();}},true);
+ dock.querySelector('[data-dock-lock]').onclick=()=>{finish();state.locked=!state.locked;labels();persist();};dock.querySelector('[data-dock-reset]').onclick=()=>{finish();state.x=16;state.y=16;place();persist();};
+ const toggle=dock.querySelector('[data-dock-settings]');toggle.onclick=()=>{panel.hidden=!panel.hidden;toggle.setAttribute('aria-expanded',String(!panel.hidden));place();};
+ dock.querySelector('[data-dock-credit]').onclick=()=>document.querySelector('[data-credit-view]')?.click();
+ document.addEventListener('click',e=>{if(!panel.dataset.pinned&&!e.composedPath().includes(panel)&&!e.composedPath().includes(toggle)){panel.hidden=true;toggle.setAttribute('aria-expanded','false');}});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden&&!panel.dataset.pinned){panel.hidden=true;toggle.setAttribute('aria-expanded','false');toggle.focus();}else if(e.key==='Escape'&&!e.defaultPrevented&&document.getElementById('studio-user-dialog')?.open){window.TikInteractStudioWindows?.close();}});
+ document.querySelectorAll('[data-dock-window]').forEach(b=>b.onclick=()=>window.TikInteractStudioWindows?.open(b.dataset.dockWindow));
+ const localize=()=>{labels();const names={'[data-dock-credit]':['Credite AI','AI credits'],'[data-dock-window=analytics]':['Statistici','Analytics'],'[data-dock-window=account]':['Cont','Account'],'[data-dock-settings]':['Setări','Settings']};for(const [selector,values]of Object.entries(names)){const b=dock.querySelector(selector);b.querySelector('span').textContent=t(...values);b.setAttribute('aria-label',t(...values));}panel.querySelector('h2').textContent=t('Cont și preferințe','Account and preferences');};localize();
+ const closeUtilities=()=>{if(panel.dataset.pinned)return;panel.hidden=true;toggle.setAttribute('aria-expanded','false');place();};
+ window.addEventListener('tikinteract:auth',load);window.addEventListener('tikinteract:language',localize);window.addEventListener('tikinteract:workspace',closeUtilities);window.addEventListener('tikinteract:studio-tab',closeUtilities);
+ window.addEventListener('blur',()=>finish(true));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drag)finish(true);});
+ window.TikInteractFloatingDock=Object.freeze({get:()=>({...state}),reset(){state.x=16;state.y=16;place();persist();}});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})();

@@ -1,6 +1,7 @@
 import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES} from './platform-schema.js?v=2';
 import {arrangeStudioPanels} from './studio-structure.js?v=1';
 import {applyStudioVisibility} from './studio-visibility.js?v=1';
+import {isRecentRelease} from './catalog-featured-data.js?v=2';
 let config=cloneConfig(DEFAULT_CONFIG),revision=-1;
 const byId=id=>config.games.find(game=>game.id===id);
 const node=(tag,cls,text)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(text!==undefined)el.textContent=text;return el;};
@@ -27,9 +28,12 @@ function catalog(){
   for(const game of config.games.filter(g=>g.status==='published')){
    const option=node('option','',game.name);option.value=game.id;select.append(option);
    const card=node('article','game-center-card game-cover-card');card.dataset.gameId=game.id;card.dataset.gameCenterCard=(game.name+' '+game.description).toLowerCase();card.setAttribute('aria-label',game.name);
-   const image=node('img');image.src=game.cover;image.alt='Coperta '+game.name;image.width=720;image.height=1280;image.loading='lazy';
-   const body=node('div','game-center-card-body'),button=node('button','',game.plan==='free'||window.TikInteractPass?.canAccess(game.plan)?'Deschide în Studio':config.plans.find(p=>p.id===game.plan).name);button.type='button';button.dataset.planGame=game.id;button.addEventListener('click',()=>window.launchStudioGame?.(game.id));body.append(button);card.append(image,body);grid.append(card);
+   const poster=node('div','studio-game-poster'),image=node('img');image.src=game.cover;image.alt='Coperta '+game.name;image.width=720;image.height=1280;image.loading='lazy';
+   const badges=node('div','studio-game-badges');badges.dataset.nativeI18n='';badges.append(node('span',game.plan==='free'?'studio-game-free':'studio-game-pass',game.plan==='free'?'FREE':config.plans.find(p=>p.id===game.plan)?.name||'PLAY PASS'));if(isRecentRelease(game))badges.append(node('span','studio-game-new','NEW'));
+   const body=node('div','game-center-card-body'),title=node('h3','',game.name),description=node('p','studio-game-description');title.setAttribute('translate','no');description.dataset.studioGameDescription=game.id;body.append(title,description);
+   const button=node('button','studio-game-launch');button.type='button';button.dataset.planGame=game.id;button.addEventListener('click',()=>window.launchStudioGame?.(game.id));poster.append(image,badges,button);card.append(poster,body);grid.append(card);
   }
+  const upcoming=node('article','studio-games-upcoming'),placeholder=node('div','studio-game-poster studio-upcoming-poster'),bell=node('i','fa-solid fa-bell'),copy=node('div','game-center-card-body');bell.setAttribute('aria-hidden','true');placeholder.append(bell);copy.append(node('h3','',''),node('p','',''));upcoming.dataset.studioUpcoming='';upcoming.dataset.nativeI18n='';upcoming.hidden=!!document.getElementById('game-center-search')?.value.trim();upcoming.append(placeholder,copy);grid.append(upcoming);
   if(byId(selected)?.status==='published')select.value=selected;else select.value='';
   window.initializeGameFavorites?.();window.filterStudioGames?.(document.getElementById('game-center-search')?.value||'');
   updateAccess();
@@ -37,7 +41,10 @@ function catalog(){
  const nova=document.querySelector('[data-home-nova]');if(nova&&!nova.hasAttribute('data-catalog-featured'))nova.hidden=byId('nova-vex')?.status!=='published';
 }
 function updateAccess(){
- for(const button of document.querySelectorAll('[data-plan-game]')){const game=byId(button.dataset.planGame);if(game)button.textContent=game.plan==='free'||window.TikInteractPass?.canAccess(game.plan)?'Deschide în Studio':config.plans.find(p=>p.id===game.plan).name;}
+ const en=window.TikInteractLanguage?.get()==='en';
+ for(const button of document.querySelectorAll('[data-plan-game]')){const game=byId(button.dataset.planGame);if(game){const action=game.plan==='free'||window.TikInteractPass?.canAccess(game.plan)?(en?'Open in Studio':'Deschide în Studio'):config.plans.find(p=>p.id===game.plan).name;button.textContent=action;button.title=action+' · '+game.name;button.setAttribute('aria-label',button.title);}}
+ for(const text of document.querySelectorAll('[data-studio-game-description]')){const game=byId(text.dataset.studioGameDescription);if(game)text.textContent=window.TikInteractLanguage?.translate(game.description)||game.description;}
+ const upcoming=document.querySelector('[data-studio-upcoming]');if(upcoming){upcoming.querySelector('h3').textContent=en?'More games soon':'Urmează jocuri noi';upcoming.querySelector('p').textContent=en?'New experiences for your LIVE.':'Noi experiențe pentru LIVE-ul tău.';}
  const frame=document.getElementById('live-game-frame'),id=frame?.dataset.gameId,game=byId(id);
  if(id&&(!game||game.status!=='published'||(game.plan!=='free'&&!window.TikInteractPass?.canAccess(game.plan)))){
   window.TikInteractLive?.detach();frame.removeAttribute('src');delete frame.dataset.gameId;frame.hidden=true;frame.parentElement.classList.add('is-empty');document.getElementById('studio-game-empty').hidden=false;window.resetStudioTestMenu?.();document.getElementById('live-game-status').textContent='Jocul nu mai este disponibil pentru contul tău. Alege un joc gratuit sau verifică PLAY PASS.';
@@ -60,6 +67,8 @@ async function initialize(){apply(config);if(preview)window.parent.postMessage({
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();
 window.addEventListener('tikinteract:auth',updateAdminLink);
 window.addEventListener('tikinteract:access',()=>{updateAccess();window.refreshGameFavorites?.();});
+window.addEventListener('tikinteract:language',updateAccess);
+document.addEventListener('input',event=>{if(event.target.id==='game-center-search'){const upcoming=document.querySelector('[data-studio-upcoming]');if(upcoming)upcoming.hidden=!!event.target.value.trim();}});
 document.addEventListener('visibilitychange',()=>{if(!document.hidden){if(!preview)refresh();updateAdminLink();}});
 setInterval(()=>{if(!document.hidden&&!preview)refresh();},60000);
 

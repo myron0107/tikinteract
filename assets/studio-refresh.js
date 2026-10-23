@@ -2,7 +2,7 @@
 import{ct,esc,ic}from'./creator-ui.js?v=4';
 const $=s=>document.querySelector(s),en=()=>window.TikInteractLanguage?.get()==='en',t=(ro,english)=>en()?english:ro;
 let currentTab='studio',suggestedFor,accountObserver;
-const names={studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],animations:['ANIMAȚII','ANIMATIONS'],unavailable:['STUDIO','STUDIO'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
+const names={home:['ACASĂ','HOME'],studio:['TRANSMISIE','STREAM'],games:['JOCURI','GAMES'],audio:['PANOU DE SUNETE','SOUND PAD'],animations:['ANIMAȚII','ANIMATIONS'],unavailable:['STUDIO','STUDIO'],gifts:['Cadouri TikTok','TikTok Gifts'],analytics:['STATISTICI','ANALYTICS'],community:['Comunitate','Community'],account:['Contul meu','My Account'],help:['Ajutor','Help']};
 function label(tab){return t(...(names[tab]||names.studio));}
 function arrange(){window.TikInteractStudioLayout?.fitGame();}
 function suggestions(){

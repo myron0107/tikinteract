@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "node server.js",
+    "preview:studio": "node scripts/preview-studio.mjs",
     "test": "node --test",
     "build:css": "tailwindcss -c tailwind.config.cjs -i assets/utility.source.css -o assets/utility.css --minify",
     "sync:tiktok-gifts": "node scripts/sync-tiktok-gifts.mjs"

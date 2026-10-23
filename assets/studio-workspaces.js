@@ -17,7 +17,7 @@ function paint(){
  const title=document.getElementById('studio-current-section');if(mode==='ai'&&title)title.textContent='AI Studio / '+t(...labels[aiTab]);
  const number=document.querySelector('[data-credit-balance]'),label=document.querySelector('[data-credit-label]');
  if(number)number.textContent=wallet?new Intl.NumberFormat(t('ro-RO','en-GB')).format(Number(wallet.included)+Number(wallet.purchased)):'—';
- if(label)label.textContent=t('credite','credits');
+ if(label)label.textContent=t('credite AI','AI credits');
  for(const button of document.querySelectorAll('[data-credit-topup],[data-credit-view]')){button.title=t('Credite AI și reîncărcare','AI credits and top-ups');button.setAttribute('aria-label',button.title);if(button.hasAttribute('data-credit-topup'))button.disabled=!wallet;}
 }
 async function open(next,{tab,clip,configure=false,history:recordHistory=true}={}){
