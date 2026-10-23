@@ -1,5 +1,5 @@
 import {animationAPI} from './animations-client.js?v=2';
-let cache=null,stamp=0,pending=null,epoch=0;
+let cache=null,stamp=0,pending=null,epoch=0,owner=window.tikInteractUser?.id||null;
 export async function loadAnimationState({force=false}={}){
  const user=window.tikInteractUser?.id;if(!user)throw Error('ANIM_LOGIN_REQUIRED');
  if(!force&&cache?.user===user&&Date.now()-stamp<5000)return cache.data;
@@ -9,4 +9,4 @@ export async function loadAnimationState({force=false}={}){
   cache={user,data};stamp=Date.now();window.dispatchEvent(new CustomEvent('tikinteract:animation-state',{detail:data}));return data;
  }).catch(error=>{if(current===epoch&&user===window.tikInteractUser?.id){cache=null;stamp=0;window.dispatchEvent(new CustomEvent('tikinteract:animation-error'));}throw error;}).finally(()=>{if(pending?.promise===promise)pending=null;});pending={user,promise};return promise;
 }
-window.addEventListener('tikinteract:auth',()=>{epoch++;cache=null;stamp=0;pending=null;});
+window.addEventListener('tikinteract:auth',()=>{const next=window.tikInteractUser?.id||null;if(next===owner)return;owner=next;epoch++;cache=null;stamp=0;pending=null;});

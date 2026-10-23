@@ -15,9 +15,9 @@ try{
  await pointerDrag('#studio-home-panel>[data-widget-drag]',0,-900);assert((await rect('#studio-home-panel')).y<=5);
  await corner('#studio-home-panel');await pointerDrag('[data-widget-resize=home]',100,80);await corner('#studio-home-panel');await run('document.getElementById("studio-home-panel").scrollTop=150');await corner('#studio-home-panel');
  await click('[data-dock-collapse]');assert.equal(await run('TikInteractFloatingDock.get().collapsed'),true);
- const small=await rect('.studio-app-rail'),logo=await rect('.cp-rail-brand .ti-symbol'),arrow=await rect('[data-dock-collapse]');assert(small.h<90&&small.w<=65);assert(arrow.y>=logo.y+logo.h);
+ const small=await rect('.studio-app-rail'),logo=await rect('[data-dock-handle]'),arrow=await rect('[data-dock-collapse]');assert(small.h<90&&small.w<=65);assert(arrow.y>=logo.y+logo.h);
  assert.equal(await run('TikInteractWidgetDesktop.getActive()'),'home');
- await pointerDrag('.cp-rail-brand',150,100);assert.equal(await run('TikInteractFloatingDock.get().collapsed'),true);
+ await pointerDrag('[data-dock-handle]',150,100);assert.equal(await run('TikInteractFloatingDock.get().collapsed'),true);
  await b.page('Page.reload');await b.waitFor(ready);assert.equal(await run('TikInteractFloatingDock.get().collapsed'),true);
  await click('[data-dock-collapse]');assert.equal(await run('TikInteractFloatingDock.get().collapsed'),false);
  await run('TikInteractWidgetDesktop.open("studio")');assert(await run('!!document.querySelector(".studio-widget-config>header .fa-tower-broadcast")'));
@@ -31,8 +31,8 @@ try{
  const before=await rect('#game-center-panel');await touchDrag('[data-widget-resize=catalog]',40,-60);const after=await rect('#game-center-panel');assert(after.w>before.w+20);assert(after.h<before.h-30);assert(after.x>=0&&after.x+after.w<=391);
  await corner('#game-center-panel');await run('document.getElementById("game-center-panel").scrollTop=120');await corner('#game-center-panel');
  await touchDrag('#game-center-panel>[data-widget-drag]',-10,-500);assert((await rect('#game-center-panel')).y<=5);
- await click('[data-dock-collapse]');await touchDrag('.cp-rail-brand',60,140);assert.equal(await run('TikInteractFloatingDock.get().collapsed'),true);await b.screenshot('.tools/mobile-dock-review/minimized.webp');
+ await click('[data-dock-collapse]');await touchDrag('[data-dock-handle]',60,140);assert.equal(await run('TikInteractFloatingDock.get().collapsed'),true);await b.screenshot('.tools/mobile-dock-review/minimized.webp');
  await click('[data-dock-collapse]');assert.equal(await run('TikInteractFloatingDock.get().collapsed'),false);await b.screenshot('.tools/mobile-dock-review/games.webp');
  assert(await run('document.documentElement.scrollWidth<=innerWidth+1'));assert.deepEqual(b.errors,[]);
- console.log('PASS: all windows reach 4px; minimize to logo, arrow below, drag stays minimized, saved after reload; icon-only mobile menus, touch move/resize within screen; friendly Stream header, flat X, zero JS errors.');
+ console.log('PASS: all windows reach 4px; minimize to grip, arrow below, drag stays minimized, saved after reload; icon-only mobile menus, touch move/resize within screen; friendly Stream header, flat X, zero JS errors.');
 }finally{await b.close()}

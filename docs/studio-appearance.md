@@ -48,6 +48,22 @@ English is the default for new visitors on the site, maintenance page and Studio
 - Existing Studio desktop/atmosphere checks cover navigation, sounds and preservation/fit of the live game iframe.
 - Unit tests cover account language isolation/offline retry and actual Studio startup milestones/fallback.
 
-`npm.cmd test`: 186 tests passed. The browser checks listed above also passed against the isolated local preview, including the full desktop navigation/sound/game regression check.
+`npm.cmd test`: 188 tests passed. The browser checks listed above also passed against the isolated local preview, including the full desktop navigation/sound/game regression check.
+
+## Floating panel corrections and workspace guide
+
+STREAM panels now share the same sticky header layout and portal resize grip as page windows. The grip, colored icon, title and close button have separate space. Score/gifts/events use three responsive columns. Hidden sections no longer write zero-width geometry, and delayed saves cannot overwrite newer movements. Touch grips override ordinary button panning. Covered/closed panels do not leave resize controls over other windows.
+
+Launching a game opens the Stream panel picker. Its old fixed editing action is replaced by the neutral **Save and profiles** button, opening a movable/resizable **Workspace layout** window with autosave status, immediate save and existing profile management. Admins retain the existing platform-default publication flow and server permission checks. Switching profiles applies the profile's panel visibility to the picker as well as the canvas.
+
+`assets/studio-tour.js` replaces the old fixed-layout tour only in Studio. Ten contextual steps cover both floating docks, LIVE/AI navigation, catalog, panel selection, movement/resizing, layout saving, sounds and animations. A transparent backdrop and very light surrounding shade preserve visibility. Completing or dismissing the tour restores the previous page, selected panels, layout and dock state; the game iframe remains mounted. The tour does not connect LIVE, generate AI or purchase credits.
+
+The sidebar logo is removed; a compact dotted grip remains visible in expanded and collapsed modes. The bottom-right signature reuses the homepage wordmark with **STUDIO** below, without a tagline, year or background. The loading screen uses this single wordmark; Light mode has a neutral gray background. `assets/studio-app-icon.svg` provides the separate tab icon: a single white T with a brand-red accent. Public website branding is unchanged. The session inspector now scopes its labels to its own buttons, preventing it from accidentally replacing the loading wordmark.
+
+Landscape wallpapers have separate Light/Dark tone filters, applied only to the artwork and its thumbnails, without a fog overlay. Studio windows use smaller theme-aware shadows than the global docks.
+
+AI workspace state survives token refreshes and metadata updates of the same account. Account changes still clear private state. Unchanged subscription notifications no longer rebuild the generator; cached wallet reads restore the balance. The initial fetch uses quiet placeholders, and actual errors retain retry controls. The recurring workspace loading message is removed.
+
+Additional verification: `scripts/verify-studio-stream-panels.mjs` exercises all nine STREAM panels, local mouse/touch resizing, close/reopen, header repaint, persistent dimensions and themed wallpapers. `scripts/verify-studio-layout-tour.mjs` checks launch/picker behavior, the layout manager, every tour target, transparent backdrop, restoration and iframe identity. `tests/animations-state-session.test.js` checks account refresh/cache isolation; the workspace renderer test checks the quiet initial fetch and preserves unavailable-service errors.
 
 Preview locally with `npm.cmd run preview:studio` and open `http://127.0.0.1:3033/live-studio.html`. Browser checks use isolated loopback fixture data; no real payment, AI generation or LIVE session is started.

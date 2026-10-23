@@ -1,8 +1,8 @@
-import {openAnimations,openAnimationCredits} from './studio-animations-entry.js?v=6';
-import {loadAnimationState} from './animations-state.js?v=2';
+import {openAnimations,openAnimationCredits} from './studio-animations-entry.js?v=8';
+import {loadAnimationState} from './animations-state.js?v=3';
 const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 const labels={generator:['Generator AI','AI generator'],universes:['Universuri','Universes'],library:['Biblioteca mea','My library'],credits:['Credite AI','AI credits'],guide:['Ghid AI','AI guide'],history:['Istoric generări','Generation history']};
-let mode=document.documentElement.dataset.workspace==='ai'?'ai':'live',aiTab=new URLSearchParams(location.search).get('ai')||'generator',opening=0,wallet=null;
+let mode=document.documentElement.dataset.workspace==='ai'?'ai':'live',aiTab=new URLSearchParams(location.search).get('ai')||'generator',opening=0,wallet=null,accountOwner=window.tikInteractUser?.id||null;
 if(!labels[aiTab])aiTab='generator';
 function paint(){
  document.documentElement.dataset.workspace=mode;
@@ -34,7 +34,7 @@ async function open(next,{tab,clip,configure=false,history:recordHistory=true}={
  if(current!==opening)return;window.dispatchEvent(new CustomEvent('tikinteract:workspace',{detail:{mode}}));paint();
 }
 window.TikInteractWorkspaces=Object.freeze({getMode:()=>mode,open});
-async function refreshWallet(){if(!window.tikInteractUser){wallet=null;paint();return;}try{await loadAnimationState();}catch{wallet=null;paint();}}
+async function refreshWallet(){const own=window.tikInteractUser?.id;if(!own){wallet=null;paint();return;}try{const data=await loadAnimationState();if(own!==window.tikInteractUser?.id)return;wallet=data.wallet;paint();}catch{if(own===window.tikInteractUser?.id){wallet=null;paint();}}}
 async function init(){
  document.querySelectorAll('.studio-workspace-switch button[data-workspace]').forEach(b=>b.onclick=()=>open(b.dataset.workspace));
  document.querySelectorAll('[data-ai-tab]').forEach(b=>b.onclick=()=>open('ai',{tab:b.dataset.aiTab}));
@@ -50,7 +50,7 @@ async function init(){
 window.addEventListener('tikinteract:animation-state',e=>{wallet=e.detail.wallet;paint();});
 window.addEventListener('tikinteract:animation-error',()=>{wallet=null;paint();});
 window.addEventListener('tikinteract:animation-view',e=>{if(e.detail.workspace==='ai'&&labels[e.detail.tab])aiTab=e.detail.tab;paint();});
-window.addEventListener('tikinteract:auth',()=>{wallet=null;paint();refreshWallet();if(mode==='ai'&&window.tikInteractUser)queueMicrotask(()=>open('ai',{tab:aiTab,history:false}));});
+window.addEventListener('tikinteract:auth',()=>{const next=window.tikInteractUser?.id||null;if(next===accountOwner)return;accountOwner=next;wallet=null;paint();refreshWallet();if(mode==='ai'&&next)queueMicrotask(()=>open('ai',{tab:aiTab,history:false}));});
 window.addEventListener('tikinteract:config',()=>queueMicrotask(()=>{if(mode==='ai'&&window.TikInteractStudioVisibility?.isVisible('animations')===false)open('live',{history:false});paint();}));
 window.addEventListener('tikinteract:language',paint);
 window.addEventListener('popstate',()=>{const q=new URLSearchParams(location.search);open(q.get('workspace')==='ai'?'ai':'live',{tab:q.get('ai'),history:false});});

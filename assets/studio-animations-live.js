@@ -1,10 +1,10 @@
 import {esc,ic} from './creator-ui.js?v=4';
 import {animationAPI as api,animationText as t,animationError} from './animations-client.js?v=2';
 import {mediaCards,filteredClips,tabs,button,option} from './animations-live-views.js?v=4';
-import {renderAnimationWorkspace as renderAnimations} from './animations-workspace-views.js?v=2';
-import {loadAnimationState} from './animations-state.js?v=2';
+import {renderAnimationWorkspace as renderAnimations} from './animations-workspace-views.js?v=3';
+import {loadAnimationState} from './animations-state.js?v=3';
 import {creditPurchase} from './animations-credit-purchase.js?v=1';
-let root,dialog,opener,interval,epoch=0,refreshing=false,photoFile=null,uploadId=null,requestId=null,lastSignature='',mountPromise;
+let root,dialog,opener,interval,epoch=0,refreshing=false,photoFile=null,uploadId=null,requestId=null,lastSignature='',mountPromise,accountId=null,lastAccessPlan=null;
 const checkoutRequests=new Map();
 const s={workspace:'live',tab:'library',world:'vampire',tier:'standard',format:'16:9',prompt:'',character:'',consent:false,photo:'',photoName:'',busy:false,query:'',filter:'all',worlds:[],library:[],rules:[],jobs:[],wallet:{included:0,purchased:0,debt:0},config:{enabled:false,testMode:true,packages:[]},transactions:[],orders:[]};
 const lastTabs={ai:'generator',live:'library'};let requestedRule=null;
@@ -106,7 +106,7 @@ async function submitDialog(event){
 function reset(){epoch++;clearInterval(interval);if(s.photo)URL.revokeObjectURL(s.photo);photoFile=null;uploadId=null;requestId=null;checkoutRequests.clear();lastSignature='';Object.assign(s,{ready:false,loading:true,error:null,highlight:null,photo:'',photoName:'',prompt:'',character:'',consent:false,busy:false,worlds:[],library:[],rules:[],jobs:[],transactions:[],orders:[],wallet:{included:0,purchased:0,debt:0}});if(dialog?.open)dialog.close();}
 async function start(){await reload();clearInterval(interval);interval=setInterval(async()=>{if(document.hidden||refreshing||!window.tikInteractUser||root.classList.contains('hidden'))return;try{if(s.jobs.some(j=>!['moderation','completed','failed','review'].includes(j.status)))await api({action:'tick'});await reload({silent:true});}catch{}},8000);}
 export function mountAnimations(element){
- if(root)return mountPromise;root=element;root.dataset.nativeI18n='';s.workspace=document.documentElement.dataset.workspace==='ai'?'ai':'live';s.tab=s.workspace==='ai'?'generator':'library';draw();
+ if(root)return mountPromise;root=element;accountId=window.tikInteractUser?.id||null;root.dataset.nativeI18n='';s.workspace=document.documentElement.dataset.workspace==='ai'?'ai':'live';s.tab=s.workspace==='ai'?'generator':'library';draw();
  root.addEventListener('click',click);root.addEventListener('input',e=>{const id=e.target.id;if(id==='an-character')s.character=e.target.value;if(id==='an-prompt')s.prompt=e.target.value;if(id==='an-library-search'){s.query=e.target.value;root.querySelector('[data-an-library-grid]').innerHTML=mediaCards(s,filteredClips(s));}});
  root.addEventListener('change',async e=>{const id=e.target.id;if(id==='an-universe'){s.world=e.target.value;requestId=null;draw();}if(id==='an-consent')s.consent=e.target.checked;if(id==='an-library-filter'){s.filter=e.target.value;draw();}
   if(id==='an-photo'){const file=e.target.files[0];if(!file)return;if(!['image/jpeg','image/png','image/webp'].includes(file.type)||file.size>10485760){toast(t('Alege JPG, PNG sau WEBP, maximum 10 MB.','Choose JPG, PNG or WEBP, up to 10 MB.'));return;}try{const image=await createImageBitmap(file);if(image.width<300||image.height<300)throw Error();image.close();}catch{toast(t('Fotografia trebuie să aibă cel puțin 300×300 px.','Photo must be at least 300×300 px.'));return;}if(s.photo)URL.revokeObjectURL(s.photo);s.photo=URL.createObjectURL(file);s.photoName=file.name;photoFile=file;uploadId=null;requestId=null;draw();}
@@ -114,8 +114,9 @@ export function mountAnimations(element){
  root.addEventListener('submit',e=>{if(e.target.dataset.anForm==='generate'){e.preventDefault();generate();}});
  root.addEventListener('keydown',e=>{if(!e.target.matches('[data-an-tab]'))return;const ids=tabs(s).map(([id])=>id),i=ids.indexOf(s.tab),next=e.key==='ArrowRight'?ids[(i+1)%ids.length]:e.key==='ArrowLeft'?ids[(i+ids.length-1)%ids.length]:null;if(next){e.preventDefault();s.tab=next;draw();root.querySelector(`[data-an-tab=${next}]`).focus();}});
  window.addEventListener('tikinteract:language',()=>{dialog?.close();if(s.worlds.length)draw();else reload();});
- window.addEventListener('tikinteract:access',()=>{if(s.ready)draw();});
- window.addEventListener('tikinteract:auth',()=>{reset();if(window.tikInteractUser)start();else root.innerHTML='';});
- window.addEventListener('tikinteract:studio-tab',event=>{if(event.detail.tab!=='animations')root.querySelectorAll('video').forEach(v=>v.pause());else reload();});
+ lastAccessPlan=window.TikInteractPass?.getAccess()?.plan||null;
+ window.addEventListener('tikinteract:access',()=>{const plan=window.TikInteractPass?.getAccess()?.plan||null;if(plan===lastAccessPlan)return;lastAccessPlan=plan;if(s.ready)draw();});
+ window.addEventListener('tikinteract:auth',()=>{const next=window.tikInteractUser?.id||null;if(next===accountId)return;accountId=next;reset();if(next)start();else root.innerHTML='';});
+ window.addEventListener('tikinteract:studio-tab',event=>{if(event.detail.tab!=='animations')root.querySelectorAll('video').forEach(v=>v.pause());else reload({silent:s.ready});});
  window.addEventListener('pagehide',reset);mountPromise=start();return mountPromise;
 }

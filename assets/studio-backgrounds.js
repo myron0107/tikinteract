@@ -21,6 +21,7 @@
  function apply(){
   const state=saved[workspace()],choice=choices.find(c=>c.id===state.id);
   root.dataset.studioBackground=state.id;
+  root.dataset.studioBackgroundKind=choice?.kind||'color';
   root.style.setProperty('--studio-custom-background',state.color);
   if(choice?.kind==='landscape')root.style.setProperty('--studio-wallpaper-image',`url("${new URL(choice.id+'.webp',base).href}")`);
   else root.style.removeProperty('--studio-wallpaper-image');

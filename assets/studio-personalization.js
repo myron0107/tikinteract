@@ -1,13 +1,13 @@
 import {CANVAS_WIDTH,snap,normalizeLayout,moveFavorite} from './studio-personalization-model.js?v=2';
 import {esc,ic} from './creator-ui.js?v=4';
-import {loadAnimationState} from './animations-state.js?v=2';
+import {loadAnimationState} from './animations-state.js?v=3';
 import {animationAPI,animationError} from './animations-client.js?v=2';
 const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 const labels={games:['Favorite jocuri','Favorite games'],audio:['Favorite audio','Favorite audio'],preview:['Joc','Game'],controls:['Control joc','Game controls'],streamer:['TikTok LIVE','TikTok LIVE'],stats:['Scor și cadouri','Score and gifts'],feed:['Evenimente LIVE','LIVE events'],audience:['Chat și susținători','Chat and supporters'],animations:['Favorite animații','Favorite animations']};
 const read=key=>{try{return JSON.parse(localStorage.getItem(key));}catch{return null;}},write=(key,value)=>{try{localStorage.setItem(key,JSON.stringify(value));}catch{}};
 const legacy={games:read('tikinteract_game_favorites_v1')||[],audio:read('tikinteract-audio-favorites')||[],animations:[]};
 let root,toolbar,dialog,ghost,user=null,epoch=0,profiles=[],active=null,draft=normalizeLayout(),saved=normalizeLayout(),editing=false,loaded=false,cloud='loading',busy=false,timer,drag=null,dragFrame=0,applying=false,library=[],message='';
-const panelIcons={games:'gamepad',audio:'table-cells',preview:'display',controls:'sliders',streamer:'tower-broadcast',stats:'chart-simple',feed:'bolt',audience:'comments',animations:'clapperboard'};
+const panelIcons={games:'gamepad',audio:'table-cells',preview:'display',controls:'sliders',streamer:'tower-broadcast',stats:'chart-line',feed:'bolt',audience:'comments',animations:'clapperboard'};
 const nodes=new Map(),originalHidden=new Map(),mode=()=>matchMedia('(max-width:700px)').matches?'mobile':'desktop',ids=()=>[...nodes.keys()];
 let platformDefault=null,defaultRevision=0,canPublish=false,restoredLayout=false;
 const presentationKey=()=>`tikinteract_control_room_layout:${user}`;
@@ -23,7 +23,7 @@ async function rpc(name,args={}){
 }
 function errorText(e){const value=String(e?.message||'');return /LAYOUT_CONFLICT/.test(value)?t('Profilul a fost modificat pe alt dispozitiv. Reîncarcă profilurile înainte să salvezi.','This profile changed on another device. Reload profiles before saving.'):/LAYOUT_LIMIT/.test(value)?t('Poți salva cel mult 8 profiluri.','You can save up to 8 profiles.'):/PGRST202|does not exist|schema cache/.test(value)?t('Salvare locală. Pentru sincronizare, instalează supabase/studio-workspaces.sql.','Saved locally. Install supabase/studio-workspaces.sql to enable sync.'):t('Sincronizarea nu a reușit. Modificările rămân pe acest dispozitiv.','Sync failed. Changes remain on this device.');}
 function buttons(){
- if(!toolbar)return;
+ if(!toolbar)return;window.dispatchEvent(new Event('tikinteract:layout-status'));
  toolbar.innerHTML=`<select data-sle-profile aria-label="${t('Profil de aranjament','Layout profile')}" ${busy||editing?'disabled':''}>${profiles.map(p=>`<option value="${esc(p.id)}" ${p.id===active?'selected':''}>${esc(p.name)}</option>`).join('')}</select><button type="button" data-sle="new" ${busy||editing?'disabled':''} title="${t('Profil nou','New profile')}">${ic('plus')}</button><button type="button" data-sle="edit" ${!user||!loaded||editing||busy?'disabled':''}>${ic('sliders')}${t('Personalizează','Customize Layout')}</button><span class="sle-tools" ${editing?'':'hidden'}><button type="button" data-sle="save" ${busy?'disabled':''}>${ic('check')}${t('Salvează','Save Layout')}</button><button type="button" data-sle="cancel">${t('Anulează','Cancel')}</button><button type="button" data-sle="reset">${t('Resetează','Reset Layout')}</button><button type="button" data-sle="panels">${ic('layer-group')}${t('Panouri','Add Panel')}</button><button type="button" data-sle="favorites">${ic('star')}${t('Favorite','Favorites')}</button><button type="button" data-sle="lock">${ic('lock')}${t('Blochează','Lock Layout')}</button>${canPublish?`<button type="button" data-sle="publish" ${busy?'disabled':''}>${ic('globe')}${t('Setează ca implicit','Set as platform default')}</button>`:''}</span><button type="button" data-sle="profiles" ${!user||busy||editing?'disabled':''}>${ic('folder')}${t('Profiluri','Profiles')}</button><small>${cloud==='ready'?t('Sincronizat cu contul','Synced with account'):cloud==='loading'?t('Se încarcă profilurile…','Loading profiles…'):t('Doar pe acest dispozitiv','This device only')} · ${mode()==='mobile'?t('Mobil','Mobile'):t('Desktop','Desktop')}</small>${effectiveLayout().custom&&!editing?'<button type="button" data-sle="saved-layout">'+t(restoredLayout?'Noul Studio':'Aranjament salvat',restoredLayout?'New Studio':'Saved layout')+'</button>':''}<p data-sle-message role="status">${esc(message)}</p>`;
 }
 function applyFavorites(){applying=true;try{window.TikInteractFavorites?.set(draft.favorites);renderAnimations();}finally{applying=false;}}
@@ -33,13 +33,15 @@ function apply(){
  root.style.setProperty('--sle-height',Math.max(700,...rows.filter(p=>!p.hidden).map(p=>p.y+p.h+32))+'px');
  for(const [id,node] of nodes){const p=rows.find(p=>p.id===id);if(!p)continue;
   node.hidden=custom?p.hidden:originalHidden.get(id);node.classList.toggle('sle-panel',custom);
-  if(custom)for(const [key,value]of Object.entries({left:p.x*scale,top:p.y,width:p.w*scale,'panel-height':p.h}))node.style.setProperty('--sle-'+key,value+'px');
+  // Hidden Studio sections have no measurable width. Keep their last geometry
+  // until visible, instead of collapsing every saved panel to zero pixels.
+  if(custom&&scale>0)for(const [key,value]of Object.entries({left:p.x*scale,top:p.y,width:p.w*scale,'panel-height':p.h}))node.style.setProperty('--sle-'+key,value+'px');
  }
  buttons();requestAnimationFrame(()=>{window.TikInteractStudioLayout?.fitGame();nodes.forEach(node=>window.TikInteractWidgetDesktop?.positionResize(node));});
 }
 function register(id,node){
  if(!node||nodes.has(id)||!/^[a-z][a-z0-9-]{0,49}$/.test(id))return;
- nodes.set(id,node);originalHidden.set(id,node.hidden);node.dataset.layoutPanel=id;
+ nodes.set(id,node);originalHidden.set(id,node.hidden);node.dataset.layoutPanel=id;node.style.zIndex=String(20+nodes.size*3);
  const controls=document.createElement('div');controls.className='sle-panel-tools';controls.dataset.sleHandle=id;controls.tabIndex=0;controls.setAttribute('role','group');
  controls.innerHTML=`<i class="fa-solid fa-grip-vertical sle-panel-grip" aria-hidden="true"></i><i class="fa-solid fa-${panelIcons[id]||'window-maximize'} sle-panel-icon" aria-hidden="true"></i><span data-sle-label>${esc(name(id))}</span><button type="button" data-sle-left="${id}" aria-label="${t('Mută spre stânga','Move left')}">‹</button><button type="button" data-sle-up="${id}" aria-label="${t('Mută în sus','Move up')}">↑</button><button type="button" data-sle-down="${id}" aria-label="${t('Mută în jos','Move down')}">↓</button><button type="button" data-sle-right="${id}" aria-label="${t('Mută spre dreapta','Move right')}">›</button><button type="button" data-sle-hide="${id}" aria-label="${t('Ascunde panoul','Hide panel')}">${ic('xmark')}</button>`;
  node.prepend(controls);const resize=document.createElement('button');resize.type='button';resize.className='sle-resize';resize.dataset.sleResize=id;resize.innerHTML='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="m3 13 10-10m-5 10 5-5"/></svg>';resize.setAttribute('aria-label',t('Redimensionează; săgețile modifică dimensiunea','Resize; arrow keys change size'));node.append(resize);
@@ -63,14 +65,14 @@ async function save({lock=true}={}){
  const previous=profiles.find(p=>p.id===id);if(!previous){busy=false;return false;}
  try{
   const row=await rpc('studio_layout_save',{p_id:id,p_name:previous.name,p_layout:layout,p_revision:previous.revision,p_owner:own});
-  if(version!==epoch)return false;profiles=profiles.map(p=>p.id===id?row:p);saved=structuredClone(layout);draft=structuredClone(layout);cloud='ready';
+  if(version!==epoch)return false;const newer=JSON.stringify(draft)!==JSON.stringify(layout);profiles=profiles.map(p=>p.id===id?{...row,layout:newer?structuredClone(draft):row.layout,pending:newer}:p);saved=structuredClone(layout);cloud='ready';
   if(editing){restoredLayout=true;write(presentationKey(),true);}if(lock)editing=false;cache();say(t('Aranjament salvat în cont.','Layout saved to your account.'));return true;
  }catch(e){
   if(version!==epoch)return false;
   if(/LAYOUT_CONFLICT/.test(String(e.message))){say(errorText(e));return false;}
   cloud=/PGRST202|does not exist|schema cache/.test(String(e.message))?'missing':'offline';
-  profiles=profiles.map(p=>p.id===id?{...p,layout,pending:true}:p);saved=structuredClone(layout);if(lock)editing=false;cache();say(errorText(e));return false;
- }finally{if(version===epoch){busy=false;apply();}}
+  profiles=profiles.map(p=>p.id===id?{...p,layout:structuredClone(draft),pending:true}:p);saved=structuredClone(layout);if(lock)editing=false;cache();say(errorText(e));return false;
+ }finally{if(version===epoch){busy=false;if(!drag)apply();else buttons();if(JSON.stringify(draft)!==JSON.stringify(layout))queueWorkspaceSave();}}
 }
 function changedFavorites(){
  applyFavorites();cache();
@@ -86,7 +88,7 @@ async function favoritePicker(only){
  showDialog(t('Favoritele tale','Your favorites'),`<p>${t('Sunt scurtături. Eliminarea nu șterge fișierele originale. În modul de editare poți trage cardurile pentru a le reordona.','These are shortcuts. Removing one never deletes the original file. Drag cards in edit mode to reorder them.')}</p><div class="sle-panel-picker">${!only?group('games',t('Jocuri','Games'),catalog.games)+group('audio',t('Sunete','Sounds'),catalog.audio):''}${group('animations',t('Animații','Animations'),library.filter(c=>c.mime==='video/mp4'))}</div>`);
  dialog.querySelectorAll('[data-favorite-kind]').forEach(input=>input.onchange=()=>{const kind=input.dataset.favoriteKind,list=draft.favorites[kind],limit=kind==='audio'?12:40;if(input.checked&&!list.includes(input.value)&&list.length<limit)list.push(input.value);else draft.favorites[kind]=list.filter(x=>x!==input.value);input.checked=draft.favorites[kind].includes(input.value);changedFavorites();});
 }
-function queueWorkspaceSave(){clearTimeout(timer);timer=setTimeout(()=>{if(loaded&&user&&!busy)save({lock:false});},800);}
+function queueWorkspaceSave(){clearTimeout(timer);timer=setTimeout(()=>{if(!loaded||!user||document.documentElement.dataset.studioTourActive==='true')return;if(busy||drag)queueWorkspaceSave();else save({lock:false});},800);}
 function panelPicker(){
  showDialog(t('Panouri disponibile','Available panels'),`<div class="sle-panel-picker">${draft[mode()].map(p=>`<label><input type="checkbox" data-show-panel="${p.id}" ${!p.hidden?'checked':''}>${esc(name(p.id))}</label>`).join('')}</div>`);
  dialog.querySelectorAll('[data-show-panel]').forEach(input=>input.onchange=()=>{draft.custom=true;draft[mode()].find(p=>p.id===input.dataset.showPanel).hidden=!input.checked;apply();queueWorkspaceSave();if(input.dataset.showPanel==='animations'&&input.checked)loadLibrary();});
@@ -120,7 +122,7 @@ async function action(event){
  }
 }
 function publishDialog(){
- if(!canPublish||!editing)return;
+ if(!canPublish)return;
  const layout=structuredClone(draft);layout.favorites={games:[],audio:[],animations:[]};
  showDialog(t('Aranjamentul implicit al platformei','Platform default layout'),`<p>${t('Publici pozițiile, dimensiunile și vizibilitatea panourilor pentru desktop și mobil. Se aplică utilizatorilor fără aranjament personalizat. Favoritele, fișierele și datele tale nu se publică.','Publish panel positions, sizes and visibility for desktop and mobile. This applies to users without a customized layout. Your favorites, files and personal data are never published.')}</p><button type="button" class="an-button" data-publish-default>${t('Publică acest aranjament','Publish this layout')}</button><p data-publish-error role="status"></p>`);
  dialog.querySelector('[data-publish-default]').onclick=async e=>{
@@ -154,6 +156,7 @@ function frontPanel(node){
 function startPointer(e){
  const free=document.body.classList.contains('studio-widget-desktop')&&e.target.closest('[data-sle-handle],[data-sle-resize]');
  if((!editing&&!free)||e.button!==0||drag)return;
+ if(free&&e.target.closest('button:not([data-sle-resize])'))return;
  if(free&&!editing)enableFreeLayout();
  const favorite=e.target.closest('.studio-quick-item,.live-favorite-card');
  if(favorite){if(e.target.closest('.game-favorite-star,.live-favorite-remove'))return;const kind=favorite.closest('.studio-game-options')?'games':favorite.closest('#live-favorite-sounds')?'audio':'animations',id=kind==='games'?favorite.querySelector('[data-live-game]')?.dataset.liveGame:kind==='audio'?favorite.dataset.soundId:favorite.dataset.animationId;if(!id)return;drag={kind:'favorite',list:kind,id,node:favorite,startX:e.clientX,startY:e.clientY,moved:false};}
@@ -164,7 +167,7 @@ function startPointer(e){
  }
  frontPanel(drag.node);drag.rect=drag.node.getBoundingClientRect();drag.scroll=scrollY;
  drag.styles=Object.fromEntries(['transform','z-index','width','height','pointer-events'].map(k=>[k,[drag.node.style.getPropertyValue(k),drag.node.style.getPropertyPriority(k)]]));
- drag.pointer=e.pointerId;drag.capture=e.target;e.target.setPointerCapture?.(e.pointerId);e.preventDefault();
+ drag.pointer=e.pointerId;drag.capture=e.target.closest('[data-sle-resize],[data-sle-handle]')||e.target;drag.capture.setPointerCapture?.(e.pointerId);e.preventDefault();
 }
 function pointerMove(e){
  if(!drag||e.pointerId!==drag.pointer)return;
@@ -216,7 +219,7 @@ function endPointer(commit=true){
 function init(){
  root=document.querySelector('.studio-workspace');if(!root)return;
  toolbar=document.getElementById('studio-layout-toolbar');toolbar.dataset.nativeI18n='';toolbar.addEventListener('click',action);
- toolbar.addEventListener('change',async e=>{if(!e.target.matches('[data-sle-profile]'))return;const next=e.target.value;active=next;restoredLayout=true;write(presentationKey(),true);draft=normalizeLayout(profiles.find(p=>p.id===next)?.layout,ids());saved=structuredClone(draft);applyFavorites();apply();cache();try{await rpc('studio_layout_select',{p_id:next});}catch(error){say(errorText(error));}});
+ toolbar.addEventListener('change',e=>{if(e.target.matches('[data-sle-profile]'))window.TikInteractStudioPersonalization.selectProfile(e.target.value);});
  for(const [id,selector]of Object.entries({games:'.studio-game-picker',audio:'.studio-audio',preview:'.studio-stage',controls:'#studio-test-panel',streamer:'.studio-connection',stats:'.studio-stats',feed:'.studio-controls>.live-grid',audience:'#studio-live-session',animations:'#studio-favorite-animations'}))register(id,root.querySelector(selector));
  root.querySelectorAll('[data-layout-panel]').forEach(node=>register(node.dataset.layoutPanel,node));
  root.addEventListener('pointerdown',e=>{const panel=e.target.closest('[data-layout-panel]');if(panel)frontPanel(panel);startPointer(e);},{capture:true});document.addEventListener('pointerdown',e=>{if(e.target.closest('[data-sle-resize]')&&!root.contains(e.target))startPointer(e);},{capture:true});document.addEventListener('pointermove',pointerMove);document.addEventListener('pointerup',()=>endPointer(true));document.addEventListener('pointercancel',()=>endPointer(false));
@@ -240,7 +243,13 @@ function init(){
  window.addEventListener('blur',()=>endPointer(false));
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&drag){e.preventDefault();endPointer(false);apply();}});
  new MutationObserver(records=>{let added=false;for(const record of records)for(const node of record.addedNodes){if(node.nodeType!==1)continue;for(const panel of [node,...node.querySelectorAll('[data-layout-panel]')]){const id=panel.dataset.layoutPanel;if(id&&!nodes.has(id)){register(id,panel);added=true;}}}if(added){draft=normalizeLayout(draft,ids());apply();}}).observe(root,{childList:true,subtree:true});
- window.TikInteractStudioPersonalization=Object.freeze({getFavorites:()=>structuredClone(draft.favorites),toggleAnimation,registerPanel:(id,node)=>{register(id,node);draft=normalizeLayout(draft,ids());apply();},getLayout:()=>structuredClone(effectiveLayout()),setPanelVisible:(id,visible)=>{const p=draft[mode()].find(p=>p.id===id);if(!p)return;const changed=p.hidden===visible;p.hidden=!visible;originalHidden.set(id,!visible);apply();if(changed)queueWorkspaceSave();},isEditing:()=>editing});
+ window.TikInteractStudioPersonalization=Object.freeze({getFavorites:()=>structuredClone(draft.favorites),toggleAnimation,registerPanel:(id,node)=>{register(id,node);draft=normalizeLayout(draft,ids());apply();},getLayout:()=>structuredClone(effectiveLayout()),setPanelVisible:(id,visible)=>{const p=draft[mode()].find(p=>p.id===id);if(!p)return;const changed=p.hidden===visible;p.hidden=!visible;originalHidden.set(id,!visible);apply();if(changed)queueWorkspaceSave();},isEditing:()=>editing,
+ getStatus:()=>({loaded,busy,cloud,canPublish,active,profiles:profiles.map(({id,name})=>({id,name}))}),
+ saveLayout:async()=>{if(!loaded||busy||!user)return false;enableFreeLayout();return save({lock:false});},
+ openProfiles:()=>profileDialog(),publishLayout:()=>{enableFreeLayout();publishDialog();},
+ selectProfile:async id=>{const profile=profiles.find(p=>p.id===id);if(!profile||busy)return;active=id;restoredLayout=true;write(presentationKey(),true);draft=normalizeLayout(profile.layout,ids());saved=structuredClone(draft);applyFavorites();apply();cache();window.dispatchEvent(new CustomEvent('tikinteract:layout-profile',{detail:{visible:draft[mode()].filter(p=>!p.hidden).map(p=>p.id)}}));try{await rpc('studio_layout_select',{p_id:id});}catch(error){say(errorText(error));}},
+ restoreLayout:value=>{draft=normalizeLayout(value,ids());applyFavorites();apply();cache();queueWorkspaceSave();}
+ });
  loadUser();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();

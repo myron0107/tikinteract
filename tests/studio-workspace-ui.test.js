@@ -16,3 +16,10 @@ test('AI backend failure retains the workspace heading and local guide without i
  const error=renderAnimationWorkspace(state);assert(error.includes('Generator AI'));assert(error.includes('data-an-action="refresh"'));assert(!error.includes('id="an-prompt"'));assert(!error.includes('0 credite'));assert.match(error,/data-an-action="topup" disabled/);
  const guide=renderAnimationWorkspace({...state,tab:'guide'});assert(guide.includes('ai-guide-grid'));assert(guide.includes('data-an-open-tab="generator"'));assert(!guide.includes('role="tablist"'));
 });
+
+test('First AI load uses quiet placeholders without the recurring workspace loading message',()=>{
+ const html=renderAnimationWorkspace({workspace:'ai',tab:'generator',ready:false,loading:true});
+ assert(html.includes('an-workspace-skeleton'));assert(html.includes('aria-busy="true"'));
+ assert(!html.includes('Loading your workspace'));assert(!html.includes('Se încarcă spațiul tău'));
+ assert(!html.includes('id="an-prompt"'),'Do not expose generation controls before real configuration is available');
+});

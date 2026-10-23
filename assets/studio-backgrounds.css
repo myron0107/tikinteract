@@ -45,3 +45,9 @@ body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-custom-color 
 body#tikinteract-studio .sd-interface-label{margin-top:20px}
 body#tikinteract-studio .sd-interface-label+.sd-palette-neutral{margin-top:0!important}
 @media(max-width:500px){body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-palette-panel{padding:14px}.sd-background-options{gap:6px}}
+/* Tone the illustration itself, without a fog layer over the selected artwork.
+   Only the wallpaper is filtered; game frames and controls are unaffected. */
+html[data-mode=dark][data-studio-background-kind=landscape] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{filter:brightness(.78) saturate(.86) contrast(1.03)}
+html[data-mode=light][data-studio-background-kind=landscape] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{filter:brightness(1.18) saturate(.72) contrast(.92)}
+html[data-mode=dark] body#tikinteract-studio .sd-background-preview img{filter:brightness(.78) saturate(.86) contrast(1.03)}
+html[data-mode=light] body#tikinteract-studio .sd-background-preview img{filter:brightness(1.18) saturate(.72) contrast(.92)}
