@@ -53,16 +53,16 @@ try{
  await run('TikInteractAppearance.set({mode:"light"})');await b.screenshot('.tools/stream-panels-review/audience-light.webp');
  assert(await run('window.qaGameFrame===document.getElementById("live-game-frame")'),'Original game iframe preserved');
  await run('TikInteractWidgetDesktop.open("games")');await waitFrame();assert(await run('[...document.querySelectorAll("[data-sle-resize]")].every(h=>h.hidden)'),'No STREAM grips leak into other pages');
- // Wallpaper adjustments affect artwork only, preserve cover and change with theme.
- for(const id of ['neon-city','floating-islands','ruby-arena']){
-  const filters=[];
+ // Native wallpaper pairs preserve cover and change images with the theme.
+ for(const id of ['arcade-hub','crystal-world','stardust']){
+  const images=[];
   for(const mode of ['light','dark']){
    await run(`TikInteractStudioBackgrounds.set('${id}');TikInteractAppearance.set({mode:'${mode}'})`);await waitFrame();
    const result=await run('(()=>{const s=getComputedStyle(document.body,"::before");return{filter:s.filter,size:s.backgroundSize,image:s.backgroundImage,mode:document.documentElement.dataset.mode}})()');
-   assert.equal(result.size,'cover');assert(result.image.includes(id));assert.notEqual(result.filter,'none');filters.push(result.filter);
-   if(id==='floating-islands')await b.screenshot(`.tools/stream-panels-review/wallpaper-${mode}.webp`);
+   assert.equal(result.size,'cover');assert(result.image.includes(id));assert.equal(result.filter,'none');assert(result.image.includes(id+'-'+mode+'.webp'));images.push(result.image);
+   if(id==='crystal-world')await b.screenshot(`.tools/stream-panels-review/wallpaper-${mode}.webp`);
   }
-  assert.notEqual(filters[0],filters[1]);
+  assert.notEqual(images[0],images[1]);
  }
  assert(await run('!document.querySelector(".studio-app-rail .cp-rail-brand,.studio-app-rail .ti-symbol")'),'Dock logo removed');
  const dockBefore=await rect('[data-dock-handle]');await drag('[data-dock-handle]',50,50);const dockAfter=await rect('[data-dock-handle]');assert(dockAfter.x>dockBefore.x+20,'Minimized dock still draggable without logo');

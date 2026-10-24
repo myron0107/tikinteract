@@ -1,6 +1,6 @@
 /* The public website keeps its own loader. */
-html[data-palette-scope=studio][data-ui-pending] #page-startup-screen,html[data-palette-scope=studio][data-ui-revealing] #page-startup-screen{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;visibility:visible;background:radial-gradient(ellipse at 50% 40%,#33202b55,transparent 45%),#141418;color:#f0f1f4;opacity:1;font:400 13px/1.5 Inter,system-ui,sans-serif}
-html[data-palette-scope=studio][data-mode=light] #page-startup-screen{background:#ececef;color:#272c35}
+html[data-palette-scope=studio][data-ui-pending] #page-startup-screen,html[data-palette-scope=studio][data-ui-revealing] #page-startup-screen{position:fixed;inset:0;z-index:2147483647;display:grid;place-items:center;visibility:visible;background:#141414;color:#f0f1f4;opacity:1;font:400 13px/1.5 Inter,system-ui,sans-serif}
+html[data-palette-scope=studio][data-mode=light] #page-startup-screen{background:#ededed;color:#272c35}
 html[data-palette-scope=studio] .ti-startup-content{max-width:360px;transform:none;padding:30px}
 html[data-palette-scope=studio] .ti-startup-studio{animation:none;margin-bottom:28px;gap:0}
 html[data-palette-scope=studio] .ti-startup-wordmark{font:700 26px/1.15 Inter,system-ui,sans-serif;letter-spacing:-1px;color:#f4f4f7}
@@ -8,9 +8,11 @@ html[data-palette-scope=studio][data-mode=light] .ti-startup-wordmark{color:#101
 html[data-palette-scope=studio] .ti-startup-wordmark>span{color:#c63d5a}
 html[data-palette-scope=studio][data-mode=light] .ti-startup-wordmark>span{color:#8b1f3f}
 html[data-palette-scope=studio] body#tikinteract-studio .ti-startup-studio>strong{display:block;font:600 8px/1.4 Inter,system-ui,sans-serif;letter-spacing:4px;text-indent:4px;margin-top:7px;opacity:.65}
-html[data-palette-scope=studio] .ti-startup-track{width:176px;height:3px;border-radius:3px;overflow:hidden;background:#ffffff12}
-html[data-palette-scope=studio][data-mode=light] .ti-startup-track{background:#20252d14}
-html[data-palette-scope=studio] .ti-startup-track>span{animation:none;width:var(--studio-boot-progress,0%);background:#c84d65;transition:width .2s ease}
+html[data-palette-scope=studio] #page-startup-screen .ti-startup-track{width:176px;height:3px;border-radius:3px;overflow:hidden;background:#ffffff12}
+html[data-palette-scope=studio][data-mode=light] #page-startup-screen .ti-startup-track{background:#20202014}
+/* Keep progress neutral even when the public loader's blue palette is selected. */
+html[data-palette-scope=studio] #page-startup-screen .ti-startup-track>span{animation:none;width:var(--studio-boot-progress,0%);background:#a3a3a3;transition:width .2s ease}
+html[data-palette-scope=studio][data-mode=light] #page-startup-screen .ti-startup-track>span{background:#666666}
 html[data-palette-scope=studio] .ti-startup-content>p{font-size:12px;letter-spacing:.01em;margin-top:14px;color:#a8aeb9}
 html[data-palette-scope=studio][data-mode=light] .ti-startup-content>p{color:#626a77}
 html[data-palette-scope=studio][data-ui-revealing] #page-startup-screen{opacity:0;pointer-events:none;transition:opacity .18s ease}

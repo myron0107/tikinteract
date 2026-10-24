@@ -4,20 +4,15 @@ All visual and workspace changes are limited to `live-studio.html` and Studio as
 
 ## Appearance
 
-`assets/studio-backgrounds.js` and `.css` add Default (graphite / pearl gray), Navy, Plum and Sage, a custom solid color, and the three approved illustrated landscapes. Background and interface palette are independent. “No palette” keeps neutral controls. Preferences persist locally and separately for LIVE and AI. Existing Light/Dark controls are reused. Images cover the entire viewport, centered without repeating, in both modes.
+`assets/studio-backgrounds.js` and `.css` add Default (graphite / pearl gray), Navy, Plum and Sage, a custom solid color, and four paired cartoon / cosmic wallpapers. Background and interface palette are independent. “No palette” keeps neutral controls. Preferences persist locally and separately for LIVE and AI. Existing Light/Dark controls are reused. Images cover the entire viewport, centered without repeating, in both modes.
 
-Selected artwork is stored in `assets/studio-backgrounds/`:
+The background chooser has three groups: **Colorful**, **Metallic**, and **Illustrated landscapes** (Romanian: Colorat, Metalic, Peisaje ilustrate). Metallic offers Graphite, Silver, Blue steel, and Titanium using static directional CSS reflections with separate Light/Dark tones. The existing soft-graphite, soft-blue, and soft-mint IDs remain valid so saved selections survive this update; only their appearance and labels change. There are no animations or image downloads for metallic finishes.
 
-- `neon-city.webp`, `floating-islands.webp`, `ruby-arena.webp`: 265,692 / 298,266 / 239,422 bytes.
-- Matching `-thumb.webp` files: 17,236 / 19,418 / 16,854 bytes.
+Illustrated landscapes contain four character-free cartoon gaming / cosmic backgrounds: **Arcade hub**, **Crystal universe**, **Cosmic orbit**, and **Stardust**. Each new wallpaper has separately painted Light and Dark images, automatically selected with the current theme, plus matching thumbnails. These paired illustrations retain their native colors without brightness filters or a fog layer. Art is encoded to 1920×1080 WebP with separate 360px thumbnails; only the selected full-size wallpaper is downloaded. The rejected lake/valley images are not bundled. Their saved IDs are mapped to Arcade hub / Crystal universe while preserving the custom color. The older metal/glass image concepts also remain preview-only. `scripts/verify-studio-backgrounds.mjs` checks the three groups, four metallic finishes, all four paired illustrations and their thumbnails, selection migration, palette rerender, separate LIVE/AI persistence and mobile bounds.
 
-The approved images were generated with built-in imagegen, then encoded to WebP and separate small previews. The original PNGs remain in the Codex generated-images directory. Unapproved people/abstract previews were not added to the project. Only the selected full image is used as the wallpaper; the chooser uses lazy thumbnails. Minimal backgrounds use CSS gradients without image downloads.
+Selected artwork is stored in `assets/studio-backgrounds/`: four named wallpapers, each with `-light.webp` and `-dark.webp`, and matching `-thumb.webp` files. All eight full images and thumbnails together occupy 619,996 bytes. Only the selected full image is used; the chooser uses lazy thumbnails. Originals remain in the Codex generated-images directory.
 
-Prompt set for the approved images: a wide 16:9 gaming/streaming wallpaper, hand-drawn anime environment art, cel-shaded textures and clear linework; no people, faces, characters, animals, silhouettes, statues, text, logos or interface; quieter darker center, detailed far edges, controlled glow; no orange, copper or gold, no realistic room interiors.
-
-1. A futuristic midnight rooftop/metropolis panorama, cobalt architecture, pink/cyan neon, violet stars and reflective dark foreground.
-2. Floating rocky islands with emerald crystals, turquoise waterfalls, a deep purple valley, moonlit indigo sky and stylized trees.
-3. An empty futuristic black/burgundy arena, ruby neon architecture, mountains, a dark red moon and crimson foliage.
+Neon city, Floating islands and Ruby arena are removed from the selector and their six bundled assets are deleted. Stored selections migrate to Arcade hub, Crystal universe and Stardust respectively. The rejected lake/valley previews are also not bundled.
 
 ## Windows and mobile
 
@@ -60,10 +55,12 @@ Launching a game opens the Stream panel picker. Its old fixed editing action is 
 
 The sidebar logo is removed; a compact dotted grip remains visible in expanded and collapsed modes. The bottom-right signature reuses the homepage wordmark with **STUDIO** below, without a tagline, year or background. The loading screen uses this single wordmark; Light mode has a neutral gray background. `assets/studio-app-icon.svg` provides the separate tab icon: a single white T with a brand-red accent. Public website branding is unchanged. The session inspector now scopes its labels to its own buttons, preventing it from accidentally replacing the loading wordmark.
 
-Landscape wallpapers have separate Light/Dark tone filters, applied only to the artwork and its thumbnails, without a fog overlay. Studio windows use smaller theme-aware shadows than the global docks.
+The four cartoon/cosmic backgrounds use native Light/Dark image pairs without brightness filters or a fog overlay. Studio windows use smaller theme-aware shadows than the global docks.
 
 AI workspace state survives token refreshes and metadata updates of the same account. Account changes still clear private state. Unchanged subscription notifications no longer rebuild the generator; cached wallet reads restore the balance. The initial fetch uses quiet placeholders, and actual errors retain retry controls. The recurring workspace loading message is removed.
 
 Additional verification: `scripts/verify-studio-stream-panels.mjs` exercises all nine STREAM panels, local mouse/touch resizing, close/reopen, header repaint, persistent dimensions and themed wallpapers. `scripts/verify-studio-layout-tour.mjs` checks launch/picker behavior, the layout manager, every tour target, transparent backdrop, restoration and iframe identity. `tests/animations-state-session.test.js` checks account refresh/cache isolation; the workspace renderer test checks the quiet initial fetch and preserves unavailable-service errors.
 
 Preview locally with `npm.cmd run preview:studio` and open `http://127.0.0.1:3033/live-studio.html`. Browser checks use isolated loopback fixture data; no real payment, AI generation or LIVE session is started.
+
+The bottom-right wordmark has no white glow in Light mode: it uses the existing dark brand text with no filter or text shadow. Dark mode retains only a small black contrast shadow. Public branding and the loading logo are unchanged.

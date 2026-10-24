@@ -20,20 +20,20 @@ try{
  await run('document.querySelector(".studio-workspace-switch [data-workspace=live]").click();TikInteractStudioBackgrounds.set("neutral");TikInteractAppearance.set({mode:"dark"})');
  const dark=await background();assert(!dark.includes('url('));
  await click('[data-design-palette-toggle]');
- assert.equal(await run('document.querySelectorAll("button[data-studio-background]").length'),7);
+ assert.equal(await run('document.querySelectorAll("button[data-studio-background]").length'),12);
  await click('[data-studio-appearance-mode=light]');const light=await background();assert.notEqual(light,dark);assert(!light.includes('url('));
  for(const id of ['navy','plum','sage']){await click(`button[data-studio-background=${id}]`);assert.notEqual(await background(),light);}
- for(const id of ['neon-city','floating-islands','ruby-arena']){
-  await click(`button[data-studio-background=${id}]`);assert((await background()).includes(id+'.webp'));
-  assert(await run(`(async()=>{const image=new Image();image.src=new URL('assets/studio-backgrounds/${id}.webp',location.href).href;await image.decode();return image.naturalWidth>=1600})()`));
+ for(const id of ['arcade-hub','crystal-world','stardust']){
+  await click(`button[data-studio-background=${id}]`);assert((await background()).includes(id+'-light.webp'));
+  assert(await run(`(async()=>{const image=new Image();image.src=new URL('assets/studio-backgrounds/${id}-light.webp',location.href).href;await image.decode();return image.naturalWidth>=1600})()`));
  }
- await run('TikInteractStudioDesign.setPaletteEnabled(false)');const image=await background();assert(image.includes('ruby-arena.webp'));
+ await run('TikInteractStudioDesign.setPaletteEnabled(false)');const image=await background();assert(image.includes('stardust-light.webp'));
  await run('TikInteractStudioDesign.setSkin("ice")');assert.equal(await background(),image);
- await click('button[data-studio-background=neon-city]');
+ await click('button[data-studio-background=arcade-hub]');
  await click('.studio-workspace-switch [data-workspace=ai]');assert.equal(await run('TikInteractStudioBackgrounds.get().id'),'neutral');
  await click('[data-design-palette-toggle]');await click('button[data-studio-background=plum]');
- await click('.studio-workspace-switch [data-workspace=live]');assert.equal(await run('TikInteractStudioBackgrounds.get().id'),'neon-city');
- await b.page('Page.reload');await b.waitFor(ready);assert.equal(await run('TikInteractStudioBackgrounds.get().id'),'neon-city');
+ await click('.studio-workspace-switch [data-workspace=live]');assert.equal(await run('TikInteractStudioBackgrounds.get().id'),'arcade-hub');
+ await b.page('Page.reload');await b.waitFor(ready);assert.equal(await run('TikInteractStudioBackgrounds.get().id'),'arcade-hub');
  await click('[data-design-palette-toggle]');
  assert(await run('Array.from(document.querySelectorAll(".sd-background-landscapes img")).every(i=>i.src.endsWith("-thumb.webp"))'));
  await run('document.getElementById("studio-background-color").value="#324354"');await click('[data-studio-custom-color]');
@@ -49,10 +49,10 @@ try{
  assert(await run('document.querySelector(".studio-stage")===__sameStage'));
  await b.screenshot('.tools/appearance-review/canvas-top.webp');
  await b.page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await run('dispatchEvent(new Event("resize"))');
- await click('[data-design-palette-toggle]');await click('button[data-studio-background=floating-islands]');
+ await click('[data-design-palette-toggle]');await click('button[data-studio-background=crystal-world]');
  assert(await run('(()=>{const r=document.querySelector("[data-design-palette-panel]").getBoundingClientRect();return r.left>=0&&r.right<=innerWidth+1&&r.bottom<=innerHeight+1})()'));
  assert(await run('document.documentElement.scrollWidth<=innerWidth+1'));
  await b.screenshot('.tools/appearance-review/mobile.webp');
  assert.deepEqual(b.errors,[]);
- console.log('PASS: 7 wallpapers, Light/Dark controls and neutral defaults, images load, custom color, LIVE/AI persistence, independent palette, mobile bounds, STREAM drag to 4px, original panel retained, zero JS errors.');
+ console.log('PASS: 12 wallpapers, Light/Dark controls and neutral defaults, images load, custom color, LIVE/AI persistence, independent palette, mobile bounds, STREAM drag to 4px, original panel retained, zero JS errors.');
 }finally{await b.close()}

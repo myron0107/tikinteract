@@ -14,7 +14,7 @@ try{
  assert(await run('Array.from(document.querySelector("#studio-dock-utilities .header-account-actions").children).filter(n=>getComputedStyle(n).display!=="none").every(n=>n.matches(".studio-credit-balance,#studio-user-menu-wrap,#studio-account-avatar"))'));
  await b.page('Page.reload');await b.waitFor(ready);assert.equal(await run('document.getElementById("studio-dock-utilities").dataset.utilitiesCollapsed'),'true');await click('[data-utilities-collapse]');
  fs.mkdirSync('.tools/shell-final-review',{recursive:true});
- for(const id of ['neon-city','floating-islands','ruby-arena'])for(const mode of ['dark','light']){
+ for(const id of ['arcade-hub','crystal-world','stardust'])for(const mode of ['dark','light']){
   await run(`TikInteractStudioBackgrounds.set(${JSON.stringify(id)});TikInteractAppearance.set({mode:${JSON.stringify(mode)}})`);
   assert(await run('(()=>{const s=getComputedStyle(document.body,"::before");return s.backgroundSize==="cover"&&s.backgroundRepeat==="no-repeat"&&s.position==="fixed"&&s.top==="0px"&&s.bottom==="0px"&&s.left==="0px"&&s.right==="0px"})()'));
  }

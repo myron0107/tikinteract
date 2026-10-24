@@ -9,13 +9,17 @@
    const button=document.querySelector(buttonSelector),panel=document.querySelector(panelSelector);if(!button||!panel||panel.hidden)continue;
    if(!button.getClientRects().length){panel.hidden=true;button.setAttribute('aria-expanded','false');continue;}
    if(!observed.has(panel)){observed.add(panel);observer.observe(panel);}
-   const put=(key,value)=>panel.style.setProperty(key,value,'important');
-   put('position','fixed');put('right','auto');put('bottom','auto');put('margin','0');put('transform','none');put('max-width',Math.max(160,innerWidth-16)+'px');put('max-height',Math.max(80,innerHeight-16)+'px');put('overflow-y','auto');
-   const anchor=button.getBoundingClientRect(),rail=bar.getBoundingClientRect(),size=panel.getBoundingClientRect(),below=Math.max(0,innerHeight-rail.bottom-16),above=Math.max(0,rail.top-16);
+   const put=(key,value)=>{if(panel.style.getPropertyValue(key)!==value||panel.style.getPropertyPriority(key)!=='important')panel.style.setProperty(key,value,'important');};
+   put('position','fixed');put('right','auto');put('bottom','auto');put('margin','0');put('transform','none');put('max-width',Math.max(160,innerWidth-16)+'px');put('overflow-y','auto');
+   const anchor=button.getBoundingClientRect(),rail=bar.getBoundingClientRect(),below=Math.max(0,innerHeight-rail.bottom-16),above=Math.max(0,rail.top-16);
    const preferredHeight=panelSelector==='#language-menu'?120:220;
-   const under=below>=preferredHeight||below>=above,available=under?below:above,height=Math.min(size.height,available);
+   const under=below>=preferredHeight||below>=above,available=under?below:above;
+   // Expanding the limit before each measurement clamps scrollTop on every scroll.
+   // Apply the final limit once, then measure without changing the scroll range.
+   put('max-height',Math.max(40,Math.min(available,panelSelector==='[data-design-palette-panel]'?680:Infinity))+'px');
+   const size=panel.getBoundingClientRect(),height=Math.min(size.height,available);
    const x=Math.max(8,Math.min(anchor.left+anchor.width/2-size.width/2,innerWidth-size.width-8)),y=under?rail.bottom+8:Math.max(8,rail.top-height-8);
-   put('left',x+'px');put('top',y+'px');put('max-height',Math.max(40,available)+'px');panel.dataset.popoverSide=under?'below':'above';
+   put('left',x+'px');put('top',y+'px');panel.dataset.popoverSide=under?'below':'above';
   }
  }
  function init(){

@@ -15,7 +15,14 @@ html[data-mode=light][data-studio-background=sage] body#tikinteract-studio.studi
 html[data-mode][data-studio-background=color] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{background:var(--studio-custom-background,#202229)}
 /* Keep cover after each theme/background shorthand resets its sub-properties. */
 html[data-mode][data-studio-background] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{inset:0;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important}
-body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-palette-panel{width:408px;max-width:calc(100vw - 28px);max-height:calc(100dvh - 100px);padding:18px;scrollbar-gutter:stable}
+body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-palette-panel{width:408px;max-width:calc(100vw - 28px);max-height:min(680px,calc(100dvh - 100px));box-sizing:border-box;padding:18px;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;scrollbar-gutter:stable;scrollbar-width:thin;scrollbar-color:color-mix(in srgb,var(--sd-muted) 45%,transparent) transparent}
+body#tikinteract-studio .sd-palette-panel::-webkit-scrollbar{width:5px;height:5px}
+body#tikinteract-studio .sd-palette-panel::-webkit-scrollbar-track{background:transparent;margin-block:10px}
+body#tikinteract-studio .sd-palette-panel::-webkit-scrollbar-thumb{background:color-mix(in srgb,var(--sd-muted) 45%,transparent);border-radius:10px}
+body#tikinteract-studio .sd-palette-panel::-webkit-scrollbar-thumb:hover{background:color-mix(in srgb,var(--sd-muted) 70%,transparent)}
+body#tikinteract-studio .sd-palette-panel::-webkit-scrollbar-button{display:none;width:0;height:0}
+body#tikinteract-studio .sd-palette-panel::-webkit-scrollbar-corner{background:transparent}
+@supports selector(::-webkit-scrollbar){body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-palette-panel{scrollbar-width:auto;scrollbar-color:auto}}
 body#tikinteract-studio .sd-appearance-section{display:block;min-width:0;margin:18px 0 0;padding:0;border:0}
 body#tikinteract-studio .sd-appearance-section legend,body#tikinteract-studio .sd-interface-label{margin:0 0 10px;padding:0;color:var(--sd-text);font:600 12px/1.4 Inter,sans-serif}
 body#tikinteract-studio .sd-appearance-section p{margin:12px 0 8px;color:var(--sd-muted);font:400 11px/1.5 Inter,sans-serif}
@@ -23,7 +30,7 @@ body#tikinteract-studio .sd-appearance-themes{display:flex;gap:8px}
 body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-appearance-themes button{display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:0;width:auto;height:auto;min-height:36px;padding:8px 12px;border:1px solid var(--sd-line);border-radius:8px;background:var(--sd-soft);color:var(--sd-muted);font:500 12px/1.4 Inter,sans-serif;cursor:pointer}
 body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-appearance-themes [aria-pressed=true]{background:var(--sd-selection);color:var(--sd-text);border-color:var(--sd-muted)}
 body#tikinteract-studio .sd-background-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-body#tikinteract-studio .sd-background-landscapes{grid-template-columns:repeat(3,minmax(0,1fr))}
+body#tikinteract-studio .sd-background-landscapes{grid-template-columns:repeat(4,minmax(0,1fr))}
 body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-background-options>button{display:flex;flex-direction:column;align-items:stretch;gap:6px;min-width:0;width:100%;height:auto;min-height:0;padding:0 0 4px;border:0;border-radius:7px;background:transparent;color:var(--sd-muted);font:400 10px/1.4 Inter,sans-serif;text-align:left;white-space:normal;cursor:pointer}
 body#tikinteract-studio .sd-background-preview{position:relative;display:block;width:100%;aspect-ratio:16/10;border:1px solid var(--sd-line);border-radius:7px;overflow:hidden;background:linear-gradient(145deg,#16181e,#101115)}
 body#tikinteract-studio .sd-background-preview img{display:block;width:100%;height:100%;object-fit:cover}
@@ -45,9 +52,17 @@ body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-custom-color 
 body#tikinteract-studio .sd-interface-label{margin-top:20px}
 body#tikinteract-studio .sd-interface-label+.sd-palette-neutral{margin-top:0!important}
 @media(max-width:500px){body#tikinteract-studio.studio-widget-desktop .studio-palettes .sd-palette-panel{padding:14px}.sd-background-options{gap:6px}}
-/* Tone the illustration itself, without a fog layer over the selected artwork.
-   Only the wallpaper is filtered; game frames and controls are unaffected. */
-html[data-mode=dark][data-studio-background-kind=landscape] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{filter:brightness(.78) saturate(.86) contrast(1.03)}
-html[data-mode=light][data-studio-background-kind=landscape] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{filter:brightness(1.18) saturate(.72) contrast(.92)}
-html[data-mode=dark] body#tikinteract-studio .sd-background-preview img{filter:brightness(.78) saturate(.86) contrast(1.03)}
-html[data-mode=light] body#tikinteract-studio .sd-background-preview img{filter:brightness(1.18) saturate(.72) contrast(.92)}
+/* Paired illustrations are painted for each mode; keep their native colors. */
+html[data-mode][data-studio-background-paired=true] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{filter:none}
+html[data-mode] body#tikinteract-studio .sd-background-preview img[data-background-paired]{filter:none}
+/* Static metallic reflections; retained IDs preserve saved LIVE/AI preferences. */
+html[data-mode=dark]{--studio-soft-graphite:linear-gradient(125deg,#101113 0%,#25272b 30%,#34373b 45%,#1c1e21 61%,#111214 100%);--studio-metal-silver:linear-gradient(125deg,#202327 0%,#3b4146 30%,#51585e 45%,#30353a 61%,#1d2024 100%);--studio-soft-blue:linear-gradient(125deg,#111a22 0%,#25394a 30%,#354e61 45%,#1d303e 61%,#111b25 100%);--studio-soft-mint:linear-gradient(125deg,#1a1b1b 0%,#343b39 30%,#48514e 45%,#292f2e 61%,#191d1c 100%)}
+html[data-mode=light]{--studio-soft-graphite:linear-gradient(125deg,#b9bcc0 0%,#d1d4d7 30%,#e2e4e6 45%,#c6cacf 61%,#b6bac0 100%);--studio-metal-silver:linear-gradient(125deg,#d1d5d9 0%,#e3e6e8 30%,#f1f2f3 45%,#d8dde0 61%,#c5cbd0 100%);--studio-soft-blue:linear-gradient(125deg,#bac8d2 0%,#d0dce5 30%,#e4ebf0 45%,#c4d2de 61%,#b3c3cf 100%);--studio-soft-mint:linear-gradient(125deg,#c0c8c4 0%,#d7deda 30%,#e8ece9 45%,#cbd4cf 61%,#b8c3bc 100%)}
+html[data-mode][data-studio-background=soft-graphite] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{background:var(--studio-soft-graphite);filter:none}
+html[data-mode][data-studio-background=soft-blue] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{background:var(--studio-soft-blue);filter:none}
+html[data-mode][data-studio-background=soft-mint] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{background:var(--studio-soft-mint);filter:none}
+html[data-mode][data-studio-background=metal-silver] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop::before{background:var(--studio-metal-silver);filter:none}
+body#tikinteract-studio [data-background-preview=soft-graphite]{background:var(--studio-soft-graphite)}
+body#tikinteract-studio [data-background-preview=soft-blue]{background:var(--studio-soft-blue)}
+body#tikinteract-studio [data-background-preview=soft-mint]{background:var(--studio-soft-mint)}
+body#tikinteract-studio [data-background-preview=metal-silver]{background:var(--studio-metal-silver)}
