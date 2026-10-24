@@ -2,7 +2,7 @@ import {mountAdminMaintenance} from './admin-maintenance.js?v=1';
 import {withPublicationDate} from './catalog-featured-data.js?v=1';
 import {DEFAULT_CONFIG,validateConfig,cloneConfig,PANEL_NAMES,studioVisibility} from './platform-schema.js?v=2';
 import {studioVisibilityControls} from './admin-studio-visibility.js?v=2';
-import {mountAdminFinance} from './admin-finance.js?v=1';
+import {mountAdminFinance} from './admin-finance.js?v=2';
 import {mountAdminAnimations} from './admin-animations.js?v=2';
 import {SupportInbox,supportError} from './support-center.js';
 import {mountAdminAccessKeys} from './admin-access-keys.js';

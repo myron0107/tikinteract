@@ -1,9 +1,9 @@
 import {esc,ic} from './creator-ui.js?v=4';
 import {animationAPI as api,animationText as t,animationError} from './animations-client.js?v=2';
-import {mediaCards,filteredClips,tabs,button,option} from './animations-live-views.js?v=4';
-import {renderAnimationWorkspace as renderAnimations} from './animations-workspace-views.js?v=3';
+import {mediaCards,filteredClips,tabs,button,option} from './animations-live-views.js?v=5';
+import {renderAnimationWorkspace as renderAnimations} from './animations-workspace-views.js?v=4';
 import {loadAnimationState} from './animations-state.js?v=3';
-import {creditPurchase} from './animations-credit-purchase.js?v=1';
+import {creditPurchase} from './animations-credit-purchase.js?v=2';
 let root,dialog,opener,interval,epoch=0,refreshing=false,photoFile=null,uploadId=null,requestId=null,lastSignature='',mountPromise,accountId=null,lastAccessPlan=null;
 const checkoutRequests=new Map();
 const s={workspace:'live',tab:'library',world:'vampire',tier:'standard',format:'16:9',prompt:'',character:'',consent:false,photo:'',photoName:'',busy:false,query:'',filter:'all',worlds:[],library:[],rules:[],jobs:[],wallet:{included:0,purchased:0,debt:0},config:{enabled:false,testMode:true,packages:[]},transactions:[],orders:[]};

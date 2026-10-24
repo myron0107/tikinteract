@@ -1,4 +1,4 @@
-import {mountSubscription,selectSubscriptionPlan} from './studio-subscription.js?v=5';
+import {mountSubscription,selectSubscriptionPlan} from './studio-subscription.js?v=6';
 import {arrangeAccountLayout,refreshAccountLayout} from './account-layout.js?v=2';
 import {mountAccountMessages,selectAccountMessages,openSupportConversation} from './account-support.js?v=4';
 import{ct,esc,ic,avatar,date,rpc,errorCopy,empty}from'./creator-ui.js?v=1';

@@ -1,10 +1,11 @@
-import {mountBilling,selectBillingPlan} from './billing.js?v=2';
+import {commerceOffer} from './commerce-offers.js?v=1';
+import {mountBilling,selectBillingPlan} from './billing.js?v=3';
 import {esc,ic} from './creator-ui.js?v=2';
-import {planTickets,planLabel,passText as t} from './plan-tickets.js?v=1';
+import {planTickets,planLabel,passText as t} from './plan-tickets.js?v=2';
 let root,selected='',signature='';
 function render(){
  if(!root?.isConnected)return;const config=window.TikInteractPlatform?.getConfig(),access=window.TikInteractPass?.getAccess(),user=window.tikInteractUser;
- if(!config)return;const stamp=JSON.stringify([config.plans,access,user?.id,window.TikInteractLanguage?.get(),selected]);if(signature===stamp)return;signature=stamp;
+ if(!config)return;const stamp=JSON.stringify([commerceOffer(),config.plans,access,user?.id,window.TikInteractLanguage?.get(),selected]);if(signature===stamp)return;signature=stamp;
  const oldForm=root.querySelector('#pp-redeem-form'),oldInput=root.querySelector('#pp-code'),value=oldInput?.value||'',focused=document.activeElement===oldInput,selection=oldInput?.selectionStart;
  const plan=config.plans.find(item=>item.id===access?.plan),expiry=access?.validUntil?new Date(access.validUntil):null;
  const days=expiry?Math.max(0,Math.ceil((expiry.getTime()-Date.parse(access.serverNow))/86400000)):null;
@@ -21,5 +22,5 @@ export function mountSubscription(element){
  render();
 }
 export function selectSubscriptionPlan(plan){selected=['free','play_pass','play_pass_pro'].includes(plan)?plan:'';signature='';render();if(['play_pass','play_pass_pro'].includes(selected))selectBillingPlan(selected,{scroll:false});}
-for(const event of ['tikinteract:access','tikinteract:config','tikinteract:language'])window.addEventListener(event,render);
+for(const event of ['tikinteract:access','tikinteract:config','tikinteract:language','tikinteract:commerce-offer'])window.addEventListener(event,render);
 window.addEventListener('tikinteract:auth',()=>{if(root){root.querySelector('#pp-code')?.replaceChildren();const input=root.querySelector('#pp-code');if(input)input.value='';}signature='';render();});

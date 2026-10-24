@@ -1453,6 +1453,14 @@ function showConnectionError(message) {
     window.alert((window.TikInteractLanguage?.translate ?? (value=>value))(`Eroare TikTok LIVE: ${message}`));
 }
 
+function showLiveVerificationIssue() {
+    updateConnectionStatus(false, null);
+    const status = document.getElementById('tiktok-sync-status');
+    if (status) status.textContent = window.TikInteractLanguage?.get()==='en'
+        ? 'The LIVE connector could not verify the session. Your website account is still signed in. Retry the LIVE connection.'
+        : 'Conectorul LIVE nu a putut verifica sesiunea. Contul site-ului rămâne conectat. Reîncearcă legătura LIVE.';
+}
+
 function sendStudioServerMessage(message, target = socket) {
     if (!window.tikInteractUser || !window.tikInteractAccessToken || target?.readyState !== WebSocket.OPEN) return false;
     target.send(JSON.stringify({...message, accessToken: window.tikInteractAccessToken}));
@@ -1468,6 +1476,7 @@ function connectToLocalServer() {
         sendStudioServerMessage({ type: 'state' });
     });
     socket.addEventListener('message', (event) => {
+        if (socket !== event.target) return;
         let message;
         try {
             message = JSON.parse(event.data);
@@ -1479,7 +1488,9 @@ function connectToLocalServer() {
         window.dispatchEvent(new CustomEvent('tikinteract:live-event',{detail:message}));
         if (message.type === 'auth-required') {
             socket?.close();
-            if (typeof updateUI === 'function') updateUI(null);
+            // A connector verification failure is not a Supabase sign-out.
+            // Keep the website session, profile and saved workspace intact.
+            showLiveVerificationIssue();
             return;
         } else if (message.type === 'status') {
             updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl, message.sessionId);
@@ -1534,6 +1545,10 @@ function connectToLocalServer() {
     });
     socket.addEventListener('close', (event) => {
         if (socket !== event.target) return;
+        if (event.code === 1008) {
+            if (event.reason === 'Origin not allowed') showConnectionError('Originea paginii nu este permisă de serverul local. Folosește https://tikinteract.vercel.app/.');
+            else showLiveVerificationIssue();
+        }
         updateConnectionStatus(false, null);
         finishPlatformLiveSession().catch((error) => {
             console.error('Failed to finish LIVE session:', error);
@@ -1599,16 +1614,14 @@ function toggleTikTokConnection() {
         sendStudioServerMessage({ type: 'connect', username });
     } else if (socket?.readyState === WebSocket.CONNECTING) {
         const pendingSocket = socket;
+        const failedBeforeOpen = (event) => {
+            if (event.code !== 1008) showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
+        };
         pendingSocket.addEventListener('open', () => {
+            pendingSocket.removeEventListener('close', failedBeforeOpen);
             sendStudioServerMessage({ type: 'connect', username }, pendingSocket);
         }, { once: true });
-        pendingSocket.addEventListener('close', (event) => {
-            if (event.code === 1008) {
-                showConnectionError('Originea paginii nu este permisă de serverul local. Folosește https://tikinteract.vercel.app/.');
-                return;
-            }
-            showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
-        }, { once: true });
+        pendingSocket.addEventListener('close', failedBeforeOpen, { once: true });
     } else {
         showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
     }

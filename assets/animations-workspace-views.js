@@ -1,4 +1,4 @@
-import {tabs,button,universes,library,events,statusText} from './animations-live-views.js?v=4';
+import {tabs,button,universes,library,events,statusText} from './animations-live-views.js?v=5';
 import {generator,guide} from './ai-studio-views.js?v=1';
 import {creditHistory,generationHistory} from './animations-account-views.js?v=1';
 import {animationText as t,animationError} from './animations-client.js?v=2';

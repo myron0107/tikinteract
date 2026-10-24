@@ -1,7 +1,7 @@
 import {esc,ic} from './creator-ui.js?v=4';
 
 const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
-const accountModule=()=>import('./creator-account.js?v=10');
+const accountModule=()=>import('./creator-account.js?v=11');
 const titles={account:['Contul meu','My account'],subscription:['Abonamentul meu','My subscription'],analytics:['Statistici','Analytics'],support:['Suport','Support'],help:['Ghid Studio','Studio guide'],community:['Comunitate','Community']};
 const icons={account:'user',subscription:'ticket',analytics:'chart-line',support:'comments',help:'circle-question',community:'users'};
 let dialog,menu,wrap,trigger,content,accountRoot,view=null,pane='profile',request=0,opener,restoreFocus=true,adminUser=null,identity=null,selectingAccount=false;

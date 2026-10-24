@@ -1,0 +1,18 @@
+/* One scrollbar style for all Studio windows, nested panels and floating menus.
+   Scoped to the Studio document; embedded games and the public site are untouched. */
+body#tikinteract-studio{--studio-scroll-thumb:color-mix(in srgb,var(--sd-muted,#8490a3) 45%,transparent);--studio-scroll-thumb-hover:color-mix(in srgb,var(--sd-muted,#8490a3) 70%,transparent)}
+body#tikinteract-studio,body#tikinteract-studio *{scrollbar-width:thin!important;scrollbar-color:var(--studio-scroll-thumb) transparent!important}
+body#tikinteract-studio::-webkit-scrollbar,body#tikinteract-studio *::-webkit-scrollbar{width:5px!important;height:5px!important}
+body#tikinteract-studio::-webkit-scrollbar-track,body#tikinteract-studio *::-webkit-scrollbar-track{background:transparent!important;margin:10px 0!important}
+body#tikinteract-studio::-webkit-scrollbar-thumb,body#tikinteract-studio *::-webkit-scrollbar-thumb{background:var(--studio-scroll-thumb)!important;border:0!important;border-radius:10px!important;box-shadow:none!important}
+body#tikinteract-studio::-webkit-scrollbar-thumb:hover,body#tikinteract-studio *::-webkit-scrollbar-thumb:hover{background:var(--studio-scroll-thumb-hover)!important}
+body#tikinteract-studio::-webkit-scrollbar-button,body#tikinteract-studio *::-webkit-scrollbar-button{display:none!important;width:0!important;height:0!important}
+body#tikinteract-studio::-webkit-scrollbar-corner,body#tikinteract-studio *::-webkit-scrollbar-corner{background:transparent!important}
+/* Keep the track clear of window headers and the corner resize control. */
+body#tikinteract-studio :is(.studio-widget-window,.studio-widget-config)::-webkit-scrollbar-track{margin-block:58px var(--window-scroll-end,34px)!important}
+body#tikinteract-studio [data-layout-panel]::-webkit-scrollbar-track{margin-block:54px var(--window-scroll-end,30px)!important}
+body#tikinteract-studio :is(.sw-window-content,.studio-dock-scroll)::-webkit-scrollbar-track{margin-block:12px 20px!important}
+/* Chrome uses its native scrollbar if scrollbar-color has a custom value.
+   Reset the standard properties so the 5px WebKit styling actually renders. */
+@supports selector(::-webkit-scrollbar){body#tikinteract-studio,body#tikinteract-studio *{scrollbar-width:auto!important;scrollbar-color:auto!important}}
+@media(forced-colors:active){body#tikinteract-studio{--studio-scroll-thumb:CanvasText;--studio-scroll-thumb-hover:Highlight}}

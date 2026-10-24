@@ -1,6 +1,6 @@
 import {latestPublishedGame} from './catalog-featured-data.js?v=1';
 import {esc,ic} from './creator-ui.js?v=2';
-import {planTickets,passText as t} from './plan-tickets.js?v=1';
+import {planTickets,passText as t} from './plan-tickets.js?v=2';
 const copy={
  introTitle:['Crește-ți LIVE-urile pe TikTok','Grow your TikTok LIVE streams'],introAccent:['cu instrumente puternice','with powerful tools'],introCopy:['TikInteract te ajută să creezi experiențe interactive, să îți crești comunitatea și să obții mai mult din fiecare LIVE.','TikInteract helps you create interactive experiences, grow your community and get more from every LIVE.'],introInteraction:['Mai multă interacțiune','More interaction'],introCommunity:['Comunitate mai puternică','A stronger community'],
  giftHeading:['Cadouri TikTok','TikTok Gifts'],giftCatalog:['Explorează catalogul','Explore the catalog'],giftTitle:['Cadourile din LIVE,','Your LIVE gifts,'],giftTitleAccent:['în colecția ta.','in your collection.'],giftIntro:['Explorează cadourile TikTok și vezi în profil ce ai primit la LIVE.','Explore TikTok gifts and see what you received during LIVE on your profile.'],giftImages:['Imagini originale','Original images'],giftCollection:['Colecția ta de cadouri','Your gift collection'],giftSpotlight:['Cadouri în prim-plan','Featured gifts'],giftRetry:['Încearcă din nou','Try again'],
@@ -52,5 +52,5 @@ function initialize(){
  const root=document.querySelector('[data-home-reel]');if(root){const observer=new IntersectionObserver(entries=>{if(!entries.some(entry=>entry.isIntersecting))return;observer.disconnect();import('./home-reel/reel.js?v=2').then(module=>module.mountHomeReel(root)).then(reel=>{window.TikInteractHomeReel=reel;}).catch(()=>{root.dataset.ready='false';});},{rootMargin:'100px'});observer.observe(root);}
  window.TikInteractStartup?.ready('layout');
 }
-window.addEventListener('tikinteract:config',render);window.addEventListener('tikinteract:language',render);
+window.addEventListener('tikinteract:config',render);window.addEventListener('tikinteract:language',render);window.addEventListener('tikinteract:commerce-offer',render);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',initialize,{once:true});else initialize();

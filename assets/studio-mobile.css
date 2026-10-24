@@ -61,6 +61,7 @@ body#tikinteract-studio .studio-page-signature .ti-brand-name{filter:drop-shadow
 html[data-mode=light] body#tikinteract-studio .studio-page-signature .ti-brand-name{filter:none}
 @media(max-width:700px){body#tikinteract-studio .studio-page-signature{right:10px;bottom:10px;--brand-size:16px}}
 /* Softer elevation than the two global docks, shared by Studio windows. */
+body#tikinteract-studio .studio-window-moving{will-change:transform;transition:none!important}
 html[data-mode=dark] body#tikinteract-studio{--studio-window-shadow:0 7px 24px #0004,0 1px 3px #0003}
 html[data-mode=light] body#tikinteract-studio{--studio-window-shadow:0 6px 20px #1621361c,0 1px 3px #16213612}
 html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #view-live #live-studio-panel [data-layout-panel][data-widget-enabled=true],html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop :is(.studio-widget-window,.studio-widget-config,#studio-user-dialog[open],.an-dialog[open]){box-shadow:var(--studio-window-shadow)!important}

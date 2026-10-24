@@ -1,0 +1,4 @@
+/* Commercial copy follows the existing ticket layout and colors. */
+.commerce-offer-summary{margin:14px 0 0;color:var(--sd-muted,var(--studio-muted,#85858f));font:400 11px/1.65 Inter,system-ui,sans-serif}
+.commerce-offer-summary p{margin:5px 0}
+.commerce-offer-summary p:first-child{font-weight:500}
