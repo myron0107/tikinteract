@@ -3,7 +3,7 @@
 The public website is `index.html`; the standalone workspace is
 [`live-studio.html`](live-studio.html). The homepage includes one **LIVE Studio**
 navigation entry, shown only to signed-in accounts, and retains the animated game showcase.
-Direct Studio access requires sign-in; local LIVE commands are verified with Supabase Auth.
+Direct Studio access requires sign-in; LIVE commands are verified server-side with Supabase Auth.
 See [template, routes and verification](docs/site-template.md).
 
 **TikTok Gifts** adds a live-synced gift catalog and a received-gift collection per
@@ -12,19 +12,23 @@ Public cloud collections require the additive
 [`supabase/tiktok_gifts.sql`](supabase/tiktok_gifts.sql) migration; until activated,
 new collection metadata remains on the receiving device. See [setup and verification](docs/tiktok-gifts.md).
 
-## Local TikTok LIVE connector
+## TikTok LIVE online
+
+Studio connects directly to `/api/live` on the website using secure WebSockets. Users do not need a local program or TikFinity. Deploy the new function with Fluid Compute enabled; see [online LIVE activation and limitations](docs/tiktok-live-online.md). Profile verification/saving is separate from the LIVE transport and works for offline creators too, when TikTok permits public profile verification.
+
+## Optional local development server
 
 The LIVE connector uses the unofficial `tiktok-live-connector` Node.js package (AGPL-3.0-only). It connects by creator username only; it does not request TikTok passwords or session cookies. As it relies on TikTok's undocumented LIVE interface, it may stop working if TikTok changes that interface. Review the package license and TikTok's terms before distributing or using this prototype commercially.
 
 1. Install Node.js 20 or newer from [nodejs.org](https://nodejs.org/).
 2. Run `start-tikinteract.bat`. It installs dependencies on first run and starts the local server.
 3. To use the local app directly, open `http://127.0.0.1:3000`.
-4. To use the deployed Vercel page, keep the local server running on the same computer, open `https://tikinteract.vercel.app/`, enter the username of a creator who is currently LIVE, and press **Pornește Conexiunea Live**. The page stays open and connects to the local server in the background.
+4. The deployed Studio uses its online `/api/live` endpoint. It does not use the local server on the visitor's computer.
 5. Comments and gifts appear in the live feed and trigger game effects.
 6. When TikTok includes avatar URLs in the LIVE room and events, the connected streamer and chat participants appear with their profile photos; otherwise the UI uses initials.
 7. **Salvează și caută poza** can load the streamer profile photo even before connecting to a LIVE stream.
 
-The local server listens only on `127.0.0.1` and accepts WebSocket requests from the local app and `https://tikinteract.vercel.app/`; the browser must be on the same computer as the server. Keep its terminal window open while streaming. Opening `index.html` directly or using the hosted site without first starting the local server will not connect.
+The optional development server listens only on `127.0.0.1`. Its legacy `/ws` endpoint remains available for older local clients; the current Studio uses the online endpoint. Opening HTML files with `file://` is unsupported.
 
 ## Home page
 

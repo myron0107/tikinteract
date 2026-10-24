@@ -25,6 +25,7 @@ function header(){
 function shortConnectLabel(){const button=$('#btn-connect'),label=t('Conectează','Connect');if(button&&['Pornește Conexiunea Live','Start LIVE connection','Conectează','Connect'].includes(button.textContent.trim())&&button.textContent!==label)button.textContent=label;}
 function connectionLabels(){
  shortConnectLabel();
+ const hint=$('[data-live-connect-hint]');if(hint)hint.textContent=t('Conectează LIVE-ul direct din Studio. Profilul poate fi salvat și când ești offline.','Connect your LIVE directly from Studio. You can save your profile even while offline.');
  const input=$('#tiktok-user');if(input){input.placeholder='@username';input.setAttribute('aria-label',t('Username TikTok','TikTok username'));}
  const more=$('#studio-profile-more');if(more){const name=t('Opțiuni profil TikTok','TikTok profile options');more.title=name;more.setAttribute('aria-label',name);}
  const actions=$('.studio-profile-details .streamer-profile-actions');actions?.setAttribute('data-native-i18n','');
@@ -34,12 +35,10 @@ function connectionLabels(){
 }
 function simplifyConnection(connection){
  const connect=$('#btn-connect'),status=$('#tiktok-sync-status'),details=$('#studio-profile-details'),toggle=$('#studio-profile-more');
- if(toggle&&details){
-  toggle.onclick=()=>{details.hidden=!details.hidden;toggle.setAttribute('aria-expanded',String(!details.hidden));};
-  details.addEventListener('keydown',event=>{if(event.key==='Escape'){details.hidden=true;toggle.setAttribute('aria-expanded','false');toggle.focus();}});
- }
+ if(details)details.hidden=false;
+ if(toggle)toggle.hidden=true;
  if(connect)new MutationObserver(shortConnectLabel).observe(connect,{childList:true,characterData:true,subtree:true});
- if(status){const sync=()=>{status.hidden=!status.textContent.trim()||/^(Stare:|Status:)/i.test(status.textContent.trim());};new MutationObserver(sync).observe(status,{childList:true,characterData:true,subtree:true});sync();}
+ if(status)status.hidden=false;
  connectionLabels();
 }
 function accountTicket(){
@@ -70,7 +69,7 @@ function init(){
 }
 function help(){const root=$('#studio-help-panel');if(!root)return;root.setAttribute('data-native-i18n','');root.innerHTML='<div class="cp-page-heading"><h2>'+label('help')+'</h2><p>'+t('Tot ce ai nevoie pentru următorul LIVE.','Everything you need for your next LIVE.')+'</p></div><div class="studio-help-cards">'+[
  ['gamepad',t('Alege jocul','Choose your game'),t('Pornește un joc din favorite sau din catalog. Schimbă formatul între 9:16 și 16:9 fără să repornești jocul.','Launch a game from your favorites or the catalog. Switch between 9:16 and 16:9 without restarting it.')],
- ['tower-broadcast',t('Conectează LIVE-ul','Connect your LIVE'),t('Introdu username-ul TikTok în panoul de conexiune. Serverul local preia comentariile, like-urile și cadourile.','Enter your TikTok username in the connection panel. The local server receives comments, likes and gifts.')],
+ ['tower-broadcast',t('Conectează LIVE-ul','Connect your LIVE'),t('Introdu username-ul TikTok și conectează LIVE-ul direct din Studio. Nu ai nevoie de un program local.','Enter your TikTok username and connect your LIVE directly from Studio. No local program is needed.')],
  ['sliders',t('Controlează jocul','Control your game'),t('Deschide Control joc din Transmisie și așază panoul unde îți este comod. Cadourile și acțiunile disponibile depind de joc.','Open Game controls from Stream and place the panel wherever you need it. Available gifts and actions depend on the game.')],
  ['volume-high',t('Pregătește sunetele','Prepare your audio'),t('Adaugă sunete la favorite în PANOU DE SUNETE. Reglează volumul și redă-le din panoul de acces rapid.','Add favorites in SOUND PAD. Adjust the volume and play them from the quick access panel.')]
  ].map(([icon,title,copy])=>'<article class="cp-panel">'+ic(icon)+'<h3>'+title+'</h3><p>'+copy+'</p></article>').join('')+'</div><button class="cp-btn cp-btn-primary" type="button" onclick="openStudioHelp()">'+t('Pornește turul ghidat','Start the guided tour')+'</button>';

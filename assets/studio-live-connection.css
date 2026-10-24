@@ -1,0 +1,11 @@
+/* Keep account/profile feedback distinct from the live transport state. Studio only. */
+#tikinteract-studio .studio-connection .studio-profile-details { display:block; margin-top:14px; }
+#tikinteract-studio .studio-connection #tiktok-sync-status,
+#tikinteract-studio .studio-connection #tiktok-profile-status { margin:12px 0; font-size:12px; line-height:1.55; font-weight:500; text-transform:none; letter-spacing:normal; overflow-wrap:anywhere; }
+#tikinteract-studio .studio-connection #tiktok-sync-status.is-error { color:var(--sd-danger,#e27e86); }
+#tikinteract-studio .studio-connection .streamer-profile-actions { display:flex; gap:8px; margin:12px 0 8px; }
+#tikinteract-studio .studio-connection .streamer-profile-actions button { display:inline-flex; align-items:center; justify-content:center; gap:7px; min-height:34px; width:auto; padding:8px 12px; font-size:12px !important; }
+#tikinteract-studio .studio-connection #tiktok-profile { margin:8px 0; }
+#tikinteract-studio .studio-connection .studio-profile-details>p { font-size:11px; line-height:1.5; margin:8px 0 0; }
+#tikinteract-studio .studio-connection .studio-connect-hint { display:block !important; font-size:12px; line-height:1.5; color:var(--sd-muted); margin:0 0 12px; }
+@media(max-width:480px){#tikinteract-studio .studio-connection .compact-connect-row {display:flex;flex-wrap:wrap;gap:8px}#tikinteract-studio .studio-connection .compact-connect-row input{flex:1 1 150px;min-width:0}#tikinteract-studio .studio-connection .compact-connect-row button{flex:1 1 100px}}

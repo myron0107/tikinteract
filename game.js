@@ -1,6 +1,7 @@
 let totalScore = 0;
 let items = [];
 let socket = null;
+let liveDesiredUsername = null, liveReconnectTimer = null, liveStateTimer = null, liveRetryAttempt = 0;
 let giftCount = 0;
 let connectedUsername = null;
 let platformSessionActive = false;
@@ -1148,15 +1149,15 @@ function saveTikTokProfileFromSettings() {
     const username = input.value.trim().replace(/^@/, '');
     const userId = window.tikInteractUser?.id;
     const current = () => window.tikInteractUser?.id === userId && input.value.trim().replace(/^@/, '').toLowerCase() === username.toLowerCase();
-    const status = document.getElementById('tiktok-sync-status');
+    const status = document.getElementById('tiktok-profile-status') || document.getElementById('tiktok-sync-status');
     if (status) {
         status.textContent = 'Se verifică dacă profilul există pe TikTok…';
         status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-zinc-400';
     }
-    saveTikTokLeaderboardProfile(username).then((isPublic) => {
+    return saveTikTokLeaderboardProfile(username).then((isPublic) => {
         if (!current()) return;
-        const status = document.getElementById('tiktok-sync-status');
-        if (status && !connectedUsername) {
+        const status = document.getElementById('tiktok-profile-status') || document.getElementById('tiktok-sync-status');
+        if (status) {
             status.textContent = isPublic
                 ? 'Profil TikTok verificat și salvat.'
                 : window.tikInteractUser ? 'Salvarea a fost anulată.' : 'Intră în cont ca să verifici profilul TikTok.';
@@ -1165,7 +1166,7 @@ function saveTikTokProfileFromSettings() {
         loadLeaderboard();
     }).catch((error) => {
         if (!current()) return;
-        const status = document.getElementById('tiktok-sync-status');
+        const status = document.getElementById('tiktok-profile-status') || document.getElementById('tiktok-sync-status');
         if (status) {
             status.textContent = `Nu am putut salva profilul: ${error.message}`;
             status.className = 'mb-4 text-[10px] font-bold uppercase tracking-[0.14em] text-amber-400';
@@ -1296,6 +1297,11 @@ async function recordLeaderboardGift(event) {
 }
 
 function setStreamerProfile(username, avatarUrl, displayName = username) {
+    const previous = window.TikInteractStreamerProfile;
+    if (previous?.userId === window.tikInteractUser?.id && previous.username?.toLowerCase() === String(username).toLowerCase()) {
+        avatarUrl ||= previous.avatarUrl;
+        if (displayName === username) displayName = previous.displayName || username;
+    }
     window.TikInteractStreamerProfile = Object.freeze({userId:window.tikInteractUser?.id,username,avatarUrl,displayName});
     if (typeof CustomEvent !== 'undefined') window.dispatchEvent(new CustomEvent('tikinteract:streamer-profile',{detail:window.TikInteractStreamerProfile}));
     const profile = document.getElementById('tiktok-profile');
@@ -1306,13 +1312,13 @@ function setStreamerProfile(username, avatarUrl, displayName = username) {
 
     let safeAvatarUrl = null;
     try {
-        const parsedAvatarUrl = new URL(avatarUrl || window.tikInteractUser?.user_metadata?.avatar_url || window.tikInteractUser?.user_metadata?.picture);
+        const parsedAvatarUrl = new URL(avatarUrl);
         if (parsedAvatarUrl.protocol === 'https:') safeAvatarUrl = parsedAvatarUrl.href;
     } catch {
         safeAvatarUrl = null;
     }
 
-    setAccountAvatar(displayName || username, safeAvatarUrl);
+    setAccountAvatar(displayName || username, safeAvatarUrl || window.tikInteractUser?.user_metadata?.avatar_url || window.tikInteractUser?.user_metadata?.picture);
 
     if (!profile) return;
     profile.classList.remove('hidden');
@@ -1432,6 +1438,7 @@ function updateConnectionStatus(connected, username, connecting = false, avatarU
     }
 
     if (button) {
+        button.dataset.connectionState = connected ? 'connected' : connecting ? 'connecting' : 'disconnected';
         button.textContent = connected || connecting ? 'Oprește Conexiunea' : 'Pornește Conexiunea Live';
         button.className = connected || connecting
             ? 'w-full bg-zinc-800 hover:bg-zinc-700 text-white font-bold py-3 rounded-xl text-xs transition cursor-pointer'
@@ -1450,15 +1457,21 @@ function updateConnectionStatus(connected, username, connecting = false, avatarU
 
 function showConnectionError(message) {
     updateConnectionStatus(false, null);
-    window.alert((window.TikInteractLanguage?.translate ?? (value=>value))(`Eroare TikTok LIVE: ${message}`));
+    const status = document.getElementById('tiktok-sync-status');
+    const text = (window.TikInteractLanguage?.translate ?? (value=>value))(`Eroare TikTok LIVE: ${message}`);
+    if (status) { status.hidden = false; status.textContent = text; status.classList.add('is-error'); }
+    else window.alert(text);
 }
 
 function showLiveVerificationIssue() {
     updateConnectionStatus(false, null);
     const status = document.getElementById('tiktok-sync-status');
-    if (status) status.textContent = window.TikInteractLanguage?.get()==='en'
-        ? 'The LIVE connector could not verify the session. Your website account is still signed in. Retry the LIVE connection.'
-        : 'Conectorul LIVE nu a putut verifica sesiunea. Contul site-ului rămâne conectat. Reîncearcă legătura LIVE.';
+    if (status) {
+        status.hidden = false;
+        status.textContent = window.TikInteractLanguage?.get()==='en'
+            ? 'The LIVE service could not verify the session. Your website account is still signed in. Retry the LIVE connection.'
+            : 'Serviciul LIVE nu a putut verifica sesiunea. Contul site-ului rămâne conectat. Reîncearcă legătura LIVE.';
+    }
 }
 
 function sendStudioServerMessage(message, target = socket) {
@@ -1467,14 +1480,28 @@ function sendStudioServerMessage(message, target = socket) {
     return true;
 }
 
-function connectToLocalServer() {
+function connectToLiveService() {
     if (!window.tikInteractUser || !window.tikInteractAccessToken) return;
     if (socket && (socket.readyState === WebSocket.OPEN || socket.readyState === WebSocket.CONNECTING)) return;
 
-    socket = new WebSocket('ws://127.0.0.1:3000/ws');
+    const origin = window.location?.origin || 'https://tikinteract.vercel.app';
+    const endpoint = new URL('/api/live', /^http:\/\/(localhost|127\.0\.0\.1)(:|\/|$)/.test(origin) ? 'https://tikinteract.vercel.app' : origin);
+    endpoint.protocol = endpoint.protocol === 'https:' ? 'wss:' : 'ws:';
+    socket = new WebSocket(endpoint.href);
+    const currentSocket = socket;
+    let issue = null;
+    const connectionFailed = 'Serviciul TikTok LIVE online nu este disponibil. Reîncearcă în câteva momente.';
     socket.addEventListener('open', () => {
+        if (socket !== currentSocket) return;
         sendStudioServerMessage({ type: 'state' });
+        if (liveDesiredUsername) sendStudioServerMessage({type:'connect',username:liveDesiredUsername});
+        clearInterval(liveStateTimer);
+        liveStateTimer = setInterval(() => sendStudioServerMessage({type:'state'}, currentSocket), 20000);
     });
+    const authChanged = () => {
+        if (socket === currentSocket && currentSocket.readyState === WebSocket.OPEN && window.tikInteractUser) sendStudioServerMessage({type:'state'}, currentSocket);
+    };
+    window.addEventListener('tikinteract:auth', authChanged);
     socket.addEventListener('message', (event) => {
         if (socket !== event.target) return;
         let message;
@@ -1487,14 +1514,19 @@ function connectToLocalServer() {
 
         window.dispatchEvent(new CustomEvent('tikinteract:live-event',{detail:message}));
         if (message.type === 'auth-required') {
+            liveDesiredUsername = null;
+            issue = 'auth';
             socket?.close();
             // A connector verification failure is not a Supabase sign-out.
             // Keep the website session, profile and saved workspace intact.
             showLiveVerificationIssue();
             return;
         } else if (message.type === 'status') {
+            if (!message.connected && !message.connecting && liveDesiredUsername) return;
             updateConnectionStatus(message.connected, message.username, message.connecting, message.avatarUrl, message.sessionId);
+            if (issue && !message.connected && !message.connecting) showConnectionError(issue);
             if (message.connected && message.username) {
+                liveRetryAttempt = 0;
                 startPlatformLiveSession(message.username);
             } else {
                 finishPlatformLiveSession().catch((error) => {
@@ -1536,27 +1568,50 @@ function connectToLocalServer() {
             }
             console.warn('TikTok profile lookup failed:', message.message);
         } else if (message.type === 'connecting') {
+            issue = null;
             updateConnectionStatus(false, message.username, true, null, message.sessionId);
         } else if (message.type === 'error') {
-            showConnectionError(message.message);
+            liveDesiredUsername = null;
+            issue = message.message || connectionFailed;
+            showConnectionError(issue);
+        } else if (message.type === 'stream-ended') {
+            liveDesiredUsername = null;
         } else if (message.type === 'chat' || message.type === 'gift' || message.type === 'like') {
             handleTikTokEvent(message);
         }
     });
     socket.addEventListener('close', (event) => {
         if (socket !== event.target) return;
-        if (event.code === 1008) {
-            if (event.reason === 'Origin not allowed') showConnectionError('Originea paginii nu este permisă de serverul local. Folosește https://tikinteract.vercel.app/.');
-            else showLiveVerificationIssue();
-        }
+        clearInterval(liveStateTimer);
+        window.removeEventListener('tikinteract:auth', authChanged);
         updateConnectionStatus(false, null);
+        socket = null;
+        if (event.code === 1008) {
+            liveDesiredUsername = null;
+            if (event.reason === 'Origin not allowed') showConnectionError('Originea paginii nu este permisă. Folosește https://tikinteract.vercel.app/.');
+            else showLiveVerificationIssue();
+        } else if (issue === 'auth') showLiveVerificationIssue();
+        else if (issue) showConnectionError(issue);
+        else if (liveDesiredUsername && window.tikInteractUser && liveRetryAttempt < 5) {
+            const delay = Math.min(1000 * 2 ** liveRetryAttempt++, 30000);
+            updateConnectionStatus(false, liveDesiredUsername, true);
+            clearTimeout(liveReconnectTimer);
+            liveReconnectTimer = setTimeout(connectToLiveService, delay);
+            return;
+        } else if (liveDesiredUsername) {
+            liveDesiredUsername = null;
+            showConnectionError(connectionFailed);
+        }
         finishPlatformLiveSession().catch((error) => {
             console.error('Failed to finish LIVE session:', error);
         });
-        socket = null;
     });
     socket.addEventListener('error', () => {
-        updateConnectionStatus(false, null);
+        if (socket === currentSocket) {
+            const status = document.getElementById('tiktok-sync-status');
+            if (status) status.textContent = window.TikInteractLanguage?.get()==='en'
+                ? 'Reconnecting to the online LIVE service…' : 'Se reîncearcă legătura cu serviciul LIVE online…';
+        }
     });
 }
 
@@ -1566,7 +1621,7 @@ async function waitForTikInteractLiveSession() {
 }
 
 function requestTikTokGiftCatalog(username, refresh = false) {
-    connectToLocalServer();
+    connectToLiveService();
     const requestSocket = socket;
     const request = () => {
         sendStudioServerMessage({type:'gift-catalog', username, refresh}, requestSocket);
@@ -1577,6 +1632,8 @@ function requestTikTokGiftCatalog(username, refresh = false) {
 }
 
 function disconnectTikTokConnection() {
+    liveDesiredUsername = null;
+    clearTimeout(liveReconnectTimer);
     if (socket?.readyState === WebSocket.OPEN) {
         sendStudioServerMessage({ type: 'disconnect' });
     }
@@ -1592,13 +1649,13 @@ function toggleTikTokConnection() {
     const button = document.getElementById('btn-connect');
     if (!input || !button) return;
 
-    if (connectedUsername || button.textContent.includes('Oprește')) {
+    if (connectedUsername || liveDesiredUsername || button.dataset.connectionState === 'connecting') {
         disconnectTikTokConnection();
         return;
     }
 
     const username = input.value.trim().replace(/^@/, '');
-    if (!/^[A-Za-z0-9._]{2,24}$/.test(username)) {
+    if (!/^[A-Za-z0-9._]{2,24}$/.test(username) || username.endsWith('.') || username.toLowerCase() === 'numele_tau') {
         window.alert((window.TikInteractLanguage?.translate ?? (value=>value))('Introdu un username TikTok valid (2-24 caractere).'));
         return;
     }
@@ -1609,21 +1666,17 @@ function toggleTikTokConnection() {
         console.warn('Local storage unavailable:', error);
     }
 
-    connectToLocalServer();
-    if (socket?.readyState === WebSocket.OPEN) {
-        sendStudioServerMessage({ type: 'connect', username });
-    } else if (socket?.readyState === WebSocket.CONNECTING) {
-        const pendingSocket = socket;
-        const failedBeforeOpen = (event) => {
-            if (event.code !== 1008) showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
-        };
-        pendingSocket.addEventListener('open', () => {
-            pendingSocket.removeEventListener('close', failedBeforeOpen);
-            sendStudioServerMessage({ type: 'connect', username }, pendingSocket);
-        }, { once: true });
-        pendingSocket.addEventListener('close', failedBeforeOpen, { once: true });
-    } else {
-        showConnectionError('Nu pot ajunge la serverul local. Pornește start-tikinteract.bat pe acest calculator și încearcă din nou.');
+    liveRetryAttempt = 0;
+    clearTimeout(liveReconnectTimer);
+    liveDesiredUsername = username;
+    updateConnectionStatus(false, username, true);
+    // Profile saving is independent of the LIVE transport, including offline profiles.
+    saveTikTokProfileFromSettings();
+    connectToLiveService();
+    if (socket?.readyState === WebSocket.OPEN) sendStudioServerMessage({ type: 'connect', username });
+    else if (socket?.readyState !== WebSocket.CONNECTING) {
+        liveDesiredUsername = null;
+        showConnectionError('Serviciul TikTok LIVE online nu este disponibil. Reîncearcă în câteva momente.');
     }
 }
 
@@ -1772,10 +1825,13 @@ window.startTikInteractStudio = () => {
         runEngine();
         loadSoundEffectLibrary();
     }
-    if(document.documentElement.dataset.workspace !== 'ai')connectToLocalServer();
+    // The LIVE service starts only when requested, not on every Studio page load.
 };
 
 window.stopTikInteractStudio = () => {
+    liveDesiredUsername = null;
+    clearTimeout(liveReconnectTimer);
+    clearInterval(liveStateTimer);
     socket?.close();
     socket = null;
     updateConnectionStatus(false, null);
