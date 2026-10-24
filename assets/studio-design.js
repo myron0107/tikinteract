@@ -2,6 +2,8 @@
 (()=>{
  const root=document.documentElement;
  const skins={live:[['ice','Glacier', '#b6d7ff','#72b1ff'],['signal','Crimson', '#f27a91','#f2aa8a'],['racing','Electric','#85abff','#c8a2ff']],ai:[['lumen','Lumen','#f3ca91','#ed9ba8'],['orbit','Iris','#c0a5ff','#e5a2dd'],['aurora','Lagoon','#7bdcdb','#a3bfff']]};
+ const extraSkins=[['ocean','Ocean','#83c6f3','#8fa7d9'],['mint','Mint','#7fd9b3','#9bd7d1'],['amethyst','Amethyst','#b9a0ee','#d8a8d9'],['rosewood','Rosewood','#df9fb5','#b9a7d7'],['sage','Sage','#b5c893','#9fc8bb'],['steel','Steel','#a8bfd5','#b9c3d1'],['graphite','Graphite','#bfc4ce','#9aa4b6'],['midnight','Midnight','#a1aedb','#9dbccf']];
+ skins.live.push(...extraSkins);skins.ai.push(...extraSkins);
  const defaults={live:'ice',ai:'lumen'};
  const read=key=>{try{return localStorage.getItem(key);}catch{return null;}};
  const mode=()=>root.dataset.dockMenu?root.dataset.dockMenu==='ai'?'ai':'live':root.dataset.workspace==='ai'?'ai':'live';

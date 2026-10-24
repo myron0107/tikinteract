@@ -3,10 +3,10 @@ import {mkdir,writeFile} from 'node:fs/promises';
 import path from 'node:path';
 import WebSocket from 'ws';
 
-export async function openSkyShiftBrowser(profileName='skyshift-qa') {
+export async function openSkyShiftBrowser(profileName='skyshift-qa',{extraArgs=[]}={}) {
     const profile=path.resolve('.tools',profileName);
     await mkdir(profile,{recursive:true});
-    const child=spawn(process.env.GALLERY_CHROME||'C:/Program Files/Google/Chrome/Application/chrome.exe',['--headless=new','--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-component-update','--disable-extensions','--mute-audio','--remote-debugging-port=0',`--user-data-dir=${profile}`,'about:blank'],{windowsHide:true,stdio:['ignore','ignore','pipe']});
+    const child=spawn(process.env.GALLERY_CHROME||'C:/Program Files/Google/Chrome/Application/chrome.exe',['--headless=new','--no-first-run','--no-default-browser-check','--disable-background-networking','--disable-component-update','--disable-extensions','--mute-audio','--remote-debugging-port=0',`--user-data-dir=${profile}`,...extraArgs,'about:blank'],{windowsHide:true,stdio:['ignore','ignore','pipe']});
     let socket;
     try {
         const endpoint=await new Promise((resolve,reject)=>{

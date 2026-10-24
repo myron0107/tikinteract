@@ -602,6 +602,7 @@ function closeCookiePreferences() {
 
 let paidLaunchSequence = 0;
 window.addEventListener('tikinteract:auth', () => {paidLaunchSequence++;});
+if(isStudioPage)window.addEventListener('tikinteract:game-closed',()=>{paidLaunchSequence++;});
 function loadLiveGame(gameId, verified = false) {
     const accessRequest = verified ? paidLaunchSequence : ++paidLaunchSequence;
     if (!currentUser) { openAuthModal(); return false; }

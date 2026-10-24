@@ -1,7 +1,10 @@
+import {openAnimationSource} from './studio-broadcast-sources.js?v=2';
+import {renderRuleForm,bindRuleForm} from './animations-rule-form.js?v=1';
+import {triggerAnimation} from './studio-animation-player.js?v=1';
 import {esc,ic} from './creator-ui.js?v=4';
 import {animationAPI as api,animationText as t,animationError} from './animations-client.js?v=2';
-import {mediaCards,filteredClips,tabs,button,option} from './animations-live-views.js?v=5';
-import {renderAnimationWorkspace as renderAnimations} from './animations-workspace-views.js?v=4';
+import {mediaCards,filteredClips,tabs,button,option} from './animations-live-views.js?v=7';
+import {renderAnimationWorkspace as renderAnimations} from './animations-workspace-views.js?v=6';
 import {loadAnimationState} from './animations-state.js?v=3';
 import {creditPurchase} from './animations-credit-purchase.js?v=2';
 let root,dialog,opener,interval,epoch=0,refreshing=false,photoFile=null,uploadId=null,requestId=null,lastSignature='',mountPromise,accountId=null,lastAccessPlan=null;
@@ -45,7 +48,8 @@ async function generate(){
 const submitButton=()=>`<button type="submit" class="an-button an-primary">${t('Salvează','Save')}</button>`;
 function ruleDialog(id,selectedClip){
  if(!s.library.some(c=>c.mime==='video/mp4')){toast(t('Adaugă mai întâi un videoclip.','Add a video first.'));return;}const r=s.rules.find(r=>r.id===id);
- open(t('Regulă LIVE','LIVE rule'),`<form data-an-dialog-form="rule" data-id="${esc(id||'')}"><label>${t('Eveniment','Event')}<select name="type">${[['gift',t('Cadou TikTok','TikTok gift')],['user',t('Utilizator','User')],['threshold',t('Prag monede per eveniment','Coins per event')],['manual','Manual']].map(([v,l])=>option(v,l,r?.type||'gift')).join('')}</select></label><label>${t('ID sau numele exact al cadoului','Gift ID or exact gift name')}<input name="gift" maxlength="100" value="${esc(r?.gift||'')}" placeholder="5655 / Rose"></label><label>${t('Username fan','Fan username')}<input name="username" maxlength="31" value="${esc(r?.username||'')}" placeholder="@username"></label><label>${t('Prag cantitate / monede','Quantity / coin threshold')}<input name="threshold" type="number" min="1" max="1000000" value="${r?.threshold||1}" required></label><label>${t('Videoclip','Video')}<select name="clip">${s.library.filter(c=>c.mime==='video/mp4').map(c=>option(c.id,c.title,r?.clip||selectedClip||s.library.find(c=>c.mime==='video/mp4').id)).join('')}</select></label>${submitButton()}</form>`);
+ open(t('Regulă LIVE','LIVE rule'),renderRuleForm(r,s.library,selectedClip));
+ bindRuleForm(dialog.querySelector('[data-an-dialog-form=rule]'));
 }
 async function act(action,extra={}){const result=await api({action,...extra});await reload();return result;}
 async function click(event){
@@ -66,6 +70,7 @@ async function click(event){
   case 'events':s.tab='events';draw();break;
   case 'preview':if(clip)open(clip.title,`${clip.mime?.startsWith('image/')?`<img class="an-full-image" src="${esc(clip.url)}" alt="${esc(clip.title)}">`:`<video controls playsinline preload="metadata" src="${esc(clip.url)}"></video>`}<p>${t('Previzualizarea nu consumă credite AI.','Preview uses no AI credits.')}</p>`);break;
   case 'download':{const r=await api({action:'download',id}),a=document.createElement('a');a.href=r.url;a.rel='noreferrer';a.download=s.library.find(c=>c.id===id)?.mime==='image/jpeg'?'character.jpg':'animation.mp4';a.click();break;}
+  case 'rename':if(clip)open(t('Redenumește animația','Rename animation'),`<form data-an-dialog-form="rename" data-id="${esc(id)}"><label>${t('Denumirea animației','Animation name')}<input name="title" maxlength="100" required value="${esc(clip.title)}" autocomplete="off"></label>${submitButton()}</form>`);break;
   case 'fan':if(clip)open(t('Asociază un fan','Assign a fan'),`<form data-an-dialog-form="fan" data-id="${id}"><label>Username<input name="fan" maxlength="31" value="${esc(clip.fan)}"></label>${submitButton()}</form>`);break;
   case 'delete':if(clip)open(t('Șterge videoclipul','Delete video'),`<form data-an-dialog-form="deleteMedia" data-id="${id}"><p>${esc(clip.title)}</p><p>${t('Videoclipul și regulile asociate vor fi șterse din cont.','The video and its rules will be deleted from your account.')}</p>${submitButton()}</form>`);break;
   case 'import':open(t('Importă videoclip','Import video'),`<form data-an-dialog-form="import"><label>MP4 · 100 MB<input name="file" type="file" accept="video/mp4" required></label><label><input name="rights" type="checkbox" required>${t('Am dreptul să încarc și să difuzez acest videoclip.','I have the right to upload and broadcast this video.')}</label>${submitButton()}</form>`);break;
@@ -74,9 +79,9 @@ async function click(event){
   case 'edit-rule':ruleDialog(id);break;
   case 'toggle-rule':if(rule)await act('saveRule',{...rule,enabled:!rule.enabled});break;
   case 'delete-rule':await act('deleteRule',{id});break;
-  case 'test-rule':if(rule)await act('event',{manual:true,clip:rule.clip,requestId:crypto.randomUUID()});toast(t('Adăugat în coada OBS.','Added to the OBS queue.'));break;
-  case 'play-live':await act('event',{manual:true,clip:id,requestId:crypto.randomUUID()});toast(t('Adăugat în coada OBS.','Added to the OBS queue.'));break;
-  case 'overlay':{const r=await api({action:'overlayToken'});open('OBS Browser Source',`<label>${t('Link privat — nu îl distribui','Private link — do not share')}<input readonly value="${esc(r.url)}" id="an-overlay-url"></label>${button('copy-overlay',t('Copiază linkul','Copy link'),'copy')}<p>${t('Adaugă o sursă Browser în OBS, lipește linkul și setează 1080×1920 sau 1920×1080. Linkul anterior este revocat.','Add an OBS Browser Source, paste the link and set 1080×1920 or 1920×1080. The previous link is revoked.')}</p>`);break;}
+  case 'test-rule':if(rule)await triggerAnimation(rule.clip);toast(t('Redare manuală în scena jocului.','Manual playback in the game scene.'));break;
+  case 'play-live':{const r=await triggerAnimation(id);toast(t('Redare în scena jocului.','Playback in the game scene.')+(r.overlayQueued?t(' Trimisă și în sursa Link.',' Also queued for the Link source.'):''));break;}
+  case 'overlay':await openAnimationSource();break;
   case 'copy-overlay':await navigator.clipboard.writeText(dialog.querySelector('#an-overlay-url').value);b.textContent=t('Copiat','Copied');break;
   case 'revoke-overlay':await act('revokeOverlay');toast(t('Accesul OBS a fost revocat.','OBS access revoked.'));break;
   case 'clear-queue':await act('clearQueue');toast(t('Coada a fost golită.','Queue cleared.'));break;
@@ -97,9 +102,10 @@ async function submitDialog(event){
   if(type==='import'){const file=f.get('file');if(file.type!=='video/mp4'||file.size>104857600)throw Error('ANIM_INVALID_FILE');await upload(file);}
   if(type==='world')await api({action:'createWorld',...Object.fromEntries(f)});
   if(type==='fan')await api({action:'fan',id:form.dataset.id,fan:f.get('fan')});
+  if(type==='rename')await api({action:'rename',id:form.dataset.id,title:f.get('title')});
   if(type==='deleteMedia')await api({action:'deleteMedia',id:form.dataset.id});
   if(type==='deleteData')await api({action:'deleteData',confirm:true});
-  if(type==='rule')await api({action:'saveRule',id:form.dataset.id||undefined,...Object.fromEntries(f),threshold:Number(f.get('threshold')),enabled:true});
+  if(type==='rule')await api({action:'saveRule',id:form.dataset.id||undefined,...Object.fromEntries(f),threshold:Number(f.get('threshold')||1),enabled:true});
   dialog.close();await reload();
  }catch(e){dialog.querySelector('[data-an-dialog-error]').textContent=animationError(e.message);}finally{b.disabled=false;}
 }

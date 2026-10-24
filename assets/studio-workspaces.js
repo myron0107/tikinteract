@@ -1,4 +1,4 @@
-import {openAnimations,openAnimationCredits} from './studio-animations-entry.js?v=9';
+import {openAnimations,openAnimationCredits} from './studio-animations-entry.js?v=11';
 import {loadAnimationState} from './animations-state.js?v=3';
 const t=(ro,en)=>window.TikInteractLanguage?.get()==='en'?en:ro;
 const labels={generator:['Generator AI','AI generator'],universes:['Universuri','Universes'],library:['Biblioteca mea','My library'],credits:['Credite AI','AI credits'],guide:['Ghid AI','AI guide'],history:['Istoric generări','Generation history']};

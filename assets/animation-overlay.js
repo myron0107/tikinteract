@@ -1,5 +1,6 @@
 // Capability lives in the fragment, never in server/CDN request logs.
 const token=location.hash.slice(1),video=document.getElementById('animation');
+video.style.objectFit=new URLSearchParams(location.search).get('fit')==='cover'?'cover':'contain';
 let current=null,busy=false,ack=null,delay=2000;
 async function poll(){
  if(busy||current)return;busy=true;

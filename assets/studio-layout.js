@@ -8,7 +8,7 @@
         }
         if (explicitFormat) { nativeWidth = format === 'landscape' ? 960 : 540; nativeHeight = format === 'landscape' ? 540 : 960; }
         const frame = document.getElementById('live-game-frame');
-        const wrap = frame?.parentElement;
+        const wrap = frame?.closest('.live-game-frame-wrap') || (frame?.parentElement.id==='studio-game-output-target'?document.querySelector('.live-game-frame-wrap'):null);
         if (!frame || !wrap || !wrap.clientWidth || !wrap.clientHeight) return;
         const studioApp = document.body?.classList?.contains('studio-app');
         const desktopApp = studioApp && window.innerWidth >= 1000;
@@ -22,9 +22,10 @@
         frame.style.setProperty('--game-native-width', `${nativeWidth}px`);
         frame.style.setProperty('--game-native-height', `${nativeHeight}px`);
         frame.style.setProperty('--game-fit-scale', String(scale));
+        if(frame.parentElement.id==='studio-game-output-target')for(const name of ['--game-native-width','--game-native-height','--game-fit-scale'])frame.parentElement.style.setProperty(name,frame.style.getPropertyValue(name));
     }
     document.addEventListener('DOMContentLoaded', () => {
-        const frame = document.getElementById('live-game-frame'), wrap = frame?.parentElement;
+        const frame = document.getElementById('live-game-frame'), wrap = frame?.closest('.live-game-frame-wrap');
         frame?.addEventListener('load',()=>{publishFormat();fitGame();});
         if (wrap && typeof ResizeObserver !== 'undefined') new ResizeObserver(() => fitGame()).observe(wrap);
         window.addEventListener('resize', () => fitGame());

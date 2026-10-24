@@ -30,6 +30,7 @@ export const snap=n=>Math.round(n/8)*8;
 export function normalizeLayout(value,ids=PANEL_DEFAULTS.map(p=>p.id),{migrateAnimationFavorites=false}={}){
  const legacy=value?.version!==2?gridLayout(value,ids):null;
  const defaults=gridLayout(null,ids),out={version:2,animationFavorites:true,custom:!!value?.custom,desktop:[],mobile:[],favorites:(legacy||gridLayout({favorites:value?.favorites},ids)).favorites};
+ if(value?.preset==='studio-default-v1')out.preset=value.preset;
  for(const mode of ['desktop','mobile']){
   const width=CANVAS_WIDTH[mode],seen=new Set(),source=legacy?.[mode]||value?.[mode]||[];
   const convert=p=>({id:p.id,x:Math.round((p.x-1)*width/12),y:(p.y-1)*36,w:Math.round(p.w*width/12-(mode==='mobile'?0:12)),h:p.h*36-12,hidden:!!p.hidden});

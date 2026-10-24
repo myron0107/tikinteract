@@ -1,7 +1,7 @@
 import {esc,ic} from './creator-ui.js?v=4';
 import {asset} from './animations-demo-model.js?v=1';
 import {animationText as t} from './animations-client.js?v=2';
-import {button,option,statusText} from './animations-live-views.js?v=5';
+import {button,option,statusText} from './animations-live-views.js?v=7';
 export function renderAIGenerator(s,renderCredits){
  const cost=s.config[s.tier+'Credits'],job=s.jobs[0],clip=s.library.find(c=>c.id===job?.result_id),world=s.worlds.find(w=>w.id===s.world)||s.worlds[0],art=world?asset(world.base||world.id):'';
  return `<div class="ai-creation-workspace"><div class="ai-creation-main"><section class="ai-canvas an-panel"><header><div>${ic('wand-magic-sparkles')}<span>${t('Canvas creativ','Creative canvas')}</span></div><span class="an-badge">${clip?'VIDEO':t('PREVIZUALIZARE UNIVERS','UNIVERSE PREVIEW')} · ${clip?.format||s.format}</span></header><div class="ai-creation-preview">${clip?`<video id="an-generator-video" controls playsinline src="${esc(clip.url)}"></video>`:`${art?`<img src="${art}" alt="${esc(world?.name||'')}">`:''}<span class="an-video-label">${t('ILUSTRAȚIE · NU ESTE REZULTAT GENERAT','ILLUSTRATION · NOT A GENERATED RESULT')}</span><div class="ai-world-caption"><small>TIK STUDIO / ORIGINAL WORLDS</small><h2>${esc(world?.name||'')}</h2><p>${t('Ideile tale au un loc al lor.','A place for your ideas to take shape.')}</p></div>`}</div><div class="ai-canvas-footer"><span>${ic('film')} ${s.format}</span><span>${ic('clock')} 5 s</span><span>${job?statusText(job.status):t('Pregătit pentru creație','Ready to create')}</span></div></section>

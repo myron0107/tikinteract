@@ -1,0 +1,35 @@
+body#tikinteract-studio .live-game-frame-wrap{position:relative;isolation:isolate;transform-style:flat}
+body#tikinteract-studio #live-game-frame{isolation:isolate;transform-style:flat}
+body#tikinteract-studio #studio-game-output-target{position:absolute;left:50%;top:50%;width:var(--game-native-width,540px);height:var(--game-native-height,960px);transform:translate(-50%,-50%) scale(var(--game-fit-scale,.4));transform-origin:center;isolation:isolate;transform-style:flat;overflow:hidden;background:#000}
+body#tikinteract-studio #studio-game-output-target>#live-game-frame{position:absolute!important;left:0!important;top:0!important;width:100%!important;height:100%!important;transform:none!important}
+body#tikinteract-studio #studio-game-output-target.is-output-parked{position:fixed;left:0;top:0;transform:none;z-index:-100;pointer-events:none}
+body#tikinteract-studio .studio-game-output-preview{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000}
+body#tikinteract-studio .studio-game-output-preview[hidden]{display:none!important}
+body#tikinteract-studio .studio-game-output-cursor{position:absolute;z-index:999999;pointer-events:none;transform:translate(-1px,-1px)}
+body#tikinteract-studio.studio-output-sharing,body#tikinteract-studio.studio-output-sharing *{cursor:none!important}
+body#tikinteract-studio .studio-output-local-cursor{position:fixed;z-index:2147483647;pointer-events:none;transform:translate(-1px,-1px)}
+body#tikinteract-studio .studio-output-local-cursor[hidden],body#tikinteract-studio .studio-game-output-cursor[hidden]{display:none!important}
+body#tikinteract-studio .studio-stage-heading{flex-wrap:wrap;gap:8px}
+body#tikinteract-studio .studio-scene-animation-layer{position:absolute;inset:0;z-index:8;pointer-events:none;background:transparent;overflow:hidden}
+body#tikinteract-studio .studio-scene-animation-layer[hidden]{display:none!important}
+body#tikinteract-studio .studio-scene-animation-layer video{display:block;width:100%;height:100%;object-fit:contain;background:transparent}
+body#tikinteract-studio .studio-scene-animation-status{font-size:12px;line-height:1.5;color:var(--sd-muted);margin:8px 0}
+body#tikinteract-studio .studio-broadcast-source,body#tikinteract-studio .studio-scene-animation-stop{font-size:11px;white-space:normal;min-height:30px}
+body#tikinteract-studio .studio-stop-game{font-size:10px;min-height:28px;padding:5px 9px;gap:6px;color:var(--sd-text);border-color:color-mix(in srgb,#ee7c87 28%,var(--sd-line))}
+body#tikinteract-studio .studio-stop-game i{color:#dc7181;font-size:10px}
+body#tikinteract-studio .studio-stop-game:disabled{opacity:.45;cursor:default}
+body#tikinteract-studio .studio-source-dialog{max-width:min(560px,calc(100vw - 24px))}
+body#tikinteract-studio .studio-source-dialog label{display:grid;gap:6px;margin:12px 0}
+body#tikinteract-studio .studio-source-dialog input,body#tikinteract-studio .studio-source-dialog select{max-width:100%;width:100%}
+body#tikinteract-studio .studio-source-dialog ol{padding-left:22px;line-height:1.7}
+body#tikinteract-studio .studio-source-dialog .studio-output-cursor{display:flex;align-items:center;gap:9px}
+body#tikinteract-studio .studio-source-dialog .studio-output-cursor input{width:16px;height:16px;flex:0 0 16px}
+body#tikinteract-studio .studio-source-dialog [data-source-close]{display:grid;place-items:center;flex:0 0 30px;width:30px;height:30px;padding:0;border:0;border-radius:50%;color:inherit;background:transparent;opacity:.7;cursor:pointer}
+body#tikinteract-studio .studio-source-dialog [data-source-close]:hover{opacity:1;background:color-mix(in srgb,currentColor 8%,transparent)}
+body#tikinteract-studio .studio-source-dialog [data-source-close]:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+body#tikinteract-studio .an-dialog label[hidden]{display:none!important}
+/* The event log is one window; its inner list must not paint only half of it. */
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel [data-layout-panel=feed]{background:var(--sd-panel,var(--studio-panel))!important;color:var(--sd-text,var(--studio-ink));border:1px solid var(--sd-line,var(--studio-line))!important;border-radius:14px;box-shadow:var(--studio-window-shadow);overflow:hidden!important;padding:0!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel [data-layout-panel=feed][data-widget-enabled=true]:not([hidden]){display:flex!important;flex-direction:column}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel [data-layout-panel=feed]>.feed-box{flex:1;min-height:0;max-height:none;width:100%;padding:12px 14px;border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel [data-layout-panel=feed] .feed-header{flex:none;font-size:12px;font-weight:400;color:var(--sd-muted);margin-bottom:10px}

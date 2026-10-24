@@ -20,7 +20,7 @@ function header(){
  connectionLabels();
 
  const heading=$('.studio-connection .studio-panel-title');if(heading&&heading.textContent!=='TikTok LIVE')heading.textContent='TikTok LIVE';
- document.querySelector('.studio-controls .feed-header>span:first-child')?.replaceChildren(t('Evenimente LIVE','LIVE events'));
+ document.querySelector('.studio-controls .feed-header>span:first-child')?.replaceChildren(t('Reacțiile LIVE, în ordinea în care sosesc.','LIVE reactions, in the order they arrive.'));
 }
 function shortConnectLabel(){const button=$('#btn-connect'),label=t('Conectează','Connect');if(button&&['Pornește Conexiunea Live','Start LIVE connection','Conectează','Connect'].includes(button.textContent.trim())&&button.textContent!==label)button.textContent=label;}
 function connectionLabels(){

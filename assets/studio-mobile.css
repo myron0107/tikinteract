@@ -106,3 +106,30 @@ html[data-mode=light] body#tikinteract-studio{--layout-button-bg:#00000006;--lay
 
 /* Default topbar position; saved inline coordinates take precedence after dragging. */
 html[data-mode] body#tikinteract-studio.studio-app.studio-modern.studio-widget-desktop #studio-dock-utilities{top:0!important;right:0!important}
+
+body#tikinteract-studio .studio-dock-handle .studio-collapsed-panel-icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;color:var(--sd-text)}
+body#tikinteract-studio .studio-interface-icon{flex:none;width:16px;height:16px;color:var(--sd-accent)}
+body#tikinteract-studio .sle-animation-feedback{margin:10px 0;font:500 12px/1.55 Inter,sans-serif;color:var(--sd-text);overflow-wrap:anywhere}
+body#tikinteract-studio .sle-animation-feedback.is-error{color:var(--sd-danger,#d66c77)}
+
+/* Favorite sounds keep compact tiles instead of stretching with the window. */
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel .studio-audio #live-favorite-sounds{grid-template-columns:repeat(auto-fill,76px)!important;grid-auto-rows:76px;grid-auto-flow:row!important;gap:8px!important;justify-content:start;align-content:start}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel #live-favorite-sounds>.live-favorite-card{width:76px!important;height:76px!important;min-height:0!important;max-width:100%;padding:4px;aspect-ratio:1}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel #live-favorite-sounds .live-favorite-icon{font-size:19px}
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel #live-favorite-sounds .live-favorite-title{font-size:10px;line-height:1.2;white-space:normal;max-height:24px}
+@media(max-width:700px){
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel .studio-audio #live-favorite-sounds{grid-template-columns:repeat(auto-fill,72px)!important;grid-auto-rows:72px}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel #live-favorite-sounds>.live-favorite-card{width:72px!important;height:72px!important}
+}
+
+/* DEFAULT follows the reference on desktop and becomes a scrollable stack on phones. */
+html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel .studio-workspace.sle-custom.sle-default-preset{position:fixed!important;inset:0!important;width:100vw!important;max-width:none!important;height:100dvh!important;min-height:0!important;margin:0!important;padding:0!important;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--sd-line) transparent}
+body#tikinteract-studio .sle-default-preset::-webkit-scrollbar{width:6px}
+body#tikinteract-studio .sle-default-preset::-webkit-scrollbar-track{background:transparent;margin-block:8px}
+body#tikinteract-studio .sle-default-preset::-webkit-scrollbar-thumb{background:var(--sd-line);border-radius:8px}
+body#tikinteract-studio.studio-app.studio-modern .studio-palettes .sd-palette-options>button{min-height:76px}
+body#tikinteract-studio .sd-palette-options .sd-palette-preview{height:34px}
+@media(max-width:1199px){
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel .studio-workspace.sle-custom{position:fixed!important;inset:0!important;width:100vw!important;max-width:none!important;height:100dvh!important;margin:0!important;padding:0!important;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--sd-line) transparent;touch-action:pan-y}
+ html[data-mode] body#tikinteract-studio.studio-app.studio-modern #view-live #live-studio-panel .studio-workspace.sle-custom [data-layout-panel]{overscroll-behavior-y:auto!important;touch-action:pan-y}
+}
