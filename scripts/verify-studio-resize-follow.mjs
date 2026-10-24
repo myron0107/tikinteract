@@ -11,13 +11,14 @@ async function check(name,nodeSelector,handleSelector,gripSelector,{touch=false,
   for(let i=1;i<=12;i++){
    if(touch)await b.page('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:geometry.x+dx*i/12,y:geometry.y+dy*i/12,id:1}]});
    else await b.page('Input.dispatchMouseEvent',{type:'mouseMoved',buttons:1,x:geometry.x+dx*i/12,y:geometry.y+dy*i/12});await frame();
-   rows.push(await run('(()=>{const n=qaWindow.getBoundingClientRect(),g=qaGrip.getBoundingClientRect();return{dx:g.right-n.right,dy:g.bottom-n.bottom,hidden:qaGrip.hidden,transform:getComputedStyle(qaGrip).transform}})()'));
+   rows.push(...await run('(()=>{const n=qaWindow.getBoundingClientRect(),key=qaGrip.hasAttribute("data-widget-resize")?"data-widget-resize":"data-sle-resize",selector="["+key+"="+qaGrip.getAttribute(key)+"]";return [...document.querySelectorAll(selector)].map(g=>{const r=g.getBoundingClientRect(),corner=g.dataset.resizeCorner||"se";return{dx:corner.includes("w")?r.left-n.left:r.right-n.right,dy:corner.includes("n")?r.top-n.top:r.bottom-n.bottom,hidden:g.hidden}})})()'));
   }
  }finally{
   if(touch)await b.page('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
   else await b.page('Input.dispatchMouseEvent',{type:'mouseReleased',button:'left',x:geometry.x+dx,y:geometry.y+dy});await frame();
  }
  const after=await run('qaWindow.getBoundingClientRect().toJSON()');
+ if(rows.some(r=>r.hidden||Math.abs(r.dx)>1||Math.abs(r.dy)>1))console.log(name,{before:geometry.window,after,bad:rows.filter(r=>r.hidden||Math.abs(r.dx)>1||Math.abs(r.dy)>1).slice(0,4)});
  assert(Math.hypot(after.x-geometry.window.x,after.y-geometry.window.y)>10,name+': window actually moved');
  assert(rows.every(r=>!r.hidden&&Math.abs(r.dx)<=1&&Math.abs(r.dy)<=1),name+': resize grip must stay in the corner while dragging');
  console.log(name+': grip aligned in all '+rows.length+' drag frames');
@@ -25,8 +26,10 @@ async function check(name,nodeSelector,handleSelector,gripSelector,{touch=false,
 try{
  await b.page('Emulation.setDeviceMetricsOverride',{width:1600,height:1000,deviceScaleFactor:1,mobile:false});await b.page('Page.navigate',{url:'http://127.0.0.1:3033/live-studio.html'});await b.waitFor('document.documentElement?.dataset.uiReady==="ready"&&!!window.TikInteractWidgetDesktop');
  await run('TikInteractWidgetDesktop.open("home")');await frame();
+ await run('(()=>{const n=document.getElementById("studio-home-panel");for(const[k,v]of Object.entries({left:"300px",top:"180px",width:"600px",height:"400px"}))n.style.setProperty(k,v,"important");TikInteractWidgetDesktop.positionResize(n)})()');await frame();
  await check('Home','#studio-home-panel','#studio-home-panel [data-widget-drag]','[data-widget-resize=home]');
  await run('TikInteractStudioWindows.open("subscription")');await b.waitFor('!!document.querySelector("#studio-user-dialog .ti-ticket")');await frame();
+ await run('(()=>{const n=document.getElementById("studio-user-dialog");for(const[k,v]of Object.entries({left:"300px",top:"180px",width:"700px",height:"500px"}))n.style.setProperty(k,v,"important");TikInteractWidgetDesktop.positionResize(n)})()');await frame();
  await check('Subscription','#studio-user-dialog','#studio-user-dialog [data-widget-drag]','[data-widget-resize=account]');
  await run('TikInteractStudioWindows.close();TikInteractWidgetDesktop.open("studio")');await frame();
  await check('Stream menu','.studio-widget-config','.studio-widget-config [data-widget-drag]','[data-widget-resize=config]');
@@ -34,6 +37,7 @@ try{
  await check('Stream','.studio-stats','.studio-stats [data-sle-handle]','body > [data-sle-resize=stats]');
  await b.page('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await b.page('Emulation.setTouchEmulationEnabled',{enabled:true});
  await run('dispatchEvent(new Event("resize"));TikInteractWidgetDesktop.open("home")');await frame();
+ await run('(()=>{const n=document.getElementById("studio-home-panel");for(const[k,v]of Object.entries({left:"100px",top:"250px",width:"240px",height:"400px"}))n.style.setProperty(k,v,"important");TikInteractWidgetDesktop.positionResize(n)})()');await frame();
  const top=await run('document.getElementById("studio-home-panel").getBoundingClientRect().top');
  await check('Mobile Home','#studio-home-panel','#studio-home-panel [data-widget-drag]','[data-widget-resize=home]',{touch:true,dx:0,dy:top>45?-40:40});
  assert.deepEqual(b.errors,[]);
